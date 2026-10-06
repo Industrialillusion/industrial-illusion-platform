@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr" class="dark scroll-smooth">
 <head>
@@ -79,9 +78,9 @@
 
             <!-- Portails & CTA -->
             <div class="flex items-center space-x-3">
-                <a href="/login.html" class="hidden sm:inline-flex px-3.5 py-2 bg-cyberDark text-cyberGreen border border-cyberGreen/40 rounded-lg hover:bg-black transition-all text-xs font-mono font-bold tracking-wider uppercase">
+                <button onclick="openLoginModal()" class="hidden sm:inline-flex px-3.5 py-2 bg-cyberDark text-cyberGreen border border-cyberGreen/40 rounded-lg hover:bg-black transition-all text-xs font-mono font-bold tracking-wider uppercase">
                     Portail B2B / PWA
-                </a>
+                </button>
                 <button onclick="openAuditModal()" class="px-4 py-2 bg-gradient-to-r from-cyberGreenDark to-emerald-700 text-white font-extrabold rounded-lg hover:brightness-110 transition-all text-xs tracking-wider shadow-md uppercase">
                     Audit B2B
                 </button>
@@ -127,7 +126,7 @@
                     </div>
                 </div>
 
-                <!-- CARD INTRODUZIONE LOGO & HOLDING -->
+                <!-- CARD INTRODUZIONE HOLDING -->
                 <div class="lg:col-span-5 bg-cyberDark text-white rounded-3xl p-8 space-y-6 shadow-2xl relative overflow-hidden border border-cyberGreen/30">
                     <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyberGreen/10 rounded-full blur-3xl pointer-events-none"></div>
                     
@@ -223,7 +222,7 @@
                     </div>
                     <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4">
                         <li>• Décharge totale de responsabilité civile</li>
-                        <li>• Traçabilité d'élimination contrôlée</li>
+                        <li>• Traçabilité d'élimination controlled</li>
                     </ul>
                 </div>
 
@@ -246,7 +245,7 @@
             <!-- BROCHURE DOWNLOAD BANNER -->
             <div class="bg-papyrusCard border border-cyberDark/10 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="space-y-2">
-                    <h4 class="text-lg font-bold text-cyberDark">Téléchargez la Brochure Commerciale Officieller PurKemet</h4>
+                    <h4 class="text-lg font-bold text-cyberDark">Téléchargez la Brochure Commerciale Officielle PurKemet</h4>
                     <p class="text-xs text-cyberDark/70">Consultez le parcours de la matière en 5 étapes, les spécifications techniques et les garanties pour votre établissement.</p>
                 </div>
                 <button onclick="openAuditModal()" class="px-6 py-3 bg-cyberDark text-white font-bold rounded-xl text-xs uppercase tracking-wider whitespace-nowrap hover:bg-black transition-all">
@@ -290,22 +289,22 @@
             </div>
         </section>
 
-        <!-- 5. K-MEH-20 (VISION A LUNGO TERMINE) -->
+        <!-- 5. K-MEH-20 (VERSIONE TESTI PULITA E RIFINITA) -->
         <section id="kmeh20" class="max-w-7xl mx-auto px-6 scroll-mt-28 space-y-8">
             <div class="bg-papyrusCard border border-cyberDark/10 rounded-3xl p-8 sm:p-12 space-y-8">
                 <div class="max-w-3xl space-y-3">
                     <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Infrastructure Lourde (Projet Général)</span>
                     <h3 class="text-3xl font-black text-cyberDark">Kemet Modular Eco Hub 20 (K-MEH-20)</h3>
                     <p class="text-sm text-cyberDark/80 leading-relaxed">
-                        L'actif matériel du Projet Illusion Kemet est une œuvre d'architecture industrielle monumentale brevetée auprès de l'<strong>OMPIC</strong>: une pyramide tronquée à base carrée de $56\text{ m} \times 56\text{ m}$ ($3.136\text{ m}^2$).
+                        L'actif matériel du Projet Illusion Kemet est une infrastructure d'architecture industrielle monumentale brevetée auprès de l'<strong>OMPIC</strong> : une pyramide tronquée a base carrée de <strong>56 m × 56 m</strong> (soit une superficie de <strong>3 136 m²</strong>).
                     </p>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-8 items-center">
                     <div class="space-y-4 text-xs text-cyberDark/80 leading-relaxed">
                         <div class="p-4 bg-papyrusBg rounded-xl border border-cyberDark/10 space-y-1">
-                            <h4 class="font-bold text-cyberDark text-sm">Organisme Cyber-Biologique</h4>
-                            <p>Autonomie métabolique producing son propre biométhane pur à 100% via le cœur bionique <em>Kemet Loop</em>, rendant l'installation totalement indépendante du réseau.</p>
+                            <h4 class="font-bold text-cyberDark text-sm">Organisme Bionique Cyber-Écologique</h4>
+                            <p>Autonomie métabolique totale produisant son propre biométhane pur à 100% via le cœur bionique <em>Kemet Loop</em>, rendant l'installation entièrement autonome en énergie.</p>
                         </div>
                         <div class="p-4 bg-papyrusBg rounded-xl border border-cyberDark/10 space-y-1">
                             <h4 class="font-bold text-cyberDark text-sm">Pôle Manufacturier de Kénitra</h4>
@@ -316,7 +315,8 @@
                     <div class="bg-cyberDark text-white p-8 rounded-2xl space-y-4 border border-kemetGold/30">
                         <h4 class="text-lg font-bold text-kemetGold">Spécifications de la Pyramide</h4>
                         <ul class="space-y-2 text-xs text-slate-300 font-mono">
-                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Dimensions:</span><span>56m × 56m (Hauteur 24m)</span></li>
+                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Dimensions:</span><span>56 m × 56 m (Hauteur 24 m)</span></li>
+                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Superficie:</span><span>3 136 m²</span></li>
                             <li class="flex justify-between border-b border-white/10 pb-1"><span>Capacité:</span><span>20 000 Tonnes / an</span></li>
                             <li class="flex justify-between border-b border-white/10 pb-1"><span>Blindage:</span><span>Cage de Faraday (EMP/TEMPEST)</span></li>
                             <li class="flex justify-between"><span>Brevet:</span><span>Invention Industrielle OMPIC</span></li>
@@ -410,6 +410,43 @@
             <p class="text-[10px] font-mono">Conforme Loi CNDP n° 09-08 & Loi n° 28-00 • Document Officiel Data Room Genesis</p>
         </div>
     </footer>
+
+    <!-- MODAL PORTAIL B2B / PWA (ACCESS CONFIRMATION) -->
+    <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cyberDark text-white border border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            
+            <div class="space-y-2 text-center">
+                <div class="w-12 h-12 bg-cyberGreen/10 text-cyberGreen rounded-2xl flex items-center justify-center mx-auto text-xl font-bold border border-cyberGreen/20">
+                    🔑
+                </div>
+                <h3 class="text-xl font-black text-white">Portail d'Accès Réseau</h3>
+                <p class="text-xs text-slate-400">Sélectionnez votre espace d'authentification sécurisé.</p>
+            </div>
+
+            <div class="space-y-4 pt-2">
+                <button onclick="alert('Espace Client ESG: La plateforme d\'accès aux certificats mensuels est en cours d\'activation pour votre établissement.')" class="w-full p-4 bg-cyberCard border border-white/10 rounded-2xl hover:border-kemetGold transition-all text-left flex items-center gap-4 group">
+                    <span class="text-2xl">🏨</span>
+                    <div>
+                        <div class="text-xs font-bold text-white group-hover:text-kemetGold">Espace Client ESG (HoReCa)</div>
+                        <div class="text-[10px] text-slate-400">Téléchargement des certificats & bilan carbone</div>
+                    </div>
+                </button>
+
+                <button onclick="alert('Portail PWA Maat OS: Interface réservée aux Vecteurs Logistiques autorisés par le Dépôt de Marrakech.')" class="w-full p-4 bg-cyberCard border border-white/10 rounded-2xl hover:border-cyberGreen transition-all text-left flex items-center gap-4 group">
+                    <span class="text-2xl">📱</span>
+                    <div>
+                        <div class="text-xs font-bold text-white group-hover:text-cyberGreen">PWA Opérateur (Maat OS)</div>
+                        <div class="text-[10px] text-slate-400">Application mobile de pesée & tournée logistique</div>
+                    </div>
+                </button>
+            </div>
+
+            <p class="text-[10px] font-mono text-center text-slate-500">
+                Accès sécurisé notarisation blockchain • Industrial Illusion SARL
+            </p>
+        </div>
+    </div>
 
     <!-- MODAL AUDIT B2B -->
     <div id="auditModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -532,6 +569,10 @@
             document.getElementById('formFeedback').classList.add('hidden');
         }
 
+        // Modals Login / Portail B2B
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+
         // Modals Carrières
         function openCareerModal(role) {
             document.getElementById('career_role').value = role;
@@ -564,45 +605,4 @@
                 feedback.className = "text-xs text-center font-bold text-emerald-800 block";
                 feedback.innerText = "✓ Demande enregistrée! Un auditeur vous contactera sous 24h.";
                 document.getElementById('auditForm').reset();
-                setTimeout(closeAuditModal, 3000);
-            } catch (err) {
-                feedback.className = "text-xs text-center font-bold text-red-600 block";
-                feedback.innerText = "Erreur: " + err.message;
-            } finally {
-                btn.disabled = false; btn.innerText = "Envoyer la Demande d'Audit";
-            }
-        }
-
-        // Submit Career -> Supabase vectors (ou log)
-        async function handleCareerSubmit(e) {
-            e.preventDefault();
-            const btn = document.getElementById('careerSubmitBtn');
-            const feedback = document.getElementById('careerFeedback');
-            btn.disabled = true; btn.innerText = "Traitement...";
-
-            const payload = {
-                full_name: document.getElementById('candidate_name').value,
-                phone: document.getElementById('candidate_phone').value
-            };
-
-            try {
-                const { error } = await supabaseClient.from('vectors').insert([payload]);
-                if (error) throw error;
-                feedback.className = "text-xs text-center font-bold text-emerald-800 block";
-                feedback.innerText = "✓ Candidature reçue avec succès! Notre équipe vous recontactera.";
-                document.getElementById('careerForm').reset();
-                setTimeout(closeCareerModal, 3000);
-            } catch (err) {
-                feedback.className = "text-xs text-center font-bold text-red-600 block";
-                feedback.innerText = "Note: " + err.message;
-            } finally {
-                btn.disabled = false; btn.innerText = "Soumettre Ma Candidature";
-            }
-        }
-
-        // Init
-        fetchLiveImpact();
-        setInterval(fetchLiveImpact, 30000);
-    </script>
-</body>
-</html>
+                setTimeout(closeAuditModal, 3000
