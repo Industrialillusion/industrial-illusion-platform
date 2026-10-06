@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PWA Maat OS — Opérateur Logistique | Industrial Illusion</title>
+    <meta name="theme-color" content="#0B0F12">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyberDark: '#0B0F12',
+                        cyberCard: '#131920',
+                        cyberGreen: '#00FFA3',
+                        cyberGreenDark: '#00B871',
+                        kemetGold: '#C5A059'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; }
+        .glow-green { box-shadow: 0 0 20px rgba(0, 255, 163, 0.2); }
+    </style>
+</head>
+<body class="bg-cyberDark text-slate-100 font-sans min-h-screen flex flex-col justify-between select-none">
+
+    <header class="bg-cyberCard border-b border-white/10 px-4 py-3 sticky top-0 z-40 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 rounded-full bg-cyberGreen animate-pulse"></div>
+            <div>
+                <h1 class="text-xs font-black tracking-widest text-white leading-none">MAAT OS <span class="text-[9px] text-cyberGreen font-mono">v1.0 PWA</span></h1>
+                <p class="text-[9px] text-slate-400 font-mono mt-0.5">Terminal Logistique Terrain</p>
+            </div>
+        </div>
+        <span id="network-status" class="text-[10px] font-mono px-2 py-1 rounded bg-emerald-500/10 text-cyberGreen border border-cyberGreen/30">
+            CONNECTÉ
+        </span>
+    </header>
+
+    <main class="p-4 space-y-5 max-w-md mx-auto w-full flex-grow">
+
+        <div class="bg-cyberCard p-4 rounded-2xl border border-white/10 space-y-3">
+            <label class="block text-[10px] font-mono font-bold uppercase text-cyberGreen">1. Établissement & Vecteur</label>
+            
+            <div>
+                <span class="text-[10px] text-slate-400">Vecteur Logistique:</span>
+                <select id="vector_select" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen outline-none mt-1 font-medium">
+                    <option value="">Chargement des opérateurs...</option>
+                </select>
+            </div>
+
+            <div>
+                <span class="text-[10px] text-slate-400">Établissement B2B Partner:</span>
+                <select id="client_select" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen outline-none mt-1 font-medium">
+                    <option value="">Chargement des clients B2B...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-cyberCard p-4 rounded-2xl border border-white/10 space-y-3">
+            <label class="block text-[10px] font-mono font-bold uppercase text-cyberGreen">2. Identification Sac & Matière</label>
+            
+            <div class="flex gap-2">
+                <input type="text" id="bag_qr_id" placeholder="Code QR Sac (ex: SAC-PET-089)" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen outline-none font-mono">
+                <button onclick="scanQR()" class="px-4 bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen font-bold rounded-xl text-xs flex items-center justify-center">
+                    📷
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="selectMaterial('PET_CLEAR')" class="mat-btn p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left hover:border-cyberGreen focus:border-cyberGreen focus:bg-cyberGreen/10 transition-all">
+                    🟢 PET Transparente
+                </button>
+                <button type="button" onclick="selectMaterial('PE_HD')" class="mat-btn p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left hover:border-cyberGreen focus:border-cyberGreen focus:bg-cyberGreen/10 transition-all">
+                    🟡 PE-HD Flaconnage
+                </button>
+                <button type="button" onclick="selectMaterial('ALUMINIUM')" class="mat-btn p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left hover:border-cyberGreen focus:border-cyberGreen focus:bg-cyberGreen/10 transition-all">
+                    ⚪ Aluminium Cannettes
+                </button>
+                <button type="button" onclick="selectMaterial('CARTON')" class="mat-btn p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left hover:border-cyberGreen focus:border-cyberGreen focus:bg-cyberGreen/10 transition-all">
+                    📦 Carton Ondulé
+                </button>
+                <button type="button" onclick="selectMaterial('VERRE')" class="mat-btn p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left hover:border-cyberGreen focus:border-cyberGreen focus:bg-cyberGreen/10 transition-all col-span-2">
+                    🍾 Verre Bouteilles (Big-Bag)
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-cyberCard p-5 rounded-2xl border border-cyberGreen/30 space-y-4 text-center glow-green">
+            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                <span class="text-[10px] font-mono font-bold uppercase text-cyberGreen">3. Pesée Stabilisée IoT</span>
+                <span id="bt-status" class="text-[9px] font-mono text-slate-400">Balance Déconnectée</span>
+            </div>
+
+            <div class="space-y-1">
+                <div id="weight_display" class="text-5xl font-black font-mono text-cyberGreen tracking-tight">00.00</div>
+                <p class="text-[10px] font-mono text-slate-400 uppercase">Poids Brut (Kilogrammes)</p>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="connectBluetoothScale()" class="w-1/2 py-2.5 bg-black/60 border border-cyberGreen/40 text-cyberGreen font-mono font-bold rounded-xl text-[11px] hover:bg-cyberGreen/10">
+                    📶 Connecter Balance
+                </button>
+                <button onclick="simulateWeighing()" class="w-1/2 py-2.5 bg-black/60 border border-kemetGold/40 text-kemetGold font-mono font-bold rounded-xl text-[11px] hover:bg-kemetGold/10">
+                    ⚡ Simuler Pesée
+                </button>
+            </div>
+        </div>
+
+        <button onclick="submitCollection()" id="send_btn" class="w-full py-4 bg-gradient-to-r from-cyberGreenDark to-emerald-600 text-black font-black rounded-2xl text-sm font-mono tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
+            💾 Ancrer sur Data Lake
+        </button>
+
+        <div id="pwa_feedback" class="text-xs text-center font-mono font-bold hidden p-3 rounded-xl"></div>
+
+    </main>
+
+    <footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-cyberCard">
+        Industrial Illusion SARL • Cryptographic Ledger PWA
+    </footer>
+
+    <script>
+        const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let selectedMaterial = "";
+        let currentWeight = 0.00;
+
+        async function initPWA() {
+            const { data: vectors } = await supabase.from('vectors').select('*');
+            const vSelect = document.getElementById('vector_select');
+            if (vectors && vectors.length > 0) {
+                vSelect.innerHTML = vectors.map(v => `<option value="${v.id}">${v.full_name} (${v.vehicle_type || 'Triporteur'})</option>`).join('');
+            } else {
+                vSelect.innerHTML = '<option value="">Aucun vecteur trouvé</option>';
+            }
+
+            const { data: clients } = await supabase.from('clients').select('*');
+            const cSelect = document.getElementById('client_select');
+            if (clients && clients.length > 0) {
+                cSelect.innerHTML = clients.map(c => `<option value="${c.id}">${c.company_name} [${c.horeca_category}]</option>`).join('');
+            } else {
+                cSelect.innerHTML = '<option value="">Aucun client B2B en base</option>';
+            }
+        }
+
+        function selectMaterial(mat) {
+            selectedMaterial = mat;
+            document.querySelectorAll('.mat-btn').forEach(btn => btn.classList.remove('border-cyberGreen', 'bg-cyberGreen/10'));
+            event.currentTarget.classList.add('border-cyberGreen', 'bg-cyberGreen/10');
+        }
+
+        function scanQR() {
+            const randomID = 'SAC-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('bag_qr_id').value = randomID;
+        }
+
+        function simulateWeighing() {
+            currentWeight = (Math.random() * (45 - 5) + 5).toFixed(2);
+            document.getElementById('weight_display').innerText = currentWeight;
+            document.getElementById('bt-status').innerText = "Pesée Stabilisée (Simulée)";
+            document.getElementById('bt-status').className = "text-[9px] font-mono text-cyberGreen font-bold";
+        }
+
+        async function connectBluetoothScale() {
+            try {
+                document.getElementById('bt-status').innerText = "Recherche Bluetooth...";
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['battery_service']
+                });
+                document.getElementById('bt-status').innerText = "Connecté: " + device.name;
+                document.getElementById('bt-status').className = "text-[9px] font-mono text-cyberGreen font-bold";
+            } catch (err) {
+                alert("Bluetooth non disponible. Mode simulation activé.");
+                simulateWeighing();
+            }
+        }
+
+        async function submitCollection() {
+            const vectorId = document.getElementById('vector_select').value;
+            const clientId = document.getElementById('client_select').value;
+            const bagQr = document.getElementById('bag_qr_id').value;
+            const btn = document.getElementById('send_btn');
+            const feedback = document.getElementById('pwa_feedback');
+
+            if (!clientId) return alert("Veuillez sélectionner un client B2B.");
+            if (!selectedMaterial) return alert("Veuillez choisir le type de matériau.");
+            if (currentWeight <= 0) return alert("Veuillez effectuer la pesée avant d'envoyer.");
+
+            btn.disabled = true;
+            btn.innerText = "Transmission Data Lake...";
+
+            const payload = {
+                client_id: clientId,
+                vector_id: vectorId || null,
+                bag_qr_id: bagQr || 'SANS-QR',
+                material_type: selectedMaterial,
+                weight_kg: parseFloat(currentWeight),
+                gps_location: "31.6295, -7.9811"
+            };
+
+            try {
+                const { error } = await supabase.from('collections').insert([payload]);
+                if (error) throw error;
+
+                feedback.className = "text-xs text-center font-mono font-bold block bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/40";
+                feedback.innerText = "✓ Pesée ancrée avec succès sur le Data Lake!";
+                
+                document.getElementById('bag_qr_id').value = "";
+                document.getElementById('weight_display').innerText = "00.00";
+                currentWeight = 0;
+            } catch (err) {
+                feedback.className = "text-xs text-center font-bold block bg-red-500/20 text-red-400 border border-red-500/40";
+                feedback.innerText = "Erreur transmission: " + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "💾 Ancrer sur Data Lake";
+                setTimeout(() => feedback.classList.add('hidden'), 4000);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initPWA);
+    </script>
+</body>
+</html>
