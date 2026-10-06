@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html lang="fr" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -281,7 +282,7 @@
                     <p class="text-xs text-obsidian/75">Consultez le parcours de la matière en 5 étapes, les spécifications techniques et les garanties pour votre établissement.</p>
                 </div>
                 <button onclick="downloadBrochure()" class="px-7 py-3.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl text-xs uppercase tracking-wider whitespace-nowrap hover:bg-black transition-all border border-cyberGreen/30 shadow-lg">
-                    📄 Télécharger la Brochure PDF
+                    📄 Demander la Brochure PDF
                 </button>
             </div>
         </section>
@@ -443,7 +444,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PORTAIL B2B / PWA -->
+    <!-- MODAL PORTAIL B2B / PWA (AVEC LIENS ACTIFS) -->
     <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-obsidian text-white border-2 border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
@@ -457,7 +458,8 @@
             </div>
 
             <div class="space-y-4 pt-2 font-mono">
-                <button onclick="alert('Espace Client ESG: La plateforme d\'accès aux certificats mensuels est en cours d\'activation pour votre établissement.')" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-kemetGoldBright transition-all text-left flex items-center gap-4 group">
+                <!-- ACCÈS ESPACE CLIENT ESG -->
+                <button onclick="window.location.href='dashboard.html'" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-kemetGoldBright transition-all text-left flex items-center gap-4 group">
                     <span class="text-2xl">🏨</span>
                     <div>
                         <div class="text-xs font-bold text-white group-hover:text-kemetGoldBright">Espace Client ESG (HoReCa)</div>
@@ -465,7 +467,8 @@
                     </div>
                 </button>
 
-                <button onclick="alert('Portail PWA Maat OS: Interface réservée aux Vecteurs Logistiques autorisés par le Dépôt de Marrakech.')" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-cyberGreen transition-all text-left flex items-center gap-4 group">
+                <!-- ACCÈS PWA OPÉRATEUR -->
+                <button onclick="window.location.href='pwa.html'" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-cyberGreen transition-all text-left flex items-center gap-4 group">
                     <span class="text-2xl">📱</span>
                     <div>
                         <div class="text-xs font-bold text-white group-hover:text-cyberGreen">PWA Opérateur (Maat OS)</div>
@@ -569,7 +572,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT BLINDÉ SANS DÉPENDANCES -->
+    <!-- SCRIPT JS PRINCIPAL -->
     <script>
         function openAuditModal() {
             var el = document.getElementById('auditModal');
@@ -720,6 +723,9 @@
             initSupabase();
             setInterval(fetchLiveImpact, 30000);
         });
+    </script>
+</body>
+</html>    });
     </script>
 </body>
 </html>
