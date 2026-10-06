@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Illusion SARL — Projet PurKemet | Cyber-Écologie & Traçabilité ESG</title>
+    <meta name="description" content="Plateforme numérique intégrée de logistique, Data Lake et traçabilité ESG pour la gestion des déchets B2B à Marrakech.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        kemetDark: '#0B0F12',
+                        kemetCard: '#131A20',
+                        kemetGreen: '#0B4F3A',
+                        kemetGold: '#D4AF37',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-kemetDark text-slate-200 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-kemetDark/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl font-black tracking-widest text-kemetGold">[ I² ]</span>
+                <div>
+                    <h1 class="text-lg font-bold text-white leading-tight">INDUSTRIAL ILLUSION <span class="text-xs font-normal text-slate-400">SARL</span></h1>
+                    <p class="text-xs text-kemetGold tracking-wider">PROJET PURKEMET MARRAKECH</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span> Data Lake Live
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full space-y-16">
+
+        <!-- Hero Section -->
+        <div class="text-center space-y-6 max-w-3xl mx-auto">
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                L'Écosystème Cyber-Écologique de <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-kemetGold">Souveraineté Matérielle</span>
+            </h2>
+            <p class="text-slate-400 text-base sm:text-lg">
+                Service logistique B2B à 0 MAD pour les établissements HoReCa de Marrakech. Traçabilité inviolable, salubrité garantie et certification ESG notariée sur Data Lake.
+            </p>
+        </div>
+
+        <!-- Live Impact Counter Section -->
+        <div class="bg-kemetCard border border-slate-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-72 h-72 bg-kemetGreen/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 mb-8 gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Impact Territorial en Temps Réel</h3>
+                    <p class="text-xs text-slate-400">Métriques consolidées depuis le dépôt logistique de Marrakech (Loi n° 28-00)</p>
+                </div>
+                <div class="text-xs font-mono text-slate-500">
+                    Horodatage Système: <span id="last-update">En synchronisation...</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <!-- Counter 1: Kg Recyclés -->
+                <div class="bg-kemetDark/60 p-6 rounded-xl border border-slate-800">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Matière Valorisée (Kg)</span>
+                    <div id="kg-counter" class="text-4xl sm:text-5xl font-black text-white mt-2 font-mono">0.00</div>
+                    <p class="text-xs text-emerald-400 mt-2">PET, PE-HD, Alu, Carton, Verre</p>
+                </div>
+
+                <!-- Counter 2: CO2 Evité -->
+                <div class="bg-kemetDark/60 p-6 rounded-xl border border-slate-800">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Émissions CO₂ Évitées (Kg)</span>
+                    <div id="co2-counter" class="text-4xl sm:text-5xl font-black text-kemetGold mt-2 font-mono">0.00</div>
+                    <p class="text-xs text-kemetGold/80 mt-2">Calcul normalisé filière recyclage</p>
+                </div>
+
+                <!-- Counter 3: Vol. Sottratto alla Discarica -->
+                <div class="bg-kemetDark/60 p-6 rounded-xl border border-slate-800">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Détourné du CEV (m³)</span>
+                    <div id="m3-counter" class="text-4xl sm:text-5xl font-black text-emerald-400 mt-2 font-mono">0.00</div>
+                    <p class="text-xs text-slate-400 mt-2">Preservation CEV El Mnabha</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillar Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-kemetCard p-6 rounded-xl border border-slate-800">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold mb-4">0 MAD</div>
+                <h4 class="text-lg font-bold text-white mb-2">Service Clé en Main à 0 MAD</h4>
+                <p class="text-xs text-slate-400">Évacuation de la fraction sèche contre service complet de salubrité de la fraction humide. Zero redevance pour le client B2B.</p>
+            </div>
+
+            <div class="bg-kemetCard p-6 rounded-xl border border-slate-800">
+                <div class="w-10 h-10 rounded-lg bg-kemetGold/10 text-kemetGold flex items-center justify-center font-bold mb-4">IoT</div>
+                <h4 class="text-lg font-bold text-white mb-2">Pesée Bluetooth Anti-Fraude</h4>
+                <p class="text-xs text-slate-400">Ancrage direct depuis les balances industrielles embarquées vers la PWA Maat OS sans saisie manuelle autorisée.</p>
+            </div>
+
+            <div class="bg-kemetCard p-6 rounded-xl border border-slate-800">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold mb-4">ESG</div>
+                <h4 class="text-lg font-bold text-white mb-2">Certifications & Clef Verte</h4>
+                <p class="text-xs text-slate-400">Bilan mensuel notarié attestant des tonnages exacts valorisés pour la validation des audits RSE et étatiques.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-kemetDark py-8 text-center text-xs text-slate-500 space-y-2">
+        <p>© Industrial Illusion SARL — Projet PurKemet. Tous droits réservés.</p>
+        <p class="text-[10px] text-slate-600">Nœud Préfectoral — Marrakech, Royaume du Maroc | Conforme Loi CNDP n° 09-08 & Loi n° 28-00</p>
+    </footer>
+
+    <!-- Supabase Integration Script -->
+    <script>
+        const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function fetchLiveImpact() {
+            try {
+                const { data, error } = await supabase
+                    .from('live_impact_summary')
+                    .select('*')
+                    .single();
+
+                if (error) throw error;
+
+                if (data) {
+                    document.getElementById('kg-counter').innerText = Number(data.total_kg_recycled).toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+                    document.getElementById('co2-counter').innerText = Number(data.total_co2_avoided_kg).toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+                    document.getElementById('m3-counter').innerText = Number(data.total_m3_diverted).toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+                }
+            } catch (err) {
+                console.warn("Métrique initiale fallback:", err.message);
+            } finally {
+                document.getElementById('last-update').innerText = new Date().toLocaleTimeString('fr-FR');
+            }
+        }
+
+        fetchLiveImpact();
+        setInterval(fetchLiveImpact, 30000);
+    </script>
+</body>
+</html>
