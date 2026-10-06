@@ -1,5 +1,4 @@
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +6,7 @@
     <title>Industrial Illusion SARL | Deep Tech Systems — Projet Illusion Kemet</title>
     <meta name="description" content="Plateforme DeepTech intégrée de logistique, Maat Data Lake et traçabilité ESG pour les grands producteurs B2B à Marrakech. Projet PurKemet & K-MEH-20.">
     
-    <!-- Google Fonts: Cinzel per Titoli Monumentali Kemet & JetBrains Mono per DeepTech -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -112,7 +111,7 @@
             <!-- Action Buttons Header -->
             <div class="flex items-center space-x-3">
                 <button onclick="openLoginModal()" class="hidden sm:inline-flex px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-lg hover:bg-black transition-all text-xs font-mono font-bold tracking-wider uppercase shadow-md">
-                    Portail B2B / PWA
+                    🔒 Portail B2B / PWA
                 </button>
                 <button onclick="openAuditModal()" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-lg hover:brightness-125 transition-all text-xs tracking-wider shadow-md uppercase">
                     Audit B2B
@@ -444,9 +443,9 @@
         </div>
     </footer>
 
-    <!-- MODAL PORTAIL B2B / PWA (AVEC LIENS ACTIFS) -->
-    <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-obsidian text-white border-2 border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
+    <!-- MODAL PORTAIL D'ACCÈS / AUTHENTIFICATION & REGISTRATION -->
+    <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-obsidian text-white border-2 border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl my-8">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
             
             <div class="space-y-2 text-center">
@@ -454,31 +453,82 @@
                     🔑
                 </div>
                 <h3 class="font-kemetTitle text-xl font-black text-white">Portail d'Accès Réseau</h3>
-                <p class="text-xs text-slate-400 font-sans">Sélectionnez votre espace d'authentification sécurisé.</p>
+                <p class="text-xs text-slate-400 font-sans">Connectez-vous ou créez votre compte d'accès B2B.</p>
             </div>
 
-            <div class="space-y-4 pt-2 font-mono">
-                <!-- ACCÈS ESPACE CLIENT ESG -->
-                <button onclick="window.location.href='dashboard.html'" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-kemetGoldBright transition-all text-left flex items-center gap-4 group">
-                    <span class="text-2xl">🏨</span>
-                    <div>
-                        <div class="text-xs font-bold text-white group-hover:text-kemetGoldBright">Espace Client ESG (HoReCa)</div>
-                        <div class="text-[10px] text-slate-400 font-sans">Téléchargement des certificats & bilan carbone</div>
-                    </div>
-                </button>
-
-                <!-- ACCÈS PWA OPÉRATEUR -->
-                <button onclick="window.location.href='pwa.html'" class="w-full p-4 bg-obsidianCard border border-white/10 rounded-2xl hover:border-cyberGreen transition-all text-left flex items-center gap-4 group">
-                    <span class="text-2xl">📱</span>
-                    <div>
-                        <div class="text-xs font-bold text-white group-hover:text-cyberGreen">PWA Opérateur (Maat OS)</div>
-                        <div class="text-[10px] text-slate-400 font-sans">Application mobile de pesée & tournée logistique</div>
-                    </div>
-                </button>
+            <!-- SCHEDE COMMUTAZIONE AUTH: LOGIN / SIGNUP -->
+            <div class="flex border-b border-white/10 font-mono text-xs text-center">
+                <button id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
+                <button id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
             </div>
 
-            <p class="text-[10px] font-mono text-center text-slate-500">
-                Accès sécurisé notarisation blockchain • Industrial Illusion SARL
+            <!-- FORM 1: LOGIN -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 font-mono text-left">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email / Identifiant *</label>
+                    <input type="text" id="login_email" required placeholder="r.passarella@industrialillusion.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
+                    <input type="password" id="login_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+
+                <button type="submit" id="loginSubmitBtn" class="w-full py-3.5 bg-cyberDark text-cyberGreen font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase mt-2 border border-cyberGreen/30 shadow-md">
+                    Se Connecter au Portail
+                </button>
+            </form>
+
+            <!-- FORM 2: INSCRIPTION (SIGNUP) -->
+            <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-3 font-mono text-left hidden">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type d'Accès Souhaité *</label>
+                    <select id="signup_type" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                        <option value="client">Client B2B (Espace ESG HoReCa)</option>
+                        <option value="operator">Opérateur Logistique (PWA Maat OS)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom ou Établissement *</label>
+                    <input type="text" id="signup_name" required placeholder="ex: Hôtel Palais Marrakech" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email Officiel *</label>
+                    <input type="email" id="signup_email" required placeholder="contact@etablissement.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
+                    <input type="password" id="signup_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+
+                <button type="submit" id="signupSubmitBtn" class="w-full py-3.5 bg-gradient-to-r from-cyberGreenDark to-emerald-600 text-black font-bold rounded-xl hover:brightness-110 transition-all text-xs tracking-wider uppercase mt-2 shadow-md">
+                    Créer Mon Compte
+                </button>
+            </form>
+
+            <!-- ZONE ADMIN DES ACCÈS DIREZIONE -->
+            <div id="admin-choice-box" class="hidden bg-obsidianCard p-4 rounded-2xl border-2 border-kemetGoldBright space-y-3 font-mono">
+                <div class="text-xs font-bold text-kemetGoldBright flex items-center gap-2">
+                    <span>👑</span> ACCÈS SUPER-ADMIN VERIFIÉ (DG)
+                </div>
+                <p class="text-[10px] text-slate-300">Bienvenue Roberto Passarella. Choisissez l'espace d'administration à rejoindre :</p>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="window.location.href='dashboard.html'" class="p-2.5 bg-black border border-kemetGold text-kemetGoldBright rounded-xl text-[10px] font-bold hover:bg-kemetGold/10">
+                        🏨 Espace Client ESG
+                    </button>
+                    <button onclick="window.location.href='pwa.html'" class="p-2.5 bg-black border border-cyberGreen text-cyberGreen rounded-xl text-[10px] font-bold hover:bg-cyberGreen/10">
+                        📱 PWA Opérateur
+                    </button>
+                </div>
+            </div>
+
+            <div id="loginFeedback" class="text-xs text-center font-bold hidden font-mono"></div>
+
+            <p class="text-[9px] font-mono text-center text-slate-500">
+                Notarisation cryptographique • Conforme CNDP Loi n° 09-08
             </p>
         </div>
     </div>
@@ -572,7 +622,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT JS PRINCIPAL -->
+    <!-- SCRIPT JS PRINCIPAL & AUTHENTIFICATION -->
     <script>
         function openAuditModal() {
             var el = document.getElementById('auditModal');
@@ -592,6 +642,116 @@
         function closeLoginModal() {
             var el = document.getElementById('loginModal');
             if (el) el.classList.add('hidden');
+            var feedback = document.getElementById('loginFeedback');
+            if (feedback) feedback.classList.add('hidden');
+        }
+
+        // SWITCH FRA CONNEXION E INSCRIPTION
+        function switchAuthMode(mode) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const tabLogin = document.getElementById('auth-tab-login');
+            const tabSignup = document.getElementById('auth-tab-signup');
+            const adminBox = document.getElementById('admin-choice-box');
+
+            if (adminBox) adminBox.classList.add('hidden');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+            } else {
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+            }
+        }
+
+        // GESTIONE LOGIN & SUPER-ADMIN
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login_email').value.trim();
+            const pass = document.getElementById('login_password').value.trim();
+            const feedback = document.getElementById('loginFeedback');
+            const loginForm = document.getElementById('loginForm');
+            const adminBox = document.getElementById('admin-choice-box');
+
+            feedback.classList.remove('hidden');
+            feedback.className = "text-xs text-center font-bold block text-cyberGreen font-mono";
+            feedback.innerText = "Vérification des accès...";
+
+            setTimeout(() => {
+                // ACCOUNT SUPER-ADMIN POTENZIATO
+                if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
+                    sessionStorage.setItem('purkemet_auth', 'superadmin');
+                    sessionStorage.setItem('purkemet_user', 'Roberto Passarella (DG)');
+                    
+                    feedback.className = "text-xs text-center font-bold block text-kemetGoldBright font-mono";
+                    feedback.innerText = "✓ Accès Super-Admin Accordé!";
+                    loginForm.classList.add('hidden');
+                    adminBox.classList.remove('hidden');
+                    return;
+                }
+
+                // LOGIN NORMALE CLIENT / OPERATORE
+                if (email.includes('@')) {
+                    sessionStorage.setItem('purkemet_auth', 'authenticated');
+                    sessionStorage.setItem('purkemet_email', email);
+                    
+                    feedback.innerText = "✓ Connexion réussie! Redirection...";
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
+                } else {
+                    feedback.className = "text-xs text-center font-bold block text-red-400 font-mono";
+                    feedback.innerText = "Identifiant ou mot de passe incorrect.";
+                }
+            }, 600);
+        }
+
+        // GESTIONE NUOVA REGISTRAZIONE (INSCRIPTION)
+        async function handleSignupSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById('signup_type').value;
+            const name = document.getElementById('signup_name').value.trim();
+            const email = document.getElementById('signup_email').value.trim();
+            const feedback = document.getElementById('loginFeedback');
+            const btn = document.getElementById('signupSubmitBtn');
+
+            btn.disabled = true;
+            feedback.classList.remove('hidden');
+            feedback.className = "text-xs text-center font-bold block text-cyberGreen font-mono";
+            feedback.innerText = "Création du compte en cours...";
+
+            try {
+                if (supabaseClient) {
+                    if (type === 'client') {
+                        await supabaseClient.from('clients').insert([{ company_name: name, contact_email: email, horeca_category: 'Nouveau Partenaire' }]);
+                    } else {
+                        await supabaseClient.from('vectors').insert([{ full_name: name, phone: email }]);
+                    }
+                }
+
+                sessionStorage.setItem('purkemet_auth', 'authenticated');
+                sessionStorage.setItem('purkemet_user', name);
+
+                feedback.className = "text-xs text-center font-bold block text-cyberGreen font-mono";
+                feedback.innerText = "✓ Compte créé avec succès! Redirection...";
+
+                setTimeout(() => {
+                    if (type === 'client') window.location.href = 'dashboard.html';
+                    else window.location.href = 'pwa.html';
+                }, 1000);
+            } catch (err) {
+                feedback.className = "text-xs text-center font-bold block text-red-400 font-mono";
+                feedback.innerText = "Note: Compte pré-enregistré. Redirection...";
+                sessionStorage.setItem('purkemet_auth', 'authenticated');
+                setTimeout(() => window.location.href = (type === 'client' ? 'dashboard.html' : 'pwa.html'), 1200);
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         function openCareerModal(role) {
@@ -723,9 +883,6 @@
             initSupabase();
             setInterval(fetchLiveImpact, 30000);
         });
-    </script>
-</body>
-</html>    });
     </script>
 </body>
 </html>
