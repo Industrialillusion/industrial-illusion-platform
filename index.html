@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Industrial Illusion SARL | Deep Tech Systems — Projet Illusion Kemet</title>
-    <meta name="description" content="Plateforme DeepTech intégrée de logistique, Maat Data Lake et traçabilité ESG pour les grands producteurs B2B à Marrakech. Projet PurKemet & K-MEH-20.">
+    <title>Industrial Illusion SARL | Deep Tech Systems — Portail Institutionnel</title>
+    <meta name="description" content="Holding industrielle DeepTech spécialisée dans l'ingénierie environnementale, la gestion intégrale B2B et la traçabilité notariale au Maroc. Projet Illusion Kemet.">
     
     <!-- Google Fonts: Cinzel, JetBrains Mono, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN & Supabase JS Client -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -64,6 +65,13 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(197, 160, 89, 0.4);
             box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .papyrus-glass:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 255, 163, 0.6);
+            box-shadow: 0 20px 40px -5px rgba(0, 255, 163, 0.15);
         }
 
         .obsidian-glass {
@@ -72,22 +80,33 @@
             box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
         }
 
-        .text-glow-green {
-            text-shadow: 0 0 14px rgba(0, 255, 163, 0.5);
-        }
-
-        .text-glow-gold {
-            text-shadow: 0 0 12px rgba(197, 160, 89, 0.4);
-        }
-
-        /* ANIMAZIONE OCCHIO CIBERNETICO */
+        /* ANIMAZIONI E DYNAMISME VISUALE */
         @keyframes cyberPulse {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0,255,163,0.6)); }
-            50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(0,255,163,0.9)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(0,255,163,0.95)); }
         }
         .cyber-eye-anim {
-            animation: cyberPulse 4s ease-in-out infinite;
+            animation: cyberPulse 3.5s ease-in-out infinite;
         }
+
+        @keyframes scanLine {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.2; }
+        }
+        .scanner-beam {
+            position: absolute;
+            left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #00FFA3, transparent);
+            box-shadow: 0 0 12px #00FFA3;
+            animation: scanLine 3.5s ease-in-out infinite;
+        }
+
+        @keyframes floatEffect {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+        .float-anim { animation: floatEffect 5s ease-in-out infinite; }
     </style>
 </head>
 <body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black min-h-screen flex flex-col justify-between">
@@ -100,14 +119,10 @@
             <a href="index.html" class="flex items-center space-x-3.5 group">
                 <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300">
                     <svg class="w-10 h-10 text-cyberGreen cyber-eye-anim" viewBox="0 0 100 100" fill="none">
-                        <!-- Profilo Occhio di Horus Cibernetico -->
                         <path d="M8 50 Q 50 10, 92 50 Q 50 90, 8 50 Z" stroke="#00FFA3" stroke-width="3.5" fill="#090D10"/>
-                        <!-- Iride & Pupilla -->
                         <circle cx="50" cy="50" r="18" stroke="#C5A059" stroke-width="3" fill="#11161C"/>
                         <circle cx="50" cy="50" r="7" fill="#00FFA3"/>
-                        <!-- Linee di Circuiti Egizi -->
                         <path d="M22 30 L32 18 M78 30 L68 18 M22 70 L32 82 M78 70 L68 82" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
-                        <!-- Lacrima di Horus Stilizzata -->
                         <path d="M50 68 C 50 82, 38 88, 38 96" stroke="#C5A059" stroke-width="3" fill="none" stroke-linecap="round"/>
                         <path d="M62 68 L 74 92" stroke="#C5A059" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
@@ -131,10 +146,10 @@
             <!-- AUTH & PROFIL EN HAUT À DROITE -->
             <div id="auth-header-container" class="flex items-center space-x-3">
                 <div id="guest-auth-buttons" class="flex items-center space-x-2">
-                    <button onclick="openAuthModal('login')" class="px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-xl hover:bg-black hover:border-cyberGreen transition-all text-xs font-mono font-bold tracking-wider uppercase shadow-md">
+                    <button type="button" onclick="openAuthModal('login')" class="px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-xl hover:bg-black hover:border-cyberGreen transition-all text-xs font-mono font-bold tracking-wider uppercase shadow-md">
                         Connexion
                     </button>
-                    <button onclick="openAuthModal('signup')" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-xl hover:brightness-125 transition-all text-xs tracking-wider shadow-md uppercase">
+                    <button type="button" onclick="openAuthModal('signup')" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-xl hover:brightness-125 transition-all text-xs tracking-wider shadow-md uppercase">
                         S'inscrire
                     </button>
                 </div>
@@ -147,7 +162,7 @@
                             <div id="user-status-tag" class="text-[8px] font-bold text-cyberGreen uppercase">Compte Actif</div>
                         </div>
                     </div>
-                    <button onclick="openProfileDrawer()" class="px-3.5 py-2 bg-papyrusLight border border-kemetGold/50 text-obsidian font-mono font-bold rounded-xl hover:bg-papyrusDark transition-all text-xs uppercase shadow-sm">
+                    <button type="button" onclick="openProfileDrawer()" class="px-3.5 py-2 bg-papyrusLight border border-kemetGold/50 text-obsidian font-mono font-bold rounded-xl hover:bg-papyrusDark transition-all text-xs uppercase shadow-sm">
                         Espace ⚙️
                     </button>
                 </div>
@@ -156,7 +171,7 @@
         </div>
     </header>
 
-    <!-- MAIN HUB -->
+    <!-- MAIN CONTENT -->
     <main class="mt-28 space-y-24 mb-20 max-w-7xl mx-auto px-6">
 
         <!-- HERO SECTION INSTITUTIONNELLE -->
@@ -177,11 +192,11 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 pt-2">
-                        <a href="purkemet.html" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center">
+                        <button type="button" onclick="openAuditModal()" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center">
+                            Demander un Audit Gratuit (0 MAD) →
+                        </button>
+                        <a href="purkemet.html" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
                             Explorer PurKemet B2B →
-                        </a>
-                        <a href="kmeh20.html" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
-                            Découvrir K-MEH-20 →
                         </a>
                     </div>
 
@@ -195,7 +210,8 @@
                 </div>
 
                 <!-- CARD MONOLITHE GENESIS DATA ROOM -->
-                <div class="lg:col-span-5 obsidian-glass text-white rounded-3xl p-8 space-y-6 relative overflow-hidden border-2 border-kemetGold/40 group hover:border-cyberGreen/50 transition-all duration-500">
+                <div class="lg:col-span-5 obsidian-glass text-white rounded-3xl p-8 space-y-6 relative overflow-hidden border-2 border-kemetGold/40 float-anim">
+                    <div class="scanner-beam"></div>
                     <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono">
                         <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Genesis Data Room</span>
                         <span class="text-xs text-kemetGoldBright">Track 0 & K-MEH-20</span>
@@ -204,7 +220,7 @@
                     <div class="space-y-3">
                         <h3 class="font-kemetTitle text-2xl font-black text-white">PROJET ILLUSION KEMET</h3>
                         <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                            Écosystème unifié opérant par la double voie: la logistique d'urgence B2B <strong>PurKemet</strong> (Jour 0) et l'infrastructure bionique lourde <strong>K-MEH-20</strong> gouvernée par le système d'exploitation souverain <strong>Maat OS</strong>.
+                            Écosystème unifié opérant par la double voie: la logistique d'urgence B2B <strong>PurKemet</strong> (Jour 0) e l'infrastructure bionique lourde <strong>K-MEH-20</strong> gouvernée par le système d'exploitation souverain <strong>Maat OS</strong>.
                         </p>
                     </div>
 
@@ -270,7 +286,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
                 <!-- CARD PURKEMET -->
-                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between">
                     <div class="space-y-3">
                         <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Track 0 Immédiat</span>
                         <h4 class="font-kemetTitle text-xl font-bold text-obsidian">PurKemet B2B</h4>
@@ -284,7 +300,7 @@
                 </div>
 
                 <!-- CARD K-MEH-20 -->
-                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between">
                     <div class="space-y-3">
                         <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Infrastructure</span>
                         <h4 class="font-kemetTitle text-xl font-bold text-obsidian">K-MEH-20</h4>
@@ -298,7 +314,7 @@
                 </div>
 
                 <!-- CARD DATA LAKE -->
-                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between">
                     <div class="space-y-3">
                         <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Registre Blockchain</span>
                         <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Maat Data Lake</h4>
@@ -312,7 +328,7 @@
                 </div>
 
                 <!-- CARD CARRIÈRES -->
-                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between">
                     <div class="space-y-3">
                         <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Inclusivité</span>
                         <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Carrières & Mikhala</h4>
@@ -335,7 +351,7 @@
                     <span class="text-xs font-mono text-cyberGreen font-bold uppercase tracking-widest">Présentation Institutionnelle</span>
                     <h3 class="font-kemetTitle text-3xl font-black text-white">À Propos d'Industrial Illusion SARL</h3>
                     <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-                        Société d'ingénierie environnementale DeepTech basée à Marrakech, Industrial Illusion SARL conçoit e déploie les infrastructures cyber-physiques régissant la collecte, la traçabilité e la valorisation industrielle des matières secondaires au Maroc. Notre gouvernance associe rigorisme technique e modèle inclusif à travers les Actions de Classe B e l'émancipation des Chiffonniers (Mikhala).
+                        Société d'ingénierie environnementale DeepTech basée à Marrakech, Industrial Illusion SARL conçoit et déploie les infrastructures cyber-physiques régissant la collecte, la traçabilité et la valorisation industrielle des matières secondaires au Maroc. Notre gouvernance associe rigorisme technique et modèle inclusif à travers les Actions de Classe B et l'émancipation des Chiffonniers (Mikhala).
                     </p>
                 </div>
                 <div class="lg:col-span-4 flex flex-col justify-center items-end border-l border-white/10 pl-6 space-y-3 font-mono text-xs">
@@ -364,10 +380,57 @@
         </div>
     </footer>
 
+    <!-- MODAL AUDIT B2B -->
+    <div id="auditModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="papyrus-glass border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
+            <button type="button" onclick="closeAuditModal()" class="absolute top-4 right-4 text-obsidian hover:text-black text-2xl font-bold">&times;</button>
+            <div class="space-y-1">
+                <h3 class="font-kemetTitle text-xl font-black text-obsidian">Demande d'Audit Gisement PurKemet B2B</h3>
+                <p class="text-xs text-obsidian/75">Évaluation gratuite sur site pour votre établissement à Marrakech.</p>
+            </div>
+            <form id="auditForm" onsubmit="handleAuditSubmit(event)" class="space-y-4 text-left font-sans">
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Nom de l'Établissement *</label>
+                    <input type="text" id="company_name" required placeholder="ex: Hôtel / Restaurant / Clinique" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Catégorie</label>
+                        <select id="horeca_category" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none">
+                            <option value="Hôtel / Resort">Hôtel / Resort</option>
+                            <option value="Restaurant / Rooftop">Restaurant / Rooftop</option>
+                            <option value="Nightlife / Bar">Nightlife / Bar</option>
+                            <option value="École / Clinique">École / Clinique</option>
+                            <option value="Commerces & Artisans">Commerces & Artisans</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">ICE (Optionnel)</label>
+                        <input type="text" id="ice_no" placeholder="0001234560000" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Email Contact *</label>
+                        <input type="email" id="contact_email" required placeholder="direction@etablissement.ma" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Téléphone *</label>
+                        <input type="tel" id="contact_phone" required placeholder="+212 6..." class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none">
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full py-3.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase mt-2 border border-cyberGreen/30">
+                    Envoyer la Demande d'Audit
+                </button>
+                <div id="formFeedback" class="text-xs text-center font-bold hidden font-mono"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL AUTHENTIFICATION / INSCRIPTION -->
     <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-obsidian text-white border-2 border-cyberGreen/40 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl my-8">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
             
             <div class="space-y-2 text-center">
                 <div class="w-12 h-12 bg-cyberGreen/10 text-cyberGreen rounded-2xl flex items-center justify-center mx-auto text-xl font-bold border border-cyberGreen/30">
@@ -378,8 +441,8 @@
             </div>
 
             <div class="flex border-b border-white/10 font-mono text-xs text-center">
-                <button id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
-                <button id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
+                <button type="button" id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
+                <button type="button" id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
             </div>
 
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 font-mono text-left">
@@ -435,7 +498,7 @@
     <!-- DRAWER DE GESTION PROFIL -->
     <div id="profileDrawer" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-obsidian text-white border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
-            <button onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
 
             <div class="text-center border-b border-white/10 pb-4 space-y-1">
                 <h3 class="font-kemetTitle text-xl font-black text-white" id="drawer-user-name">Mon Profil</h3>
@@ -447,53 +510,85 @@
                     <span class="text-slate-400">Statut du Compte:</span>
                     <span id="drawer-status-val" class="text-cyberGreen">ACTIF</span>
                 </div>
-                <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans">Votre compte est configuré e opérationnel.</p>
+                <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans">Votre compte est configuré et opérationnel.</p>
             </div>
 
             <div class="space-y-3 font-mono">
-                <button id="drawer-btn-dashboard" onclick="window.location.href='dashboard.html'" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
-                    <span>🏨 Accéder à l'Espace Client ESG</span>
+                <button type="button" id="drawer-btn-dashboard" onclick="window.location.href='dashboard.html'" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
+                    <span>🏨 Accéder à l'Espace Client ESG (`dashboard.html`)</span>
                     <span>→</span>
                 </button>
 
-                <button id="drawer-btn-pwa" onclick="window.location.href='pwa.html'" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
-                    <span>📱 Accéder à la PWA Opérateur (Maat OS)</span>
+                <button type="button" id="drawer-btn-pwa" onclick="window.location.href='pwa.html'" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
+                    <span>📱 Accéder à la PWA Opérateur (`pwa.html`)</span>
                     <span>→</span>
                 </button>
             </div>
 
             <div class="pt-2 flex justify-between items-center border-t border-white/10 text-xs font-mono">
-                <button onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
-                <button onclick="closeProfileDrawer()" class="px-4 py-2 bg-papyrusDark text-obsidian rounded-xl font-bold">Fermer</button>
+                <button type="button" onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
+                <button type="button" onclick="closeProfileDrawer()" class="px-4 py-2 bg-papyrusDark text-obsidian rounded-xl font-bold">Fermer</button>
             </div>
         </div>
     </div>
 
-    <!-- LOGIQUE JS -->
+    <!-- LOGIQUE JS CORAZZATA E GLOBALE -->
     <script>
-        function openAuthModal(mode) { document.getElementById('loginModal').classList.remove('hidden'); switchAuthMode(mode || 'login'); }
-        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
-        function openProfileDrawer() { document.getElementById('profileDrawer').classList.remove('hidden'); updateDrawerContent(); }
-        function closeProfileDrawer() { document.getElementById('profileDrawer').classList.add('hidden'); }
+        // FUNZIONI GLOBALI GARANTITE (SCOPE WINDOW)
+        window.openAuditModal = function() {
+            const el = document.getElementById('auditModal');
+            if (el) el.classList.remove('hidden');
+        };
 
-        function switchAuthMode(mode) {
+        window.closeAuditModal = function() {
+            const el = document.getElementById('auditModal');
+            if (el) el.classList.add('hidden');
+            const feedback = document.getElementById('formFeedback');
+            if (feedback) feedback.classList.add('hidden');
+        };
+
+        window.openAuthModal = function(mode) {
+            const el = document.getElementById('loginModal');
+            if (el) el.classList.remove('hidden');
+            window.switchAuthMode(mode || 'login');
+        };
+
+        window.closeLoginModal = function() {
+            const el = document.getElementById('loginModal');
+            if (el) el.classList.add('hidden');
+        };
+
+        window.openProfileDrawer = function() {
+            const el = document.getElementById('profileDrawer');
+            if (el) el.classList.remove('hidden');
+            window.updateDrawerContent();
+        };
+
+        window.closeProfileDrawer = function() {
+            const el = document.getElementById('profileDrawer');
+            if (el) el.classList.add('hidden');
+        };
+
+        window.switchAuthMode = function(mode) {
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
             const tabLogin = document.getElementById('auth-tab-login');
             const tabSignup = document.getElementById('auth-tab-signup');
 
             if (mode === 'login') {
-                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                if (loginForm) loginForm.classList.remove('hidden');
+                if (signupForm) signupForm.classList.add('hidden');
+                if (tabLogin) tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                if (tabSignup) tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
             } else {
-                signupForm.classList.remove('hidden'); loginForm.classList.add('hidden');
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                if (signupForm) signupForm.classList.remove('hidden');
+                if (loginForm) loginForm.classList.add('hidden');
+                if (tabSignup) tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                if (tabLogin) tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
             }
-        }
+        };
 
-        function handleLoginSubmit(e) {
+        window.handleLoginSubmit = function(e) {
             e.preventDefault();
             const email = document.getElementById('login_email').value.trim();
             const pass = document.getElementById('login_password').value.trim();
@@ -503,7 +598,10 @@
                 sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
                 sessionStorage.setItem('purkemet_role', 'Super-Admin');
                 sessionStorage.setItem('purkemet_status', 'ACTIVE');
-                checkUserSession(); closeLoginModal(); openProfileDrawer(); return;
+                window.checkUserSession();
+                window.closeLoginModal();
+                window.openProfileDrawer();
+                return;
             }
 
             if (email.includes('@')) {
@@ -511,11 +609,13 @@
                 sessionStorage.setItem('purkemet_name', email.split('@')[0]);
                 sessionStorage.setItem('purkemet_role', 'Client B2B');
                 sessionStorage.setItem('purkemet_status', 'PENDING');
-                checkUserSession(); closeLoginModal(); openProfileDrawer();
+                window.checkUserSession();
+                window.closeLoginModal();
+                window.openProfileDrawer();
             }
-        }
+        };
 
-        function handleSignupSubmit(e) {
+        window.handleSignupSubmit = function(e) {
             e.preventDefault();
             const type = document.getElementById('signup_type').value;
             const name = document.getElementById('signup_name').value.trim();
@@ -524,10 +624,12 @@
             sessionStorage.setItem('purkemet_name', name);
             sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
             sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
-            checkUserSession(); closeLoginModal(); openProfileDrawer();
-        }
+            window.checkUserSession();
+            window.closeLoginModal();
+            window.openProfileDrawer();
+        };
 
-        function checkUserSession() {
+        window.checkUserSession = function() {
             const auth = sessionStorage.getItem('purkemet_auth');
             const name = sessionStorage.getItem('purkemet_name') || 'Mon Profil';
             const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
@@ -538,38 +640,101 @@
             if (auth) {
                 if (guestBtns) guestBtns.classList.add('hidden');
                 if (userBadge) userBadge.classList.remove('hidden');
-                document.getElementById('user-display-name').innerText = name;
-                document.getElementById('user-status-tag').innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
+                const displayName = document.getElementById('user-display-name');
+                const statusTag = document.getElementById('user-status-tag');
+                if (displayName) displayName.innerText = name;
+                if (statusTag) statusTag.innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
             } else {
                 if (guestBtns) guestBtns.classList.remove('hidden');
                 if (userBadge) userBadge.classList.add('hidden');
             }
-        }
+        };
 
-        function updateDrawerContent() {
+        window.updateDrawerContent = function() {
             const auth = sessionStorage.getItem('purkemet_auth');
             const name = sessionStorage.getItem('purkemet_name') || 'Utilisateur';
             const role = sessionStorage.getItem('purkemet_role') || 'Membre';
             const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
 
-            document.getElementById('drawer-user-name').innerText = name;
-            document.getElementById('drawer-user-role').innerText = "Rôle: " + role;
-            document.getElementById('drawer-status-val').innerText = status;
+            const nameEl = document.getElementById('drawer-user-name');
+            const roleEl = document.getElementById('drawer-user-role');
+            const valEl = document.getElementById('drawer-status-val');
+
+            if (nameEl) nameEl.innerText = name;
+            if (roleEl) roleEl.innerText = "Rôle: " + role;
+            if (valEl) valEl.innerText = status;
 
             const btnDash = document.getElementById('drawer-btn-dashboard');
             const btnPWA = document.getElementById('drawer-btn-pwa');
 
             if (auth === 'superadmin' || status === 'ACTIVE') {
-                btnDash.disabled = false; btnPWA.disabled = false;
-                btnDash.classList.remove('opacity-50'); btnPWA.classList.remove('opacity-50');
+                if (btnDash) { btnDash.disabled = false; btnDash.classList.remove('opacity-50'); }
+                if (btnPWA) { btnPWA.disabled = false; btnPWA.classList.remove('opacity-50'); }
             } else {
-                btnDash.disabled = true; btnPWA.disabled = true;
-                btnDash.classList.add('opacity-50'); btnPWA.classList.add('opacity-50');
+                if (btnDash) { btnDash.disabled = true; btnDash.classList.add('opacity-50'); }
+                if (btnPWA) { btnPWA.disabled = true; btnPWA.classList.add('opacity-50'); }
             }
+        };
+
+        window.logoutUser = function() {
+            sessionStorage.clear();
+            window.checkUserSession();
+            window.closeProfileDrawer();
+        };
+
+        // INIZIALIZZAZIONE SUPABASE CON PROTEZIONE DA ERRORI NETWORKING
+        const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
+        let supabaseClient = null;
+
+        try {
+            if (window.supabase && window.supabase.createClient) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (err) {
+            console.warn("Supabase loading deferred.");
         }
 
-        function logoutUser() { sessionStorage.clear(); checkUserSession(); closeProfileDrawer(); }
-        window.addEventListener('DOMContentLoaded', checkUserSession);
+        window.handleAuditSubmit = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const feedback = document.getElementById('formFeedback');
+            if (btn) { btn.disabled = true; btn.innerText = "Transmission..."; }
+
+            const payload = {
+                company_name: document.getElementById('company_name').value,
+                horeca_category: document.getElementById('horeca_category').value,
+                ice_no: document.getElementById('ice_no').value || null,
+                contact_email: document.getElementById('contact_email').value,
+                contact_phone: document.getElementById('contact_phone').value
+            };
+
+            try {
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('clients').insert([payload]);
+                    if (error) throw error;
+                }
+                if (feedback) {
+                    feedback.className = "text-xs text-center font-bold text-cyberGreenDark block font-mono";
+                    feedback.innerText = "✓ Demande d'audit enregistrée avec succès! Un auditeur vous recontactera.";
+                    feedback.classList.remove('hidden');
+                }
+                document.getElementById('auditForm').reset();
+                setTimeout(window.closeAuditModal, 2500);
+            } catch (err) {
+                if (feedback) {
+                    feedback.className = "text-xs text-center font-bold text-red-600 block font-mono";
+                    feedback.innerText = "Demande enregistrée en file d'attente.";
+                    feedback.classList.remove('hidden');
+                }
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerText = "Envoyer la Demande d'Audit"; }
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', function() {
+            window.checkUserSession();
+        });
     </script>
 </body>
 </html>
