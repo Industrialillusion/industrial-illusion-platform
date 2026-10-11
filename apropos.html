@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qui Sommes-Nous | Industrial Illusion SARL — Présentation Institutionnelle</title>
-    <meta name="description" content="Présentation officielle de la holding Industrial Illusion SARL, sa vision stratégique, ses engagements RSE et son modèle de gouvernance au Maroc.">
+    <meta name="description" content="Présentation officielle d'Industrial Illusion SARL, startup DeepTech marocaine basée à Marrakech. Modèle de valorisation B2B, gouvernance et conformité environnementale.">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,9 +27,9 @@
                     },
                     colors: {
                         papyrusBase: '#E3D2BF',
-                        papyrusLight: '#F3E8DA',
-                        papyrusCard: '#EADBCB',
-                        papyrusDark: '#C9B59F',
+                        papyrusLight: '#F5EBE1',
+                        papyrusCard: '#E8D8C8',
+                        papyrusDark: '#C7B29B',
                         obsidian: '#090D10',
                         obsidianCard: '#11161C',
                         kemetGold: '#C5A059',
@@ -45,26 +45,38 @@
         body {
             background-color: #E3D2BF;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(243, 232, 218, 0.9) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(201, 181, 159, 0.6) 0px, transparent 50%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.2 0 0 0 0.7 0.15 0 0 0 0.58 0.1 0 0 0 0.42 0 0 0 0.14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)'/%3E%3C/svg%3E"),
+                radial-gradient(at 0% 0%, rgba(245, 235, 225, 0.85) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(199, 178, 155, 0.6) 0px, transparent 50%),
                 radial-gradient(at 50% 100%, rgba(227, 210, 191, 0.95) 0px, transparent 50%),
-                radial-gradient(at 80% 50%, rgba(197, 160, 89, 0.15) 0px, transparent 50%);
+                radial-gradient(at 80% 50%, rgba(197, 160, 89, 0.18) 0px, transparent 50%);
             background-attachment: fixed;
         }
 
-        .papyrus-border { border: 1px solid rgba(197, 160, 89, 0.4); }
+        .papyrus-border { 
+            border: 1px solid rgba(197, 160, 89, 0.45); 
+            box-shadow: inset 0 0 12px rgba(180, 140, 90, 0.15);
+        }
 
         .papyrus-glass {
-            background: linear-gradient(135deg, rgba(243, 232, 218, 0.88), rgba(227, 210, 191, 0.82));
+            background: linear-gradient(135deg, rgba(245, 235, 225, 0.92), rgba(227, 210, 191, 0.85));
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(197, 160, 89, 0.35);
-            box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.07);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.08);
         }
 
         .obsidian-glass {
             background: linear-gradient(145deg, #11161C, #090D10);
-            border: 1px solid rgba(197, 160, 89, 0.35);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes cyberPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0,255,163,0.6)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(0,255,163,0.9)); }
+        }
+        .cyber-eye-anim {
+            animation: cyberPulse 4s ease-in-out infinite;
         }
     </style>
 </head>
@@ -75,11 +87,14 @@
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             
             <a href="index.html" class="flex items-center space-x-3.5 group">
-                <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40">
-                    <svg class="w-9 h-9 text-cyberGreen" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-                        <path d="M10 50 Q 50 15, 90 50 Q 50 85, 10 50 Z" stroke-width="3.5" stroke="#00FFA3"/>
-                        <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3" fill="#090D10"/>
-                        <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
+                <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300">
+                    <svg class="w-10 h-10 text-cyberGreen cyber-eye-anim" viewBox="0 0 100 100" fill="none">
+                        <path d="M8 50 Q 50 10, 92 50 Q 50 90, 8 50 Z" stroke="#00FFA3" stroke-width="3.5" fill="#090D10"/>
+                        <circle cx="50" cy="50" r="18" stroke="#C5A059" stroke-width="3" fill="#11161C"/>
+                        <circle cx="50" cy="50" r="7" fill="#00FFA3"/>
+                        <path d="M22 30 L32 18 M78 30 L68 18 M22 70 L32 82 M78 70 L68 82" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M50 68 C 50 82, 38 88, 38 96" stroke="#C5A059" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M62 68 L 74 92" stroke="#C5A059" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div>
@@ -90,11 +105,11 @@
             
             <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-obsidian/80">
                 <a href="index.html" class="hover:text-cyberGreenDark transition-colors">Accueil</a>
-                <a href="apropos.html" class="text-cyberGreenDark font-black border-b-2 border-cyberGreenDark pb-0.5">Qui Sommes-Nous</a>
                 <a href="purkemet.html" class="hover:text-cyberGreenDark transition-colors">PurKemet B2B</a>
                 <a href="kmeh20.html" class="hover:text-cyberGreenDark transition-colors">K-MEH-20</a>
                 <a href="datalake.html" class="hover:text-cyberGreenDark transition-colors">Maat Data Lake</a>
                 <a href="carrieres.html" class="hover:text-cyberGreenDark transition-colors">Carrières</a>
+                <a href="apropos.html" class="text-cyberGreenDark font-black border-b-2 border-cyberGreenDark pb-0.5">Qui Sommes-Nous</a>
             </nav>
 
             <div id="auth-header-container" class="flex items-center space-x-3">
@@ -124,61 +139,62 @@
         </div>
     </header>
 
-    <!-- CONTENT MAIN -->
+    <!-- MAIN CONTENT -->
     <main class="mt-28 space-y-20 mb-20 max-w-7xl mx-auto px-6">
 
         <!-- HERO SECTION -->
         <section class="pt-4 max-w-4xl space-y-6">
-            <span class="px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/80 text-obsidian text-xs font-mono font-bold tracking-wider uppercase shadow-sm inline-block">
+            <span class="px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/90 text-obsidian text-xs font-mono font-bold tracking-wider uppercase shadow-sm inline-block">
                 🏛️ Présentation Institutionnelle — Industrial Illusion SARL
             </span>
             <h2 class="font-kemetTitle text-4xl sm:text-5xl font-black text-obsidian leading-tight">
-                Une Holding Industrielle Dédiée à la Souveraineté Écologique & Technologique
+                Une Startup DeepTech Marocaine au Service de la Valorisation Industrielle
             </h2>
             <p class="text-base sm:text-lg text-obsidian/90 leading-relaxed font-medium">
-                Implantée à Marrakech, <strong>Industrial Illusion SARL</strong> est une société d'ingénierie DeepTech qui conçoit, développe et exploite des infrastructures de valorisation matérielle, de traçabilité notariale et de logistique bionique à haute valeur ajoutée.
+                Basée à Marrakech, <strong>Industrial Illusion SARL</strong> est une entreprise marocaine d'ingénierie environnementale. Nous développons des solutions technologiques intégrées destinées à optimiser la collecte, accroître le tonnellage de matière valorisée et garantir la conformité réglementaire des grands producteurs B2B.
             </p>
         </section>
 
-        <!-- VISION DU DIRECTOIRE & OBJECTIFS -->
+        <!-- OBJECTIFS INDUSTRIELS & PLAN DE TONNAGE -->
         <section class="grid lg:grid-cols-12 gap-10 items-stretch">
             
             <div class="lg:col-span-7 papyrus-glass p-8 sm:p-10 rounded-3xl space-y-6 border-2 border-kemetGold/40">
                 <div class="space-y-2">
-                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Mission Strategique</span>
-                    <h3 class="font-kemetTitle text-2xl font-black text-obsidian">Nos Objectifs Industriels & Environnementaux</h3>
+                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Stratégie d'Exploitation</span>
+                    <h3 class="font-kemetTitle text-2xl font-black text-obsidian">Objectifs de Tonnellage & Plan d'Impact</h3>
                 </div>
                 
                 <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
-                    Industrial Illusion SARL a pour objectif d'éradiquer la mise en décharge sauvage des fractions sèches et de structurer la filière de la collecte B2B dans le strict respect de la réglementation marocaine.
+                    Notre plan d'affaires vise la capture et le traitement systématique des gisements de déchets secs issus des secteurs à forte activité (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans) dans la préfecture de Marrakech.
                 </p>
 
                 <div class="space-y-4 pt-2">
                     <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
-                        <h4 class="font-bold text-obsidian text-sm">1. Traçabilité Totale (Maat Data Lake)</h4>
-                        <p class="text-xs text-obsidian/80">Offrir aux producteurs B2B une notarisation cryptographique infalsifiable pour leurs bilans extra-financiers ESG et leurs audits d'accréditation.</p>
+                        <h4 class="font-bold text-obsidian text-sm">1. Captation Maximale du Gisement Sèche</h4>
+                        <p class="text-xs text-obsidian/80">Déploiement de circuits logistiques dédiés au PET, PE-HD, Verre, Carton et Aluminium pour détourner plusieurs milliers de tonnes annuelles des décharges municipales.</p>
                     </div>
 
                     <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
-                        <h4 class="font-bold text-obsidian text-sm">2. Conformité Réglementaire Stricte</h4>
-                        <p class="text-xs text-obsidian/80">Décharger les établissements partenaires de la responsabilité civile et pénale quant au devenir de leurs déchets en appliquant la Loi n° 28-00.</p>
+                        <h4 class="font-bold text-obsidian text-sm">2. Conformité et Traçabilité (Loi 28-00)</h4>
+                        <p class="text-xs text-obsidian/80">Sécurisation légale des contrats d'enlèvement de la fraction indifférenciée e notarisation systématique des volumes sur Maat Data Lake.</p>
                     </div>
 
                     <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
-                        <h4 class="font-bold text-obsidian text-sm">3. Infrastructure Lourde Souveraine</h4>
-                        <p class="text-xs text-obsidian/80">Déployer les centres industriels autonomes K-MEH-20, produits au sein du pôle manufacturier de Kénitra, pour une transformation locale de la matière.</p>
+                        <h4 class="font-bold text-obsidian text-sm">3. Infrastructure Modulaire Unifiée</h4>
+                        <p class="text-xs text-obsidian/80">Mise en œuvre du hub K-MEH-20 e du pôle manufacturier de Kénitra pour assurer le conditionnement et la transformation locale des gisements.</p>
                     </div>
                 </div>
             </div>
 
+            <!-- CARD DIRECTION GÉNÉRALE -->
             <div class="lg:col-span-5 obsidian-glass text-white p-8 sm:p-10 rounded-3xl flex flex-col justify-between space-y-6 border-2 border-kemetGold/40">
                 <div class="space-y-4">
-                    <span class="text-xs font-mono text-cyberGreen uppercase tracking-widest font-bold block">Gouvernance du Directoire</span>
+                    <span class="text-xs font-mono text-cyberGreen uppercase tracking-widest font-bold block">Direction Générale</span>
                     <h3 class="font-kemetTitle text-2xl font-black text-white">Roberto Passarella</h3>
-                    <p class="text-xs text-slate-300 font-mono">Directeur Général & Fondateur</p>
+                    <p class="text-xs text-slate-300 font-mono">Directeur Général</p>
                     <hr class="border-white/10">
                     <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                        « Notre vision est celle d'un progrès technique indissociable du progrès social. En combinant l'automatisation de Maat OS avec la valorisation formelle des collaborateurs sur le terrain, nous bâtissons un modèle industriel pérenne et exemplaire au Maroc. »
+                        « Notre priorité est d'apporter une réponse rigoureuse, mesurable et pérenne aux défis environnementaux du Maroc, en associant innovation logistique e modèle social collaboratif. »
                     </p>
                 </div>
 
@@ -191,52 +207,48 @@
 
         </section>
 
-        <!-- ENGAGEMENT SOCIAL & ACTIONS DE CLASSE B -->
+        <!-- ENGAGEMENT SOCIAL & GOUVERNANCE DES ACTIONS DE CLASSE B -->
         <section class="papyrus-glass p-8 sm:p-12 rounded-3xl space-y-8 border-2 border-kemetGold/40">
             <div class="max-w-3xl space-y-3">
-                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Responsabilité Sociétale & Inclusion</span>
-                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Le Modèle Humain & Participatif</h3>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">RSE & Modèle Social</span>
+                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Gouvernance Sociale & Copropriété</h3>
                 <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
-                    Industrial Illusion place l'humain au cœur de sa chaîne de valeur. Nous transformons l'activité informelle en professions formelles e dignes, tout en associant directement nos salariés à la réussite de l'entreprise.
+                    Industrial Illusion s'engage à structurer la professionnalisation des acteurs du secteur tout en créant une valeur durable partagée au sein de la structure.
                 </p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
-                    <h4 class="font-bold text-obsidian text-lg">Integration des Chiffonniers (Mikhala)</h4>
+                    <h4 class="font-bold text-obsidian text-lg">Intégration des Chiffonniers (Mikhala)</h4>
                     <p class="text-xs text-obsidian/80 leading-relaxed">
-                        Accompagnement, formalisation statutaire, fourniture d'Équipements de Protection Individuelle (EPI) conformes e formation continue aux normes de sécurité e logistique.
+                        Programme d'intégration formelle des Chiffonniers (Mikhala) garantissant des équipements de protection individuelle (EPI), des formations aux normes de sécurité, un encadrement digne e l'accès aux avantages sociaux.
                     </p>
                 </div>
 
                 <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
                     <h4 class="font-bold text-obsidian text-lg">Paradigme des Actions de Classe B</h4>
                     <p class="text-xs text-obsidian/80 leading-relaxed">
-                        Modèle de gouvernance fondé sur des Actions de Classe B réglementées, permettant de faire de chaque salarié à durée indéterminée un copropriétaire de l'infrastucture, leur garantissant l'accès à un système complet de welfare, d'avantages e de dividendes.
+                        La société se fonde sur le paradigme des Actions de Classe B, réglementées au fin de rendre le salarié à durée indéterminée (CDI) copropriétaire de l'infrastructure dont il fait partie, lui donnant accès à un système complet de welfare, d'avantages et de dividendes.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- ANCRAGE INSTITUTIONNEL -->
-        <section class="border-t border-kemetGold/40 pt-10 grid md:grid-cols-3 gap-6 text-center font-mono">
+        <!-- ANCRAGE REGLEMENTAIRE -->
+        <section class="border-t border-kemetGold/40 pt-10 grid md:grid-cols-2 gap-6 text-center font-mono">
             <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
                 <span class="text-xs text-obsidian/70 font-bold uppercase block">Ancrage Territorial</span>
-                <span class="text-sm font-bold text-obsidian">Wilaya de Marrakech-Safi</span>
+                <span class="text-sm font-bold text-obsidian">Région Marrakech-Safi, Royaume du Maroc</span>
             </div>
             <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
-                <span class="text-xs text-obsidian/70 font-bold uppercase block">Partenariat d'Investissement</span>
-                <span class="text-sm font-bold text-obsidian">Patronage AMDIE</span>
-            </div>
-            <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
-                <span class="text-xs text-obsidian/70 font-bold uppercase block">Conformité Légale</span>
-                <span class="text-sm font-bold text-cyberGreenDark">Loi 28-00 & CNDP 09-08</span>
+                <span class="text-xs text-obsidian/70 font-bold uppercase block">Cadre Légal & Souveraineté</span>
+                <span class="text-sm font-bold text-cyberGreenDark">Conforme Loi 28-00 & CNDP 09-08</span>
             </div>
         </section>
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER INSTITUTIONNEL -->
     <footer class="border-t border-kemetGold/40 bg-papyrusDark/50 py-8">
         <div class="max-w-7xl mx-auto px-6 text-center text-xs text-obsidian/80 space-y-2 font-mono">
             <p>© 2026 Industrial Illusion SARL — Deep Tech Systems. Tous droits réservés.</p>
