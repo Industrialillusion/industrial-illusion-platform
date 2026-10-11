@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui Sommes-Nous | Industrial Illusion SARL — Présentation Institutionnelle</title>
+    <meta name="description" content="Présentation officielle de la holding Industrial Illusion SARL, sa vision stratégique, ses engagements RSE et son modèle de gouvernance au Maroc.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS & Supabase JS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        kemetTitle: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        papyrusBase: '#E3D2BF',
+                        papyrusLight: '#F3E8DA',
+                        papyrusCard: '#EADBCB',
+                        papyrusDark: '#C9B59F',
+                        obsidian: '#090D10',
+                        obsidianCard: '#11161C',
+                        kemetGold: '#C5A059',
+                        kemetGoldBright: '#E8C86A',
+                        cyberGreen: '#00FFA3',
+                        cyberGreenDark: '#00B871'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #E3D2BF;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(243, 232, 218, 0.9) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(201, 181, 159, 0.6) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(227, 210, 191, 0.95) 0px, transparent 50%),
+                radial-gradient(at 80% 50%, rgba(197, 160, 89, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .papyrus-border { border: 1px solid rgba(197, 160, 89, 0.4); }
+
+        .papyrus-glass {
+            background: linear-gradient(135deg, rgba(243, 232, 218, 0.88), rgba(227, 210, 191, 0.82));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.07);
+        }
+
+        .obsidian-glass {
+            background: linear-gradient(145deg, #11161C, #090D10);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER INSTITUTIONNEL -->
+    <header class="border-b border-kemetGold/40 bg-papyrusBase/90 backdrop-blur-xl fixed top-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+            
+            <a href="index.html" class="flex items-center space-x-3.5 group">
+                <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40">
+                    <svg class="w-9 h-9 text-cyberGreen" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                        <path d="M10 50 Q 50 15, 90 50 Q 50 85, 10 50 Z" stroke-width="3.5" stroke="#00FFA3"/>
+                        <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3" fill="#090D10"/>
+                        <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-kemetTitle text-lg font-black tracking-widest text-obsidian leading-none">INDUSTRIAL ILLUSION</h1>
+                    <p class="text-[9px] font-mono tracking-[0.28em] text-cyberGreenDark font-extrabold uppercase mt-1">DEEP TECH SYSTEMS</p>
+                </div>
+            </a>
+            
+            <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-obsidian/80">
+                <a href="index.html" class="hover:text-cyberGreenDark transition-colors">Accueil</a>
+                <a href="apropos.html" class="text-cyberGreenDark font-black border-b-2 border-cyberGreenDark pb-0.5">Qui Sommes-Nous</a>
+                <a href="purkemet.html" class="hover:text-cyberGreenDark transition-colors">PurKemet B2B</a>
+                <a href="kmeh20.html" class="hover:text-cyberGreenDark transition-colors">K-MEH-20</a>
+                <a href="datalake.html" class="hover:text-cyberGreenDark transition-colors">Maat Data Lake</a>
+                <a href="carrieres.html" class="hover:text-cyberGreenDark transition-colors">Carrières</a>
+            </nav>
+
+            <div id="auth-header-container" class="flex items-center space-x-3">
+                <div id="guest-auth-buttons" class="flex items-center space-x-2">
+                    <button onclick="openAuthModal('login')" class="px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-xl hover:bg-black transition-all text-xs font-mono font-bold uppercase shadow-md">
+                        Connexion
+                    </button>
+                    <button onclick="openAuthModal('signup')" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-xl text-xs uppercase shadow-md">
+                        S'inscrire
+                    </button>
+                </div>
+
+                <div id="user-profile-badge" class="hidden flex items-center space-x-3">
+                    <div class="bg-obsidian border border-kemetGold/50 px-3.5 py-1.5 rounded-xl font-mono text-xs flex items-center space-x-2.5 shadow-lg">
+                        <span class="text-cyberGreen">👤</span>
+                        <div>
+                            <div id="user-display-name" class="font-bold text-white text-[11px] leading-tight">Mon Profil</div>
+                            <div id="user-status-tag" class="text-[8px] font-bold text-cyberGreen uppercase">Compte Actif</div>
+                        </div>
+                    </div>
+                    <button onclick="openProfileDrawer()" class="px-3.5 py-2 bg-papyrusLight border border-kemetGold/50 text-obsidian font-mono font-bold rounded-xl text-xs uppercase">
+                        Espace ⚙️
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- CONTENT MAIN -->
+    <main class="mt-28 space-y-20 mb-20 max-w-7xl mx-auto px-6">
+
+        <!-- HERO SECTION -->
+        <section class="pt-4 max-w-4xl space-y-6">
+            <span class="px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/80 text-obsidian text-xs font-mono font-bold tracking-wider uppercase shadow-sm inline-block">
+                🏛️ Présentation Institutionnelle — Industrial Illusion SARL
+            </span>
+            <h2 class="font-kemetTitle text-4xl sm:text-5xl font-black text-obsidian leading-tight">
+                Une Holding Industrielle Dédiée à la Souveraineté Écologique & Technologique
+            </h2>
+            <p class="text-base sm:text-lg text-obsidian/90 leading-relaxed font-medium">
+                Implantée à Marrakech, <strong>Industrial Illusion SARL</strong> est une société d'ingénierie DeepTech qui conçoit, développe et exploite des infrastructures de valorisation matérielle, de traçabilité notariale et de logistique bionique à haute valeur ajoutée.
+            </p>
+        </section>
+
+        <!-- VISION DU DIRECTOIRE & OBJECTIFS -->
+        <section class="grid lg:grid-cols-12 gap-10 items-stretch">
+            
+            <div class="lg:col-span-7 papyrus-glass p-8 sm:p-10 rounded-3xl space-y-6 border-2 border-kemetGold/40">
+                <div class="space-y-2">
+                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Mission Strategique</span>
+                    <h3 class="font-kemetTitle text-2xl font-black text-obsidian">Nos Objectifs Industriels & Environnementaux</h3>
+                </div>
+                
+                <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
+                    Industrial Illusion SARL a pour objectif d'éradiquer la mise en décharge sauvage des fractions sèches et de structurer la filière de la collecte B2B dans le strict respect de la réglementation marocaine.
+                </p>
+
+                <div class="space-y-4 pt-2">
+                    <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
+                        <h4 class="font-bold text-obsidian text-sm">1. Traçabilité Totale (Maat Data Lake)</h4>
+                        <p class="text-xs text-obsidian/80">Offrir aux producteurs B2B une notarisation cryptographique infalsifiable pour leurs bilans extra-financiers ESG et leurs audits d'accréditation.</p>
+                    </div>
+
+                    <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
+                        <h4 class="font-bold text-obsidian text-sm">2. Conformité Réglementaire Stricte</h4>
+                        <p class="text-xs text-obsidian/80">Décharger les établissements partenaires de la responsabilité civile et pénale quant au devenir de leurs déchets en appliquant la Loi n° 28-00.</p>
+                    </div>
+
+                    <div class="p-4 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-1">
+                        <h4 class="font-bold text-obsidian text-sm">3. Infrastructure Lourde Souveraine</h4>
+                        <p class="text-xs text-obsidian/80">Déployer les centres industriels autonomes K-MEH-20, produits au sein du pôle manufacturier de Kénitra, pour une transformation locale de la matière.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 obsidian-glass text-white p-8 sm:p-10 rounded-3xl flex flex-col justify-between space-y-6 border-2 border-kemetGold/40">
+                <div class="space-y-4">
+                    <span class="text-xs font-mono text-cyberGreen uppercase tracking-widest font-bold block">Gouvernance du Directoire</span>
+                    <h3 class="font-kemetTitle text-2xl font-black text-white">Roberto Passarella</h3>
+                    <p class="text-xs text-slate-300 font-mono">Directeur Général & Fondateur</p>
+                    <hr class="border-white/10">
+                    <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                        « Notre vision est celle d'un progrès technique indissociable du progrès social. En combinant l'automatisation de Maat OS avec la valorisation formelle des collaborateurs sur le terrain, nous bâtissons un modèle industriel pérenne et exemplaire au Maroc. »
+                    </p>
+                </div>
+
+                <div class="p-4 bg-obsidianCard rounded-2xl border border-white/10 text-xs font-mono space-y-2">
+                    <div class="text-slate-400">Siège Opérationnel:</div>
+                    <div class="text-white font-bold">Préfecture de Marrakech, Région Marrakech-Safi</div>
+                    <div class="text-kemetGoldBright pt-2">r.passarella@industrialillusion.ma</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ENGAGEMENT SOCIAL & ACTIONS DE CLASSE B -->
+        <section class="papyrus-glass p-8 sm:p-12 rounded-3xl space-y-8 border-2 border-kemetGold/40">
+            <div class="max-w-3xl space-y-3">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Responsabilité Sociétale & Inclusion</span>
+                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Le Modèle Humain & Participatif</h3>
+                <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
+                    Industrial Illusion place l'humain au cœur de sa chaîne de valeur. Nous transformons l'activité informelle en professions formelles e dignes, tout en associant directement nos salariés à la réussite de l'entreprise.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
+                    <h4 class="font-bold text-obsidian text-lg">Integration des Chiffonniers (Mikhala)</h4>
+                    <p class="text-xs text-obsidian/80 leading-relaxed">
+                        Accompagnement, formalisation statutaire, fourniture d'Équipements de Protection Individuelle (EPI) conformes e formation continue aux normes de sécurité e logistique.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
+                    <h4 class="font-bold text-obsidian text-lg">Paradigme des Actions de Classe B</h4>
+                    <p class="text-xs text-obsidian/80 leading-relaxed">
+                        Modèle de gouvernance fondé sur des Actions de Classe B réglementées, permettant de faire de chaque salarié à durée indéterminée un copropriétaire de l'infrastucture, leur garantissant l'accès à un système complet de welfare, d'avantages e de dividendes.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANCRAGE INSTITUTIONNEL -->
+        <section class="border-t border-kemetGold/40 pt-10 grid md:grid-cols-3 gap-6 text-center font-mono">
+            <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
+                <span class="text-xs text-obsidian/70 font-bold uppercase block">Ancrage Territorial</span>
+                <span class="text-sm font-bold text-obsidian">Wilaya de Marrakech-Safi</span>
+            </div>
+            <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
+                <span class="text-xs text-obsidian/70 font-bold uppercase block">Partenariat d'Investissement</span>
+                <span class="text-sm font-bold text-obsidian">Patronage AMDIE</span>
+            </div>
+            <div class="papyrus-glass p-6 rounded-2xl border border-kemetGold/30">
+                <span class="text-xs text-obsidian/70 font-bold uppercase block">Conformité Légale</span>
+                <span class="text-sm font-bold text-cyberGreenDark">Loi 28-00 & CNDP 09-08</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-kemetGold/40 bg-papyrusDark/50 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-obsidian/80 space-y-2 font-mono">
+            <p>© 2026 Industrial Illusion SARL — Deep Tech Systems. Tous droits réservés.</p>
+            <p class="text-[10px]">Document Officiel d'Information Institutionnelle • Marrakech, Maroc</p>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTHENTIFICATION -->
+    <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-obsidian text-white border-2 border-cyberGreen/40 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl my-8">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div class="space-y-2 text-center">
+                <h3 class="font-kemetTitle text-xl font-black text-white">Portail d'Accès Sécurisé</h3>
+                <p class="text-xs text-slate-400 font-sans">Connectez-vous ou créez votre compte d'accès B2B.</p>
+            </div>
+            <div class="flex border-b border-white/10 font-mono text-xs text-center">
+                <button id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
+                <button id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
+            </div>
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 font-mono text-left">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email / Identifiant *</label>
+                    <input type="text" id="login_email" required placeholder="nom@etablissement.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
+                    <input type="password" id="login_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-cyberDark text-cyberGreen font-bold rounded-xl border border-cyberGreen/30 shadow-md">Se Connecter</button>
+            </form>
+            <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-3 font-mono text-left hidden">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type de Compte *</label>
+                    <select id="signup_type" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                        <option value="standard">Public / Investisseur (Newsletter)</option>
+                        <option value="client">Client B2B (Espace ESG HoReCa)</option>
+                        <option value="operator">Opérateur Logistique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Établissement *</label>
+                    <input type="text" id="signup_name" required placeholder="Hôtel / Nom Prénom" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email Officiel *</label>
+                    <input type="email" id="signup_email" required placeholder="contact@etablissement.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
+                    <input type="password" id="signup_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-cyberGreenDark to-emerald-600 text-black font-bold rounded-xl shadow-md">Créer Mon Compte</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DRAWER PROFIL -->
+    <div id="profileDrawer" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-obsidian text-white border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
+            <button onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <div class="text-center border-b border-white/10 pb-4 space-y-1">
+                <h3 class="font-kemetTitle text-xl font-black text-white" id="drawer-user-name">Mon Profil</h3>
+                <p class="text-xs font-mono text-kemetGoldBright" id="drawer-user-role">Role: Membre</p>
+            </div>
+            <div id="drawer-status-box" class="p-4 rounded-2xl bg-obsidianCard border border-white/10 space-y-2 font-mono text-xs">
+                <div class="flex justify-between font-bold">
+                    <span class="text-slate-400">Statut du Compte:</span>
+                    <span id="drawer-status-val" class="text-cyberGreen">ACTIF</span>
+                </div>
+                <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans">Votre compte est actif.</p>
+            </div>
+            <div class="space-y-3 font-mono">
+                <button id="drawer-btn-dashboard" onclick="window.location.href='dashboard.html'" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
+                    <span>🏨 Accéder à l'Espace Client ESG</span><span>→</span>
+                </button>
+                <button id="drawer-btn-pwa" onclick="window.location.href='pwa.html'" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
+                    <span>📱 Accéder à la PWA Opérateur (Maat OS)</span><span>→</span>
+                </button>
+            </div>
+            <div class="pt-2 flex justify-between items-center border-t border-white/10 text-xs font-mono">
+                <button onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openAuthModal(mode) { document.getElementById('loginModal').classList.remove('hidden'); switchAuthMode(mode || 'login'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        function openProfileDrawer() { document.getElementById('profileDrawer').classList.remove('hidden'); updateDrawerContent(); }
+        function closeProfileDrawer() { document.getElementById('profileDrawer').classList.add('hidden'); }
+
+        function switchAuthMode(mode) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
+            } else {
+                signupForm.classList.remove('hidden'); loginForm.classList.add('hidden');
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login_email').value.trim();
+            const pass = document.getElementById('login_password').value.trim();
+
+            if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
+                sessionStorage.setItem('purkemet_auth', 'superadmin');
+                sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
+                sessionStorage.setItem('purkemet_role', 'Super-Admin');
+                sessionStorage.setItem('purkemet_status', 'ACTIVE');
+                checkUserSession(); closeLoginModal(); openProfileDrawer(); return;
+            }
+
+            if (email.includes('@')) {
+                sessionStorage.setItem('purkemet_auth', 'client');
+                sessionStorage.setItem('purkemet_name', email.split('@')[0]);
+                sessionStorage.setItem('purkemet_role', 'Client B2B');
+                sessionStorage.setItem('purkemet_status', 'PENDING');
+                checkUserSession(); closeLoginModal(); openProfileDrawer();
+            }
+        }
+
+        function handleSignupSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById('signup_type').value;
+            const name = document.getElementById('signup_name').value.trim();
+
+            sessionStorage.setItem('purkemet_auth', type);
+            sessionStorage.setItem('purkemet_name', name);
+            sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
+            sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
+            checkUserSession(); closeLoginModal(); openProfileDrawer();
+        }
+
+        function checkUserSession() {
+            const auth = sessionStorage.getItem('purkemet_auth');
+            const name = sessionStorage.getItem('purkemet_name') || 'Mon Profil';
+            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
+            const guestBtns = document.getElementById('guest-auth-buttons');
+            const userBadge = document.getElementById('user-profile-badge');
+
+            if (auth) {
+                if (guestBtns) guestBtns.classList.add('hidden');
+                if (userBadge) userBadge.classList.remove('hidden');
+                document.getElementById('user-display-name').innerText = name;
+                document.getElementById('user-status-tag').innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
+            } else {
+                if (guestBtns) guestBtns.classList.remove('hidden');
+                if (userBadge) userBadge.classList.add('hidden');
+            }
+        }
+
+        function updateDrawerContent() {
+            const auth = sessionStorage.getItem('purkemet_auth');
+            const name = sessionStorage.getItem('purkemet_name') || 'Utilisateur';
+            const role = sessionStorage.getItem('purkemet_role') || 'Membre';
+            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
+
+            document.getElementById('drawer-user-name').innerText = name;
+            document.getElementById('drawer-user-role').innerText = "Rôle: " + role;
+            document.getElementById('drawer-status-val').innerText = status;
+
+            const btnDash = document.getElementById('drawer-btn-dashboard');
+            const btnPWA = document.getElementById('drawer-btn-pwa');
+
+            if (auth === 'superadmin' || status === 'ACTIVE') {
+                btnDash.disabled = false; btnPWA.disabled = false;
+                btnDash.classList.remove('opacity-50'); btnPWA.classList.remove('opacity-50');
+            } else {
+                btnDash.disabled = true; btnPWA.disabled = true;
+                btnDash.classList.add('opacity-50'); btnPWA.classList.add('opacity-50');
+            }
+        }
+
+        function logoutUser() { sessionStorage.clear(); checkUserSession(); closeProfileDrawer(); }
+        window.addEventListener('DOMContentLoaded', checkUserSession);
+    </script>
+</body>
+</html>
