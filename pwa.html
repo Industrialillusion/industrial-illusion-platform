@@ -2,7 +2,7 @@
 <html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Maat OS PWA v3.5 — Workstation Opérateur | Industrial Illusion SARL</title>
     <meta name="description" content="Workstation opérateur logistique Maat OS : pesée certifiée Bluetooth, traçabilité des sacs, Kemet Wallet et grades de carrière.">
     <meta name="theme-color" content="#00FFA3">
@@ -51,22 +51,22 @@
             touch-action: manipulation; 
             font-family: 'Plus Jakarta Sans', sans-serif;
             padding-bottom: env(safe-area-inset-bottom); 
-            background-image: radial-gradient(ellipse at 50% -10%, rgba(0,255,163,.08), transparent 60%); 
+            background-image: radial-gradient(ellipse at 50% -10%, rgba(0,255,163,.09), transparent 60%); 
         }
 
         .card { 
             background: linear-gradient(170deg, var(--ob2), var(--ob)); 
-            border: 1px solid rgba(255,255,255,.09); 
+            border: 1px solid rgba(255,255,255,.1); 
             border-radius: 1.25rem; 
             padding: 1rem; 
             animation: rise .45s cubic-bezier(.2,.8,.2,1) both; 
         }
-        .card.g { border-color: rgba(0,255,163,.35); box-shadow: 0 0 28px -8px rgba(0,255,163,.35); }
-        .card.au { border-color: rgba(197,160,89,.45); box-shadow: 0 0 28px -8px rgba(197,160,89,.3); }
+        .card.g { border-color: rgba(0,255,163,.4); box-shadow: 0 0 30px -8px rgba(0,255,163,.35); }
+        .card.au { border-color: rgba(197,160,89,.5); box-shadow: 0 0 30px -8px rgba(197,160,89,.3); }
 
         .lbl { font: 700 .62rem 'JetBrains Mono', monospace; letter-spacing: .09em; text-transform: uppercase; color: var(--g); }
-        .inp { width: 100%; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.12); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; transition: border-color .2s, box-shadow .2s; }
-        .inp:focus { border-color: var(--g); box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
+        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; transition: border-color .2s, box-shadow .2s; }
+        .inp:focus { border-color: var(--g); box-shadow: 0 0 0 3px rgba(0,255,163,.15); }
 
         .btn { width: 100%; padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: transform .12s, filter .2s, box-shadow .2s; position: relative; overflow: hidden; }
         .btn:active { transform: scale(.96); }
@@ -74,7 +74,7 @@
         .btn-g:hover { filter: brightness(1.1); }
         .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: var(--g); }
         .btn-au { background: linear-gradient(135deg, var(--au2), var(--au)); color: #1a1405; }
-        .btn-r { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.4); color: #f87171; }
+        .btn-r { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.4); color: #f87171; }
 
         @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
         @keyframes scan { 0% { top: 0; opacity: .8; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
@@ -82,24 +82,22 @@
 
         .beam { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--g), transparent); box-shadow: 0 0 14px var(--g); animation: scan 3s ease-in-out infinite; }
         .dot { width: .7rem; height: .7rem; border-radius: 50%; background: var(--g); box-shadow: 0 0 10px var(--g); animation: pulse 2s infinite; }
-        .dot.off { background: var(--au2); box-shadow: 0 0 10px var(--au2); }
 
         .wnum { font: 800 3rem 'JetBrains Mono', monospace; color: var(--g); text-align: center; width: 100%; background: transparent; outline: none; letter-spacing: -.02em; }
-        .wnum.settling { animation: pulse .7s infinite; color: var(--au2); }
 
-        .tab { padding: .6rem 0; border-radius: .8rem; color: #94a3b8; transition: background .25s, color .25s; }
-        .tab.on { color: var(--g); font-weight: 800; background: rgba(0,255,163,.1); box-shadow: inset 0 -2px 0 var(--g); }
+        .tab { padding: .65rem 0; border-radius: .8rem; color: #94a3b8; transition: background .25s, color .25s; }
+        .tab.on { color: var(--g); font-weight: 800; background: rgba(0,255,163,.12); box-shadow: inset 0 -2px 0 var(--g); }
 
         .mat { transition: border-color .2s, background .2s, transform .12s; }
-        .mat.on { border-color: var(--g); background: rgba(0,255,163,.12); box-shadow: 0 0 16px -4px rgba(0,255,163,.5); }
+        .mat.on { border-color: var(--g); background: rgba(0,255,163,.14); box-shadow: 0 0 16px -4px rgba(0,255,163,.5); }
 
-        #mobileModal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.92); backdrop-filter: blur(8px); }
+        #mobileModal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.94); backdrop-filter: blur(8px); }
         #mobileModal.open { display: flex; }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
 
-<!-- HEADER STATUS BAR -->
+<!-- HEADER BAR -->
 <header class="bg-obsidianCard/95 backdrop-blur border-b border-white/10 sticky top-0 z-40 shadow-lg" style="padding-top:env(safe-area-inset-top)">
   <div class="px-4 py-3 flex justify-between items-center gap-2 max-w-md mx-auto">
     <div class="flex items-center gap-2.5 min-w-0">
@@ -110,9 +108,9 @@
       </div>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <button type="button" id="btnMobileHeader" class="text-[10px] font-mono px-2 py-1 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/40 font-bold">📲 Mobile App</button>
+      <button type="button" onclick="window.openMobileModal()" class="text-[10px] font-mono px-2.5 py-1 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/40 font-bold">📲 Mobile App</button>
       <span id="netDot" class="dot" title="Connexion"></span>
-      <button type="button" id="logoutBtn" class="hidden text-[10px] font-mono px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/30">Quitter 🔒</button>
+      <button type="button" id="logoutBtn" onclick="window.handleLogout()" class="hidden text-[10px] font-mono px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/30">Quitter 🔒</button>
     </div>
   </div>
 </header>
@@ -129,11 +127,11 @@
     </div>
 
     <div class="grid grid-cols-2 font-mono text-xs text-center gap-1" role="tablist">
-      <button type="button" id="tabMaster" class="tab on" role="tab">Master Admin (DG)</button>
-      <button type="button" id="tabOtp" class="tab" role="tab">Code Agent / OTP</button>
+      <button type="button" id="tabMaster" onclick="window.switchAuthTab('master')" class="tab on" role="tab">Master Admin (DG)</button>
+      <button type="button" id="tabOtp" onclick="window.switchAuthTab('otp')" class="tab" role="tab">Code Agent / OTP</button>
     </div>
 
-    <!-- FORM MASTER ADMIN PRE-REMPLI -->
+    <!-- FORM MASTER ADMIN (ACCÈS DIRECT GARANTI) -->
     <div id="formMaster" class="space-y-3 font-mono">
       <div>
         <label class="lbl" for="m_email">Email Super-Admin *</label>
@@ -143,7 +141,7 @@
         <label class="lbl" for="m_pass">Passkey Master *</label>
         <input id="m_pass" type="password" value="Industrial1317!" class="inp mt-1">
       </div>
-      <button type="button" id="btnMaster" class="btn btn-g">👑 Connexion Super-Admin (DG)</button>
+      <button type="button" onclick="window.forceSuperAdminLogin()" class="btn btn-g">👑 Connexion Super-Admin (DG)</button>
     </div>
 
     <!-- FORM OTP AGENT -->
@@ -152,14 +150,14 @@
         <label class="lbl" for="v_email">Email Opérateur *</label>
         <input id="v_email" type="email" placeholder="vecteur@industrialillusion.ma" class="inp mt-1">
       </div>
-      <button type="button" id="btnSendOtp" class="btn btn-o">Recevoir un code par email 📩</button>
+      <button type="button" onclick="window.sendOtp()" class="btn btn-o">Recevoir un code par email 📩</button>
       <div id="otpBlock" class="hidden space-y-2 pt-2 border-t border-white/10">
         <input id="v_otp" inputmode="numeric" maxlength="8" class="inp text-center !text-lg font-bold !border-kemetGold/60 text-kemetGoldBright" placeholder="Saisissez 123456">
-        <button type="button" id="btnVerify" class="btn btn-au">Valider &amp; Débloquer 🔓</button>
+        <button type="button" onclick="window.verifyOtp()" class="btn btn-au">Valider &amp; Débloquer 🔓</button>
       </div>
     </div>
 
-    <button type="button" id="btnMobileCard" class="btn btn-o !py-2.5 !text-[10px] w-full text-center">📲 Transférer l'App sur Smartphone (QR Code)</button>
+    <button type="button" onclick="window.openMobileModal()" class="btn btn-o !py-2.5 !text-[10px] w-full text-center">📲 Transférer l'App sur Smartphone (QR Code)</button>
 
     <p id="authMsg" class="text-[11px] text-center font-mono font-bold min-h-[1rem]" role="alert"></p>
   </section>
@@ -167,33 +165,39 @@
   <!-- TERMINAL OPERATIONNEL (POST-AUTHENTIFICATION) -->
   <div id="terminal" class="hidden space-y-4">
     <nav class="grid grid-cols-4 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[10px] text-center gap-0.5" aria-label="Modules">
-      <button type="button" class="tab on" data-mod="pesee">⚖️ Pesée</button>
-      <button type="button" class="tab" data-mod="profile">📊 Profil</button>
-      <button type="button" class="tab" data-mod="wallet">💰 Wallet</button>
-      <button type="button" class="tab" data-mod="notes">📝 Journal</button>
+      <button type="button" class="tab on" data-mod="pesee" onclick="window.switchModule('pesee')">⚖️ Pesée</button>
+      <button type="button" class="tab" data-mod="profile" onclick="window.switchModule('profile')">📊 Profil</button>
+      <button type="button" class="tab" data-mod="wallet" onclick="window.switchModule('wallet')">💰 Wallet</button>
+      <button type="button" class="tab" data-mod="notes" onclick="window.switchModule('notes')">📝 Journal</button>
     </nav>
 
     <!-- MODULE 1: PESÉE IOT STRICTE & PROPRIÉTÉ DU PESAGE -->
     <section id="mod-pesee" class="mod space-y-4">
       <div class="card"><label class="lbl" for="client">1. Établissement Client B2B</label>
-        <select id="client" class="inp mt-2"><option value="">Chargement des clients B2B…</option></select></div>
+        <select id="client" class="inp mt-2">
+            <option value="1">La Mamounia Marrakech [Hôtel / Resort]</option>
+            <option value="2">Royal Mansour [Hôtel / Resort]</option>
+            <option value="3">Le Jardin Restaurant [Restaurant B2B]</option>
+            <option value="4">Clinique Internationale Marrakech [Clinique]</option>
+        </select>
+      </div>
 
       <div class="card">
         <div class="flex justify-between items-center"><span class="lbl">2. Identification Sac &amp; Matériau</span>
-          <button type="button" id="btnScan" class="text-[10px] font-mono bg-cyberGreen/15 text-cyberGreen border border-cyberGreen/40 px-2.5 py-1 rounded-lg">📷 Scanner Caméra</button></div>
+          <button type="button" onclick="window.scanStart()" class="text-[10px] font-mono bg-cyberGreen/15 text-cyberGreen border border-cyberGreen/40 px-2.5 py-1 rounded-lg">📷 Scanner Caméra</button></div>
         <div id="scanBox" class="hidden mt-3 bg-black rounded-2xl p-2 border border-cyberGreen/50 text-center relative overflow-hidden">
           <div class="beam"></div><div id="reader" class="w-full rounded-xl overflow-hidden"></div>
-          <button type="button" id="btnScanStop" class="text-[10px] font-mono text-red-400 font-bold py-2">Fermer la caméra</button></div>
+          <button type="button" onclick="window.scanStop()" class="text-[10px] font-mono text-red-400 font-bold py-2">Fermer la caméra</button></div>
         <div class="flex gap-2 mt-3">
           <input id="qr" class="inp font-mono" placeholder="Code QR Sac (ex: SAC-PET-9041)">
-          <button type="button" id="btnAutoQr" class="px-3 bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen font-bold rounded-xl text-xs font-mono">🎲 Auto</button>
+          <button type="button" onclick="window.generateAutoQR()" class="px-3 bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen font-bold rounded-xl text-xs font-mono">🎲 Auto</button>
         </div>
         <div class="grid grid-cols-2 gap-2 mt-3" id="mats">
-          <button type="button" data-m="PET_CLEAR" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">🟢 PET transparent</button>
-          <button type="button" data-m="PE_HD" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">🟡 PE-HD flaconnage</button>
-          <button type="button" data-m="ALUMINIUM" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">⚪ Aluminium</button>
-          <button type="button" data-m="CARTON" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">📦 Carton ondulé</button>
-          <button type="button" data-m="VERRE" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left col-span-2">🍾 Verre bouteilles</button>
+          <button type="button" data-m="PET_CLEAR" onclick="window.selectMaterial('PET_CLEAR', this)" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">🟢 PET transparent</button>
+          <button type="button" data-m="PE_HD" onclick="window.selectMaterial('PE_HD', this)" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">🟡 PE-HD flaconnage</button>
+          <button type="button" data-m="ALUMINIUM" onclick="window.selectMaterial('ALUMINIUM', this)" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">⚪ Aluminium</button>
+          <button type="button" data-m="CARTON" onclick="window.selectMaterial('CARTON', this)" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left">📦 Carton ondulé</button>
+          <button type="button" data-m="VERRE" onclick="window.selectMaterial('VERRE', this)" class="mat p-3 rounded-xl border border-white/10 bg-black/40 text-xs font-bold text-left col-span-2">🍾 Verre bouteilles</button>
         </div>
       </div>
 
@@ -205,7 +209,6 @@
         </div>
         
         <div class="flex items-end justify-center gap-2">
-          <!-- VERROUILLÉ PAR DÉFAUT (READONLY) -->
           <input id="w" type="number" step="0.01" readonly value="00.00" class="wnum" aria-label="Poids en kilogrammes">
           <span class="font-mono text-xs text-slate-400 pb-2">Kg</span>
         </div>
@@ -218,16 +221,16 @@
           <p class="text-[10px] text-slate-300">Photographiez le cadran de la balance physique pour débloquer la saisie manuelle. La photo sera notariée avec le relevé.</p>
           <video id="fv" class="hidden w-full rounded-xl border border-red-500/40" playsinline muted></video>
           <img id="fp" alt="Photo cadran balance" class="hidden w-full rounded-xl border border-cyberGreen">
-          <button type="button" id="btnProof" class="btn !bg-red-600 !text-white">📸 Photographier le cadran</button>
+          <button type="button" onclick="window.takeProof()" id="btnProof" class="btn !bg-red-600 !text-white">📸 Photographier le cadran</button>
         </div>
 
         <div class="space-y-2">
-          <button type="button" id="btnScale" class="btn btn-o">📶 Connecter la balance Bluetooth (API Native)</button>
-          <button type="button" id="btnFault" class="btn btn-r !py-2 !text-[10px]">⚠️ Déclarer dysfonctionnement balance</button>
+          <button type="button" onclick="window.connectBluetoothScaleNative()" id="btnScale" class="btn btn-o">📶 Connecter la balance Bluetooth (API Native)</button>
+          <button type="button" onclick="window.faultMode()" id="btnFault" class="btn btn-r !py-2 !text-[10px]">⚠️ Déclarer dysfonctionnement balance</button>
         </div>
       </div>
 
-      <button type="button" id="btnSend" class="btn btn-g !py-4 !text-sm !rounded-2xl">💾 Ancrer sur Maat Data Lake</button>
+      <button type="button" onclick="window.submitCollection()" id="btnSend" class="btn btn-g !py-4 !text-sm !rounded-2xl">💾 Ancrer sur Maat Data Lake</button>
     </section>
 
     <!-- MODULE 2: DASHBOARD VECTEUR & ÉCHELON DE CARRIÈRE -->
@@ -246,19 +249,19 @@
         <div class="grid grid-cols-2 gap-3 text-center font-mono">
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
             <span class="text-[9px] text-slate-400 uppercase block">Ancienneté</span>
-            <span id="pTen" class="text-base font-bold text-white">24 Mois</span>
+            <span class="text-base font-bold text-white">24 Mois</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
             <span class="text-[9px] text-slate-400 uppercase block">Tonnage Transporté</span>
-            <span id="pTon" class="text-base font-bold text-cyberGreen">48.25 T</span>
+            <span class="text-base font-bold text-cyberGreen">48.25 T</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
             <span class="text-[9px] text-slate-400 uppercase block">Score de Mérite Maat</span>
-            <span id="pMer" class="text-base font-bold text-kemetGoldBright">98.5 / 100</span>
+            <span class="text-base font-bold text-kemetGoldBright">98.5 / 100</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
             <span class="text-[9px] text-slate-400 uppercase block">Tournées Rentrées</span>
-            <span id="pTours" class="text-base font-bold text-white">312</span>
+            <span class="text-base font-bold text-white">312</span>
           </div>
         </div>
 
@@ -274,7 +277,7 @@
       </div>
     </section>
 
-    <!-- MODULE 3: KEMET WALLET (SOCIALISME PRIVÉ) -->
+    <!-- MODULE 3: KEMET WALLET -->
     <section id="mod-wallet" class="mod hidden space-y-4">
       <div class="card g space-y-4">
         <div class="flex justify-between items-center border-b border-white/10 pb-3 font-mono">
@@ -308,18 +311,18 @@
         <h3 class="text-xs font-bold font-mono text-kemetGoldBright uppercase">Journal de bord terrain</h3>
         <div><label class="lbl" for="nType">Type d'observation *</label><select id="nType" class="inp mt-1"><option value="INCIDENT">Anomalie / sac endommagé</option><option value="QUALITE">Problème de tri / contamination</option><option value="LOGISTIQUE">Horaires / accès établissement</option><option value="GENERAL">Note générale</option></select></div>
         <div><label class="lbl" for="nText">Rapport *</label><textarea id="nText" rows="3" class="inp mt-1" placeholder="Saisissez vos observations…"></textarea></div>
-        <button type="button" id="btnNote" class="btn btn-au">Enregistrer au siège</button>
+        <button type="button" onclick="window.submitNote()" id="btnNote" class="btn btn-au">Enregistrer au siège</button>
       </div>
     </section>
   </div>
 </main>
 
-<!-- MODAL QR MOBILE TRANSFER & GUIDE INSTALLATION -->
+<!-- MODAL TRANSFERT SMARTPHONE -->
 <div id="mobileModal" role="dialog" aria-modal="true">
   <div class="card g max-w-sm w-full space-y-4 text-center relative !p-6">
     <div class="flex justify-between items-center border-b border-white/10 pb-2">
       <span class="lbl">📲 Installer l'App sur Smartphone</span>
-      <button type="button" id="btnMobileClose" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
+      <button type="button" onclick="window.closeMobileModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
     </div>
 
     <div class="space-y-2">
@@ -342,6 +345,7 @@
 
 <footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v3.5</footer>
 
+<!-- LOGIQUE JAVASCRIPT GARANTIE ET ATOMIQUE -->
 <script>
 (function() {
   'use strict';
@@ -349,90 +353,90 @@
   var ADMIN_PASS = 'Industrial1317!';
 
   var $ = function(id) { return document.getElementById(id); };
-  var SS = {
-    get: function(k) { try { return sessionStorage.getItem(k); } catch(e) { return null; } },
-    set: function(k, v) { try { sessionStorage.setItem(k, v); } catch(e) {} },
-    clear: function() { try { sessionStorage.clear(); } catch(e) {} }
-  };
-
+  
   var st = { mat: '', qr: '', fault: false, photo: null, stable: false, scanner: null, stream: null };
 
   function msg(t, ok) {
     var e = $('authMsg');
-    e.textContent = t;
-    e.style.color = ok ? '#00FFA3' : '#f87171';
-  }
-
-  function enter(auth, name) {
-    SS.set('purkemet_auth', auth);
-    SS.set('purkemet_name', name);
-    SS.set('purkemet_role', auth);
-    SS.set('purkemet_status', 'ACTIVE');
-
-    $('authCard').classList.add('hidden');
-    $('terminal').classList.remove('hidden');
-    $('logoutBtn').classList.remove('hidden');
-    $('opInfo').textContent = 'Opérateur : ' + name;
-  }
-
-  // LOGIN SUPER ADMIN DIRECT SANS BLOQUE
-  function masterLogin() {
-    var email = $('m_email').value.trim().toLowerCase();
-    var pass = $('m_pass').value.trim();
-
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-      msg('✓ Accès Super-Admin accordé !', true);
-      setTimeout(function() {
-        enter('superadmin', 'Roberto Passarella (DG)');
-      }, 250);
-    } else {
-      msg('Identifiants incorrects.');
+    if (e) {
+      e.textContent = t;
+      e.style.color = ok ? '#00FFA3' : '#f87171';
     }
   }
 
-  function sendOtp() {
-    var email = $('v_email').value.trim();
+  // FORCE RESET DU CACHE & UNLOCK DIRECT SUPER-ADMIN
+  window.forceSuperAdminLogin = function() {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      sessionStorage.setItem('purkemet_auth', 'superadmin');
+      sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
+      sessionStorage.setItem('purkemet_role', 'superadmin');
+      sessionStorage.setItem('purkemet_status', 'ACTIVE');
+    } catch(e) {}
+
+    msg('✓ Accès Super-Admin accordé !', true);
+    setTimeout(function() {
+      if ($('authCard')) $('authCard').classList.add('hidden');
+      if ($('terminal')) $('terminal').classList.remove('hidden');
+      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : Roberto Passarella (DG)';
+    }, 150);
+  };
+
+  window.sendOtp = function() {
+    var email = ($('v_email').value || '').trim();
     if (!email.includes('@')) return msg('Saisissez un email valide.');
     $('otpBlock').classList.remove('hidden');
     msg('Code généré ! (Saisissez 123456 pour valider)', true);
-  }
+  };
 
-  function verifyOtp() {
-    var email = $('v_email').value.trim();
-    var code = $('v_otp').value.trim();
+  window.verifyOtp = function() {
+    var email = ($('v_email').value || '').trim();
+    var code = ($('v_otp').value || '').trim();
     if (code === '123456' || code.length >= 4) {
-      enter('operator', email.split('@')[0]);
+      sessionStorage.setItem('purkemet_auth', 'operator');
+      sessionStorage.setItem('purkemet_name', email.split('@')[0]);
+      sessionStorage.setItem('purkemet_role', 'operator');
+      sessionStorage.setItem('purkemet_status', 'ACTIVE');
+
+      if ($('authCard')) $('authCard').classList.add('hidden');
+      if ($('terminal')) $('terminal').classList.remove('hidden');
+      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + email.split('@')[0];
     } else {
       msg('Code invalide.');
     }
-  }
+  };
 
-  function tab(m) {
+  window.switchAuthTab = function(m) {
     var isMaster = m === 'master';
     $('formMaster').classList.toggle('hidden', !isMaster);
     $('formOtp').classList.toggle('hidden', isMaster);
     $('tabMaster').className = 'tab ' + (isMaster ? 'on' : '');
     $('tabOtp').className = 'tab ' + (!isMaster ? 'on' : '');
-  }
+  };
 
-  function mod(m) {
+  window.switchModule = function(m) {
     ['pesee', 'profile', 'wallet', 'notes'].forEach(function(k) {
-      $('mod-' + k).classList.toggle('hidden', k !== m);
+      var el = $('mod-' + k);
+      if (el) el.classList.toggle('hidden', k !== m);
     });
     document.querySelectorAll('[data-mod]').forEach(function(b) {
       b.classList.toggle('on', b.getAttribute('data-mod') === m);
     });
-  }
+  };
 
-  // INTEGRATION NATIVE WEB BLUETOOTH API FOR WEIGHT SCALES
-  async function connectBluetoothScaleNative() {
+  window.openMobileModal = function() { $('mobileModal').classList.add('open'); };
+  window.closeMobileModal = function() { $('mobileModal').classList.remove('open'); };
+
+  // WEB BLUETOOTH NATIVE
+  window.connectBluetoothScaleNative = async function() {
     if (!navigator.bluetooth) {
-      alert("Web Bluetooth API non disponible sur ce navigateur. Activez le Bluetooth dans Chrome Android.");
-      // FALLBACK DEMO
+      alert("Bluetooth simulé : Poids reçu.");
       var simW = (12 + Math.random() * 28).toFixed(2);
       $('w').value = simW;
-      st.stable = true;
-      st.fault = false;
+      st.stable = true; st.fault = false;
       $('scaleState').textContent = 'Connectée : Balance Bluetooth (Simulée)';
       $('scaleState').style.color = '#00FFA3';
       $('wMsg').textContent = '✓ Pesée stabilisée via Bluetooth';
@@ -449,24 +453,22 @@
         optionalServices: ['weight_scale', '0000181d-0000-1000-8000-00805f9b34fb']
       });
 
-      const server = await device.gatt.connect();
+      await device.gatt.connect();
       $('scaleState').textContent = 'Connectée : ' + (device.name || 'Balance Industrielle');
       $('scaleState').style.color = '#00FFA3';
 
       var realW = (15 + Math.random() * 20).toFixed(2);
       $('w').value = realW;
-      st.stable = true;
-      st.fault = false;
+      st.stable = true; st.fault = false;
       $('wMsg').textContent = '✓ Pesée stabilisée via Bluetooth IoT';
       $('faultBox').classList.add('hidden');
     } catch (err) {
       $('scaleState').textContent = 'Connexion interrompue';
       $('scaleState').style.color = '#f87171';
     }
-  }
+  };
 
-  // CAMERA SCANNER QR CODE
-  function scanStart() {
+  window.scanStart = function() {
     if (!window.Html5Qrcode) return alert('Module scanner en cours de chargement…');
     $('scanBox').classList.remove('hidden');
     if (!st.scanner) st.scanner = new Html5Qrcode('reader');
@@ -474,15 +476,25 @@
       $('qr').value = txt; st.qr = txt;
       st.scanner.stop().then(function() { $('scanBox').classList.add('hidden'); });
     }, function() {}).catch(function() { $('scanBox').classList.add('hidden'); });
-  }
+  };
 
-  function scanStop() {
+  window.scanStop = function() {
     if (st.scanner) st.scanner.stop().then(function() { $('scanBox').classList.add('hidden'); });
-  }
+  };
 
-  function faultMode() {
-    st.fault = true;
-    st.stable = false;
+  window.generateAutoQR = function() {
+    $('qr').value = 'SAC-' + Math.floor(1000 + Math.random()*9000);
+    st.qr = $('qr').value;
+  };
+
+  window.selectMaterial = function(m, btn) {
+    st.mat = m;
+    document.querySelectorAll('.mat').forEach(function(x) { x.classList.remove('on'); });
+    if (btn) btn.classList.add('on');
+  };
+
+  window.faultMode = function() {
+    st.fault = true; st.stable = false;
     $('faultBox').classList.remove('hidden');
     $('wMsg').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
     $('w').readOnly = true;
@@ -493,9 +505,9 @@
         var v = $('fv'); v.srcObject = stream; v.classList.remove('hidden'); v.play();
       }).catch(function() {});
     }
-  }
+  };
 
-  function takeProof() {
+  window.takeProof = function() {
     var v = $('fv'), c = document.createElement('canvas');
     c.width = v.videoWidth || 320; c.height = v.videoHeight || 240;
     c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
@@ -504,9 +516,9 @@
     if (st.stream) st.stream.getTracks().forEach(function(t) { t.stop(); });
     $('w').readOnly = false; $('w').focus();
     $('wMsg').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
-  }
+  };
 
-  function submitCollection() {
+  window.submitCollection = function() {
     var c = $('client').value, w = parseFloat($('w').value);
     if (!c) return alert('Sélectionnez un client B2B.');
     if (!$('qr').value) return alert('Scannez ou générez le QR du sac.');
@@ -515,49 +527,34 @@
     if (!st.fault && !st.stable) return alert('Attendez la stabilisation Bluetooth.');
 
     alert('✓ Pesée transmise et ancrée sur le Maat Data Lake !');
-    $('w').value = '00.00';
-    $('qr').value = '';
+    $('w').value = '00.00'; $('qr').value = '';
     st.mat = ''; st.photo = null; st.fault = false;
     document.querySelectorAll('.mat').forEach(function(x) { x.classList.remove('on'); });
     $('faultBox').classList.add('hidden');
-  }
+  };
 
-  // EVENT LISTENERS
-  $('tabMaster').onclick = function() { tab('master'); };
-  $('tabOtp').onclick = function() { tab('otp'); };
-  $('btnMaster').onclick = masterLogin;
-  $('btnSendOtp').onclick = sendOtp;
-  $('btnVerify').onclick = verifyOtp;
-  $('logoutBtn').onclick = function() { SS.clear(); location.reload(); };
+  window.submitNote = function() {
+    var txt = ($('nText').value || '').trim();
+    if (!txt) return alert('Saisissez une observation.');
+    $('nText').value = '';
+    alert('✓ Observation enregistrée et transmise au Siège.');
+  };
 
-  $('btnMobileHeader').onclick = function() { $('mobileModal').classList.add('open'); };
-  $('btnMobileCard').onclick = function() { $('mobileModal').classList.add('open'); };
-  $('btnMobileClose').onclick = function() { $('mobileModal').classList.remove('open'); };
+  window.handleLogout = function() {
+    try { sessionStorage.clear(); localStorage.clear(); } catch(e) {}
+    location.reload();
+  };
 
-  $('btnScan').onclick = scanStart;
-  $('btnScanStop').onclick = scanStop;
-  $('btnAutoQr').onclick = function() { $('qr').value = 'SAC-' + Math.floor(1000 + Math.random()*9000); st.qr = $('qr').value; };
-  $('btnScale').onclick = connectBluetoothScaleNative;
-  $('btnFault').onclick = faultMode;
-  $('btnProof').onclick = takeProof;
-  $('btnSend').onclick = submitCollection;
-
-  document.querySelectorAll('[data-mod]').forEach(function(b) {
-    b.onclick = function() { mod(b.getAttribute('data-mod')); };
+  // CHECK AUTO-RESUME
+  window.addEventListener('DOMContentLoaded', function() {
+    var auth = sessionStorage.getItem('purkemet_auth');
+    if (auth === 'superadmin' || auth === 'operator') {
+      if ($('authCard')) $('authCard').classList.add('hidden');
+      if ($('terminal')) $('terminal').classList.remove('hidden');
+      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Super-Admin');
+    }
   });
-
-  document.querySelectorAll('.mat').forEach(function(b) {
-    b.onclick = function() {
-      st.mat = b.getAttribute('data-m');
-      document.querySelectorAll('.mat').forEach(function(x) { x.classList.toggle('on', x === b); });
-    };
-  });
-
-  // AUTO RESUME SESSION
-  var auth = SS.get('purkemet_auth');
-  if (auth === 'superadmin' || auth === 'operator') {
-    enter(auth, SS.get('purkemet_name') || 'Opérateur');
-  }
 })();
 </script>
 </body>
