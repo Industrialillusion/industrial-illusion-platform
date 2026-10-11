@@ -6,14 +6,11 @@
     <title>Industrial Illusion SARL | Deep Tech Systems — Projet Illusion Kemet</title>
     <meta name="description" content="Plateforme DeepTech intégrée de logistique, Maat Data Lake et traçabilité ESG pour les grands producteurs B2B à Marrakech. Projet PurKemet & K-MEH-20.">
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -47,48 +44,31 @@
             background-image: 
                 radial-gradient(at 10% 10%, rgba(239, 227, 211, 0.8) 0px, transparent 50%),
                 radial-gradient(at 90% 20%, rgba(212, 194, 175, 0.6) 0px, transparent 50%),
-                radial-gradient(at 50% 80%, rgba(229, 214, 196, 0.9) 0px, transparent 50%),
-                radial-gradient(at 20% 95%, rgba(200, 180, 160, 0.4) 0px, transparent 50%);
+                radial-gradient(at 50% 80%, rgba(229, 214, 196, 0.9) 0px, transparent 50%);
             background-attachment: fixed;
         }
 
-        .papyrus-border {
-            border: 1px solid rgba(197, 160, 89, 0.35);
-            box-shadow: inset 0 0 15px rgba(180, 150, 120, 0.15);
-        }
-
+        .papyrus-border { border: 1px solid rgba(197, 160, 89, 0.35); }
         .papyrus-card {
             background: linear-gradient(145deg, rgba(239, 227, 211, 0.85), rgba(220, 204, 185, 0.75));
             backdrop-filter: blur(8px);
             border: 1px solid rgba(197, 160, 89, 0.3);
             box-shadow: 0 10px 30px rgba(10, 13, 16, 0.05);
         }
-
-        .text-glow-green {
-            text-shadow: 0 0 14px rgba(0, 255, 163, 0.5);
-        }
-
-        .text-glow-gold {
-            text-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
-        }
     </style>
 </head>
-<body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black">
+<body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black min-h-screen flex flex-col justify-between">
 
-    <!-- HEADER / NAVIGATION CON ESPACE PROFIL EN HAUT À DROITE -->
-    <header class="border-b border-kemetGold/30 bg-papyrusBase/80 backdrop-blur-md fixed top-0 w-full z-50">
+    <!-- HEADER NAVIGATION MULTI-PAGINA -->
+    <header class="border-b border-kemetGold/30 bg-papyrusBase/90 backdrop-blur-md fixed top-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
             
-            <!-- LOGO OCCHIO CIBERNETICO -->
-            <a href="#" class="flex items-center space-x-3 group">
+            <a href="index.html" class="flex items-center space-x-3 group">
                 <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1 shadow-lg border border-cyberGreen/40">
-                    <svg class="w-10 h-10 text-cyberGreen transition-transform duration-500 group-hover:scale-105" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                    <svg class="w-10 h-10 text-cyberGreen" viewBox="0 0 100 100" fill="none" stroke="currentColor">
                         <path d="M10 50 Q 50 15, 90 50 Q 50 85, 10 50 Z" stroke-width="3.5" stroke="#00FFA3"/>
                         <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3" fill="#0A0D10"/>
                         <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
-                        <path d="M25 32 L35 20 M75 32 L65 20 M25 68 L35 80 M75 68 L65 80" stroke="#00FFA3" stroke-width="2"/>
-                        <circle cx="35" cy="20" r="2" fill="#E6CA65"/>
-                        <circle cx="65" cy="20" r="2" fill="#E6CA65"/>
                     </svg>
                 </div>
                 <div>
@@ -97,20 +77,15 @@
                 </div>
             </a>
             
-            <!-- Nav Menu Desktop -->
             <nav class="hidden lg:flex items-center space-x-7 text-xs font-mono font-bold tracking-wider uppercase text-obsidian/80">
-                <a href="#vision" class="hover:text-cyberGreenDark transition-colors">Vision</a>
-                <a href="#purkemet" class="hover:text-cyberGreenDark transition-colors">PurKemet B2B</a>
-                <a href="#datalake" class="hover:text-cyberGreenDark transition-colors flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse"></span> Data Lake
-                </a>
-                <a href="#kmeh20" class="hover:text-cyberGreenDark transition-colors">K-MEH-20</a>
-                <a href="#carrieres" class="hover:text-cyberGreenDark transition-colors">Carrières</a>
+                <a href="index.html" class="text-cyberGreenDark font-black border-b-2 border-cyberGreenDark">Accueil</a>
+                <a href="purkemet.html" class="hover:text-cyberGreenDark transition-colors">PurKemet B2B</a>
+                <a href="kmeh20.html" class="hover:text-cyberGreenDark transition-colors">K-MEH-20</a>
+                <a href="datalake.html" class="hover:text-cyberGreenDark transition-colors">Maat Data Lake</a>
+                <a href="carrieres.html" class="hover:text-cyberGreenDark transition-colors">Carrières</a>
             </nav>
 
-            <!-- GESTIONE PROFILO E AUTHENTICATION (IN ALTO A DESTRA) -->
             <div id="auth-header-container" class="flex items-center space-x-3">
-                <!-- Stato 1: Utente non loggato -->
                 <div id="guest-auth-buttons" class="flex items-center space-x-2">
                     <button onclick="openAuthModal('login')" class="px-3.5 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-lg hover:bg-black transition-all text-xs font-mono font-bold tracking-wider uppercase shadow-md">
                         Connexion
@@ -120,10 +95,9 @@
                     </button>
                 </div>
 
-                <!-- Stato 2: Utente loggato (Profilo Attivo) -->
                 <div id="user-profile-badge" class="hidden flex items-center space-x-3">
                     <div class="bg-obsidian border border-kemetGold/50 px-3.5 py-1.5 rounded-xl font-mono text-xs flex items-center space-x-2 shadow-md">
-                        <span id="user-role-icon">👤</span>
+                        <span>👤</span>
                         <div>
                             <div id="user-display-name" class="font-bold text-white text-[11px] leading-tight">Mon Profil</div>
                             <div id="user-status-tag" class="text-[8px] font-bold text-cyberGreen uppercase">Compte Actif</div>
@@ -138,315 +112,116 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="mt-28 space-y-28 mb-20">
+    <!-- MAIN HUB -->
+    <main class="mt-28 space-y-20 mb-20 max-w-7xl mx-auto px-6">
 
-        <!-- HERO SECTION -->
-        <section class="max-w-7xl mx-auto px-6 pt-6">
+        <section class="pt-6">
             <div class="grid lg:grid-cols-12 gap-12 items-center">
-                
                 <div class="lg:col-span-7 space-y-6">
                     <div class="inline-flex items-center px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/60 text-obsidian text-xs font-mono font-bold tracking-wider uppercase">
-                        📜 Document de Souveraineté — Écosystème Illusion Kemet
+                        📜 Genesis Master Document — Projet Illusion Kemet
                     </div>
                     
                     <h2 class="font-kemetTitle text-4xl sm:text-6xl font-black text-obsidian tracking-tight leading-tight">
-                        La Révolution <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreenDark via-emerald-800 to-obsidian">DeepTech</span> du Waste Management
+                        L'Ingénierie Souveraine de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreenDark via-emerald-800 to-obsidian">Nouvelle Révolution Industrielle</span>
                     </h2>
                     
                     <p class="text-base sm:text-lg text-obsidian/85 leading-relaxed font-medium">
-                        Industrial Illusion déploie l'infrastructure numérique et logistique pour tous les <strong>Grands Producteurs B2B</strong> à Marrakech (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans). Valorisation de la fraction sèche à 0 MAD, prise en charge conforme de l'indifférencié et notarisation ESG sur <strong>Maat Data Lake</strong>.
+                        Industrial Illusion SARL déploie un écosystème cyber-physique unifié combinant l'intervention logistique immédiate <strong>PurKemet (Track 0)</strong> et l'infrastructure bionique lourde <strong>K-MEH-20</strong>, régis par le système d'exploitation souverain <strong>Maat OS</strong>.
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 pt-2">
-                        <button onclick="openAuditModal()" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/30">
-                            Demander un Audit Gratuit (0 MAD)
-                        </button>
-                        <a href="#purkemet" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
-                            Découvrir le Modèle PurKemet
+                        <a href="purkemet.html" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/30 text-center">
+                            Explorer PurKemet B2B →
                         </a>
-                    </div>
-
-                    <div class="pt-4 flex items-center gap-6 text-xs font-mono font-bold text-obsidian/70 border-t border-kemetGold/30">
-                        <span>Conforme Loi n° 28-00</span>
-                        <span>•</span>
-                        <span>Souveraineté CNDP n° 09-08</span>
-                        <span>•</span>
-                        <span>Notarisation Blockchain</span>
+                        <a href="kmeh20.html" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
+                            Découvrir K-MEH-20 →
+                        </a>
                     </div>
                 </div>
 
-                <!-- CARD MONOLITE OSSIDIANA -->
                 <div class="lg:col-span-5 bg-obsidian text-white rounded-3xl p-8 space-y-6 shadow-2xl relative overflow-hidden border-2 border-kemetGold/40">
-                    <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyberGreen/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
                     <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono">
-                        <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Genesis Data Room</span>
-                        <span class="text-xs text-kemetGoldBright">Track 0 & K-MEH-20</span>
+                        <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Holding Direction</span>
+                        <span class="text-xs text-kemetGoldBright">Marrakech, Maroc</span>
                     </div>
 
                     <div class="space-y-3">
-                        <h3 class="font-kemetTitle text-2xl font-black text-white">PROJET ILLUSION KEMET</h3>
+                        <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Directeur Général & Fondateur</span>
+                        <h3 class="font-kemetTitle text-2xl font-black text-white">Roberto Passarella</h3>
                         <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                            Écosystème unifié opérant par la double voie: la logistique d'urgence B2B <strong>PurKemet</strong> (Jour 0) et l'infrastructure bionique lourde <strong>K-MEH-20</strong> gouvernée par le système d'exploitation souverain <strong>Maat OS</strong>.
+                            « Nous ne promettons pas l'avenir : nous l'installons. Illusion Kemet élève l'apport humain et distribue la richesse produite grâce à la souveraineté technologique du Royaume. »
                         </p>
                     </div>
 
                     <div class="p-4 bg-obsidianCard rounded-2xl border border-white/10 space-y-2 text-xs font-mono">
-                        <div class="flex justify-between font-bold text-cyberGreen">
-                            <span>Directeur Général:</span>
-                            <span class="text-white">Roberto Passarella</span>
-                        </div>
                         <div class="flex justify-between font-bold text-slate-400">
-                            <span>Contact Officiel:</span>
+                            <span>Contact Direct:</span>
                             <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline">r.passarella@industrialillusion.ma</a>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
-        <!-- VISION & SOCIALISME PRIVÉ -->
-        <section id="vision" class="max-w-7xl mx-auto px-6 scroll-mt-28">
-            <div class="papyrus-card rounded-3xl p-8 sm:p-12 space-y-8">
-                <div class="max-w-3xl space-y-3">
-                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Humanisme Technologique</span>
-                    <h3 class="font-kemetTitle text-3xl font-black text-obsidian">L'Inversion du Paradigme Cybernétique</h3>
-                    <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
-                        Alors que les révolutions industrielles du passé ont aliéné le travailleur, Industrial Illusion place l'humain au centre. <strong>Maat OS</strong> rend l'intelligence artificielle intrinsèquement dépendante de l'opérateur. Nous transformons les travailleurs informels en partenaires associés bénéficiant du <strong>Socialisme Privé</strong>.
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-papyrusLight/80 p-6 rounded-2xl papyrus-border space-y-2">
-                        <h4 class="font-bold text-obsidian text-base">Émancipation des Chiffonniers (Mikhala)</h4>
-                        <p class="text-xs text-obsidian/75">Intégration formelle avec dignité, équipements de protection (EPI), formation continue et outils financiers éthiques.</p>
-                    </div>
-                    <div class="bg-papyrusLight/80 p-6 rounded-2xl papyrus-border space-y-2">
-                        <h4 class="font-bold text-obsidian text-base">Algorithme de Mérite Maat</h4>
-                        <p class="text-xs text-obsidian/75">Attribution impartiale des primes et des tournées sans favoritisme, basée sur la ponctualité, la sécurité et la qualité.</p>
-                    </div>
-                    <div class="bg-papyrusLight/80 p-6 rounded-2xl papyrus-border space-y-2">
-                        <h4 class="font-bold text-obsidian text-base">Actions de Classe B & Copropriété</h4>
-                        <p class="text-xs text-obsidian/75">Modèle fondé sur le paradigme des Actions de Classe B, réglementées pour faire de chaque salarié à durée indéterminée un copropriétaire de l'infrastructure, leur ouvrant l'accès à un système complet de welfare, d'avantages et de dividendes.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PURKEMET B2B (TRACK 0) -->
-        <section id="purkemet" class="max-w-7xl mx-auto px-6 scroll-mt-28 space-y-12">
+        <!-- CARDS DI STRADATAMENTO ALLE PAGINE REALI -->
+        <section class="space-y-8">
             <div class="text-center max-w-3xl mx-auto space-y-3">
-                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Opérationnalité Immédiate (Track 0)</span>
-                <h3 class="font-kemetTitle text-3xl sm:text-4xl font-black text-obsidian">Projet PurKemet : La Solution Clé en Main pour Grands Producteurs</h3>
-                <p class="text-sm text-obsidian/80 font-medium">
-                    PurKemet prend en charge l'ensemble du gisement de déchets des établissements B2B de Marrakech, éliminant les risques de surtaxe municipale (Loi 28-00) et sécurisant vos audits ESG.
-                </p>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- PILASTRO 1 -->
-                <div class="bg-obsidian text-white p-8 rounded-3xl space-y-4 border border-kemetGold/30 relative flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 bg-cyberGreen/10 rounded-xl flex items-center justify-center text-cyberGreen font-mono font-black text-sm">0 MAD</div>
-                        <h4 class="text-xl font-bold text-white">Gratuité Fraction Sèche</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Enlèvement sans aucun coût logistique du PET, PE-HD, Aluminium, Verre et Carton. La valeur de la matière compensant l'exploitation de la collecte.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4 font-mono">
-                        <li>• Sacs PP renforcés fournis avec QR Code</li>
-                        <li>• Intervention garantie sous 12 heures</li>
-                    </ul>
-                </div>
-
-                <!-- PILASTRO 2 -->
-                <div class="bg-obsidian text-white p-8 rounded-3xl space-y-4 border border-kemetGold/30 relative flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 bg-kemetGold/20 rounded-xl flex items-center justify-center text-kemetGoldBright font-mono font-black text-sm">100%</div>
-                        <h4 class="text-xl font-bold text-white">Gestion Indifferenciée Légale</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Prise en charge sous contrat de la fraction non-recyclable. Élimination garantie dans le strict respect du cadre légal (Loi 28-00) déchargeant votre direction.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4 font-mono">
-                        <li>• Décharge totale de responsabilité civile</li>
-                        <li>• Traçabilité d'élimination contrôlée</li>
-                    </ul>
-                </div>
-
-                <!-- PILASTRO 3 -->
-                <div class="bg-obsidian text-white p-8 rounded-3xl space-y-4 border border-kemetGold/30 relative flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-cyberGreen font-mono font-black text-sm">ESG</div>
-                        <h4 class="text-xl font-bold text-white">Certificat PurKemet Zéro-Déchet</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Émission mensuelle du rapport d'impact certifié par notarisation blockchain. Indispensable pour valider les labels <em>Clef Verte</em>, <em>Travelife</em> et <em>ISO 14001</em>.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4 font-mono">
-                        <li>• Métriques de CO₂ évitées & Kg valorisés</li>
-                        <li>• QR Code public de vérification pour auditeurs</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- BROCHURE BANNER -->
-            <div class="papyrus-card rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-kemetGold/40">
-                <div class="space-y-2">
-                    <h4 class="font-kemetTitle text-lg font-bold text-obsidian">Téléchargez la Brochure Commerciale Officielle PurKemet</h4>
-                    <p class="text-xs text-obsidian/75">Consultez le parcours de la matière en 5 étapes, les spécifications techniques et les garanties pour votre établissement.</p>
-                </div>
-                <button onclick="downloadBrochure()" class="px-7 py-3.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl text-xs uppercase tracking-wider whitespace-nowrap hover:bg-black transition-all border border-cyberGreen/30 shadow-lg">
-                    📄 Demander la Brochure PDF
-                </button>
-            </div>
-        </section>
-
-        <!-- MAAT DATA LAKE LIVE IMPACT -->
-        <section id="datalake" class="max-w-5xl mx-auto px-6 scroll-mt-28">
-            <div class="bg-obsidian text-white rounded-3xl p-8 sm:p-12 border-2 border-cyberGreen/40 shadow-2xl relative overflow-hidden text-center space-y-8">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-cyberGreen/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div class="space-y-2">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyberGreen/10 text-cyberGreen text-xs font-mono font-bold">
-                        <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse"></span>
-                        MAAT DATA LAKE SYNCHRONISÉ
-                    </div>
-                    <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Traçabilité Cryptographique en Temps Réel</h3>
-                    <p class="text-xs text-slate-400 max-w-xl mx-auto font-sans">Chaque transaction physique est enregistrée de manière immuable sur notre Data Lake souverain.</p>
-                </div>
-
-                <!-- COUNTERS GRID -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                    <div class="bg-obsidianCard p-6 rounded-2xl border border-white/10 space-y-2">
-                        <span class="text-xs font-mono uppercase text-slate-400 font-bold">Matière Valorisée (Kg)</span>
-                        <div id="kg-counter" class="text-4xl sm:text-5xl font-black text-white font-mono text-glow-green">0.00</div>
-                        <p class="text-[10px] text-cyberGreen font-mono">PET, PE-HD, Alu, Carton, Verre</p>
-                    </div>
-
-                    <div class="bg-obsidianCard p-6 rounded-2xl border border-white/10 space-y-2">
-                        <span class="text-xs font-mono uppercase text-slate-400 font-bold">Émissions CO₂ Évitées (Kg)</span>
-                        <div id="co2-counter" class="text-4xl sm:text-5xl font-black text-kemetGoldBright font-mono text-glow-gold">0.00</div>
-                        <p class="text-[10px] text-kemetGold font-mono">Calcul normalisé filière recyclage</p>
-                    </div>
-                </div>
-
-                <p class="text-[10px] font-mono text-slate-500">
-                    Registre conforme CNDP Loi n° 09-08 • Audit fiscal en temps réel réservé DGI / Wilaya
-                </p>
-            </div>
-        </section>
-
-        <!-- K-MEH-20 (INFRASTRUCTURE LOURDE) -->
-        <section id="kmeh20" class="max-w-7xl mx-auto px-6 scroll-mt-28 space-y-8">
-            <div class="papyrus-card rounded-3xl p-8 sm:p-12 space-y-8 border-2 border-kemetGold/30">
-                <div class="max-w-3xl space-y-3">
-                    <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Infrastructure Lourde (Projet Général)</span>
-                    <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Kemet Modular Eco Hub 20 (K-MEH-20)</h3>
-                    <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
-                        L'actif matériel du Projet Illusion Kemet est une infrastructure d'architecture industrielle monumentale brevetée auprès de l'<strong>OMPIC</strong> : une pyramide tronquée à base carrée de <strong>56 m × 56 m</strong> (soit une superficie de <strong>3 136 m²</strong>).
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="space-y-4 text-xs text-obsidian/80 leading-relaxed">
-                        <div class="p-4 bg-papyrusLight/80 rounded-xl papyrus-border space-y-1">
-                            <h4 class="font-bold text-obsidian text-sm">Organisme Bionique Cyber-Écologique</h4>
-                            <p>Autonomie métabolique totale produisant son propre biométhane pur à 100% via le cœur bionique <em>Kemet Loop</em>, rendant l'installation entièrement autonome en énergie.</p>
-                        </div>
-                        <div class="p-4 bg-papyrusLight/80 rounded-xl papyrus-border space-y-1">
-                            <h4 class="font-bold text-obsidian text-sm">Pôle Manufacturier de Kénitra</h4>
-                            <p>Les Skids modulaires de la pyramide sont fabriqués en série dans la Zone Franche de Kénitra (<em>La Vallée de l'Humanisme</em>). Une NewCo inaliénable du sol marocain.</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-obsidian text-white p-8 rounded-2xl space-y-4 border-2 border-kemetGold/40 shadow-xl">
-                        <h4 class="font-kemetTitle text-lg font-bold text-kemetGoldBright">Spécifications de la Pyramide</h4>
-                        <ul class="space-y-2 text-xs text-slate-300 font-mono">
-                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Dimensions:</span><span>56 m × 56 m (Hauteur 24 m)</span></li>
-                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Superficie:</span><span>3 136 m²</span></li>
-                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Capacité:</span><span>20 000 Tonnes / an</span></li>
-                            <li class="flex justify-between border-b border-white/10 pb-1"><span>Blindage:</span><span>Cage de Faraday (EMP/TEMPEST)</span></li>
-                            <li class="flex justify-between"><span>Brevet:</span><span>Invention Industrielle OMPIC</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CARRIÈRES & RECRUTEMENT -->
-        <section id="carrieres" class="max-w-7xl mx-auto px-6 scroll-mt-28 space-y-8">
-            <div class="text-center max-w-3xl mx-auto space-y-3">
-                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Opportunités Économiques</span>
-                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Rejoignez l'Écosystème Industrial Illusion</h3>
-                <p class="text-sm text-obsidian/80 font-medium">
-                    Nous recrutons des talents engagés pour accompagner notre déploiement sur le nœud de Marrakech.
-                </p>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Architecture de l'Écosystème</span>
+                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Les Piliers du Projet Illusion Kemet</h3>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- POSIZIONE 1: VETTORI LOGISTICI -->
-                <div class="papyrus-card p-8 rounded-3xl space-y-6 flex flex-col justify-between">
+                <div class="papyrus-card p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark transition-all">
                     <div class="space-y-4">
-                        <div class="inline-block px-3 py-1 bg-obsidian text-cyberGreen font-mono text-xs font-bold rounded-lg">
-                            Logistique Terrain
-                        </div>
-                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Vecteurs Logistiques Motorisés</h4>
-                        <p class="text-xs text-obsidian/80 leading-relaxed font-medium">
-                            Vous êtes propriétaire ou locataire d'un triporteur motorisé, furgonnette (Doblò, Partner) ou camionnette à Marrakech? Devenez prestataire indépendant partenaire.
+                        <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-xs font-bold rounded-lg inline-block">Track 0 Immédiat</span>
+                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">PurKemet B2B Management</h4>
+                        <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
+                            Service d'excellence clé en main pour tous les grands producteurs B2B (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans). Valorisation du sec à 0 MAD et gestion légale sous contrat de l'indifférencié (Loi n° 28-00).
                         </p>
-                        <ul class="text-xs text-obsidian/75 space-y-2">
-                            <li>✓ Rémunération garantie à la course (supérieure au SMIG)</li>
-                            <li>✓ Kit technique fourni (Balance Bluetooth, Sacs QR, EPI)</li>
-                            <li>✓ Assistance à l'immatriculation Auto-Entrepreneur</li>
-                            <li>✓ Attribution équitable via Maat OS</li>
-                        </ul>
                     </div>
-                    <button onclick="openCareerModal('Vecteur Logistique')" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-black transition-all shadow-md">
-                        Postuler comme Vecteur
-                    </button>
+                    <a href="purkemet.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
+                        Accéder au Portail PurKemet →
+                    </a>
                 </div>
 
-                <!-- POSIZIONE 2: AMBASSADEURS COMMERCIAUX -->
-                <div class="papyrus-card p-8 rounded-3xl space-y-6 flex flex-col justify-between">
+                <div class="papyrus-card p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark transition-all">
                     <div class="space-y-4">
-                        <div class="inline-block px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-xs font-bold rounded-lg">
-                            Développement Commercial
-                        </div>
-                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Ambassadeurs Commerciaux B2B</h4>
-                        <p class="text-xs text-obsidian/80 leading-relaxed font-medium">
-                            Vous disposez d'un réseau dans l'hôtellerie, la restauration ou le commerce à Marrakech? Introduisez les contrats PurKemet auprès des décideurs.
+                        <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-xs font-bold rounded-lg inline-block">Infrastructure Lourde</span>
+                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Kemet Modular Eco Hub 20</h4>
+                        <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
+                            L'ingénierie monumentale de la Pyramide de 56 m × 56 m (3 136 m²), le cœur bionique Kemet Loop, l'autonomie en biométhane à 100%, Maat OS et le pôle manufacturier inaliénable de Kénitra.
                         </p>
-                        <ul class="text-xs text-obsidian/75 space-y-2">
-                            <li>✓ Commission d'entrée immédiate (250 DH dès la 3ème collecte)</li>
-                            <li>✓ Primes de volume sur le tonnage apporté</li>
-                            <li>✓ Tracé et validé de manière transparente on-chain</li>
-                            <li>✓ Formation complète aux outils B2B fournie</li>
-                        </ul>
                     </div>
-                    <button onclick="openCareerModal('Ambassadeur Commercial')" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-black transition-all shadow-md">
-                        Postuler comme Ambassadeur
-                    </button>
+                    <a href="kmeh20.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
+                        Consulter K-MEH-20 →
+                    </a>
                 </div>
-            </div>
-        </section>
 
-        <!-- ANCRAGE TERRITORIAL -->
-        <section class="max-w-7xl mx-auto px-6 pt-12 border-t border-kemetGold/30">
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div class="space-y-4">
-                    <h3 class="font-kemetTitle text-2xl font-black text-obsidian">Ancrage Territorial Marrakech</h3>
-                    <p class="text-xs text-obsidian/80 leading-relaxed font-medium">
-                        Industrial Illusion opère en pleine synergie avec la Wilaya de Marrakech-Safi et sollicite le patronage de l'<strong>AMDIE</strong> (Agence Marocaine de Développement des Investissements et des Exportations) pour accélérer la souveraineté écologique du Royaume.
-                    </p>
+                <div class="papyrus-card p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark transition-all">
+                    <div class="space-y-4">
+                        <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-xs font-bold rounded-lg inline-block">Registre Blockchain</span>
+                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Maat Data Lake & Impact</h4>
+                        <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
+                            Le réservoir inaliénable de données cryptographiques. Suivi en temps réel des kilogrammes valorisés, des émissions CO₂ évitées, audits DGI et transparence fiscale totale.
+                        </p>
+                    </div>
+                    <a href="datalake.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
+                        Ouvrir le Maat Data Lake →
+                    </a>
                 </div>
-                <div class="p-6 papyrus-card rounded-2xl text-xs space-y-2 border border-kemetGold/40">
-                    <div class="font-bold text-obsidian">Siège & Représentation Opérationnelle:</div>
-                    <div class="text-obsidian/75 font-medium">Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc</div>
-                    <div class="font-bold text-obsidian pt-2">Direction Générale:</div>
-                    <div class="text-obsidian/75 font-mono">Roberto Passarella — r.passarella@industrialillusion.ma</div>
+
+                <div class="papyrus-card p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark transition-all">
+                    <div class="space-y-4">
+                        <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-xs font-bold rounded-lg inline-block">Socialisme Privé</span>
+                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Carrières & Émancipation</h4>
+                        <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
+                            Recrutement des Vecteurs Logistiques Motorisés et des Ambassadeurs Commerciaux B2B. Integration formelle des Chiffonniers (Mikhala) e copropriété via Actions de Classe B.
+                        </p>
+                    </div>
+                    <a href="carrieres.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
+                        Rejoindre le Réseau →
+                    </a>
                 </div>
             </div>
         </section>
@@ -457,386 +232,156 @@
     <footer class="border-t border-kemetGold/30 bg-papyrusDark/40 py-8">
         <div class="max-w-7xl mx-auto px-6 text-center text-xs text-obsidian/70 space-y-2 font-mono">
             <p>© 2026 Industrial Illusion SARL — Deep Tech Systems. Tous droits réservés.</p>
-            <p class="text-[10px]">Conforme Loi CNDP n° 09-08 & Loi n° 28-00 • Document Officiel Data Room Genesis</p>
+            <p class="text-[10px]">Siège Opérationnel: Préfecture de Marrakech, Région Marrakech-Safi • Conforme Loi CNDP n° 09-08 & Loi n° 28-00</p>
         </div>
     </footer>
 
-    <!-- MODAL PORTAIL D'ACCÈS / AUTHENTIFICATION & REGISTRATION -->
-    <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-obsidian text-white border-2 border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl my-8">
+    <!-- MODAL AUTH -->
+    <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-obsidian text-white border-2 border-cyberGreen/30 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
-            
             <div class="space-y-2 text-center">
-                <div class="w-12 h-12 bg-cyberGreen/10 text-cyberGreen rounded-2xl flex items-center justify-center mx-auto text-xl font-bold border border-cyberGreen/30">
-                    🔑
-                </div>
                 <h3 class="font-kemetTitle text-xl font-black text-white">Portail d'Accès Réseau</h3>
                 <p class="text-xs text-slate-400 font-sans">Connectez-vous ou créez votre compte d'accès B2B.</p>
             </div>
-
-            <!-- SCHEDE COMMUTAZIONE AUTH: LOGIN / SIGNUP -->
             <div class="flex border-b border-white/10 font-mono text-xs text-center">
                 <button id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
                 <button id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
             </div>
-
-            <!-- FORM 1: LOGIN -->
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 font-mono text-left">
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email / Identifiant *</label>
-                    <input type="text" id="login_email" required placeholder="r.passarella@industrialillusion.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                    <input type="text" id="login_email" required placeholder="votre.email@etablissement.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
                 </div>
-
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
                     <input type="password" id="login_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
                 </div>
-
-                <button type="submit" id="loginSubmitBtn" class="w-full py-3.5 bg-cyberDark text-cyberGreen font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase mt-2 border border-cyberGreen/30 shadow-md">
-                    Se Connecter au Portail
-                </button>
+                <button type="submit" class="w-full py-3.5 bg-cyberDark text-cyberGreen font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase border border-cyberGreen/30">Se Connecter</button>
             </form>
-
-            <!-- FORM 2: INSCRIPTION (3 NIVEAUX D'ACCÈS) -->
             <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="space-y-3 font-mono text-left hidden">
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Type de Compte *</label>
                     <select id="signup_type" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
-                        <option value="standard">Public / Investisseur (Newsletter & Reports)</option>
-                        <option value="client">Client B2B (Espace ESG HoReCa — Sur Validation)</option>
-                        <option value="operator">Opérateur / Vecteur Logistique (Sur Habilitation Siège)</option>
+                        <option value="standard">Public / Investisseur (Newsletter)</option>
+                        <option value="client">Client B2B (Espace ESG HoReCa)</option>
+                        <option value="operator">Opérateur / Vecteur Logistique</option>
                     </select>
                 </div>
-
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Nom Établissement *</label>
-                    <input type="text" id="signup_name" required placeholder="ex: Hôtel Palais Marrakech / Jean Dupont" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
+                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Nom / Établissement *</label>
+                    <input type="text" id="signup_name" required placeholder="Hôtel Palais / Nom Prénom" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
                 </div>
-
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email Officiel *</label>
                     <input type="email" id="signup_email" required placeholder="contact@etablissement.ma" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
                 </div>
-
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de Passe *</label>
                     <input type="password" id="signup_password" required placeholder="••••••••" class="w-full bg-obsidianCard border border-white/10 rounded-xl p-3 text-xs text-white focus:border-cyberGreen focus:outline-none">
                 </div>
-
-                <button type="submit" id="signupSubmitBtn" class="w-full py-3.5 bg-gradient-to-r from-cyberGreenDark to-emerald-600 text-black font-bold rounded-xl hover:brightness-110 transition-all text-xs tracking-wider uppercase mt-2 shadow-md">
-                    Créer Mon Compte
-                </button>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-cyberGreenDark to-emerald-600 text-black font-bold rounded-xl hover:brightness-110 transition-all text-xs tracking-wider uppercase">Créer Mon Compte</button>
             </form>
-
-            <div id="loginFeedback" class="text-xs text-center font-bold hidden font-mono"></div>
-
-            <p class="text-[9px] font-mono text-center text-slate-500">
-                Notarisation cryptographique • Conforme CNDP Loi n° 09-08
-            </p>
         </div>
     </div>
 
-    <!-- DRAWER DE GESTION DU PROFIL (MEMBER DASHBOARD) -->
+    <!-- DRAWER PROFIL -->
     <div id="profileDrawer" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-obsidian text-white border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
             <button onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
-
-            <div class="space-y-1 text-center border-b border-white/10 pb-4">
-                <div class="text-3xl mb-1">👤</div>
-                <h3 class="font-kemetTitle text-xl font-black text-white" id="drawer-user-name">Mon Profil Utilisateur</h3>
+            <div class="text-center border-b border-white/10 pb-4">
+                <h3 class="font-kemetTitle text-xl font-black text-white" id="drawer-user-name">Mon Profil</h3>
                 <p class="text-xs font-mono text-kemetGoldBright" id="drawer-user-role">Role: Membre</p>
             </div>
-
-            <!-- INFOS STATUT ACCÈS -->
             <div id="drawer-status-box" class="p-4 rounded-2xl bg-obsidianCard border border-white/10 space-y-2 font-mono text-xs">
                 <div class="flex justify-between font-bold">
                     <span class="text-slate-400">Statut du Compte:</span>
-                    <span id="drawer-status-val" class="text-cyberGreen font-extrabold">ACTIF</span>
+                    <span id="drawer-status-val" class="text-cyberGreen">ACTIF</span>
                 </div>
-                <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans leading-relaxed">
-                    Votre compte est configuré. Vous recevrez nos bulletins d'information et études d'impact environnemental.
-                </p>
+                <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans">Votre compte est actif.</p>
             </div>
-
-            <!-- BOUTONS ROUTAGE SECURED -->
             <div class="space-y-3 font-mono">
-                <button id="drawer-btn-dashboard" onclick="window.location.href='dashboard.html'" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex items-center justify-between">
-                    <span>🏨 Accéder à l'Espace Client ESG</span>
-                    <span>→</span>
+                <button id="drawer-btn-dashboard" onclick="window.location.href='dashboard.html'" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
+                    <span>🏨 Accéder à l'Espace Client ESG</span><span>→</span>
                 </button>
-
-                <button id="drawer-btn-pwa" onclick="window.location.href='pwa.html'" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex items-center justify-between">
-                    <span>📱 Accéder à la PWA Opérateur (Maat OS)</span>
-                    <span>→</span>
+                <button id="drawer-btn-pwa" onclick="window.location.href='pwa.html'" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
+                    <span>📱 Accéder à la PWA Opérateur (Maat OS)</span><span>→</span>
                 </button>
             </div>
-
             <div class="pt-2 flex justify-between items-center border-t border-white/10 text-xs font-mono">
                 <button onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
-                <button onclick="closeProfileDrawer()" class="px-4 py-2 bg-papyrusDark text-obsidian rounded-xl font-bold">Fermer</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL AUDIT B2B -->
-    <div id="auditModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="papyrus-card border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
-            <button onclick="closeAuditModal()" class="absolute top-4 right-4 text-obsidian hover:text-black text-2xl font-bold">&times;</button>
-            
-            <div class="space-y-1">
-                <h3 class="font-kemetTitle text-xl font-black text-obsidian">Demande d'Audit Gisement B2B</h3>
-                <p class="text-xs text-obsidian/75">Évaluation gratuite sur site pour votre établissement à Marrakech.</p>
-            </div>
-
-            <form id="auditForm" onsubmit="handleAuditSubmit(event)" class="space-y-4 text-left">
-                <div>
-                    <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Nom de l'Établissement *</label>
-                    <input type="text" id="company_name" required placeholder="ex: Hôtel / Restaurant / Clinique" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Catégorie</label>
-                        <select id="horeca_category" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                            <option value="Hôtel / Resort">Hôtel / Resort</option>
-                            <option value="Restaurant / Rooftop">Restaurant / Rooftop</option>
-                            <option value="Nightlife / Bar">Nightlife / Bar</option>
-                            <option value="École / Clinique">École / Clinique</option>
-                            <option value="Commerces & Artisans">Commerces & Artisans</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">ICE (Optionnel)</label>
-                        <input type="text" id="ice_no" placeholder="0001234560000" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Email Contact *</label>
-                        <input type="email" id="contact_email" required placeholder="direction@etablissement.ma" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Téléphone *</label>
-                        <input type="tel" id="contact_phone" required placeholder="+212 6..." class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full py-3.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase mt-2 border border-cyberGreen/30">
-                    Envoyer la Demande d'Audit
-                </button>
-                <div id="formFeedback" class="text-xs text-center font-bold hidden font-mono"></div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL RECRUTEMENT -->
-    <div id="careerModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="papyrus-card border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
-            <button onclick="closeCareerModal()" class="absolute top-4 right-4 text-obsidian hover:text-black text-2xl font-bold">&times;</button>
-            
-            <div class="space-y-1">
-                <h3 class="font-kemetTitle text-xl font-black text-obsidian">Candidature Recrutement</h3>
-                <p class="text-xs text-obsidian/75 font-mono" id="careerRoleTitle">Postuler dans l'écosystème</p>
-            </div>
-
-            <form id="careerForm" onsubmit="handleCareerSubmit(event)" class="space-y-4 text-left">
-                <input type="hidden" id="career_role" value="">
-                
-                <div>
-                    <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Nom Complet *</label>
-                    <input type="text" id="candidate_name" required placeholder="Votre nom et prénom" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Téléphone / WhatsApp *</label>
-                        <input type="tel" id="candidate_phone" required placeholder="+212 6..." class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase text-obsidian/80 mb-1">Véhicule (Si Vecteur)</label>
-                        <input type="text" id="candidate_vehicle" placeholder="ex: Triporteur / Doblò" class="w-full bg-papyrusLight border border-kemetGold/40 rounded-xl p-3 text-xs text-obsidian focus:border-cyberGreenDark focus:outline-none font-medium">
-                    </div>
-                </div>
-
-                <button type="submit" id="careerSubmitBtn" class="w-full py-3.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all text-xs tracking-wider uppercase mt-2 border border-cyberGreen/30">
-                    Soumettre Ma Candidature
-                </button>
-                <div id="careerFeedback" class="text-xs text-center font-bold hidden font-mono"></div>
-            </form>
-        </div>
-    </div>
-
-    <!-- SCRIPT JS PRINCIPAL ET GESTION NATIVE DU PROFIL -->
     <script>
-        function openAuditModal() {
-            var el = document.getElementById('auditModal');
-            if (el) el.classList.remove('hidden');
-        }
-        function closeAuditModal() {
-            var el = document.getElementById('auditModal');
-            if (el) el.classList.add('hidden');
-            var feedback = document.getElementById('formFeedback');
-            if (feedback) feedback.classList.add('hidden');
-        }
-
-        function openAuthModal(mode) {
-            var el = document.getElementById('loginModal');
-            if (el) el.classList.remove('hidden');
-            switchAuthMode(mode || 'login');
-        }
-        function closeLoginModal() {
-            var el = document.getElementById('loginModal');
-            if (el) el.classList.add('hidden');
-            var feedback = document.getElementById('loginFeedback');
-            if (feedback) feedback.classList.add('hidden');
-        }
-
-        function openProfileDrawer() {
-            var el = document.getElementById('profileDrawer');
-            if (el) el.classList.remove('hidden');
-            updateDrawerContent();
-        }
-        function closeProfileDrawer() {
-            var el = document.getElementById('profileDrawer');
-            if (el) el.classList.add('hidden');
-        }
+        function openAuthModal(mode) { document.getElementById('loginModal').classList.remove('hidden'); switchAuthMode(mode || 'login'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        function openProfileDrawer() { document.getElementById('profileDrawer').classList.remove('hidden'); updateDrawerContent(); }
+        function closeProfileDrawer() { document.getElementById('profileDrawer').classList.add('hidden'); }
 
         function switchAuthMode(mode) {
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
-            const tabLogin = document.getElementById('auth-tab-login');
-            const tabSignup = document.getElementById('auth-tab-signup');
-
             if (mode === 'login') {
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
             } else {
-                signupForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                signupForm.classList.remove('hidden'); loginForm.classList.add('hidden');
             }
         }
 
-        // LOGIN USER & SUPER-ADMIN
         function handleLoginSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('login_email').value.trim();
             const pass = document.getElementById('login_password').value.trim();
-            const feedback = document.getElementById('loginFeedback');
 
-            feedback.classList.remove('hidden');
-            feedback.className = "text-xs text-center font-bold block text-cyberGreen font-mono";
-            feedback.innerText = "Vérification des accès...";
-
-            setTimeout(() => {
-                // ACCESSO SUPER-ADMIN (ROBERTO PASSARELLA - DG)
-                if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
-                    sessionStorage.setItem('purkemet_auth', 'superadmin');
-                    sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
-                    sessionStorage.setItem('purkemet_role', 'Super-Admin');
-                    sessionStorage.setItem('purkemet_status', 'ACTIVE');
-                    
-                    checkUserSession();
-                    closeLoginModal();
-                    openProfileDrawer();
-                    return;
-                }
-
-                // LOGIN GENERALE
-                if (email.includes('@')) {
-                    sessionStorage.setItem('purkemet_auth', 'client');
-                    sessionStorage.setItem('purkemet_name', email.split('@')[0]);
-                    sessionStorage.setItem('purkemet_role', 'Client B2B');
-                    sessionStorage.setItem('purkemet_status', 'PENDING');
-                    
-                    checkUserSession();
-                    closeLoginModal();
-                    openProfileDrawer();
-                } else {
-                    feedback.className = "text-xs text-center font-bold block text-red-400 font-mono";
-                    feedback.innerText = "Identifiant ou mot de passe incorrect.";
-                }
-            }, 600);
-        }
-
-        // REGISTRAZIONE UTENTI MULTI-LIVELLO
-        async function handleSignupSubmit(e) {
-            e.preventDefault();
-            const type = document.getElementById('signup_type').value;
-            const name = document.getElementById('signup_name').value.trim();
-            const email = document.getElementById('signup_email').value.trim();
-            const feedback = document.getElementById('loginFeedback');
-            const btn = document.getElementById('signupSubmitBtn');
-
-            btn.disabled = true;
-            feedback.classList.remove('hidden');
-            feedback.className = "text-xs text-center font-bold block text-cyberGreen font-mono";
-            feedback.innerText = "Création du compte en cours...";
-
-            try {
-                if (supabaseClient) {
-                    if (type === 'client') {
-                        await supabaseClient.from('clients').insert([{ company_name: name, contact_email: email, horeca_category: 'Nouveau Client' }]);
-                    } else if (type === 'operator') {
-                        await supabaseClient.from('vectors').insert([{ full_name: name, phone: email }]);
-                    }
-                }
-
-                sessionStorage.setItem('purkemet_auth', type);
-                sessionStorage.setItem('purkemet_name', name);
-                sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
-                sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
-
-                checkUserSession();
-                closeLoginModal();
-                openProfileDrawer();
-            } catch (err) {
-                sessionStorage.setItem('purkemet_auth', type);
-                sessionStorage.setItem('purkemet_name', name);
-                sessionStorage.setItem('purkemet_role', type);
+            if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
+                sessionStorage.setItem('purkemet_auth', 'superadmin');
+                sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
+                sessionStorage.setItem('purkemet_role', 'Super-Admin');
                 sessionStorage.setItem('purkemet_status', 'ACTIVE');
-                checkUserSession();
-                closeLoginModal();
-                openProfileDrawer();
-            } finally {
-                btn.disabled = false;
+                checkUserSession(); closeLoginModal(); openProfileDrawer(); return;
+            }
+
+            if (email.includes('@')) {
+                sessionStorage.setItem('purkemet_auth', 'client');
+                sessionStorage.setItem('purkemet_name', email.split('@')[0]);
+                sessionStorage.setItem('purkemet_role', 'Client B2B');
+                sessionStorage.setItem('purkemet_status', 'PENDING');
+                checkUserSession(); closeLoginModal(); openProfileDrawer();
             }
         }
 
-        // VERIFICA E AGGIORNAMENTO HEADER USER PROFILE
+        function handleSignupSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById('signup_type').value;
+            const name = document.getElementById('signup_name').value.trim();
+
+            sessionStorage.setItem('purkemet_auth', type);
+            sessionStorage.setItem('purkemet_name', name);
+            sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
+            sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
+            checkUserSession(); closeLoginModal(); openProfileDrawer();
+        }
+
         function checkUserSession() {
             const auth = sessionStorage.getItem('purkemet_auth');
             const name = sessionStorage.getItem('purkemet_name') || 'Mon Profil';
             const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
-
             const guestBtns = document.getElementById('guest-auth-buttons');
             const userBadge = document.getElementById('user-profile-badge');
 
             if (auth) {
                 if (guestBtns) guestBtns.classList.add('hidden');
                 if (userBadge) userBadge.classList.remove('hidden');
-
                 document.getElementById('user-display-name').innerText = name;
-                
-                const statusTag = document.getElementById('user-status-tag');
-                if (status === 'PENDING') {
-                    statusTag.innerText = "En Attente de Confirmation";
-                    statusTag.className = "text-[8px] font-bold text-kemetGoldBright uppercase";
-                } else {
-                    statusTag.innerText = "Compte Actif";
-                    statusTag.className = "text-[8px] font-bold text-cyberGreen uppercase";
-                }
+                document.getElementById('user-status-tag').innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
             } else {
                 if (guestBtns) guestBtns.classList.remove('hidden');
                 if (userBadge) userBadge.classList.add('hidden');
             }
         }
 
-        // AGGIORNAMENTO DRAWER PROFILE
         function updateDrawerContent() {
             const auth = sessionStorage.getItem('purkemet_auth');
             const name = sessionStorage.getItem('purkemet_name') || 'Utilisateur';
@@ -845,169 +390,22 @@
 
             document.getElementById('drawer-user-name').innerText = name;
             document.getElementById('drawer-user-role').innerText = "Rôle: " + role;
+            document.getElementById('drawer-status-val').innerText = status;
 
-            const statusVal = document.getElementById('drawer-status-val');
-            const statusMsg = document.getElementById('drawer-status-msg');
             const btnDash = document.getElementById('drawer-btn-dashboard');
             const btnPWA = document.getElementById('drawer-btn-pwa');
 
-            if (auth === 'superadmin') {
-                statusVal.innerText = "SUPER-ADMIN (DG)";
-                statusVal.className = "text-kemetGoldBright font-extrabold";
-                statusMsg.innerText = "Accès prioritaire accordé par la Direction Générale. Tous les modules de l'écosystème sont débloqués.";
+            if (auth === 'superadmin' || status === 'ACTIVE') {
                 btnDash.disabled = false; btnPWA.disabled = false;
                 btnDash.classList.remove('opacity-50'); btnPWA.classList.remove('opacity-50');
-            } else if (status === 'PENDING') {
-                statusVal.innerText = "EN ATTENTE DE CONFIRMATION";
-                statusVal.className = "text-kemetGoldBright font-extrabold";
-                statusMsg.innerText = "Votre demande d'accès B2B est en cours de vérification par l'équipe PurKemet. Un auditeur vous contactera sous 24h pour activer votre portail.";
+            } else {
                 btnDash.disabled = true; btnPWA.disabled = true;
                 btnDash.classList.add('opacity-50'); btnPWA.classList.add('opacity-50');
-            } else {
-                statusVal.innerText = "COMPTE ACTIF";
-                statusVal.className = "text-cyberGreen font-extrabold";
-                statusMsg.innerText = "Votre compte est actif. Vous êtes inscrit à nos bulletins d'information et rapports d'impact environnemental.";
-                btnDash.disabled = false; btnPWA.disabled = false;
-                btnDash.classList.remove('opacity-50'); btnPWA.classList.remove('opacity-50');
             }
         }
 
-        function logoutUser() {
-            sessionStorage.clear();
-            checkUserSession();
-            closeProfileDrawer();
-        }
-
-        function openCareerModal(role) {
-            var roleInput = document.getElementById('career_role');
-            if (roleInput) roleInput.value = role;
-            var roleTitle = document.getElementById('careerRoleTitle');
-            if (roleTitle) roleTitle.innerText = "Poste: " + role;
-            var el = document.getElementById('careerModal');
-            if (el) el.classList.remove('hidden');
-        }
-        function closeCareerModal() {
-            var el = document.getElementById('careerModal');
-            if (el) el.classList.add('hidden');
-            var feedback = document.getElementById('careerFeedback');
-            if (feedback) feedback.classList.add('hidden');
-        }
-
-        function downloadBrochure() {
-            alert("Génération du Kit Documentaire PurKemet B2B (Genesis Data Room). Veuillez préciser votre établissement dans le formulaire d'audit pour recevoir le dossier complet.");
-            openAuditModal();
-        }
-
-        const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
-        let supabaseClient = null;
-
-        function initSupabase() {
-            try {
-                if (window.supabase && window.supabase.createClient) {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    fetchLiveImpact();
-                } else {
-                    setTimeout(initSupabase, 500);
-                }
-            } catch (err) {
-                console.warn("Patienter pendant le chargement Supabase JS...");
-            }
-        }
-
-        async function fetchLiveImpact() {
-            if (!supabaseClient) return;
-            try {
-                const { data, error } = await supabaseClient
-                    .from('live_impact_summary')
-                    .select('*')
-                    .single();
-
-                if (error) return;
-
-                if (data) {
-                    const kgEl = document.getElementById('kg-counter');
-                    const co2El = document.getElementById('co2-counter');
-                    if (kgEl) kgEl.innerText = Number(data.total_kg_recycled).toLocaleString('fr-FR', { minimumFractionDigits: 2 });
-                    if (co2El) co2El.innerText = Number(data.total_co2_avoided_kg).toLocaleString('fr-FR', { minimumFractionDigits: 2 });
-                }
-            } catch (err) {
-                console.warn("Sync DataLake Error:", err.message);
-            }
-        }
-
-        async function handleAuditSubmit(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const feedback = document.getElementById('formFeedback');
-            if (btn) { btn.disabled = true; btn.innerText = "Transmission..."; }
-
-            const payload = {
-                company_name: document.getElementById('company_name').value,
-                horeca_category: document.getElementById('horeca_category').value,
-                ice_no: document.getElementById('ice_no').value || null,
-                contact_email: document.getElementById('contact_email').value,
-                contact_phone: document.getElementById('contact_phone').value
-            };
-
-            try {
-                if (supabaseClient) {
-                    const { error } = await supabaseClient.from('clients').insert([payload]);
-                    if (error) throw error;
-                }
-                if (feedback) {
-                    feedback.className = "text-xs text-center font-bold text-cyberGreenDark block";
-                    feedback.innerText = "✓ Demande enregistrée! Un auditeur vous contactera sous 24h.";
-                }
-                document.getElementById('auditForm').reset();
-                setTimeout(closeAuditModal, 3000);
-            } catch (err) {
-                if (feedback) {
-                    feedback.className = "text-xs text-center font-bold text-red-600 block";
-                    feedback.innerText = "Erreur: " + err.message;
-                }
-            } finally {
-                if (btn) { btn.disabled = false; btn.innerText = "Envoyer la Demande d'Audit"; }
-            }
-        }
-
-        async function handleCareerSubmit(e) {
-            e.preventDefault();
-            const btn = document.getElementById('careerSubmitBtn');
-            const feedback = document.getElementById('careerFeedback');
-            if (btn) { btn.disabled = true; btn.innerText = "Traitement..."; }
-
-            const payload = {
-                full_name: document.getElementById('candidate_name').value,
-                phone: document.getElementById('candidate_phone').value
-            };
-
-            try {
-                if (supabaseClient) {
-                    const { error } = await supabaseClient.from('vectors').insert([payload]);
-                    if (error) throw error;
-                }
-                if (feedback) {
-                    feedback.className = "text-xs text-center font-bold text-cyberGreenDark block";
-                    feedback.innerText = "✓ Candidature reçue avec succès! Notre équipe vous recontactera.";
-                }
-                document.getElementById('careerForm').reset();
-                setTimeout(closeCareerModal, 3000);
-            } catch (err) {
-                if (feedback) {
-                    feedback.className = "text-xs text-center font-bold text-red-600 block";
-                    feedback.innerText = "Note: " + err.message;
-                }
-            } finally {
-                if (btn) { btn.disabled = false; btn.innerText = "Soumettre Ma Candidature"; }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initSupabase();
-            checkUserSession();
-            setInterval(fetchLiveImpact, 30000);
-        });
+        function logoutUser() { sessionStorage.clear(); checkUserSession(); closeProfileDrawer(); }
+        window.addEventListener('DOMContentLoaded', checkUserSession);
     </script>
 </body>
 </html>
