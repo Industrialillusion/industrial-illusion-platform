@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Maat OS PWA v5.0 — Workstation Opérateur & Double Pesée | Industrial Illusion SARL</title>
-    <meta name="description" content="Workstation opérateur logistique Maat OS : protocole de double pesée certifiée, ancrage blockchain immuable, Kemet Wallet et suivi des dossiers clients.">
+    <title>Maat OS PWA v6.5 — Workstation Enterprise | Industrial Illusion SARL</title>
+    <meta name="description" content="Workstation opérateur logistique Maat OS v6.5: Super-Admin DG Desk, Double Pesée, Module Ambassadeur B2B, Kemet Wallet multi-canaux, Score Maat et Registre Caisse.">
     <meta name="theme-color" content="#00FFA3">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -103,7 +103,7 @@
     <div class="flex items-center gap-2.5 min-w-0">
       <svg class="w-9 h-9 shrink-0" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
       <div class="min-w-0">
-        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v5.0 PWA</span></h1>
+        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v6.5</span></h1>
         <p id="opInfo" class="text-[9px] text-slate-400 font-mono mt-0.5 truncate">Workstation Opérateur Terrain</p>
       </div>
     </div>
@@ -123,12 +123,12 @@
     <div class="text-center space-y-1">
       <div class="w-12 h-12 mx-auto rounded-2xl bg-cyberGreen/10 border border-cyberGreen/30 flex items-center justify-center text-xl">📱</div>
       <h2 class="font-mono font-bold text-white uppercase tracking-wider text-sm">Accès Workstation Opérateur</h2>
-      <p class="text-[11px] text-slate-400">Authentification du Vecteur Logistique Maat OS.</p>
+      <p class="text-[11px] text-slate-400">Authentification sécurisée du Vecteur Logistique Maat OS.</p>
     </div>
 
     <div class="grid grid-cols-2 font-mono text-xs text-center gap-1" role="tablist">
       <button type="button" id="tabMaster" onclick="window.switchAuthTab('master')" class="tab on" role="tab">Master Admin (DG)</button>
-      <button type="button" id="tabOtp" onclick="window.switchAuthTab('otp')" class="tab" role="tab">Code Agent / OTP</button>
+      <button type="button" id="tabOtp" onclick="window.switchAuthTab('otp')" class="tab" role="tab">Email &amp; Code OTP</button>
     </div>
 
     <!-- FORM MASTER ADMIN -->
@@ -141,19 +141,35 @@
         <label class="lbl" for="m_pass">Passkey Master *</label>
         <input id="m_pass" type="password" value="Industrial1317!" class="inp mt-1">
       </div>
-      <button type="button" onclick="window.forceSuperAdminLogin()" class="btn btn-g">👑 Connexion Super-Admin (DG)</button>
+      <button type="button" onclick="window.forceSuperAdminLogin()" class="btn btn-g">👑 Connexion Super-Admin (DG Desk)</button>
     </div>
 
     <!-- FORM OTP AGENT -->
     <div id="formOtp" class="hidden space-y-3 font-mono">
-      <div>
-        <label class="lbl" for="v_email">Email Opérateur *</label>
-        <input id="v_email" type="email" placeholder="vecteur@industrialillusion.ma" class="inp mt-1">
+      <div id="step-email-input" class="space-y-3">
+        <div>
+            <label class="lbl" for="v_email">Email Opérateur / Ambassadeur *</label>
+            <input id="v_email" type="email" placeholder="agent@industrialillusion.ma" class="inp mt-1">
+        </div>
+        <div>
+            <label class="lbl" for="v_password">Mot de passe *</label>
+            <input id="v_password" type="password" placeholder="••••••••" class="inp mt-1">
+        </div>
+        <button type="button" onclick="window.requestEmailOtp()" class="btn btn-o">Demander le Code OTP par Email 📩</button>
       </div>
-      <button type="button" onclick="window.sendOtp()" class="btn btn-o">Recevoir un code par email 📩</button>
-      <div id="otpBlock" class="hidden space-y-2 pt-2 border-t border-white/10">
-        <input id="v_otp" inputmode="numeric" maxlength="8" class="inp text-center !text-lg font-bold !border-kemetGold/60 text-kemetGoldBright" placeholder="Saisissez 123456">
-        <button type="button" onclick="window.verifyOtp()" class="btn btn-au">Valider &amp; Débloquer 🔓</button>
+
+      <div id="otpBlock" class="hidden space-y-3 pt-2 border-t border-white/10">
+        <div class="p-3 bg-cyberGreen/10 border border-cyberGreen/30 rounded-xl text-center space-y-1">
+            <p class="text-xs text-cyberGreen font-bold">Un code OTP à 6 chiffres a été envoyé par e-mail.</p>
+            <p class="text-[10px] text-slate-400">Code de test temporaire : <span class="text-kemetGoldBright font-bold">123456</span></p>
+        </div>
+
+        <div>
+            <label class="lbl" for="v_otp">Code OTP (6 chiffres) *</label>
+            <input id="v_otp" inputmode="numeric" maxlength="6" class="inp text-center !text-xl font-bold !border-kemetGold/60 text-kemetGoldBright tracking-widest mt-1" placeholder="123456">
+        </div>
+
+        <button type="button" onclick="window.verifyOtpCode()" class="btn btn-au">Valider &amp; Débloquer 🔓</button>
       </div>
     </div>
 
@@ -162,34 +178,88 @@
     <p id="authMsg" class="text-[11px] text-center font-mono font-bold min-h-[1rem]" role="alert"></p>
   </section>
 
+  <!-- BANNIÈRE ESSAI TEMPORAIRE -->
+  <div id="trial-banner" class="hidden p-3 bg-kemetGold/20 border border-kemetGold/50 rounded-2xl font-mono text-xs text-center space-y-1">
+    <div class="flex justify-between items-center font-bold text-kemetGoldBright">
+        <span>⚠️ MODE ESSAI TEMPORAIRE</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-kemetGold text-black">EN ATTENTE SEDE</span>
+    </div>
+    <p class="text-[10px] text-slate-300">Votre e-mail est vérifié. Vous naviguez en mode test avant validation centrale par la Direction.</p>
+  </div>
+
   <!-- TERMINAL OPERATIONNEL POST-LOGIN -->
   <div id="terminal" class="hidden space-y-4">
     
-    <!-- NAVIGATION DE VECTEUR -->
-    <nav class="grid grid-cols-5 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[9px] text-center gap-0.5">
-      <button type="button" class="tab on" data-mod="clients" onclick="window.switchModule('clients')">🏢 Clients</button>
+    <!-- NAVIGATION APPLICATIVE DE VECTEUR & AMBASSADEUR -->
+    <nav class="grid grid-cols-6 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[8px] text-center gap-0.5">
+      <button type="button" class="tab on" data-mod="admin" id="nav-admin-tab" onclick="window.switchModule('admin')">👑 DG</button>
       <button type="button" class="tab" data-mod="pesee1" onclick="window.switchModule('pesee1')">1️⃣ Collecte</button>
       <button type="button" class="tab" data-mod="pesee2" onclick="window.switchModule('pesee2')">2️⃣ Dépôt</button>
+      <button type="button" class="tab" data-mod="ambassador" onclick="window.switchModule('ambassador')">🤝 Ambass.</button>
       <button type="button" class="tab" data-mod="profile" onclick="window.switchModule('profile')">📊 Profil</button>
       <button type="button" class="tab" data-mod="wallet" onclick="window.switchModule('wallet')">💰 Wallet</button>
     </nav>
 
-    <!-- MODULE 0: SELECTION SCHEDA CLIENTE B2B DEDICATA -->
-    <section id="mod-clients" class="mod space-y-4">
-      <div class="card g">
+    <!-- MODULE SUPER-ADMIN DESK (DIRECTION GÉNÉRALE) -->
+    <section id="mod-admin" class="mod space-y-4">
+      <div class="card au space-y-3">
         <div class="flex justify-between items-center border-b border-white/10 pb-2">
-            <label class="lbl">Fiches Partenaires B2B Marrakech</label>
-            <span class="text-[9px] font-mono text-cyberGreen font-bold">CLIENTS AGRÉÉS</span>
+            <span class="lbl !text-kemetGoldBright">Bureau de Direction — Roberto Passarella (DG)</span>
+            <span class="text-[9px] font-mono text-cyberGreen font-bold">CONTROL DESK</span>
         </div>
-        <p class="text-[11px] text-slate-300 mt-2">Cliquez sur un établissement pour ouvrir sa fiche de collecte active ou consulter ses données notariées.</p>
-      </div>
 
-      <div class="space-y-3 font-mono" id="client-cards-container">
-        <!-- Generato dinamicamente via JS -->
+        <!-- STATS DE LOGISTIQUE DEPOIS & MATERIAL STOCKED -->
+        <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs">
+            <div class="p-3 bg-black/50 rounded-xl border border-white/10">
+                <span class="text-[9px] text-slate-400 block uppercase">Stock au Dépôt Hub</span>
+                <span class="text-lg font-bold text-cyberGreen">18.42 T</span>
+            </div>
+            <div class="p-3 bg-black/50 rounded-xl border border-white/10">
+                <span class="text-[9px] text-slate-400 block uppercase">Expéditions Usines</span>
+                <span class="text-lg font-bold text-kemetGoldBright">42.80 T</span>
+            </div>
+        </div>
+
+        <!-- APPROVATION DES COMPTES EN ATTENTE (VETTORI E CLIENTIB2B) -->
+        <div class="space-y-2 font-mono text-xs pt-1">
+            <span class="lbl block">Demandes d'Approbation en Attente :</span>
+            <div class="space-y-2">
+                <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center">
+                    <div>
+                        <span class="text-white font-bold block">Hassan M. (Fourgonnette)</span>
+                        <span class="text-[9px] text-slate-400">Vecteur • Cluster Guéliz • Permis B</span>
+                    </div>
+                    <button type="button" onclick="alert('Compte Vecteur Approuvé !')" class="px-2.5 py-1 bg-cyberGreen text-black font-bold text-[10px] rounded-lg">Approuver</button>
+                </div>
+
+                <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center">
+                    <div>
+                        <span class="text-white font-bold block">Hôtel Riad Lotus</span>
+                        <span class="text-[9px] text-slate-400">Client B2B • Apporté par Ambassadeur</span>
+                    </div>
+                    <button type="button" onclick="alert('Compte Client B2B Approuvé !')" class="px-2.5 py-1 bg-kemetGold text-black font-bold text-[10px] rounded-lg">Approuver</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRAMME DE RETRAIT INDUSTRIEL AUPRÈS DES USINES PARTENAIRES -->
+        <div class="space-y-2 font-mono text-xs pt-1">
+            <span class="lbl block">Acheteurs Industriels &amp; Usines Partenaires :</span>
+            <div class="space-y-1.5 text-[11px] text-slate-300">
+                <div class="p-2 bg-black/40 rounded-lg flex justify-between items-center border border-white/5">
+                    <span>🏢 Pôle Recyclage Kénitra (PET)</span>
+                    <span class="text-cyberGreen font-bold">Enlèvement Ven. 16/10</span>
+                </div>
+                <div class="p-2 bg-black/40 rounded-lg flex justify-between items-center border border-white/5">
+                    <span>🏢 Papeterie du Sud Casablanca (Carton)</span>
+                    <span class="text-kemetGoldBright font-bold">Enlèvement Lun. 19/10</span>
+                </div>
+            </div>
+        </div>
       </div>
     </section>
 
-    <!-- MODULE 1: PREMIÈRE PESÉE (COLLECTE TERRAIN SUR SITE CLIENT) -->
+    <!-- MODULE 1: PREMIÈRE PESÉE (COLLECTE TERRAIN) -->
     <section id="mod-pesee1" class="mod hidden space-y-4">
       <div class="card">
         <div class="flex justify-between items-center border-b border-white/10 pb-2">
@@ -259,7 +329,7 @@
       <button type="button" onclick="window.submitCollecte()" class="btn btn-au !py-4 !text-sm !rounded-2xl">🚚 Enregistrer Pesée 1 &amp; Bloquer en Transit (Bordereau)</button>
     </section>
 
-    <!-- MODULE 2: SECONDE PESÉE (CONTRÔLE DÉPÔT & ANCRAGE BLOCKCHAIN) -->
+    <!-- MODULE 2: SECONDE PESÉE (CONTRÔLE DÉPÔT) -->
     <section id="mod-pesee2" class="mod hidden space-y-4">
       <div class="card g">
         <div class="flex justify-between items-center border-b border-white/10 pb-2">
@@ -279,7 +349,6 @@
             <div class="flex justify-between text-slate-400"><span>Client:</span><span id="b_client" class="text-white font-bold">-</span></div>
             <div class="flex justify-between text-slate-400"><span>Matériau:</span><span id="b_mat" class="text-cyberGreen font-bold">-</span></div>
             <div class="flex justify-between text-slate-400"><span>Pesée 1 (Collecte):</span><span id="b_w1" class="text-kemetGoldBright font-bold">- Kg</span></div>
-            <div class="flex justify-between text-slate-400"><span>Lien Visiteur Temp:</span><a id="b_link" href="#" target="_blank" class="text-cyberGreen font-bold underline">Voir Data Lake</a></div>
         </div>
       </div>
 
@@ -304,7 +373,55 @@
       <button type="button" onclick="window.submitDepotAncrage()" class="btn btn-g !py-4 !text-sm !rounded-2xl">🔗 Valider la Double Pesée &amp; Générer Cryptographic Key</button>
     </section>
 
-    <!-- MODULE 3: DASHBOARD VECTEUR & ÉCHELON DE CARRIÈRE MAAT -->
+    <!-- MODULE 3: VECTEUR-AMBASSADEUR (PROCUREMENT COMMERCIAL B2B) -->
+    <section id="mod-ambassador" class="mod hidden space-y-4">
+      <div class="card au space-y-3">
+        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <span class="lbl !text-kemetGoldBright">Module Vecteur-Ambassadeur B2B</span>
+            <span class="text-[9px] font-mono text-cyberGreen font-bold">+250 MAD / Contrat</span>
+        </div>
+        <p class="text-[11px] text-slate-300">Faites signer un contrat de collecte exclusif PurKemet à un hôtel ou restaurant et encaissez des commissions d'apporteur d'affaires[cite: 7].</p>
+
+        <form onsubmit="window.submitAmbassadorContract(event)" class="space-y-3 font-mono text-xs text-left pt-2">
+            <div>
+                <label class="lbl">Nom de l'Établissement B2B Procuré *</label>
+                <input type="text" id="amb_hotel_name" required placeholder="ex: Riad Boutique Medina" class="inp mt-1">
+            </div>
+
+            <div>
+                <label class="lbl">Catégorie Horeca *</label>
+                <select id="amb_cat" class="inp mt-1">
+                    <option value="RIAD">Riad / Maison d'Hôtes</option>
+                    <option value="RESTAURANT">Restaurant / Rooftop</option>
+                    <option value="HOTEL_RESORT">Hôtel 5* / Resort</option>
+                    <option value="CLINIQUE">Clinique / Établissement</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="lbl">Photo du Contrat Signé / QR Code Onboarding *</label>
+                <input type="file" accept="image/*" id="amb_photo" required class="inp mt-1 text-[10px]">
+            </div>
+
+            <button type="submit" class="btn btn-au !py-3">🤝 Enregistrer le Contrat B2B &amp; Réclamer Bonus</button>
+        </form>
+
+        <!-- COMMISSION TRACKER -->
+        <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
+            <span class="lbl block">Tableau des Commissions Apporteur d'Affaires :</span>
+            <div class="flex justify-between text-slate-300 text-[11px]">
+                <span>• Bonus d'Entrée Express (3ème collecte):</span>
+                <span class="text-cyberGreen font-bold">250 MAD</span>
+            </div>
+            <div class="flex justify-between text-slate-300 text-[11px]">
+                <span>• Bonus de Volume (sur 5 tonnes):</span>
+                <span class="text-kemetGoldBright font-bold">~115 MAD / Tonne</span>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: PROFILE DÉTAILLÉ, MEZZO & SCORE MAAT -->
     <section id="mod-profile" class="mod hidden space-y-4">
       <div class="card au space-y-4">
         <div class="flex items-center gap-3 border-b border-white/10 pb-3">
@@ -318,23 +435,26 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 text-center font-mono">
-          <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Ancienneté</span>
-            <span class="text-base font-bold text-white">24 Mois</span>
-          </div>
-          <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Tonnage Notarié</span>
-            <span class="text-base font-bold text-cyberGreen">48.25 T</span>
-          </div>
-          <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Score de Mérite</span>
-            <span class="text-base font-bold text-kemetGoldBright">98.5 / 100</span>
-          </div>
-          <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Tournées Validées</span>
-            <span class="text-base font-bold text-white">312</span>
-          </div>
+        <!-- SPECIFICATIONS MEZZO LOGISTIQUE & PERMIS -->
+        <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
+            <span class="lbl block">Fiche Technique Véhicule &amp; Matériel BYOD :</span>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+                <div><span class="text-slate-400 block text-[9px]">TYPOLOGIE VÉHICULE:</span> <span class="font-bold text-white">Fourgonnette Doblò (300-600kg)</span></div>
+                <div><span class="text-slate-400 block text-[9px]">PERMIS DE CONDUIRE:</span> <span class="font-bold text-cyberGreen">Permis B (Valide)</span></div>
+                <div><span class="text-slate-400 block text-[9px]">CLUSTER AFFECTÉ:</span> <span class="font-bold text-kemetGoldBright">Guéliz &amp; Hivernage</span></div>
+                <div><span class="text-slate-400 block text-[9px]">KIT TECHNIQUE:</span> <span class="font-bold text-white">10 Sacs PP + EPI + Balance</span></div>
+            </div>
+        </div>
+
+        <!-- DECOMPOSITION SCORE MAAT -->
+        <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
+            <span class="lbl block">Indicateurs du Score de Mérite Maat (98.5 / 100) :</span>
+            <div class="space-y-1 text-[10px] text-slate-300">
+                <div class="flex justify-between"><span>• Disponibilité (35%):</span><span class="text-cyberGreen font-bold">100% Acceptation</span></div>
+                <div class="flex justify-between"><span>• Respect SLA 12h (30%):</span><span class="text-cyberGreen font-bold">99.2% Ponctualité</span></div>
+                <div class="flex justify-between"><span>• Précision Pesée Δ&lt;3% (20%):</span><span class="text-cyberGreen font-bold">98.0% Conforme</span></div>
+                <div class="flex justify-between"><span>• Note Satisfaction Client (15%):</span><span class="text-kemetGoldBright font-bold">4.9 / 5.0</span></div>
+            </div>
         </div>
 
         <div class="space-y-1.5 font-mono">
@@ -349,7 +469,7 @@
       </div>
     </section>
 
-    <!-- MODULE 4: KEMET WALLET & PAIEMENTS MULTI-CANAUX (MAROC) -->
+    <!-- MODULE 5: KEMET WALLET, PROJECTION 8H & REGISTRE CASSA -->
     <section id="mod-wallet" class="mod hidden space-y-4">
       <div class="card g space-y-4">
         <div class="flex justify-between items-center border-b border-white/10 pb-3 font-mono">
@@ -360,6 +480,23 @@
         <div class="p-4 bg-black/60 rounded-2xl border border-cyberGreen/30 text-center font-mono">
           <span class="text-[10px] text-slate-400 uppercase block">Solde Primes &amp; Courses Disponibles</span>
           <div class="text-4xl font-black text-cyberGreen">3,450.00 <span class="text-xs font-normal">MAD</span></div>
+        </div>
+
+        <!-- PROJECTION REVENUS GIORNATA 8 ORE -->
+        <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 space-y-2 font-mono text-xs">
+            <span class="lbl !text-kemetGoldBright block">Projections Estimées de Revenu (8h / Jour) :</span>
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+                <div class="p-2 bg-black/40 rounded-lg border border-white/5">
+                    <span class="text-slate-400 block">VECTEUR LOGISTIQUE</span>
+                    <span class="text-cyberGreen font-bold text-xs">~3 960 MAD / Mois</span>
+                    <span class="text-[8px] text-slate-500 block">3-4 courses/jour à 75 MAD</span>
+                </div>
+                <div class="p-2 bg-black/40 rounded-lg border border-white/5">
+                    <span class="text-slate-400 block">AMBASSADEUR + VECTEUR</span>
+                    <span class="text-kemetGoldBright font-bold text-xs">~5 610 MAD / Mois</span>
+                    <span class="text-[8px] text-slate-500 block">Inclus primes +2 contrats/mois</span>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3 text-center font-mono">
@@ -387,37 +524,11 @@
   </div>
 </main>
 
-<!-- MODAL SCHEDA CLIENTE DEDICATA -->
-<div id="clientCardModal" role="dialog" aria-modal="true">
-  <div class="card g max-w-sm w-full space-y-4 text-left relative !p-6 font-mono text-xs">
-    <div class="flex justify-between items-center border-b border-white/10 pb-2">
-      <span class="lbl" id="m_client_id">CL-001 — DOSSIER CLIENT</span>
-      <button type="button" onclick="window.closeClientCardModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
-    </div>
-
-    <div class="space-y-2">
-        <h3 id="m_client_name" class="font-bold text-base text-white">La Mamounia Marrakech</h3>
-        <p id="m_client_cat" class="text-[10px] text-kemetGoldBright">Catégorie : Hôtel / Resort 5*</p>
-    </div>
-
-    <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-1.5 text-[11px]">
-        <div class="flex justify-between text-slate-400"><span>Bordereaux en transit:</span><span id="m_client_transit" class="text-kemetGoldBright font-bold">1 Lot</span></div>
-        <div class="flex justify-between text-slate-400"><span>Tonnage total notarié:</span><span id="m_client_anchored" class="text-cyberGreen font-bold">14.85 T</span></div>
-    </div>
-
-    <div class="space-y-2 pt-1">
-        <button type="button" onclick="window.startPickupForClient()" class="btn btn-g !py-3">🚚 Démarrer une Collecte pour ce Client</button>
-        <a id="m_client_dashboard_link" href="dashboard.html" target="_blank" class="btn btn-o !py-3 text-center block">🏨 Visiter l'Espace ESG Client</a>
-        <a id="m_client_datalake_link" href="datalake.html" target="_blank" class="btn btn-au !py-3 text-center block">🌐 Voir les Clés Data Lake Notariées</a>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL DEMANDE DE PAIEMENT -->
+<!-- MODAL DEMANDE DE PAIEMENT / CASH AVEC RENDEZ-VOUS DÉPÔT -->
 <div id="payoutModal" role="dialog" aria-modal="true">
   <div class="card g max-w-sm w-full space-y-4 text-center relative !p-6">
     <div class="flex justify-between items-center border-b border-white/10 pb-2">
-      <span class="lbl">💸 Demande de Règlement / Virement</span>
+      <span class="lbl">💸 Demande de Règlement / Virement / Cash</span>
       <button type="button" onclick="window.closePayoutModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
     </div>
 
@@ -429,13 +540,22 @@
 
         <div>
             <label class="lbl">Mode de Règlement Préférentiel (Maroc) *</label>
-            <select id="payout_method" class="inp mt-1">
-                <option value="ESPECES_CAISSE">💵 Espèces Direct / Caisse Hub</option>
+            <select id="payout_method" onchange="window.toggleCashAppointment(this.value)" class="inp mt-1">
+                <option value="ESPECES_CAISSE">💵 Espèces Direct / Caisse Hub (RDV Dépôt)</option>
                 <option value="CIH_BANK">🏦 Virement CIH Bank</option>
                 <option value="ATTIJARIWAFA">🏦 Virement Attijariwafa Bank</option>
-                <option value="BANQUE_POPULAIRE">🏦 Virement Banque Populaire</option>
                 <option value="CASH_PLUS">📲 Cash Plus (Agence / Mobile)</option>
                 <option value="WAFACASH">📲 Wafacash Direct</option>
+            </select>
+        </div>
+
+        <!-- BLOC HORAIRE RDV ESPÈCES CAISSE -->
+        <div id="cash_rdv_box" class="p-3 bg-kemetGold/10 border border-kemetGold/30 rounded-xl space-y-2">
+            <label class="lbl !text-kemetGoldBright">Créneau RDV Retrait Espèces au Dépôt *</label>
+            <select id="cash_rdv_time" class="inp">
+                <option value="08:30">Demain à 08:30 (Ouverture Dépôt)</option>
+                <option value="12:30">Demain à 12:30 (Pause Méridienne)</option>
+                <option value="17:00">Demain à 17:00 (Fin de Poste)</option>
             </select>
         </div>
 
@@ -466,9 +586,9 @@
         <div>
             <label class="lbl">Motif / Origine *</label>
             <select id="cash_motif" class="inp mt-1">
-                <option value="AVANCE_CAISSE">Avance sur Course (Caisse Hub)</option>
+                <option value="AVANCE_CARBURANT">Micro-Avance Carburant (50 MAD)</option>
+                <option value="INDEMNITE_NO_SHOW">Indemnité Faux Déplacement / No-Show (25 MAD)</option>
                 <option value="ACHAT_PETIT_MATERIEL">Achat Matériel / Carburant</option>
-                <option value="ENCAISSEMENT_CLIENT">Encaissement Direct Client</option>
             </select>
         </div>
 
@@ -498,19 +618,13 @@
       </div>
     </div>
 
-    <div class="p-3 bg-black/60 rounded-xl border border-white/10 text-[11px] text-left font-mono space-y-1.5 text-slate-300">
-      <p class="font-bold text-cyberGreen">Guide d'installation App :</p>
-      <p>• <strong>iPhone (iOS Safari)</strong>: Appuie sur <span class="text-white">Partager ⎋</span> puis <span class="text-cyberGreen font-bold">'Sur l'écran d'accueil'</span>.</p>
-      <p>• <strong>Android (Chrome)</strong>: Appuie sur les 3 points <span class="text-white">⋮</span> puis <span class="text-cyberGreen font-bold">'Installer l'application'</span>.</p>
-    </div>
-
-    <button type="button" onclick="navigator.clipboard.writeText('https://industrialillusion.ma/pwa.html'); alert('Lien PWA copié dans le presse-papier !');" class="btn btn-o !py-2.5 !text-[10px]">📋 Copier le Lien PWA Mobile</button>
+    <button type="button" onclick="navigator.clipboard.writeText('https://industrialillusion.ma/pwa.html'); alert('Lien PWA copié !');" class="btn btn-o !py-2.5 !text-[10px]">📋 Copier le Lien PWA Mobile</button>
   </div>
 </div>
 
-<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v5.0</footer>
+<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v6.5</footer>
 
-<!-- LOGIQUE JAVASCRIPT EXHAUSTIVE -->
+<!-- LOGIQUE JAVASCRIPT INTEGRALE -->
 <script>
 (function() {
   'use strict';
@@ -520,20 +634,12 @@
   var $ = function(id) { return document.getElementById(id); };
 
   var st = { mat: '', qr: '', fault: false, photo: null, stable1: false, stable2: false, scanner: null, stream: null };
-  
-  var clientsList = [
-    { id: "CL-001", name: "La Mamounia Marrakech", cat: "Hôtel / Resort 5*", transit: 1, anchored: 14.85 },
-    { id: "CL-002", name: "Royal Mansour", cat: "Hôtel / Palace 5*", transit: 1, anchored: 22.10 },
-    { id: "CL-003", name: "Le Jardin Restaurant", cat: "Restaurant / Médina", transit: 0, anchored: 6.40 },
-    { id: "CL-004", name: "Clinique Internationale Marrakech", cat: "Établissement de Santé", transit: 0, anchored: 18.20 }
-  ];
-
   var activeBatches = [
     { id: "LOT-901", clientId: "CL-001", client: "La Mamounia Marrakech", mat: "PET_CLEAR", weight1: 18.50, hash: "0x8f2a...901" },
     { id: "LOT-902", clientId: "CL-002", client: "Royal Mansour", mat: "CARTON", weight1: 34.20, hash: "0x7b1c...902" }
   ];
 
-  let selectedClientIdForModal = null;
+  let currentAuthEmail = "";
 
   function msg(t, ok) {
     var e = $('authMsg');
@@ -543,7 +649,7 @@
     }
   }
 
-  // UNLOCK DIRECT SUPER-ADMIN
+  // UNLOCK DIRECT SUPER-ADMIN DESK
   window.forceSuperAdminLogin = function() {
     try {
       localStorage.clear();
@@ -554,41 +660,49 @@
       sessionStorage.setItem('purkemet_status', 'ACTIVE');
     } catch(e) {}
 
-    msg('✓ Accès Super-Admin accordé !', true);
+    msg('✓ Accès Super-Admin (DG) accordé !', true);
     setTimeout(function() {
       if ($('authCard')) $('authCard').classList.add('hidden');
       if ($('terminal')) $('terminal').classList.remove('hidden');
       if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
-      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : Roberto Passarella (DG)';
-      window.renderClientCards();
-      window.renderActiveBatchesSelect();
+      if ($('opInfo')) $('opInfo').textContent = 'Direction Générale : Roberto Passarella';
+      $('trial-banner').classList.add('hidden');
+      $('nav-admin-tab').classList.remove('hidden');
+      window.switchModule('admin');
     }, 150);
   };
 
-  window.sendOtp = function() {
+  window.requestEmailOtp = function() {
     var email = ($('v_email').value || '').trim();
-    if (!email.includes('@')) return msg('Saisissez un email valide.');
+    if (!email.includes('@')) return msg('Saisissez une adresse email valide.');
+    
+    currentAuthEmail = email;
     $('otpBlock').classList.remove('hidden');
-    msg('Code généré ! (Saisissez 123456 pour valider)', true);
+    $('step-email-input').classList.add('hidden');
+    msg('Code OTP à 6 chiffres généré !', true);
   };
 
-  window.verifyOtp = function() {
-    var email = ($('v_email').value || '').trim();
+  window.verifyOtpCode = function() {
     var code = ($('v_otp').value || '').trim();
     if (code === '123456' || code.length >= 4) {
-      sessionStorage.setItem('purkemet_auth', 'operator');
-      sessionStorage.setItem('purkemet_name', email.split('@')[0]);
-      sessionStorage.setItem('purkemet_role', 'operator');
-      sessionStorage.setItem('purkemet_status', 'ACTIVE');
+      var role = 'operator';
+      var status = 'PENDING_APPROVAL';
+
+      sessionStorage.setItem('purkemet_auth', role);
+      sessionStorage.setItem('purkemet_name', currentAuthEmail ? currentAuthEmail.split('@')[0] : 'Vecteur');
+      sessionStorage.setItem('purkemet_role', role);
+      sessionStorage.setItem('purkemet_status', status);
 
       if ($('authCard')) $('authCard').classList.add('hidden');
       if ($('terminal')) $('terminal').classList.remove('hidden');
       if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
-      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + email.split('@')[0];
-      window.renderClientCards();
-      window.renderActiveBatchesSelect();
+      if ($('opInfo')) $('opInfo').textContent = 'Opérateur (Essai) : ' + (currentAuthEmail.split('@')[0]);
+      
+      $('trial-banner').classList.remove('hidden');
+      $('nav-admin-tab').classList.add('hidden');
+      window.switchModule('pesee1');
     } else {
-      msg('Code invalide.');
+      msg('Code OTP invalide.');
     }
   };
 
@@ -601,7 +715,7 @@
   };
 
   window.switchModule = function(m) {
-    ['clients', 'pesee1', 'pesee2', 'profile', 'wallet', 'notes'].forEach(function(k) {
+    ['admin', 'pesee1', 'pesee2', 'ambassador', 'profile', 'wallet'].forEach(function(k) {
       var el = $('mod-' + k);
       if (el) el.classList.toggle('hidden', k !== m);
     });
@@ -610,47 +724,16 @@
     });
   };
 
-  window.renderClientCards = function() {
-    var container = $('client-cards-container');
-    if (!container) return;
-    container.innerHTML = clientsList.map(c => `
-      <div onclick="window.openClientCardModal('${c.id}')" class="p-4 bg-obsidianCard/90 rounded-2xl border border-white/10 hover:border-cyberGreen transition-all cursor-pointer space-y-2">
-        <div class="flex justify-between items-center">
-            <span class="text-cyberGreen font-bold">${c.id}</span>
-            <span class="text-[9px] px-2 py-0.5 rounded ${c.transit > 0 ? 'bg-kemetGold/20 text-kemetGold border border-kemetGold/40' : 'bg-cyberGreen/10 text-cyberGreen'}">${c.transit > 0 ? c.transit + ' Lot en Transit' : 'Prêt pour Collecte'}</span>
-        </div>
-        <h4 class="font-bold text-white text-sm">${c.name}</h4>
-        <div class="flex justify-between text-[11px] text-slate-400">
-            <span>Catégorie: ${c.cat}</span>
-            <span class="text-cyberGreen font-bold">${c.anchored} T Notariées</span>
-        </div>
-      </div>
-    `).join('');
+  window.toggleCashAppointment = function(val) {
+    $('cash_rdv_box').classList.toggle('hidden', val !== 'ESPECES_CAISSE');
   };
 
-  window.openClientCardModal = function(id) {
-    var c = clientsList.find(x => x.id === id);
-    if (!c) return;
-    selectedClientIdForModal = id;
-    $('m_client_id').textContent = c.id + " — DOSSIER CLIENT";
-    $('m_client_name').textContent = c.name;
-    $('m_client_cat').textContent = "Catégorie : " + c.cat;
-    $('m_client_transit').textContent = c.transit + " Lot en Transit";
-    $('m_client_anchored').textContent = c.anchored + " T";
-    
-    $('clientCardModal').classList.add('open');
-  };
-
-  window.closeClientCardModal = function() {
-    $('clientCardModal').classList.remove('open');
-  };
-
-  window.startPickupForClient = function() {
-    if (selectedClientIdForModal) {
-        $('client').value = selectedClientIdForModal;
-    }
-    window.closeClientCardModal();
-    window.switchModule('pesee1');
+  window.submitAmbassadorContract = function(e) {
+    e.preventDefault();
+    var name = $('amb_hotel_name').value;
+    alert('✅ NOUVEAU CONTRAT B2B ENREGISTRÉ !\n\n• Établissement: ' + name + '\n• Statut: Contrat validé on-chain\n• Bonus d\'Entrée Express: +250.00 MAD crédités sur votre Kemet Wallet (dès 3ème collecte).');
+    $('amb_hotel_name').value = '';
+    $('amb_photo').value = '';
   };
 
   window.openMobileModal = function() { $('mobileModal').classList.add('open'); };
@@ -705,7 +788,8 @@
 
   window.faultMode = function(step) {
     st.fault = true;
-    $('faultBox1').classList.remove('hidden');$('wMsg1').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
+    $('faultBox1').classList.remove('hidden');
+    $('wMsg1').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
     
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function(stream) {
@@ -722,7 +806,8 @@
     st.photo = c.toDataURL('image/jpeg', 0.6);
     $('fp1').src = st.photo; $('fp1').classList.remove('hidden'); v.classList.add('hidden');
     if (st.stream) st.stream.getTracks().forEach(function(t) { t.stop(); });
-    $('w1').readOnly = false; $('w1').focus();$('wMsg1').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
+    $('w1').readOnly = false; $('w1').focus();
+    $('wMsg1').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
   };
 
   // SOUMISSION PHASE 1: COLLECTE TERRAIN
@@ -735,54 +820,23 @@
     if (st.fault && !st.photo) return alert('Preuve photo obligatoire en mode défaillance.');
     if (!st.fault && !st.stable1) return alert('Attendez la stabilisation Bluetooth.');
 
-    var clientObj = clientsList.find(x => x.id === cId);
     var batchId = "LOT-" + Math.floor(1000 + Math.random()*9000);
     var hash = "0x" + Math.random().toString(16).substr(2, 8);
 
     activeBatches.push({
         id: batchId,
         clientId: cId,
-        client: clientObj ? clientObj.name : cId,
+        client: $('client').options[$('client').selectedIndex].text,
         mat: st.mat,
         weight1: w1,
         hash: hash
     });
 
-    if (clientObj) clientObj.transit += 1;
-
-    alert('✓ Première Pesée Enregistrée ! Lot ' + batchId + ' bloqué en transit vers le Dépôt.\n\nBordereau provisoire généré avec succès.');
-    $('w1').value = '00.00';$('qr').value = '';
+    alert('✓ Première Pesée Enregistrée ! Lot ' + batchId + ' bloqué en transit vers le Dépôt.');
+    $('w1').value = '00.00'; $('qr').value = '';
     st.mat = ''; st.photo = null; st.fault = false; st.stable1 = false;
     document.querySelectorAll('.mat').forEach(function(x) { x.classList.remove('on'); });
     $('faultBox1').classList.add('hidden');
-    window.renderClientCards();
-    window.renderActiveBatchesSelect();
-  };
-
-  window.renderActiveBatchesSelect = function() {
-    var select = $('active_batch_select');
-    if (!select) return;
-    select.innerHTML = '<option value="">Sélectionnez un lot en transit…</option>';
-    activeBatches.forEach(function(b) {
-        var opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = b.id + " — " + b.client + " (" + b.weight1 + " Kg)";
-        select.appendChild(opt);
-    });
-  };
-
-  window.loadBatchDetails = function(batchId) {
-    var box = $('batch_info_box');
-    var b = activeBatches.find(function(x) { return x.id === batchId; });
-    if (b) {
-        box.classList.remove('hidden');
-        $('b_client').textContent = b.client;
-        $('b_mat').textContent = b.mat;
-        $('b_w1').textContent = b.weight1 + " Kg";
-        $('b_link').href = "datalake.html?batch=" + b.id + "&hash=" + b.hash;
-    } else {
-        box.classList.add('hidden');
-    }
   };
 
   // SOUMISSION PHASE 2: DÉPÔT & ANCRAGE BLOCKCHAIN
@@ -796,19 +850,11 @@
     var b = activeBatches.find(function(x) { return x.id === batchId; });
     var variance = Math.abs(w2 - b.weight1).toFixed(2);
 
-    // Messa a giorno del tonnellaggio del cliente
-    var clientObj = clientsList.find(x => x.id === b.clientId);
-    if (clientObj) {
-        clientObj.transit = Math.max(0, clientObj.transit - 1);
-        clientObj.anchored = parseFloat((clientObj.anchored + (w2 / 1000)).toFixed(2));
-    }
-
-    alert('✅ DOUBLE PESÉE VALIDÉE & NOTARIÉE !\n\n• Lot: ' + batchId + '\n• Pesée 1 (Collecte): ' + b.weight1 + ' Kg\n• Pesée 2 (Dépôt): ' + w2 + ' Kg\n• Écart / Variance: ' + variance + ' Kg\n• Cryptographic Key: ' + b.hash + '\n\nAncrage immuable scellé sur Maat Data Lake & transmis au Dashboard Client ESG.');
+    alert('✅ DOUBLE PESÉE VALIDÉE & NOTARIÉE !\n\n• Lot: ' + batchId + '\n• Pesée 1 (Collecte): ' + b.weight1 + ' Kg\n• Pesée 2 (Dépôt): ' + w2 + ' Kg\n• Écart / Variance: ' + variance + ' Kg\n\nAncrage immuable scellé sur Maat Data Lake.');
 
     activeBatches = activeBatches.filter(function(x) { return x.id !== batchId; });
-    window.renderClientCards();
-    window.renderActiveBatchesSelect();
-    $('batch_info_box').classList.add('hidden');$('w2').value = '00.00';
+    $('batch_info_box').classList.add('hidden');
+    $('w2').value = '00.00';
     st.stable2 = false;
   };
 
@@ -829,29 +875,21 @@
     if (url) $('avatarImg').src = url;
   };
 
-  window.submitNote = function() {
-    var txt = ($('nText').value || '').trim();
-    if (!txt) return alert('Saisissez une observation.');
-    $('nText').value = '';
-    alert('✓ Observation enregistrée et transmise au Siège.');
-  };
-
   window.handleLogout = function() {
     try { sessionStorage.clear(); localStorage.clear(); } catch(e) {}
     location.reload();
   };
 
+  // CHECK AUTO-RESUME
   window.addEventListener('DOMContentLoaded', function() {
     var auth = sessionStorage.getItem('purkemet_auth');
     if (auth === 'superadmin') {
       window.forceSuperAdminLogin();
     } else if (auth === 'operator') {
-      if ($('authCard'))$('authCard').classList.add('hidden');
-      if ($('terminal'))$('terminal').classList.remove('hidden');
-      if ($('logoutBtn'))$('logoutBtn').classList.remove('hidden');
-      if ($('opInfo'))$('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
-      window.renderClientCards();
-      window.renderActiveBatchesSelect();
+      if ($('authCard')) $('authCard').classList.add('hidden');
+      if ($('terminal')) $('terminal').classList.remove('hidden');
+      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
+      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
     }
   });
 })();
