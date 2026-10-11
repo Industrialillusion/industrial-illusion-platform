@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark scroll-smooth">
+<html lang="fr" class="dark font-sans">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Client ESG — PurKemet | Industrial Illusion SARL</title>
+    <title>Espace Client ESG B2B | Industrial Illusion SARL — Reporting & Notarisation</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
     <script>
         tailwind.config = {
@@ -23,268 +23,131 @@
                         mono: ['JetBrains Mono', 'monospace']
                     },
                     colors: {
-                        papyrusBase: '#E5D6C4',
-                        papyrusLight: '#EFE3D3',
-                        papyrusDark: '#D4C2AF',
-                        obsidian: '#0A0D10',
-                        obsidianCard: '#12171C',
-                        kemetGold: '#C5A059',
-                        kemetGoldBright: '#E6CA65',
+                        cyberDark: '#0B0F12',
+                        cyberCard: '#131920',
                         cyberGreen: '#00FFA3',
-                        cyberGreenDark: '#00B871'
+                        cyberGreenDark: '#00B871',
+                        kemetGold: '#C5A059',
+                        kemetGoldBright: '#E8C86A'
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background-color: #E5D6C4;
-            background-image: 
-                radial-gradient(at 10% 10%, rgba(239, 227, 211, 0.8) 0px, transparent 50%),
-                radial-gradient(at 90% 20%, rgba(212, 194, 175, 0.6) 0px, transparent 50%),
-                radial-gradient(at 50% 80%, rgba(229, 214, 196, 0.9) 0px, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        .papyrus-card {
-            background: linear-gradient(145deg, rgba(239, 227, 211, 0.85), rgba(220, 204, 185, 0.75));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(197, 160, 89, 0.35);
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-            #printable-cert, #printable-cert * { visibility: visible; }
-            #printable-cert { position: absolute; left: 0; top: 0; width: 100%; }
-        }
+        body { background-color: #0B0F12; color: #F1F5F9; }
+        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
     </style>
 </head>
-<body class="text-obsidian antialiased overflow-x-hidden min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between">
 
-    <header class="border-b border-kemetGold/30 bg-papyrusBase/90 backdrop-blur-md sticky top-0 w-full z-40 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <!-- HEADER CLIENT -->
+    <header class="border-b border-kemetGold/30 bg-cyberDark/90 backdrop-blur fixed top-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-obsidian rounded-xl flex items-center justify-center border border-cyberGreen/40">
-                    <span class="text-cyberGreen font-bold font-mono text-sm">ESG</span>
+                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
                 </div>
                 <div>
-                    <h1 class="font-kemetTitle text-base font-black tracking-widest leading-none">INDUSTRIAL ILLUSION</h1>
-                    <p class="text-[9px] font-mono text-cyberGreenDark font-bold tracking-widest uppercase mt-0.5">Espace Client B2B</p>
+                    <h1 class="font-kemetTitle text-base font-bold text-white leading-none">ESPACE CLIENT ESG B2B</h1>
+                    <p class="text-[9px] font-mono text-cyberGreen uppercase">Plateforme PurKemet • Reporting Notarié</p>
                 </div>
             </a>
-            
-            <a href="index.html" class="px-4 py-2 border border-obsidian text-obsidian font-mono text-xs font-bold rounded-lg hover:bg-obsidian hover:text-papyrusBase transition-all uppercase">
-                ← Retour au Site
-            </a>
+
+            <div class="flex items-center space-x-4 font-mono text-xs">
+                <div class="text-right hidden sm:block">
+                    <span class="text-slate-400 block text-[10px]">ÉTABLISSEMENT :</span>
+                    <span id="client-header-name" class="font-bold text-kemetGoldBright">La Mamounia Marrakech</span>
+                </div>
+                <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-black border border-white/10 text-white rounded-xl hover:bg-white/10">Quitter 🔒</button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-10 space-y-10 w-full flex-grow">
+    <!-- CONTENT -->
+    <main class="mt-28 mb-16 max-w-7xl mx-auto px-6 space-y-10 w-full">
 
-        <div class="papyrus-card p-6 rounded-3xl border-2 border-kemetGold/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div class="space-y-1">
-                <span class="text-xs font-mono font-bold uppercase text-cyberGreenDark">Portail d'Authentification</span>
-                <h2 class="font-kemetTitle text-2xl font-black text-obsidian" id="selected-client-name">Sélectionnez Votre Établissement</h2>
-                <p class="text-xs text-obsidian/75 font-sans" id="selected-client-category">Consultez les performances ESG et la traçabilité notariale</p>
+        <!-- HERO KPI STATS -->
+        <section class="grid md:grid-cols-4 gap-6 font-mono">
+            <div class="glass-card p-6 space-y-2 border-l-4 border-l-cyberGreen">
+                <span class="text-[10px] text-slate-400 uppercase block font-bold">Total Matières Valorisées</span>
+                <span id="stat-tonnage" class="text-3xl font-black text-cyberGreen">14.85 T</span>
+                <p class="text-[10px] text-slate-400">Total double-pesée scellée</p>
             </div>
 
-            <div class="w-full sm:w-auto min-w-[280px]">
-                <label class="block text-[10px] font-mono font-bold uppercase text-obsidian/70 mb-1">Établissement B2B Partner:</label>
-                <select id="client-selector" onchange="loadClientData()" class="w-full bg-papyrusLight border border-kemetGold/50 rounded-xl p-3 text-xs font-mono font-bold text-obsidian outline-none focus:border-cyberGreenDark">
-                    <option value="">Chargement de la liste clients...</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-obsidian text-white p-6 rounded-3xl border-2 border-cyberGreen/40 shadow-xl space-y-2">
-                <span class="text-xs font-mono text-slate-400 font-bold uppercase">Matière Valorisée</span>
-                <div id="client-kg" class="text-4xl font-black font-mono text-cyberGreen">0.00 <span class="text-xs font-normal text-slate-400">Kg</span></div>
-                <p class="text-[10px] text-slate-400 font-mono">Total soustrait à la décharge</p>
+            <div class="glass-card p-6 space-y-2 border-l-4 border-l-kemetGold">
+                <span class="text-[10px] text-slate-400 uppercase block font-bold">Évitement Émissions CO₂</span>
+                <span id="stat-co2" class="text-3xl font-black text-kemetGoldBright">27.02 T</span>
+                <p class="text-[10px] text-slate-400">Facteur ADEME 1.82 kg CO₂ / kg</p>
             </div>
 
-            <div class="bg-obsidian text-white p-6 rounded-3xl border-2 border-kemetGold/40 shadow-xl space-y-2">
-                <span class="text-xs font-mono text-slate-400 font-bold uppercase">Émissions Évitées</span>
-                <div id="client-co2" class="text-4xl font-black font-mono text-kemetGoldBright">0.00 <span class="text-xs font-normal text-slate-400">Kg CO₂</span></div>
-                <p class="text-[10px] text-slate-400 font-mono">Bilan carbone équivalent</p>
+            <div class="glass-card p-6 space-y-2 border-l-4 border-l-emerald-500">
+                <span class="text-[10px] text-slate-400 uppercase block font-bold">Taux de Conformité Loi 28-00</span>
+                <span class="text-3xl font-black text-white">100%</span>
+                <p class="text-[10px] text-emerald-400">✓ Registre conforme CNDP</p>
             </div>
 
-            <div class="papyrus-card p-6 rounded-3xl border-2 border-kemetGold/40 flex flex-col justify-between space-y-4">
+            <div class="glass-card p-6 space-y-2 border-l-4 border-l-blue-500">
+                <span class="text-[10px] text-slate-400 uppercase block font-bold">Certificat Zéro-Déchet</span>
+                <span class="text-sm font-bold text-white block pt-1">GÉNÉRÉ &amp; NOTARIÉ</span>
+                <button onclick="alert('Téléchargement du Certificat ESG Officiel PDF (Horodaté Blockchain)...')" class="mt-2 text-[10px] px-3 py-1.5 bg-cyberGreen text-black font-bold rounded-lg uppercase hover:bg-emerald-400">Télécharger PDF 📜</button>
+            </div>
+        </section>
+
+        <!-- TABLEAU HISTORIQUE DOUBLE PESÉE -->
+        <section class="glass-card p-8 space-y-6">
+            <div class="flex justify-between items-center border-b border-white/10 pb-4">
                 <div>
-                    <span class="text-xs font-mono font-bold uppercase text-cyberGreenDark">Certification Numérique</span>
-                    <h3 class="font-kemetTitle text-lg font-bold text-obsidian">Rapport PurKemet Zéro-Déchet</h3>
-                    <p class="text-[11px] text-obsidian/75 mt-1">Conforme audits Clef Verte, Travelife & ISO 14001</p>
+                    <h3 class="font-kemetTitle text-xl font-bold text-white">Historique des Bordereaux de Collecte &amp; Double Pesée</h3>
+                    <p class="text-xs font-mono text-slate-400">Traçabilité complète du site jusqu'au dépôt de recyclage.</p>
                 </div>
-                <button onclick="openCertModal()" class="w-full py-3 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-black transition-all border border-cyberGreen/30 shadow-md">
-                    📄 Certificat ESG PDF
-                </button>
-            </div>
-        </div>
-
-        <div class="papyrus-card p-8 rounded-3xl border-2 border-kemetGold/30 space-y-6">
-            <div class="flex justify-between items-center border-b border-kemetGold/30 pb-4">
-                <div>
-                    <h3 class="font-kemetTitle text-xl font-bold text-obsidian">Registre des Collectes Notarisées</h3>
-                    <p class="text-xs text-obsidian/70 font-sans">Historique des pesées certifiées transmises au Maat Data Lake</p>
-                </div>
-                <span class="text-xs font-mono bg-obsidian text-cyberGreen px-3 py-1 rounded-full font-bold">Ledger On-Chain</span>
+                <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen font-mono text-xs rounded-lg font-bold">
+                    Direct Maat Data Lake
+                </span>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left font-mono text-xs">
                     <thead>
-                        <tr class="border-b border-kemetGold/30 text-[10px] font-mono uppercase text-obsidian/70 font-bold">
-                            <th class="py-3 px-4">Horodatage / Date</th>
-                            <th class="py-3 px-4">Code QR Sac</th>
-                            <th class="py-3 px-4">Type de Matériau</th>
-                            <th class="py-3 px-4 text-right">Poids Net (Kg)</th>
-                            <th class="py-3 px-4 text-center">Statut Traçabilité</th>
+                        <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
+                            <th class="py-3 px-2">N° Lot</th>
+                            <th class="py-3 px-2">Matériau</th>
+                            <th class="py-3 px-2">Pesée 1 (Site)</th>
+                            <th class="py-3 px-2">Pesée 2 (Dépôt)</th>
+                            <th class="py-3 px-2">Écart / Delta</th>
+                            <th class="py-3 px-2">Statut</th>
+                            <th class="py-3 px-2 text-right">Clé Cryptographique</th>
                         </tr>
                     </thead>
-                    <tbody id="collections-table-body" class="text-xs font-mono divide-y divide-kemetGold/20">
+                    <tbody class="divide-y divide-white/5 text-slate-300">
                         <tr>
-                            <td colspan="5" class="py-6 text-center text-obsidian/60 italic font-sans">Veuillez sélectionner un établissement pour afficher le registre.</td>
+                            <td class="py-3.5 px-2 font-bold text-white">LOT-901</td>
+                            <td class="py-3.5 px-2 text-cyberGreen font-bold">PET Transparent</td>
+                            <td class="py-3.5 px-2">18.50 Kg</td>
+                            <td class="py-3.5 px-2">18.45 Kg</td>
+                            <td class="py-3.5 px-2 text-kemetGoldBright">-0.05 Kg</td>
+                            <td class="py-3.5 px-2"><span class="px-2 py-0.5 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30 font-bold">ANCHORED</span></td>
+                            <td class="py-3.5 px-2 text-right text-slate-400"><a href="datalake.html" class="hover:text-cyberGreen underline font-bold">0x8f2a...901</a></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3.5 px-2 font-bold text-white">LOT-884</td>
+                            <td class="py-3.5 px-2 text-kemetGoldBright font-bold">Carton Ondulé</td>
+                            <td class="py-3.5 px-2">124.00 Kg</td>
+                            <td class="py-3.5 px-2">123.80 Kg</td>
+                            <td class="py-3.5 px-2 text-kemetGoldBright">-0.20 Kg</td>
+                            <td class="py-3.5 px-2"><span class="px-2 py-0.5 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30 font-bold">ANCHORED</span></td>
+                            <td class="py-3.5 px-2 text-right text-slate-400"><a href="datalake.html" class="hover:text-cyberGreen underline font-bold">0x4c9e...884</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
     </main>
 
-    <footer class="border-t border-kemetGold/30 bg-papyrusDark/40 py-6 text-center text-xs font-mono text-obsidian/70">
-        Industrial Illusion SARL • PurKemet B2B Governance
+    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
+        © 2026 Industrial Illusion SARL — Espace ESG B2B. Tous droits réservés.
     </footer>
 
-    <div id="certModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="max-w-2xl w-full my-8">
-            <div id="printable-cert" class="bg-papyrusBase border-4 border-kemetGold p-8 sm:p-12 rounded-3xl shadow-2xl space-y-8 text-obsidian relative">
-                
-                <div class="flex justify-between items-start border-b-2 border-kemetGold/40 pb-6">
-                    <div>
-                        <h2 class="font-kemetTitle text-2xl font-black tracking-widest text-obsidian">INDUSTRIAL ILLUSION SARL</h2>
-                        <p class="text-xs font-mono font-bold text-cyberGreenDark uppercase tracking-widest mt-1">PROJET PURKEMET B2B — CERTIFICAT ESG</p>
-                    </div>
-                    <div class="text-right font-mono text-[10px] text-obsidian/70">
-                        <div>N° REGISTRE: PK-2026-ESG</div>
-                        <div id="cert-date">OCTOBRE 2026</div>
-                    </div>
-                </div>
-
-                <div class="space-y-4 text-center py-4">
-                    <span class="text-xs font-mono uppercase tracking-widest text-kemetGold font-bold">Attestation Officielle de Valorisation</span>
-                    <h3 class="font-kemetTitle text-3xl font-black text-obsidian" id="cert-hotel-name">ÉTABLISSEMENT B2B</h3>
-                    <p class="text-xs text-obsidian/85 max-w-lg mx-auto leading-relaxed font-sans">
-                        Il est officiellement certifié que cet établissement participe au programme de souveraineté matérielle <strong>PurKemet</strong>, garantissant la traçabilité intégrale de sa fraction sèche et sa non-orientation vers les décharges territoriales.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-6 bg-papyrusLight p-6 rounded-2xl border border-kemetGold/40 text-center font-mono">
-                    <div>
-                        <span class="text-[10px] uppercase text-obsidian/70 font-bold block">Volume Matière Valorisé</span>
-                        <span id="cert-total-kg" class="text-3xl font-black text-obsidian">0.00 Kg</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] uppercase text-obsidian/70 font-bold block">Émissions CO₂ Évitées</span>
-                        <span id="cert-total-co2" class="text-3xl font-black text-cyberGreenDark">0.00 Kg</span>
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-end border-t-2 border-kemetGold/40 pt-6 text-[10px] font-mono">
-                    <div class="space-y-1">
-                        <div class="font-bold text-obsidian">Notarisation Cryptographique:</div>
-                        <div class="text-obsidian/60 text-[8px] break-all max-w-[250px]">HASH: 0x9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0</div>
-                        <div class="text-cyberGreenDark font-bold">Conforme Loi 28-00 & Loi CNDP 09-08</div>
-                    </div>
-                    <div class="text-right space-y-1">
-                        <div class="font-kemetTitle font-black text-xs text-obsidian">ROBERTO PASSARELLA</div>
-                        <div class="text-obsidian/70">Directeur Général, Industrial Illusion</div>
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4 border-t border-kemetGold/20">
-                    <button onclick="closeCertModal()" class="px-5 py-2.5 bg-papyrusDark text-obsidian font-mono font-bold rounded-xl text-xs uppercase">Fermer</button>
-                    <button onclick="window.print()" class="px-5 py-2.5 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl text-xs uppercase border border-cyberGreen/30 shadow-md">Imprimer / PDF</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let currentClient = null;
-
-        async function initDashboard() {
-            const { data: clients } = await supabase.from('clients').select('*');
-            const selector = document.getElementById('client-selector');
-
-            if (clients && clients.length > 0) {
-                selector.innerHTML = '<option value="">-- Sélectionnez votre établissement --</option>' + 
-                    clients.map(c => `<option value="${c.id}">${c.company_name}</option>`).join('');
-            } else {
-                selector.innerHTML = '<option value="">Aucun client enregistré</option>';
-            }
-        }
-
-        async function loadClientData() {
-            const clientId = document.getElementById('client-selector').value;
-            if (!clientId) return;
-
-            const { data: client } = await supabase.from('clients').select('*').eq('id', clientId).single();
-            if (client) {
-                currentClient = client;
-                document.getElementById('selected-client-name').innerText = client.company_name;
-                document.getElementById('selected-client-category').innerText = "Catégorie: " + client.horeca_category + " | ICE: " + (client.ice_no || 'N/A');
-            }
-
-            const { data: collections } = await supabase.from('collections').select('*').eq('client_id', clientId).order('created_at', { ascending: false });
-
-            let totalKg = 0;
-            const tableBody = document.getElementById('collections-table-body');
-
-            if (collections && collections.length > 0) {
-                tableBody.innerHTML = collections.map(c => {
-                    const weight = Number(c.weight_kg || 0);
-                    totalKg += weight;
-                    const date = new Date(c.created_at).toLocaleString('fr-FR');
-                    return `
-                        <tr>
-                            <td class="py-3 px-4 text-obsidian/80">${date}</td>
-                            <td class="py-3 px-4 font-bold text-obsidian">${c.bag_qr_id || 'N/A'}</td>
-                            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-obsidian/10 border border-obsidian/20">${c.material_type}</span></td>
-                            <td class="py-3 px-4 text-right font-bold text-obsidian">${weight.toFixed(2)} Kg</td>
-                            <td class="py-3 px-4 text-center"><span class="text-cyberGreenDark font-bold">✓ Notarié</span></td>
-                        </tr>
-                    `;
-                }).join('');
-            } else {
-                tableBody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-obsidian/60 italic font-sans">Aucun enregistrement trouvé pour cet établissement.</td></tr>';
-            }
-
-            const totalCo2 = totalKg * 1.5;
-            document.getElementById('client-kg').innerText = totalKg.toFixed(2) + " Kg";
-            document.getElementById('client-co2').innerText = totalCo2.toFixed(2) + " Kg CO₂";
-        }
-
-        function openCertModal() {
-            if (!currentClient) return alert("Veuillez sélectionner un établissement dans le menu déroulant.");
-            
-            document.getElementById('cert-hotel-name').innerText = currentClient.company_name;
-            document.getElementById('cert-total-kg').innerText = document.getElementById('client-kg').innerText;
-            document.getElementById('cert-total-co2').innerText = document.getElementById('client-co2').innerText;
-            document.getElementById('certModal').classList.remove('hidden');
-        }
-
-        function closeCertModal() {
-            document.getElementById('certModal').classList.add('hidden');
-        }
-
-        window.addEventListener('DOMContentLoaded', initDashboard);
-    </script>
 </body>
 </html>
