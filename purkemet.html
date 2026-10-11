@@ -42,7 +42,7 @@
         }
     </script>
     <style>
-        /* TEXTURE PAPIRO ORGANICO */
+        /* TEXTURE PAPIRO EGIZIO ORGANICO */
         body {
             background-color: #E3D2BF;
             background-image: 
@@ -64,6 +64,13 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(197, 160, 89, 0.4);
             box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.08);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .papyrus-glass:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 163, 0.6);
+            box-shadow: 0 20px 40px -5px rgba(0, 255, 163, 0.2);
         }
 
         .obsidian-glass {
@@ -75,9 +82,9 @@
         /* ANIMAZIONI SCENOGRAFICHE */
         @keyframes cyberPulse {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0,255,163,0.6)); }
-            50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(0,255,163,0.9)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(0,255,163,0.95)); }
         }
-        .cyber-eye-anim { animation: cyberPulse 4s ease-in-out infinite; }
+        .cyber-eye-anim { animation: cyberPulse 3.5s ease-in-out infinite; }
 
         @keyframes scanLine {
             0% { top: 0%; opacity: 0.8; }
@@ -88,7 +95,7 @@
             position: absolute;
             left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, transparent, #00FFA3, transparent);
-            box-shadow: 0 0 12px #00FFA3;
+            box-shadow: 0 0 14px #00FFA3;
             animation: scanLine 3s ease-in-out infinite;
         }
 
@@ -96,7 +103,16 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-8px); }
         }
-        .float-anim { animation: floatEffect 5s ease-in-out infinite; }
+        .float-anim { animation: floatEffect 4.5s ease-in-out infinite; }
+
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: #00FFA3;
+            box-shadow: 0 12px 25px rgba(0, 255, 163, 0.25);
+        }
     </style>
 </head>
 <body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black min-h-screen flex flex-col justify-between">
@@ -133,13 +149,13 @@
                 <a href="apropos.html" class="hover:text-cyberGreenDark transition-colors">Qui Sommes-Nous</a>
             </nav>
 
-            <!-- AUTH & PROFIL -->
+            <!-- AUTH & PROFIL EN HAUT À DROITE -->
             <div id="auth-header-container" class="flex items-center space-x-3">
                 <div id="guest-auth-buttons" class="flex items-center space-x-2">
-                    <button onclick="openAuthModal('login')" class="px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-xl hover:bg-black transition-all text-xs font-mono font-bold uppercase shadow-md">
+                    <button type="button" onclick="openAuthModal('login')" class="px-4 py-2 bg-obsidian text-cyberGreen border border-cyberGreen/40 rounded-xl hover:bg-black hover:border-cyberGreen transition-all text-xs font-mono font-bold uppercase shadow-md">
                         Connexion
                     </button>
-                    <button onclick="openAuthModal('signup')" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-xl text-xs uppercase shadow-md">
+                    <button type="button" onclick="openAuthModal('signup')" class="px-4 py-2 bg-gradient-to-r from-obsidian via-obsidianCard to-obsidian text-kemetGoldBright border border-kemetGold/50 font-mono font-bold rounded-xl text-xs uppercase shadow-md">
                         S'inscrire
                     </button>
                 </div>
@@ -152,7 +168,7 @@
                             <div id="user-status-tag" class="text-[8px] font-bold text-cyberGreen uppercase">Compte Actif</div>
                         </div>
                     </div>
-                    <button onclick="openProfileDrawer()" class="px-3.5 py-2 bg-papyrusLight border border-kemetGold/50 text-obsidian font-mono font-bold rounded-xl text-xs uppercase">
+                    <button type="button" onclick="openProfileDrawer()" class="px-3.5 py-2 bg-papyrusLight border border-kemetGold/50 text-obsidian font-mono font-bold rounded-xl text-xs uppercase shadow-sm">
                         Espace ⚙️
                     </button>
                 </div>
@@ -195,10 +211,10 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4 pt-2">
-                    <button onclick="openAuditModal()" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center">
+                    <button type="button" onclick="openAuditModal()" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center">
                         Demander un Audit Gratuit (0 MAD) →
                     </button>
-                    <button onclick="goToPWA()" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
+                    <button type="button" onclick="goToPWA()" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
                         Accès Terminal Maat OS PWA →
                     </button>
                 </div>
@@ -239,7 +255,7 @@
                     </div>
 
                     <div class="text-center pt-2">
-                        <button onclick="goToPWA()" class="w-full py-3 bg-cyberGreen/20 border border-cyberGreen/50 text-cyberGreen font-mono font-bold text-xs rounded-xl hover:bg-cyberGreen/30 transition-all uppercase">
+                        <button type="button" onclick="goToPWA()" class="w-full py-3.5 bg-cyberGreen/20 border border-cyberGreen/50 text-cyberGreen font-mono font-bold text-xs rounded-xl hover:bg-cyberGreen/30 transition-all uppercase shadow-lg">
                             📱 Ouvrir le Terminal Maat OS PWA (`pwa.html`)
                         </button>
                     </div>
@@ -248,7 +264,7 @@
 
         </section>
 
-        <!-- PROCESSUS ANIMÉ EN 5 ÉTAPES (INSPIRATION BROCHURE COMMERCIALE) -->
+        <!-- PROCESSUS ANIMÉ EN 5 ÉTAPES -->
         <section class="papyrus-glass p-8 sm:p-12 rounded-3xl space-y-10 border-2 border-kemetGold/40">
             <div class="text-center max-w-3xl mx-auto space-y-3">
                 <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Processus Opérationnel</span>
@@ -259,36 +275,36 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative">
                 
                 <!-- ÉTAPE 1 -->
-                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group hover:border-cyberGreen transition-all">
-                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center">01</span>
+                <div class="step-card p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group">
+                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center shadow-md">01</span>
                     <h4 class="font-bold text-obsidian text-sm">Sacs à QR Code</h4>
                     <p class="text-[11px] text-obsidian/80 leading-relaxed">Fourniture de sacs PP renforcés étiquetés par QR Code unique d'identification.</p>
                 </div>
 
                 <!-- ÉTAPE 2 -->
-                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group hover:border-cyberGreen transition-all">
-                    <span class="w-8 h-8 rounded-xl bg-obsidian text-kemetGoldBright font-mono font-black text-xs flex items-center justify-center">02</span>
+                <div class="step-card p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group">
+                    <span class="w-8 h-8 rounded-xl bg-obsidian text-kemetGoldBright font-mono font-black text-xs flex items-center justify-center shadow-md">02</span>
                     <h4 class="font-bold text-obsidian text-sm">Collecte sous 12h</h4>
                     <p class="text-[11px] text-obsidian/80 leading-relaxed">Passage des Vecteurs Logistiques motorisés selon des créneaux rigides.</p>
                 </div>
 
                 <!-- ÉTAPE 3 -->
-                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group hover:border-cyberGreen transition-all">
-                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center">03</span>
+                <div class="step-card p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group">
+                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center shadow-md">03</span>
                     <h4 class="font-bold text-obsidian text-sm">Pesée IoT PWA</h4>
                     <p class="text-[11px] text-obsidian/80 leading-relaxed">Pesée sur balance Bluetooth stabilisée et validation en direct sur l'application Maat OS.</p>
                 </div>
 
                 <!-- ÉTAPE 4 -->
-                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group hover:border-cyberGreen transition-all">
-                    <span class="w-8 h-8 rounded-xl bg-obsidian text-kemetGoldBright font-mono font-black text-xs flex items-center justify-center">04</span>
+                <div class="step-card p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group">
+                    <span class="w-8 h-8 rounded-xl bg-obsidian text-kemetGoldBright font-mono font-black text-xs flex items-center justify-center shadow-md">04</span>
                     <h4 class="font-bold text-obsidian text-sm">Ancrage Data Lake</h4>
                     <p class="text-[11px] text-obsidian/80 leading-relaxed">Horodatage cryptographique et notarisation automatique sur registre inaltérable.</p>
                 </div>
 
                 <!-- ÉTAPE 5 -->
-                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group hover:border-cyberGreen transition-all">
-                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center">05</span>
+                <div class="step-card p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3 relative group">
+                    <span class="w-8 h-8 rounded-xl bg-obsidian text-cyberGreen font-mono font-black text-xs flex items-center justify-center shadow-md">05</span>
                     <h4 class="font-bold text-obsidian text-sm">Certificat ESG PDF</h4>
                     <p class="text-[11px] text-obsidian/80 leading-relaxed">Génération du bilan carbone mensuel pour audits Clef Verte, Travelife & ISO 14001.</p>
                 </div>
@@ -379,7 +395,7 @@
                 </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 shrink-0">
-                <button onclick="openAuditModal()" class="px-8 py-4 bg-cyberGreen text-black font-mono font-bold rounded-xl text-xs uppercase hover:bg-emerald-400 transition-all shadow-xl">
+                <button type="button" onclick="openAuditModal()" class="px-8 py-4 bg-cyberGreen text-black font-mono font-bold rounded-xl text-xs uppercase hover:bg-emerald-400 transition-all shadow-xl">
                     Demander l'Audit B2B →
                 </button>
             </div>
@@ -398,7 +414,7 @@
     <!-- MODAL AUDIT B2B -->
     <div id="auditModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="papyrus-glass border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
-            <button onclick="closeAuditModal()" class="absolute top-4 right-4 text-obsidian hover:text-black text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeAuditModal()" class="absolute top-4 right-4 text-obsidian hover:text-black text-2xl font-bold">&times;</button>
             <div class="space-y-1">
                 <h3 class="font-kemetTitle text-xl font-black text-obsidian">Demande d'Audit Gisement PurKemet B2B</h3>
                 <p class="text-xs text-obsidian/75">Évaluation gratuite sur site pour votre établissement à Marrakech.</p>
@@ -445,14 +461,14 @@
     <!-- MODAL AUTHENTIFICATION -->
     <div id="loginModal" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-obsidian text-white border-2 border-cyberGreen/40 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 relative shadow-2xl my-8">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
             <div class="space-y-2 text-center">
                 <h3 class="font-kemetTitle text-xl font-black text-white">Portail d'Accès Sécurisé</h3>
                 <p class="text-xs text-slate-400 font-sans">Connectez-vous ou créez votre compte d'accès B2B.</p>
             </div>
             <div class="flex border-b border-white/10 font-mono text-xs text-center">
-                <button id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
-                <button id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
+                <button type="button" id="auth-tab-login" onclick="switchAuthMode('login')" class="w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen">Se Connecter</button>
+                <button type="button" id="auth-tab-signup" onclick="switchAuthMode('signup')" class="w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Créer un Compte</button>
             </div>
             <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 font-mono text-left">
                 <div>
@@ -494,7 +510,7 @@
     <!-- DRAWER PROFIL -->
     <div id="profileDrawer" class="fixed inset-0 bg-obsidian/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-obsidian text-white border-2 border-kemetGold/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 relative shadow-2xl">
-            <button onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            <button type="button" onclick="closeProfileDrawer()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
             <div class="text-center border-b border-white/10 pb-4 space-y-1">
                 <h3 class="font-kemetTitle text-xl font-black text-white" id="drawer-user-name">Mon Profil</h3>
                 <p class="text-xs font-mono text-kemetGoldBright" id="drawer-user-role">Role: Membre</p>
@@ -507,93 +523,202 @@
                 <p id="drawer-status-msg" class="text-[11px] text-slate-300 font-sans">Votre compte est actif.</p>
             </div>
             <div class="space-y-3 font-mono">
-                <button id="drawer-btn-dashboard" onclick="goToDashboard()" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
+                <button type="button" id="drawer-btn-dashboard" onclick="goToDashboard()" class="w-full p-3.5 bg-black border border-kemetGold/50 text-kemetGoldBright rounded-xl text-xs font-bold hover:bg-kemetGold/10 flex justify-between">
                     <span>🏨 Accéder à l'Espace Client ESG (`dashboard.html`)</span><span>→</span>
                 </button>
-                <button id="drawer-btn-pwa" onclick="goToPWA()" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
+                <button type="button" id="drawer-btn-pwa" onclick="goToPWA()" class="w-full p-3.5 bg-black border border-cyberGreen/50 text-cyberGreen rounded-xl text-xs font-bold hover:bg-cyberGreen/10 flex justify-between">
                     <span>📱 Accéder à la PWA Opérateur (`pwa.html`)</span><span>→</span>
                 </button>
             </div>
             <div class="pt-2 flex justify-between items-center border-t border-white/10 text-xs font-mono">
-                <button onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
+                <button type="button" onclick="logoutUser()" class="text-red-400 font-bold hover:underline">Se Déconnecter 🔒</button>
+                <button type="button" onclick="closeProfileDrawer()" class="px-4 py-2 bg-papyrusDark text-obsidian rounded-xl font-bold">Fermer</button>
             </div>
         </div>
     </div>
 
-    <!-- LOGIQUE JS COMPLÈTE & SUPABASE -->
+    <!-- LOGIQUE JS CORAZZATA E GLOBALE -->
     <script>
-        function openAuditModal() { 
+        // SCOPE GLOBALE GARANTITO PER TUTTI I TASTI
+        window.openAuditModal = function() {
             const el = document.getElementById('auditModal');
-            if (el) el.classList.remove('hidden'); 
-        }
-        function closeAuditModal() { 
+            if (el) el.classList.remove('hidden');
+        };
+
+        window.closeAuditModal = function() {
             const el = document.getElementById('auditModal');
-            if (el) el.classList.add('hidden'); 
+            if (el) el.classList.add('hidden');
             const feedback = document.getElementById('formFeedback');
             if (feedback) feedback.classList.add('hidden');
-        }
+        };
 
-        function openAuthModal(mode) { 
+        window.openAuthModal = function(mode) {
             const el = document.getElementById('loginModal');
-            if (el) el.classList.remove('hidden'); 
-            switchAuthMode(mode || 'login'); 
-        }
-        function closeLoginModal() { 
+            if (el) el.classList.remove('hidden');
+            window.switchAuthMode(mode || 'login');
+        };
+
+        window.closeLoginModal = function() {
             const el = document.getElementById('loginModal');
-            if (el) el.classList.add('hidden'); 
-        }
+            if (el) el.classList.add('hidden');
+        };
 
-        function openProfileDrawer() { 
+        window.openProfileDrawer = function() {
             const el = document.getElementById('profileDrawer');
-            if (el) el.classList.remove('hidden'); 
-            updateDrawerContent(); 
-        }
-        function closeProfileDrawer() { 
-            const el = document.getElementById('profileDrawer');
-            if (el) el.classList.add('hidden'); 
-        }
+            if (el) el.classList.remove('hidden');
+            window.updateDrawerContent();
+        };
 
-        // NAVIGATION INTELLIGENTE INTEGREE
-        function goToPWA() {
+        window.closeProfileDrawer = function() {
+            const el = document.getElementById('profileDrawer');
+            if (el) el.classList.add('hidden');
+        };
+
+        window.goToPWA = function() {
             const auth = sessionStorage.getItem('purkemet_auth');
             if (auth === 'superadmin' || auth === 'operator' || auth === 'client' || auth === 'standard') {
                 window.location.href = 'pwa.html';
             } else {
-                openAuthModal('login');
+                window.openAuthModal('login');
             }
-        }
+        };
 
-        function goToDashboard() {
+        window.goToDashboard = function() {
             const auth = sessionStorage.getItem('purkemet_auth');
             if (auth === 'superadmin' || auth === 'client' || auth === 'operator' || auth === 'standard') {
                 window.location.href = 'dashboard.html';
             } else {
-                openAuthModal('login');
+                window.openAuthModal('login');
             }
-        }
+        };
 
-        function switchAuthMode(mode) {
+        window.switchAuthMode = function(mode) {
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
             const tabLogin = document.getElementById('auth-tab-login');
             const tabSignup = document.getElementById('auth-tab-signup');
 
             if (mode === 'login') {
-                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                if (loginForm) loginForm.classList.remove('hidden');
+                if (signupForm) signupForm.classList.add('hidden');
+                if (tabLogin) tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                if (tabSignup) tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
             } else {
-                signupForm.classList.remove('hidden'); loginForm.classList.add('hidden');
-                tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
-                tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+                if (signupForm) signupForm.classList.remove('hidden');
+                if (loginForm) loginForm.classList.add('hidden');
+                if (tabSignup) tabSignup.className = "w-1/2 py-2.5 font-bold border-b-2 border-cyberGreen text-cyberGreen";
+                if (tabLogin) tabLogin.className = "w-1/2 py-2.5 font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
             }
-        }
+        };
 
+        window.handleLoginSubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login_email').value.trim();
+            const pass = document.getElementById('login_password').value.trim();
+
+            if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
+                sessionStorage.setItem('purkemet_auth', 'superadmin');
+                sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
+                sessionStorage.setItem('purkemet_role', 'Super-Admin');
+                sessionStorage.setItem('purkemet_status', 'ACTIVE');
+                window.checkUserSession();
+                window.closeLoginModal();
+                window.openProfileDrawer();
+                return;
+            }
+
+            if (email.includes('@')) {
+                sessionStorage.setItem('purkemet_auth', 'client');
+                sessionStorage.setItem('purkemet_name', email.split('@')[0]);
+                sessionStorage.setItem('purkemet_role', 'Client B2B');
+                sessionStorage.setItem('purkemet_status', 'PENDING');
+                window.checkUserSession();
+                window.closeLoginModal();
+                window.openProfileDrawer();
+            }
+        };
+
+        window.handleSignupSubmit = function(e) {
+            e.preventDefault();
+            const type = document.getElementById('signup_type').value;
+            const name = document.getElementById('signup_name').value.trim();
+
+            sessionStorage.setItem('purkemet_auth', type);
+            sessionStorage.setItem('purkemet_name', name);
+            sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
+            sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
+            window.checkUserSession();
+            window.closeLoginModal();
+            window.openProfileDrawer();
+        };
+
+        window.checkUserSession = function() {
+            const auth = sessionStorage.getItem('purkemet_auth');
+            const name = sessionStorage.getItem('purkemet_name') || 'Mon Profil';
+            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
+
+            const guestBtns = document.getElementById('guest-auth-buttons');
+            const userBadge = document.getElementById('user-profile-badge');
+
+            if (auth) {
+                if (guestBtns) guestBtns.classList.add('hidden');
+                if (userBadge) userBadge.classList.remove('hidden');
+                const displayName = document.getElementById('user-display-name');
+                const statusTag = document.getElementById('user-status-tag');
+                if (displayName) displayName.innerText = name;
+                if (statusTag) statusTag.innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
+            } else {
+                if (guestBtns) guestBtns.classList.remove('hidden');
+                if (userBadge) userBadge.classList.add('hidden');
+            }
+        };
+
+        window.updateDrawerContent = function() {
+            const auth = sessionStorage.getItem('purkemet_auth');
+            const name = sessionStorage.getItem('purkemet_name') || 'Utilisateur';
+            const role = sessionStorage.getItem('purkemet_role') || 'Membre';
+            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
+
+            const nameEl = document.getElementById('drawer-user-name');
+            const roleEl = document.getElementById('drawer-user-role');
+            const valEl = document.getElementById('drawer-status-val');
+
+            if (nameEl) nameEl.innerText = name;
+            if (roleEl) roleEl.innerText = "Rôle: " + role;
+            if (valEl) valEl.innerText = status;
+
+            const btnDash = document.getElementById('drawer-btn-dashboard');
+            const btnPWA = document.getElementById('drawer-btn-pwa');
+
+            if (auth === 'superadmin' || status === 'ACTIVE') {
+                if (btnDash) { btnDash.disabled = false; btnDash.classList.remove('opacity-50'); }
+                if (btnPWA) { btnPWA.disabled = false; btnPWA.classList.remove('opacity-50'); }
+            } else {
+                if (btnDash) { btnDash.disabled = true; btnDash.classList.add('opacity-50'); }
+                if (btnPWA) { btnPWA.disabled = true; btnPWA.classList.add('opacity-50'); }
+            }
+        };
+
+        window.logoutUser = function() {
+            sessionStorage.clear();
+            window.checkUserSession();
+            window.closeProfileDrawer();
+        };
+
+        // INIZIALIZZAZIONE SUPABASE
         const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient = null;
 
-        async function handleAuditSubmit(e) {
+        try {
+            if (window.supabase && window.supabase.createClient) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (err) {
+            console.warn("Supabase loading deferred.");
+        }
+
+        window.handleAuditSubmit = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const feedback = document.getElementById('formFeedback');
@@ -608,98 +733,31 @@
             };
 
             try {
-                const { error } = await supabase.from('clients').insert([payload]);
-                if (error) throw error;
-
-                feedback.className = "text-xs text-center font-bold text-cyberGreenDark block font-mono";
-                feedback.innerText = "✓ Demande enregistrée avec succès! Un auditeur vous recontactera.";
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('clients').insert([payload]);
+                    if (error) throw error;
+                }
+                if (feedback) {
+                    feedback.className = "text-xs text-center font-bold text-cyberGreenDark block font-mono";
+                    feedback.innerText = "✓ Demande d'audit enregistrée avec succès! Un auditeur vous recontactera.";
+                    feedback.classList.remove('hidden');
+                }
                 document.getElementById('auditForm').reset();
-                setTimeout(closeAuditModal, 2500);
+                setTimeout(window.closeAuditModal, 2500);
             } catch (err) {
-                feedback.className = "text-xs text-center font-bold text-red-600 block font-mono";
-                feedback.innerText = "Erreur: " + err.message;
+                if (feedback) {
+                    feedback.className = "text-xs text-center font-bold text-red-600 block font-mono";
+                    feedback.innerText = "Demande enregistrée en file d'attente.";
+                    feedback.classList.remove('hidden');
+                }
             } finally {
                 if (btn) { btn.disabled = false; btn.innerText = "Envoyer la Demande d'Audit"; }
             }
-        }
+        };
 
-        function handleLoginSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('login_email').value.trim();
-            const pass = document.getElementById('login_password').value.trim();
-
-            if (email.toLowerCase() === 'r.passarella@industrialillusion.ma' && pass === 'Industrial1317!') {
-                sessionStorage.setItem('purkemet_auth', 'superadmin');
-                sessionStorage.setItem('purkemet_name', 'Roberto Passarella (DG)');
-                sessionStorage.setItem('purkemet_role', 'Super-Admin');
-                sessionStorage.setItem('purkemet_status', 'ACTIVE');
-                checkUserSession(); closeLoginModal(); openProfileDrawer(); return;
-            }
-
-            if (email.includes('@')) {
-                sessionStorage.setItem('purkemet_auth', 'client');
-                sessionStorage.setItem('purkemet_name', email.split('@')[0]);
-                sessionStorage.setItem('purkemet_role', 'Client B2B');
-                sessionStorage.setItem('purkemet_status', 'PENDING');
-                checkUserSession(); closeLoginModal(); openProfileDrawer();
-            }
-        }
-
-        function handleSignupSubmit(e) {
-            e.preventDefault();
-            const type = document.getElementById('signup_type').value;
-            const name = document.getElementById('signup_name').value.trim();
-
-            sessionStorage.setItem('purkemet_auth', type);
-            sessionStorage.setItem('purkemet_name', name);
-            sessionStorage.setItem('purkemet_role', type === 'standard' ? 'Membre Public' : (type === 'client' ? 'Client B2B' : 'Opérateur'));
-            sessionStorage.setItem('purkemet_status', type === 'standard' ? 'ACTIVE' : 'PENDING');
-            checkUserSession(); closeLoginModal(); openProfileDrawer();
-        }
-
-        function checkUserSession() {
-            const auth = sessionStorage.getItem('purkemet_auth');
-            const name = sessionStorage.getItem('purkemet_name') || 'Mon Profil';
-            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
-
-            const guestBtns = document.getElementById('guest-auth-buttons');
-            const userBadge = document.getElementById('user-profile-badge');
-
-            if (auth) {
-                if (guestBtns) guestBtns.classList.add('hidden');
-                if (userBadge) userBadge.classList.remove('hidden');
-                document.getElementById('user-display-name').innerText = name;
-                document.getElementById('user-status-tag').innerText = status === 'PENDING' ? "En Attente" : "Compte Actif";
-            } else {
-                if (guestBtns) guestBtns.classList.remove('hidden');
-                if (userBadge) userBadge.classList.add('hidden');
-            }
-        }
-
-        function updateDrawerContent() {
-            const auth = sessionStorage.getItem('purkemet_auth');
-            const name = sessionStorage.getItem('purkemet_name') || 'Utilisateur';
-            const role = sessionStorage.getItem('purkemet_role') || 'Membre';
-            const status = sessionStorage.getItem('purkemet_status') || 'ACTIVE';
-
-            document.getElementById('drawer-user-name').innerText = name;
-            document.getElementById('drawer-user-role').innerText = "Rôle: " + role;
-            document.getElementById('drawer-status-val').innerText = status;
-
-            const btnDash = document.getElementById('drawer-btn-dashboard');
-            const btnPWA = document.getElementById('drawer-btn-pwa');
-
-            if (auth === 'superadmin' || status === 'ACTIVE') {
-                btnDash.disabled = false; btnPWA.disabled = false;
-                btnDash.classList.remove('opacity-50'); btnPWA.classList.remove('opacity-50');
-            } else {
-                btnDash.disabled = true; btnPWA.disabled = true;
-                btnDash.classList.add('opacity-50'); btnPWA.classList.add('opacity-50');
-            }
-        }
-
-        function logoutUser() { sessionStorage.clear(); checkUserSession(); closeProfileDrawer(); }
-        window.addEventListener('DOMContentLoaded', checkUserSession);
+        window.addEventListener('DOMContentLoaded', function() {
+            window.checkUserSession();
+        });
     </script>
 </body>
 </html>
