@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Maat OS PWA v6.5 — Workstation Enterprise | Industrial Illusion SARL</title>
-    <meta name="description" content="Workstation opérateur logistique Maat OS v6.5: Super-Admin DG Desk, Double Pesée, Module Ambassadeur B2B, Kemet Wallet multi-canaux, Score Maat et Registre Caisse.">
+    <title>Maat OS PWA v7.5 — DG Control Tower & Workstation | Industrial Illusion SARL</title>
+    <meta name="description" content="Workstation Maat OS v7.5: Super-Admin DG Control Tower, Registre National des Pesées, Habilitations 3 Catégories, Wallet & Double Pesée.">
     <meta name="theme-color" content="#00FFA3">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -91,8 +91,8 @@
         .mat { transition: border-color .2s, background .2s, transform .12s; }
         .mat.on { border-color: var(--g); background: rgba(0,255,163,.14); box-shadow: 0 0 16px -4px rgba(0,255,163,.5); }
 
-        #mobileModal, #payoutModal, #cashReceiptModal, #clientCardModal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.94); backdrop-filter: blur(8px); }
-        #mobileModal.open, #payoutModal.open, #cashReceiptModal.open, #clientCardModal.open { display: flex; }
+        #mobileModal, #payoutModal, #cashReceiptModal, #clientCardModal, #photoProofModal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.94); backdrop-filter: blur(8px); }
+        #mobileModal.open, #payoutModal.open, #cashReceiptModal.open, #clientCardModal.open, #photoProofModal.open { display: flex; }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
@@ -103,7 +103,7 @@
     <div class="flex items-center gap-2.5 min-w-0">
       <svg class="w-9 h-9 shrink-0" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
       <div class="min-w-0">
-        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v6.5</span></h1>
+        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v7.5</span></h1>
         <p id="opInfo" class="text-[9px] text-slate-400 font-mono mt-0.5 truncate">Workstation Opérateur Terrain</p>
       </div>
     </div>
@@ -123,7 +123,7 @@
     <div class="text-center space-y-1">
       <div class="w-12 h-12 mx-auto rounded-2xl bg-cyberGreen/10 border border-cyberGreen/30 flex items-center justify-center text-xl">📱</div>
       <h2 class="font-mono font-bold text-white uppercase tracking-wider text-sm">Accès Workstation Opérateur</h2>
-      <p class="text-[11px] text-slate-400">Authentification sécurisée du Vecteur Logistique Maat OS.</p>
+      <p class="text-[11px] text-slate-400">Authentification du Vecteur Logistique Maat OS.</p>
     </div>
 
     <div class="grid grid-cols-2 font-mono text-xs text-center gap-1" role="tablist">
@@ -141,7 +141,7 @@
         <label class="lbl" for="m_pass">Passkey Master *</label>
         <input id="m_pass" type="password" value="Industrial1317!" class="inp mt-1">
       </div>
-      <button type="button" onclick="window.forceSuperAdminLogin()" class="btn btn-g">👑 Connexion Super-Admin (DG Desk)</button>
+      <button type="button" onclick="window.forceSuperAdminLogin()" class="btn btn-g">👑 Connexion Super-Admin (DG Control Tower)</button>
     </div>
 
     <!-- FORM OTP AGENT -->
@@ -155,13 +155,30 @@
             <label class="lbl" for="v_password">Mot de passe *</label>
             <input id="v_password" type="password" placeholder="••••••••" class="inp mt-1">
         </div>
+
+        <div>
+            <label class="lbl" for="v_role">Rôle Demandé *</label>
+            <select id="v_role" class="inp mt-1">
+                <option value="operator">Opérateur Logistique (Vecteur)</option>
+                <option value="ambassador">Vecteur-Ambassadeur B2B</option>
+                <option value="client">Client B2B (Espace ESG)</option>
+            </select>
+        </div>
+
+        <div class="flex items-start space-x-2 text-[10px] text-slate-300 pt-1">
+            <input type="checkbox" id="privacy_check" class="mt-0.5 rounded border-white/20 bg-black text-cyberGreen focus:ring-0">
+            <label for="privacy_check" class="leading-tight">
+                J'accepte la charte de confidentialité et la gestion des données personnelles conforme à la <strong class="text-cyberGreen">Loi CNDP n° 09-08</strong>.
+            </label>
+        </div>
+
         <button type="button" onclick="window.requestEmailOtp()" class="btn btn-o">Demander le Code OTP par Email 📩</button>
       </div>
 
       <div id="otpBlock" class="hidden space-y-3 pt-2 border-t border-white/10">
         <div class="p-3 bg-cyberGreen/10 border border-cyberGreen/30 rounded-xl text-center space-y-1">
             <p class="text-xs text-cyberGreen font-bold">Un code OTP à 6 chiffres a été envoyé par e-mail.</p>
-            <p class="text-[10px] text-slate-400">Code de test temporaire : <span class="text-kemetGoldBright font-bold">123456</span></p>
+            <p class="text-[10px] text-slate-400">Code de test : <span class="text-kemetGoldBright font-bold">123456</span></p>
         </div>
 
         <div>
@@ -190,7 +207,7 @@
   <!-- TERMINAL OPERATIONNEL POST-LOGIN -->
   <div id="terminal" class="hidden space-y-4">
     
-    <!-- NAVIGATION APPLICATIVE DE VECTEUR & AMBASSADEUR -->
+    <!-- NAVIGATION APPLICATIVE -->
     <nav class="grid grid-cols-6 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[8px] text-center gap-0.5">
       <button type="button" class="tab on" data-mod="admin" id="nav-admin-tab" onclick="window.switchModule('admin')">👑 DG</button>
       <button type="button" class="tab" data-mod="pesee1" onclick="window.switchModule('pesee1')">1️⃣ Collecte</button>
@@ -200,15 +217,15 @@
       <button type="button" class="tab" data-mod="wallet" onclick="window.switchModule('wallet')">💰 Wallet</button>
     </nav>
 
-    <!-- MODULE SUPER-ADMIN DESK (DIRECTION GÉNÉRALE) -->
+    <!-- MODULE SUPER-ADMIN CONTROL TOWER (DIRECTION GÉNÉRALE) -->
     <section id="mod-admin" class="mod space-y-4">
-      <div class="card au space-y-3">
+      <div class="card au space-y-4">
         <div class="flex justify-between items-center border-b border-white/10 pb-2">
             <span class="lbl !text-kemetGoldBright">Bureau de Direction — Roberto Passarella (DG)</span>
-            <span class="text-[9px] font-mono text-cyberGreen font-bold">CONTROL DESK</span>
+            <span class="text-[9px] font-mono text-cyberGreen font-bold">CONTROL TOWER</span>
         </div>
 
-        <!-- STATS DE LOGISTIQUE DEPOIS & MATERIAL STOCKED -->
+        <!-- KPI DU DEPOIT HUB & ACHETEURS INDUSTRIELS -->
         <div class="grid grid-cols-2 gap-2 text-center font-mono text-xs">
             <div class="p-3 bg-black/50 rounded-xl border border-white/10">
                 <span class="text-[9px] text-slate-400 block uppercase">Stock au Dépôt Hub</span>
@@ -220,30 +237,48 @@
             </div>
         </div>
 
-        <!-- APPROVATION DES COMPTES EN ATTENTE (VETTORI E CLIENTIB2B) -->
-        <div class="space-y-2 font-mono text-xs pt-1">
-            <span class="lbl block">Demandes d'Approbation en Attente :</span>
-            <div class="space-y-2">
-                <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center">
-                    <div>
-                        <span class="text-white font-bold block">Hassan M. (Fourgonnette)</span>
-                        <span class="text-[9px] text-slate-400">Vecteur • Cluster Guéliz • Permis B</span>
-                    </div>
-                    <button type="button" onclick="alert('Compte Vecteur Approuvé !')" class="px-2.5 py-1 bg-cyberGreen text-black font-bold text-[10px] rounded-lg">Approuver</button>
-                </div>
+        <!-- SUB-NAVIGATION CONTROL DESK DG -->
+        <div class="flex bg-black/60 rounded-xl p-1 border border-white/10 font-mono text-[9px] text-center gap-1">
+            <button type="button" id="dg-sub-users" onclick="window.switchDgSubTab('users')" class="w-1/3 py-1.5 rounded-lg bg-cyberGreen/20 text-cyberGreen font-bold">👥 Utilisateurs</button>
+            <button type="button" id="dg-sub-pesees" onclick="window.switchDgSubTab('pesees')" class="w-1/3 py-1.5 rounded-lg text-slate-400">⚖️ Pesées</button>
+            <button type="button" id="dg-sub-caisse" onclick="window.switchDgSubTab('caisse')" class="w-1/3 py-1.5 rounded-lg text-slate-400">💰 Caisse</button>
+        </div>
 
-                <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center">
-                    <div>
-                        <span class="text-white font-bold block">Hôtel Riad Lotus</span>
-                        <span class="text-[9px] text-slate-400">Client B2B • Apporté par Ambassadeur</span>
-                    </div>
-                    <button type="button" onclick="alert('Compte Client B2B Approuvé !')" class="px-2.5 py-1 bg-kemetGold text-black font-bold text-[10px] rounded-lg">Approuver</button>
-                </div>
+        <!-- SUB-TAB 1: GESTION DES UTILISATEURS PAR CATEGORIE (VECTEURS / CLIENTS / AMBASSADEURS) -->
+        <div id="dg-box-users" class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between items-center">
+                <span class="lbl block">Rôle à Filtrer :</span>
+                <select id="user_category_filter" onchange="window.filterUserCategory(this.value)" class="inp !py-1 !px-2 !w-auto text-[10px]">
+                    <option value="ALL">Tous les Utilisateurs</option>
+                    <option value="operator">Vecteurs Logistiques</option>
+                    <option value="client">Clients B2B (HoReCa)</option>
+                    <option value="ambassador">Ambassadeurs B2B</option>
+                </select>
+            </div>
+
+            <div id="users-categorized-list" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                <!-- Generato dinamicamente via JS -->
             </div>
         </div>
 
-        <!-- PROGRAMME DE RETRAIT INDUSTRIEL AUPRÈS DES USINES PARTENAIRES -->
-        <div class="space-y-2 font-mono text-xs pt-1">
+        <!-- SUB-TAB 2: REGISTRE NATIONAL DES PESÉES & NOTARISATIONS -->
+        <div id="dg-box-pesees" class="hidden space-y-3 font-mono text-xs">
+            <span class="lbl block">Toutes les Pesées (Collecte &amp; Dépôt) :</span>
+            <div id="national-pesees-list" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                <!-- Generato dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- SUB-TAB 3: TRÉSORERIE, DEMANDES VIREMENT & CAISSE -->
+        <div id="dg-box-caisse" class="hidden space-y-3 font-mono text-xs">
+            <span class="lbl block">Demandes de Virement &amp; Reçus Caisse Espèces :</span>
+            <div id="caisse-ledger-list" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                <!-- Generato dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- ACHEURS INDUSTRIELS & CALENDRIER -->
+        <div class="space-y-2 font-mono text-xs pt-2 border-t border-white/10">
             <span class="lbl block">Acheteurs Industriels &amp; Usines Partenaires :</span>
             <div class="space-y-1.5 text-[11px] text-slate-300">
                 <div class="p-2 bg-black/40 rounded-lg flex justify-between items-center border border-white/5">
@@ -406,7 +441,6 @@
             <button type="submit" class="btn btn-au !py-3">🤝 Enregistrer le Contrat B2B &amp; Réclamer Bonus</button>
         </form>
 
-        <!-- COMMISSION TRACKER -->
         <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
             <span class="lbl block">Tableau des Commissions Apporteur d'Affaires :</span>
             <div class="flex justify-between text-slate-300 text-[11px]">
@@ -435,7 +469,6 @@
           </div>
         </div>
 
-        <!-- SPECIFICATIONS MEZZO LOGISTIQUE & PERMIS -->
         <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
             <span class="lbl block">Fiche Technique Véhicule &amp; Matériel BYOD :</span>
             <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
@@ -446,7 +479,6 @@
             </div>
         </div>
 
-        <!-- DECOMPOSITION SCORE MAAT -->
         <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
             <span class="lbl block">Indicateurs du Score de Mérite Maat (98.5 / 100) :</span>
             <div class="space-y-1 text-[10px] text-slate-300">
@@ -482,7 +514,6 @@
           <div class="text-4xl font-black text-cyberGreen">3,450.00 <span class="text-xs font-normal">MAD</span></div>
         </div>
 
-        <!-- PROJECTION REVENUS GIORNATA 8 ORE -->
         <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 space-y-2 font-mono text-xs">
             <span class="lbl !text-kemetGoldBright block">Projections Estimées de Revenu (8h / Jour) :</span>
             <div class="grid grid-cols-2 gap-2 text-[10px]">
@@ -549,7 +580,6 @@
             </select>
         </div>
 
-        <!-- BLOC HORAIRE RDV ESPÈCES CAISSE -->
         <div id="cash_rdv_box" class="p-3 bg-kemetGold/10 border border-kemetGold/30 rounded-xl space-y-2">
             <label class="lbl !text-kemetGoldBright">Créneau RDV Retrait Espèces au Dépôt *</label>
             <select id="cash_rdv_time" class="inp">
@@ -602,6 +632,20 @@
   </div>
 </div>
 
+<!-- MODAL PHOTO PROOF INSPECTION -->
+<div id="photoProofModal" role="dialog" aria-modal="true">
+  <div class="card g max-w-sm w-full space-y-4 text-center relative !p-6">
+    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+      <span class="lbl">📸 Preuve Photo Défaillance Cadran</span>
+      <button type="button" onclick="window.closePhotoProofModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
+    </div>
+    <div class="p-2 bg-black rounded-xl border border-cyberGreen/40">
+        <img id="modalPhotoProofImg" src="" alt="Photo Cadran Proof" class="w-full rounded-lg">
+    </div>
+    <button type="button" onclick="window.closePhotoProofModal()" class="btn btn-o !py-2.5">Fermer la Preuve</button>
+  </div>
+</div>
+
 <!-- MODAL TRANSFERT SMARTPHONE -->
 <div id="mobileModal" role="dialog" aria-modal="true">
   <div class="card g max-w-sm w-full space-y-4 text-center relative !p-6">
@@ -622,9 +666,9 @@
   </div>
 </div>
 
-<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v6.5</footer>
+<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v7.5</footer>
 
-<!-- LOGIQUE JAVASCRIPT INTEGRALE -->
+<!-- LOGIQUE JAVASCRIPT INTEGRALE CONTROL TOWER DG -->
 <script>
 (function() {
   'use strict';
@@ -633,10 +677,35 @@
 
   var $ = function(id) { return document.getElementById(id); };
 
+  const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
+  let supabaseClient = null;
+
+  try {
+      if (window.supabase && window.supabase.createClient) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+  } catch (err) {}
+
   var st = { mat: '', qr: '', fault: false, photo: null, stable1: false, stable2: false, scanner: null, stream: null };
+
+  var allUsersList = [
+    { email: "hassan.vecteur@industrialillusion.ma", name: "Hassan M.", role: "operator", status: "PENDING_APPROVAL", details: "Fourgonnette Doblò • Permis B • Guéliz" },
+    { email: "contact@riadlotus.ma", name: "Hôtel Riad Lotus", role: "client", status: "PENDING_APPROVAL", details: "Riad Médina • Client B2B" },
+    { email: "youssef.amb@industrialillusion.ma", name: "Youssef B.", role: "ambassador", status: "ACTIVE", details: "Ambassadeur Senior • 4 Contrats Procurés" },
+    { email: "omari.transports@gmail.com", name: "Omar K.", role: "operator", status: "ACTIVE", details: "Triporteur Motorisé • Permis B • Médina" },
+    { email: "direction@mamounia.ma", name: "La Mamounia Marrakech", role: "client", status: "ACTIVE", details: "Hôtel 5* Resort • Contrat Actif" }
+  ];
+
   var activeBatches = [
-    { id: "LOT-901", clientId: "CL-001", client: "La Mamounia Marrakech", mat: "PET_CLEAR", weight1: 18.50, hash: "0x8f2a...901" },
-    { id: "LOT-902", clientId: "CL-002", client: "Royal Mansour", mat: "CARTON", weight1: 34.20, hash: "0x7b1c...902" }
+    { id: "LOT-901", clientId: "CL-001", client: "La Mamounia Marrakech", mat: "PET_CLEAR", weight1: 18.50, weight2: 18.45, status: "ANCHORED", hash: "0x8f2a...901", photoProof: null },
+    { id: "LOT-902", clientId: "CL-002", client: "Royal Mansour", mat: "CARTON", weight1: 34.20, weight2: null, status: "IN_TRANSIT", hash: "0x7b1c...902", photoProof: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23222'/%3E%3Ctext x='50%25' y='50%25' fill='%2300FFA3' text-anchor='middle'%3EPHOTO CADRAN 34.20KG%3C/text%3E%3C/svg%3E" }
+  ];
+
+  var caisseLedger = [
+    { id: "PAY-01", type: "PAYOUT_REQ", user: "Omar K. (Vecteur)", amount: 500, method: "CIH Bank", status: "PENDING", details: "RIB 230 450 0000 1234" },
+    { id: "PAY-02", type: "PAYOUT_REQ", user: "Hassan M. (Vecteur)", amount: 350, method: "Espèces Caisse (RDV 12:30)", status: "PENDING", details: "CIN AE90123" },
+    { id: "REC-01", type: "CASH_REC", user: "Roberto Passarella", amount: 150, method: "Reçu Espèces", status: "ANCHORED", details: "Micro-Avance Carburant" }
   ];
 
   let currentAuthEmail = "";
@@ -649,7 +718,7 @@
     }
   }
 
-  // UNLOCK DIRECT SUPER-ADMIN DESK
+  // FORCE RESET DU CACHE & UNLOCK DIRECT SUPER-ADMIN CONTROL TOWER
   window.forceSuperAdminLogin = function() {
     try {
       localStorage.clear();
@@ -660,7 +729,8 @@
       sessionStorage.setItem('purkemet_status', 'ACTIVE');
     } catch(e) {}
 
-    msg('✓ Accès Super-Admin (DG) accordé !', true);
+    msg('✓ Accès Super-Admin (DG Control Tower) accordé !', true);
+
     setTimeout(function() {
       if ($('authCard')) $('authCard').classList.add('hidden');
       if ($('terminal')) $('terminal').classList.remove('hidden');
@@ -669,29 +739,44 @@
       $('trial-banner').classList.add('hidden');
       $('nav-admin-tab').classList.remove('hidden');
       window.switchModule('admin');
+      window.renderUserCategoryList('ALL');
+      window.renderNationalPeseesList();
+      window.renderCaisseLedgerList();
     }, 150);
   };
 
   window.requestEmailOtp = function() {
     var email = ($('v_email').value || '').trim();
+    var privacyChecked = $('privacy_check').checked;
+
     if (!email.includes('@')) return msg('Saisissez une adresse email valide.');
-    
+    if (!privacyChecked) return msg('Veuillez accepter la politique de confidentialité CNDP.');
+
     currentAuthEmail = email;
     $('otpBlock').classList.remove('hidden');
     $('step-email-input').classList.add('hidden');
-    msg('Code OTP à 6 chiffres généré !', true);
+    msg('Code OTP à 6 chiffres généré e-mail !', true);
   };
 
   window.verifyOtpCode = function() {
     var code = ($('v_otp').value || '').trim();
+    var role = $('v_role').value;
+
     if (code === '123456' || code.length >= 4) {
-      var role = 'operator';
       var status = 'PENDING_APPROVAL';
 
       sessionStorage.setItem('purkemet_auth', role);
       sessionStorage.setItem('purkemet_name', currentAuthEmail ? currentAuthEmail.split('@')[0] : 'Vecteur');
       sessionStorage.setItem('purkemet_role', role);
       sessionStorage.setItem('purkemet_status', status);
+
+      allUsersList.unshift({
+        email: currentAuthEmail,
+        name: currentAuthEmail.split('@')[0],
+        role: role,
+        status: status,
+        details: "Nouveau compte vérifié par OTP"
+      });
 
       if ($('authCard')) $('authCard').classList.add('hidden');
       if ($('terminal')) $('terminal').classList.remove('hidden');
@@ -724,6 +809,156 @@
     });
   };
 
+  window.switchDgSubTab = function(sub) {
+    $('dg-box-users').classList.add('hidden');
+    $('dg-box-pesees').classList.add('hidden');
+    $('dg-box-caisse').classList.add('hidden');
+
+    $('dg-sub-users').className = "w-1/3 py-1.5 rounded-lg text-slate-400";
+    $('dg-sub-pesees').className = "w-1/3 py-1.5 rounded-lg text-slate-400";
+    $('dg-sub-caisse').className = "w-1/3 py-1.5 rounded-lg text-slate-400";
+
+    if (sub === 'users') {
+        $('dg-box-users').classList.remove('hidden');
+        $('dg-sub-users').className = "w-1/3 py-1.5 rounded-lg bg-cyberGreen/20 text-cyberGreen font-bold";
+        window.renderUserCategoryList($('user_category_filter').value);
+    } else if (sub === 'pesees') {
+        $('dg-box-pesees').classList.remove('hidden');
+        $('dg-sub-pesees').className = "w-1/3 py-1.5 rounded-lg bg-cyberGreen/20 text-cyberGreen font-bold";
+        window.renderNationalPeseesList();
+    } else {
+        $('dg-box-caisse').classList.remove('hidden');
+        $('dg-sub-caisse').className = "w-1/3 py-1.5 rounded-lg bg-cyberGreen/20 text-cyberGreen font-bold";
+        window.renderCaisseLedgerList();
+    }
+  };
+
+  // SUPER-ADMIN CONTROL DESK: RENDERING UTENTI DIVISI PER CATEGORIA
+  window.filterUserCategory = function(cat) {
+    window.renderUserCategoryList(cat);
+  };
+
+  window.renderUserCategoryList = function(category) {
+    var container = $('users-categorized-list');
+    if (!container) return;
+
+    var filtered = allUsersList;
+    if (category !== 'ALL') {
+        filtered = allUsersList.filter(u => u.role === category);
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-3 text-slate-500 text-xs font-mono text-center">Aucun utilisateur dans cette catégorie.</div>';
+        return;
+    }
+
+    container.innerHTML = filtered.map(u => `
+        <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center font-mono text-xs">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-white font-bold">${u.name || u.email}</span>
+                    <span class="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase ${u.status === 'ACTIVE' ? 'bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30' : (u.status === 'REJECTED' ? 'bg-red-500/20 text-red-400' : 'bg-kemetGold/20 text-kemetGold')}">${u.status}</span>
+                </div>
+                <span class="text-[9px] text-slate-400 block mt-0.5">${u.email} • Rôle: <strong class="text-kemetGoldBright">${u.role.toUpperCase()}</strong></span>
+                <span class="text-[8px] text-slate-500 block">${u.details}</span>
+            </div>
+            <div class="flex gap-1">
+                ${u.status !== 'ACTIVE' ? `<button type="button" onclick="window.approveUserReal('${u.email}')" class="px-2 py-1 bg-cyberGreen text-black font-bold text-[9px] rounded-lg">Approuver ✓</button>` : ''}
+                ${u.status !== 'REJECTED' ? `<button type="button" onclick="window.rejectUserReal('${u.email}')" class="px-2 py-1 bg-red-500/20 text-red-400 font-bold text-[9px] rounded-lg">Bloquer</button>` : ''}
+            </div>
+        </div>
+    `).join('');
+  };
+
+  window.approveUserReal = async function(email) {
+    var user = allUsersList.find(u => u.email === email);
+    if (user) user.status = 'ACTIVE';
+
+    try {
+        if (supabaseClient) {
+            await supabaseClient.from('profiles').update({ status: 'ACTIVE' }).eq('email', email);
+        }
+    } catch(e) {}
+
+    alert("✅ Compte " + email + " approuvé avec succès par Roberto Passarella (DG) !");
+    window.renderUserCategoryList($('user_category_filter').value);
+  };
+
+  window.rejectUserReal = async function(email) {
+    var user = allUsersList.find(u => u.email === email);
+    if (user) user.status = 'REJECTED';
+
+    try {
+        if (supabaseClient) {
+            await supabaseClient.from('profiles').update({ status: 'REJECTED' }).eq('email', email);
+        }
+    } catch(e) {}
+
+    alert("✕ Accès " + email + " bloqué/suspendu.");
+    window.renderUserCategoryList($('user_category_filter').value);
+  };
+
+  // SUPER-ADMIN CONTROL DESK: RENDERING NATIONAL PESÉES & FAULT PROOFS
+  window.renderNationalPeseesList = function() {
+    var container = $('national-pesees-list');
+    if (!container) return;
+
+    container.innerHTML = activeBatches.map(b => `
+        <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 space-y-1 font-mono text-xs">
+            <div class="flex justify-between items-center">
+                <span class="text-cyberGreen font-bold">${b.id} — ${b.client}</span>
+                <span class="text-[8px] px-2 py-0.5 rounded font-bold uppercase ${b.status === 'ANCHORED' ? 'bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30' : 'bg-kemetGold/20 text-kemetGold'}">${b.status}</span>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-300">
+                <span>Matériau: ${b.mat}</span>
+                <span>P1: ${b.weight1} Kg ${b.weight2 ? '| P2: ' + b.weight2 + ' Kg' : ''}</span>
+            </div>
+            <div class="flex justify-between items-center text-[9px] text-slate-400 pt-1 border-t border-white/5">
+                <span>Hash: <strong class="text-kemetGoldBright">${b.hash}</strong></span>
+                ${b.photoProof ? `<button type="button" onclick="window.viewPhotoProof('${b.photoProof}')" class="text-cyberGreen font-bold underline">📸 Voir Preuve Photo</button>` : `<span class="text-slate-500">BT IoT Certified</span>`}
+            </div>
+        </div>
+    `).join('');
+  };
+
+  window.viewPhotoProof = function(src) {
+    $('modalPhotoProofImg').src = src;
+    $('photoProofModal').classList.add('open');
+  };
+
+  window.closePhotoProofModal = function() {
+    $('photoProofModal').classList.remove('open');
+  };
+
+  // SUPER-ADMIN CONTROL DESK: RENDERING CAISSE LEDGER & PAYOUTS
+  window.renderCaisseLedgerList = function() {
+    var container = $('caisse-ledger-list');
+    if (!container) return;
+
+    container.innerHTML = caisseLedger.map(c => `
+        <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 flex justify-between items-center font-mono text-xs">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-white font-bold">${c.user}</span>
+                    <span class="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase ${c.status === 'ANCHORED' ? 'bg-cyberGreen/20 text-cyberGreen' : 'bg-kemetGold/20 text-kemetGold'}">${c.status}</span>
+                </div>
+                <span class="text-[10px] text-cyberGreen font-bold block mt-0.5">${c.amount}.00 MAD • ${c.method}</span>
+                <span class="text-[8px] text-slate-500 block">${c.details}</span>
+            </div>
+            <div>
+                ${c.status === 'PENDING' ? `<button type="button" onclick="window.approvePayoutReal('${c.id}')" class="px-2.5 py-1 bg-kemetGold text-black font-bold text-[9px] rounded-lg">Valider Virement</button>` : `<span class="text-[9px] text-slate-500">Notarié</span>`}
+            </div>
+        </div>
+    `).join('');
+  };
+
+  window.approvePayoutReal = function(id) {
+    var item = caisseLedger.find(c => c.id === id);
+    if (item) item.status = 'ANCHORED';
+    alert("✅ Virement / Retrait " + id + " approuvé par la Direction Financière !");
+    window.renderCaisseLedgerList();
+  };
+
   window.toggleCashAppointment = function(val) {
     $('cash_rdv_box').classList.toggle('hidden', val !== 'ESPECES_CAISSE');
   };
@@ -732,8 +967,7 @@
     e.preventDefault();
     var name = $('amb_hotel_name').value;
     alert('✅ NOUVEAU CONTRAT B2B ENREGISTRÉ !\n\n• Établissement: ' + name + '\n• Statut: Contrat validé on-chain\n• Bonus d\'Entrée Express: +250.00 MAD crédités sur votre Kemet Wallet (dès 3ème collecte).');
-    $('amb_hotel_name').value = '';
-    $('amb_photo').value = '';
+    $('amb_hotel_name').value = '';$('amb_photo').value = '';
   };
 
   window.openMobileModal = function() { $('mobileModal').classList.add('open'); };
@@ -788,8 +1022,7 @@
 
   window.faultMode = function(step) {
     st.fault = true;
-    $('faultBox1').classList.remove('hidden');
-    $('wMsg1').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
+    $('faultBox1').classList.remove('hidden');$('wMsg1').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
     
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function(stream) {
@@ -806,8 +1039,7 @@
     st.photo = c.toDataURL('image/jpeg', 0.6);
     $('fp1').src = st.photo; $('fp1').classList.remove('hidden'); v.classList.add('hidden');
     if (st.stream) st.stream.getTracks().forEach(function(t) { t.stop(); });
-    $('w1').readOnly = false; $('w1').focus();
-    $('wMsg1').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
+    $('w1').readOnly = false; $('w1').focus();$('wMsg1').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
   };
 
   // SOUMISSION PHASE 1: COLLECTE TERRAIN
@@ -829,14 +1061,18 @@
         client: $('client').options[$('client').selectedIndex].text,
         mat: st.mat,
         weight1: w1,
-        hash: hash
+        weight2: null,
+        status: "IN_TRANSIT",
+        hash: hash,
+        photoProof: st.fault ? st.photo : null
     });
 
     alert('✓ Première Pesée Enregistrée ! Lot ' + batchId + ' bloqué en transit vers le Dépôt.');
-    $('w1').value = '00.00'; $('qr').value = '';
+    $('w1').value = '00.00';$('qr').value = '';
     st.mat = ''; st.photo = null; st.fault = false; st.stable1 = false;
     document.querySelectorAll('.mat').forEach(function(x) { x.classList.remove('on'); });
     $('faultBox1').classList.add('hidden');
+    window.renderNationalPeseesList();
   };
 
   // SOUMISSION PHASE 2: DÉPÔT & ANCRAGE BLOCKCHAIN
@@ -848,26 +1084,58 @@
     if (!st.stable2) return alert('Effectuez la pesée de contrôle au pèse-dépôt.');
 
     var b = activeBatches.find(function(x) { return x.id === batchId; });
-    var variance = Math.abs(w2 - b.weight1).toFixed(2);
+    if (b) {
+        b.weight2 = w2;
+        b.status = "ANCHORED";
+    }
 
-    alert('✅ DOUBLE PESÉE VALIDÉE & NOTARIÉE !\n\n• Lot: ' + batchId + '\n• Pesée 1 (Collecte): ' + b.weight1 + ' Kg\n• Pesée 2 (Dépôt): ' + w2 + ' Kg\n• Écart / Variance: ' + variance + ' Kg\n\nAncrage immuable scellé sur Maat Data Lake.');
+    var variance = Math.abs(w2 - (b ? b.weight1 : w2)).toFixed(2);
 
-    activeBatches = activeBatches.filter(function(x) { return x.id !== batchId; });
-    $('batch_info_box').classList.add('hidden');
+    alert('✅ DOUBLE PESÉE VALIDÉE & NOTARIÉE !\n\n• Lot: ' + batchId + '\n• Pesée 1 (Collecte): ' + (b ? b.weight1 : 'N/A') + ' Kg\n• Pesée 2 (Dépôt): ' + w2 + ' Kg\n• Écart / Variance: ' + variance + ' Kg\n\nAncrage immuable scellé sur Maat Data Lake.');
+
     $('w2').value = '00.00';
     st.stable2 = false;
+    window.renderNationalPeseesList();
   };
 
   window.handlePayoutSubmit = function(e) {
     e.preventDefault();
+    var amount = $('payout_amount').value;
+    var method = $('payout_method').options[$('payout_method').selectedIndex].text;
+    
+    caisseLedger.unshift({
+        id: "PAY-" + Math.floor(100 + Math.random()*900),
+        type: "PAYOUT_REQ",
+        user: sessionStorage.getItem('purkemet_name') || "Opérateur",
+        amount: parseFloat(amount),
+        method: method,
+        status: "PENDING",
+        details: $('payout_details').value
+    });
+
     alert('✅ Demande de règlement transmise au Siège.');
     window.closePayoutModal();
+    window.renderCaisseLedgerList();
   };
 
   window.handleCashReceiptSubmit = function(e) {
     e.preventDefault();
+    var amount = $('cash_amount').value;
+    var motif = $('cash_motif').options[$('cash_motif').selectedIndex].text;
+
+    caisseLedger.unshift({
+        id: "REC-" + Math.floor(100 + Math.random()*900),
+        type: "CASH_REC",
+        user: sessionStorage.getItem('purkemet_name') || "Opérateur",
+        amount: parseFloat(amount),
+        method: "Reçu Espèces",
+        status: "ANCHORED",
+        details: motif + " • Ref: " + $('cash_ref').value
+    });
+
     alert('✅ Reçu Espèces ancré au Registre de Caisse.');
     window.closeCashReceiptModal();
+    window.renderCaisseLedgerList();
   };
 
   window.uploadAvatar = function() {
@@ -886,10 +1154,10 @@
     if (auth === 'superadmin') {
       window.forceSuperAdminLogin();
     } else if (auth === 'operator') {
-      if ($('authCard')) $('authCard').classList.add('hidden');
-      if ($('terminal')) $('terminal').classList.remove('hidden');
-      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
-      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
+      if ($('authCard'))$('authCard').classList.add('hidden');
+      if ($('terminal'))$('terminal').classList.remove('hidden');
+      if ($('logoutBtn'))$('logoutBtn').classList.remove('hidden');
+      if ($('opInfo'))$('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
     }
   });
 })();
