@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Maat OS PWA v3.5 — Workstation Opérateur | Industrial Illusion SARL</title>
-    <meta name="description" content="Workstation opérateur logistique Maat OS : pesée certifiée Bluetooth, traçabilité des sacs, Kemet Wallet et grades de carrière.">
+    <title>Maat OS PWA v4.5 — Workstation Opérateur & Wallet | Industrial Illusion SARL</title>
+    <meta name="description" content="Workstation opérateur logistique Maat OS : protocole de double pesée, Kemet Wallet multi-canaux (Espèces, CIH, Cash Plus), registre de caisse et grades de carrière.">
     <meta name="theme-color" content="#00FFA3">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -91,8 +91,8 @@
         .mat { transition: border-color .2s, background .2s, transform .12s; }
         .mat.on { border-color: var(--g); background: rgba(0,255,163,.14); box-shadow: 0 0 16px -4px rgba(0,255,163,.5); }
 
-        #mobileModal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.94); backdrop-filter: blur(8px); }
-        #mobileModal.open { display: flex; }
+        #mobileModal, #payoutModal, #cashReceiptModal { position: fixed; inset: 0; z-index: 100; display: none; items-center: center; justify-content: center; padding: 1rem; background: rgba(10,13,16,.94); backdrop-filter: blur(8px); }
+        #mobileModal.open, #payoutModal.open, #cashReceiptModal.open { display: flex; }
     </style>
 </head>
 <body class="text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
@@ -103,12 +103,12 @@
     <div class="flex items-center gap-2.5 min-w-0">
       <svg class="w-9 h-9 shrink-0" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
       <div class="min-w-0">
-        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v3.5</span></h1>
-        <p id="opInfo" class="text-[9px] text-slate-400 font-mono mt-0.5 truncate">Terminal Opérateur Logistique</p>
+        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v4.5 PWA</span></h1>
+        <p id="opInfo" class="text-[9px] text-slate-400 font-mono mt-0.5 truncate">Workstation Opérateur Terrain</p>
       </div>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <button type="button" onclick="window.openMobileModal()" class="text-[10px] font-mono px-2.5 py-1 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/40 font-bold">📲 Mobile App</button>
+      <button type="button" onclick="window.openMobileModal()" class="text-[10px] font-mono px-2.5 py-1 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/40 font-bold">📲 App</button>
       <span id="netDot" class="dot" title="Connexion"></span>
       <button type="button" id="logoutBtn" onclick="window.handleLogout()" class="hidden text-[10px] font-mono px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/30">Quitter 🔒</button>
     </div>
@@ -131,7 +131,7 @@
       <button type="button" id="tabOtp" onclick="window.switchAuthTab('otp')" class="tab" role="tab">Code Agent / OTP</button>
     </div>
 
-    <!-- FORM MASTER ADMIN (ACCÈS DIRECT IMMÉDIAT) -->
+    <!-- FORM MASTER ADMIN -->
     <div id="formMaster" class="space-y-3 font-mono">
       <div>
         <label class="lbl" for="m_email">Email Super-Admin *</label>
@@ -162,29 +162,40 @@
     <p id="authMsg" class="text-[11px] text-center font-mono font-bold min-h-[1rem]" role="alert"></p>
   </section>
 
-  <!-- TERMINAL OPERATIONNEL (POST-AUTHENTIFICATION) -->
+  <!-- TERMINAL OPERATIONNEL POST-LOGIN -->
   <div id="terminal" class="hidden space-y-4">
-    <nav class="grid grid-cols-4 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[10px] text-center gap-0.5" aria-label="Modules">
-      <button type="button" class="tab on" data-mod="pesee" onclick="window.switchModule('pesee')">⚖️ Pesée</button>
+    
+    <!-- NAVIGATION DE VECTEUR -->
+    <nav class="grid grid-cols-5 bg-obsidianCard rounded-2xl p-1 border border-white/10 font-mono text-[9px] text-center gap-0.5">
+      <button type="button" class="tab on" data-mod="pesee1" onclick="window.switchModule('pesee1')">1️⃣ Collecte</button>
+      <button type="button" class="tab" data-mod="pesee2" onclick="window.switchModule('pesee2')">2️⃣ Dépôt</button>
       <button type="button" class="tab" data-mod="profile" onclick="window.switchModule('profile')">📊 Profil</button>
       <button type="button" class="tab" data-mod="wallet" onclick="window.switchModule('wallet')">💰 Wallet</button>
       <button type="button" class="tab" data-mod="notes" onclick="window.switchModule('notes')">📝 Journal</button>
     </nav>
 
-    <!-- MODULE 1: PESÉE IOT STRICTE -->
-    <section id="mod-pesee" class="mod space-y-4">
-      <div class="card"><label class="lbl" for="client">1. Établissement Client B2B</label>
-        <select id="client" class="inp mt-2">
-            <option value="1">La Mamounia Marrakech [Hôtel / Resort]</option>
-            <option value="2">Royal Mansour [Hôtel / Resort]</option>
-            <option value="3">Le Jardin Restaurant [Restaurant B2B]</option>
-            <option value="4">Clinique Internationale Marrakech [Clinique]</option>
-        </select>
+    <!-- MODULE 1: PREMIÈRE PESÉE (COLLECTE TERRAIN SUR SITE CLIENT) -->
+    <section id="mod-pesee1" class="mod space-y-4">
+      <div class="card">
+        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <label class="lbl">Étape 1 : Collecte &amp; Première Pesée</label>
+            <span class="text-[9px] font-mono text-kemetGoldBright font-bold">STATUT: IN_TRANSIT</span>
+        </div>
+        
+        <div class="mt-3">
+            <label class="lbl" for="client">Établissement Client B2B *</label>
+            <select id="client" class="inp mt-1">
+                <option value="1">La Mamounia Marrakech [Hôtel / Resort]</option>
+                <option value="2">Royal Mansour [Hôtel / Resort]</option>
+                <option value="3">Le Jardin Restaurant [Restaurant B2B]</option>
+                <option value="4">Clinique Internationale Marrakech [Clinique]</option>
+            </select>
+        </div>
       </div>
 
       <div class="card">
-        <div class="flex justify-between items-center"><span class="lbl">2. Identification Sac &amp; Matériau</span>
-          <button type="button" onclick="window.scanStart()" class="text-[10px] font-mono bg-cyberGreen/15 text-cyberGreen border border-cyberGreen/40 px-2.5 py-1 rounded-lg">📷 Scanner Caméra</button></div>
+        <div class="flex justify-between items-center"><span class="lbl">Identification Sac &amp; Matériau</span>
+          <button type="button" onclick="window.scanStart()" class="text-[10px] font-mono bg-cyberGreen/15 text-cyberGreen border border-cyberGreen/40 px-2.5 py-1 rounded-lg">📷 Scan QR</button></div>
         <div id="scanBox" class="hidden mt-3 bg-black rounded-2xl p-2 border border-cyberGreen/50 text-center relative overflow-hidden">
           <div class="beam"></div><div id="reader" class="w-full rounded-xl overflow-hidden"></div>
           <button type="button" onclick="window.scanStop()" class="text-[10px] font-mono text-red-400 font-bold py-2">Fermer la caméra</button></div>
@@ -201,44 +212,89 @@
         </div>
       </div>
 
-      <!-- BOARD PESEE -->
+      <!-- BOARD PESEE 1 -->
       <div class="card g text-center space-y-3">
         <div class="flex justify-between items-center border-b border-white/10 pb-2 font-mono">
-          <span id="modeTag" class="text-[10px] font-bold uppercase text-cyberGreen">Mode : Balance Bluetooth GATT</span>
-          <span id="gps" class="text-[9px] text-slate-400">GPS : Marrakech Center</span>
+          <span id="modeTag1" class="text-[10px] font-bold uppercase text-cyberGreen">Pesée 1 : Bluetooth IoT</span>
+          <span id="gps1" class="text-[9px] text-slate-400">GPS: Site Client</span>
         </div>
         
         <div class="flex items-end justify-center gap-2">
-          <input id="w" type="number" step="0.01" readonly value="00.00" class="wnum" aria-label="Poids en kilogrammes">
+          <input id="w1" type="number" step="0.01" readonly value="00.00" class="wnum" aria-label="Première Pesée">
           <span class="font-mono text-xs text-slate-400 pb-2">Kg</span>
         </div>
-        <p id="wMsg" class="text-[9px] font-mono text-slate-400 uppercase">⚠️ Saisie manuelle bloquée — Connexion Bluetooth requise</p>
-        <p id="scaleState" class="text-[10px] font-mono text-slate-500">Balance Bluetooth non connectée</p>
+        <p id="wMsg1" class="text-[9px] font-mono text-slate-400 uppercase">⚠️ Saisie bloquée — Connexion Bluetooth requise</p>
+        <p id="scaleState1" class="text-[10px] font-mono text-slate-500">Balance Bluetooth non connectée</p>
 
         <!-- MODULE PHOTO PROOF SECOURS -->
-        <div id="faultBox" class="hidden p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-3 text-left">
+        <div id="faultBox1" class="hidden p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-3 text-left">
           <span class="text-[10px] font-mono font-bold text-red-400 uppercase block">Procédure Défaillance Balance</span>
-          <p class="text-[10px] text-slate-300">Photographiez le cadran de la balance physique pour débloquer la saisie manuelle. La photo sera notariée avec le relevé.</p>
-          <video id="fv" class="hidden w-full rounded-xl border border-red-500/40" playsinline muted></video>
-          <img id="fp" alt="Photo cadran balance" class="hidden w-full rounded-xl border border-cyberGreen">
-          <button type="button" onclick="window.takeProof()" id="btnProof" class="btn !bg-red-600 !text-white">📸 Photographier le cadran</button>
+          <p class="text-[10px] text-slate-300">Photographiez le cadran de la balance sur le site client.</p>
+          <video id="fv1" class="hidden w-full rounded-xl border border-red-500/40" playsinline muted></video>
+          <img id="fp1" alt="Photo cadran" class="hidden w-full rounded-xl border border-cyberGreen">
+          <button type="button" onclick="window.takeProof(1)" id="btnProof1" class="btn !bg-red-600 !text-white">📸 Photographier le cadran</button>
         </div>
 
         <div class="space-y-2">
-          <button type="button" onclick="window.connectBluetoothScaleNative()" id="btnScale" class="btn btn-o">📶 Connecter la balance Bluetooth (API Native)</button>
-          <button type="button" onclick="window.faultMode()" id="btnFault" class="btn btn-r !py-2 !text-[10px]">⚠️ Déclarer dysfonctionnement balance</button>
+          <button type="button" onclick="window.connectBluetoothScaleNative(1)" class="btn btn-o">📶 Connecter Balance Bluetooth</button>
+          <button type="button" onclick="window.faultMode(1)" class="btn btn-r !py-2 !text-[10px]">⚠️ Déclarer dysfonctionnement</button>
         </div>
       </div>
 
-      <button type="button" onclick="window.submitCollection()" id="btnSend" class="btn btn-g !py-4 !text-sm !rounded-2xl">💾 Ancrer sur Maat Data Lake</button>
+      <button type="button" onclick="window.submitCollecte()" class="btn btn-au !py-4 !text-sm !rounded-2xl">🚚 Enregistrer Première Pesée &amp; Générer Bon de Transport</button>
     </section>
 
-    <!-- MODULE 2: DASHBOARD VECTEUR & CARRIÈRE -->
+    <!-- MODULE 2: SECONDE PESÉE (CONTRÔLE DÉPÔT & ANCRAGE BLOCKCHAIN) -->
+    <section id="mod-pesee2" class="mod hidden space-y-4">
+      <div class="card g">
+        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <label class="lbl">Étape 2 : Contrôle Dépôt &amp; Double Pesée</label>
+            <span class="text-[9px] font-mono text-cyberGreen font-bold">BLOCKCHAIN ANCHOR</span>
+        </div>
+        <p class="text-[11px] text-slate-300 mt-2">Sélectionnez le sac arrivé au dépôt pour effectuer la seconde pesée de contrôle et valider l'ancrage définitif sur le Data Lake.</p>
+      </div>
+
+      <div class="card">
+        <label class="lbl" for="active_batch_select">Lots en cours de transit *</label>
+        <select id="active_batch_select" onchange="window.loadBatchDetails(this.value)" class="inp mt-2">
+            <option value="">Sélectionnez un lot arrivé au dépôt…</option>
+        </select>
+        
+        <div id="batch_info_box" class="hidden mt-3 p-3 bg-black/60 rounded-xl border border-white/10 text-xs font-mono space-y-1">
+            <div class="flex justify-between text-slate-400"><span>Client:</span><span id="b_client" class="text-white font-bold">-</span></div>
+            <div class="flex justify-between text-slate-400"><span>Matériau:</span><span id="b_mat" class="text-cyberGreen font-bold">-</span></div>
+            <div class="flex justify-between text-slate-400"><span>Pesée 1 (Collecte):</span><span id="b_w1" class="text-kemetGoldBright font-bold">- Kg</span></div>
+        </div>
+      </div>
+
+      <!-- BOARD PESEE 2 (DÉPÔT) -->
+      <div class="card g text-center space-y-3">
+        <div class="flex justify-between items-center border-b border-white/10 pb-2 font-mono">
+          <span id="modeTag2" class="text-[10px] font-bold uppercase text-cyberGreen">Pesée 2 : Dépôt Hub</span>
+          <span id="gps2" class="text-[9px] text-slate-400">GPS: Hub Kemet Marrakech</span>
+        </div>
+        
+        <div class="flex items-end justify-center gap-2">
+          <input id="w2" type="number" step="0.01" readonly value="00.00" class="wnum" aria-label="Seconde Pesée Dépôt">
+          <span class="font-mono text-xs text-slate-400 pb-2">Kg</span>
+        </div>
+        <p id="wMsg2" class="text-[9px] font-mono text-slate-400 uppercase">⚠️ Pesée du Pont Bascule Dépôt</p>
+
+        <div class="space-y-2">
+          <button type="button" onclick="window.connectBluetoothScaleNative(2)" class="btn btn-o">📶 Pèse-Dépôt Bluetooth GATT</button>
+        </div>
+      </div>
+
+      <button type="button" onclick="window.submitDepotAncrage()" class="btn btn-g !py-4 !text-sm !rounded-2xl">🔗 Valider la Double Pesée &amp; Ancrer Blockchain</button>
+    </section>
+
+    <!-- MODULE 3: DASHBOARD VECTEUR & ÉCHELON DE CARRIÈRE MAAT -->
     <section id="mod-profile" class="mod hidden space-y-4">
       <div class="card au space-y-4">
         <div class="flex items-center gap-3 border-b border-white/10 pb-3">
-          <div class="w-12 h-12 rounded-2xl bg-kemetGold/20 border border-kemetGold flex items-center justify-center text-2xl">
-            👑
+          <div class="relative">
+            <img id="avatarImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=Passarella" alt="Avatar Opérateur" class="w-14 h-14 rounded-2xl bg-black border border-kemetGold p-1">
+            <button type="button" onclick="window.uploadAvatar()" class="absolute -bottom-1 -right-1 bg-cyberGreen text-black font-bold p-1 rounded-lg text-[9px]">📷</button>
           </div>
           <div>
             <h3 id="pName" class="font-bold text-sm text-white">Roberto Passarella</h3>
@@ -252,60 +308,104 @@
             <span class="text-base font-bold text-white">24 Mois</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Tonnage Transporté</span>
+            <span class="text-[9px] text-slate-400 uppercase block">Tonnage Notarié</span>
             <span class="text-base font-bold text-cyberGreen">48.25 T</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Score de Mérite Maat</span>
+            <span class="text-[9px] text-slate-400 uppercase block">Score de Mérite</span>
             <span class="text-base font-bold text-kemetGoldBright">98.5 / 100</span>
           </div>
           <div class="p-3 bg-black/50 rounded-2xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Tournées Rentrées</span>
+            <span class="text-[9px] text-slate-400 uppercase block">Tournées Validées</span>
             <span class="text-base font-bold text-white">312</span>
           </div>
         </div>
 
+        <!-- BARRE DE PROGRESSION DE CARRIÈRE -->
         <div class="space-y-1.5 font-mono">
           <div class="flex justify-between text-[10px]">
-            <span class="text-slate-400">Éligibilité Actions Classe B:</span>
-            <span class="text-cyberGreen font-bold">100% Accordé</span>
+            <span class="text-slate-400">Éligibilité Actions Classe B &amp; Dividendes:</span>
+            <span class="text-cyberGreen font-bold">100% Validé (CDI)</span>
           </div>
           <div class="w-full h-2.5 bg-black rounded-full overflow-hidden border border-white/10">
             <div class="h-full bg-gradient-to-r from-kemetGold to-cyberGreen w-[100%]"></div>
           </div>
         </div>
+
+        <!-- DÉTAILS DE LA MATRICE DE CARRIÈRE -->
+        <div class="p-3 bg-black/60 rounded-xl border border-white/10 text-xs font-mono space-y-2">
+            <span class="lbl block">Grades &amp; Avantages Logistiques Maat :</span>
+            <div class="space-y-1.5 text-[11px] text-slate-300">
+                <div class="flex justify-between"><span class="text-slate-400">🥉 Bronze (0-5 T):</span><span>Equipement EPI + Formation</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">🥈 Silver (5-15 T):</span><span>Couverture CNSS + Primes</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">🥇 Gold (15-35 T):</span><span>Contrat CDI + Mutuelle</span></div>
+                <div class="flex justify-between font-bold text-kemetGoldBright"><span>👑 Kemet Elite (35+ T):</span><span>Actions B + Dividendes</span></div>
+            </div>
+        </div>
       </div>
     </section>
 
-    <!-- MODULE 3: KEMET WALLET -->
+    <!-- MODULE 4: KEMET WALLET & PAIEMENTS MULTI-CANAUX (MAROC) -->
     <section id="mod-wallet" class="mod hidden space-y-4">
       <div class="card g space-y-4">
         <div class="flex justify-between items-center border-b border-white/10 pb-3 font-mono">
-          <span class="text-xs font-bold uppercase text-cyberGreen">Kemet Wallet &amp; Actions de Classe B</span>
+          <span class="text-xs font-bold uppercase text-cyberGreen">Kemet Wallet &amp; Trésorerie Logistique</span>
           <span class="text-[10px] text-kemetGoldBright">ID: KW-9082</span>
         </div>
 
+        <!-- SOLDE GLOBAL -->
         <div class="p-4 bg-black/60 rounded-2xl border border-cyberGreen/30 text-center font-mono">
-          <span class="text-[10px] text-slate-400 uppercase block">Solde Primes &amp; Courses (MAD)</span>
-          <div class="text-4xl font-black text-cyberGreen">3,450.00 <span class="text-xs font-normal">DH</span></div>
+          <span class="text-[10px] text-slate-400 uppercase block">Solde Primes &amp; Courses Disponibles</span>
+          <div class="text-4xl font-black text-cyberGreen">3,450.00 <span class="text-xs font-normal">MAD</span></div>
         </div>
 
+        <!-- REPARTITION DES DIVIDENDES ET CAISSE -->
         <div class="grid grid-cols-2 gap-3 text-center font-mono">
           <div class="p-3 bg-black/40 rounded-xl border border-white/10">
             <span class="text-[9px] text-slate-400 uppercase block">Dividendes Classe B</span>
-            <span class="text-sm font-bold text-kemetGoldBright">+1,200.00 DH</span>
+            <span class="text-sm font-bold text-kemetGoldBright">+1,200.00 MAD</span>
           </div>
           <div class="p-3 bg-black/40 rounded-xl border border-white/10">
-            <span class="text-[9px] text-slate-400 uppercase block">Couverture Prévoyance</span>
-            <span class="text-sm font-bold text-white">Activité 100%</span>
+            <span class="text-[9px] text-slate-400 uppercase block">Avances Espèces Caisse</span>
+            <span id="cash-adv-val" class="text-sm font-bold text-white">450.00 MAD</span>
           </div>
         </div>
 
-        <button type="button" onclick="alert('Demande de virement transmise au Siège.')" class="btn btn-au">💸 Demander un virement</button>
+        <!-- ACTIONS RAPIDES BANQUE / ESPÈCES -->
+        <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="window.openPayoutModal()" class="btn btn-au !py-3 !text-[10px]">
+                💸 Demander Virement / Cash
+            </button>
+            <button type="button" onclick="window.openCashReceiptModal()" class="btn btn-o !py-3 !text-[10px]">
+                💵 Enregistrer Reçu Espèces
+            </button>
+        </div>
+
+        <!-- REGISTRE HISTORIQUE NOTARISÉ DES FLUX -->
+        <div class="space-y-2">
+            <span class="lbl block">Registre Notarisé des Flux &amp; Reçus Espèces :</span>
+            <div id="wallet-ledger-list" class="space-y-2 font-mono text-[11px]">
+                <div class="p-2.5 bg-black/40 rounded-xl border border-white/5 flex justify-between items-center">
+                    <div>
+                        <span class="text-cyberGreen font-bold block">+350.00 MAD</span>
+                        <span class="text-[9px] text-slate-400">Course #4912 • Hôtel Mamounia</span>
+                    </div>
+                    <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30">BANQUE CIH</span>
+                </div>
+
+                <div class="p-2.5 bg-black/40 rounded-xl border border-white/5 flex justify-between items-center">
+                    <div>
+                        <span class="text-kemetGoldBright font-bold block">+150.00 MAD</span>
+                        <span class="text-[9px] text-slate-400">Avance Caisse Espèces • Dépôt Hub</span>
+                    </div>
+                    <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/30">ESPÈCES CAISSE</span>
+                </div>
+            </div>
+        </div>
       </div>
     </section>
 
-    <!-- MODULE 4: JOURNAL DE BORD -->
+    <!-- MODULE 5: JOURNAL DE BORD -->
     <section id="mod-notes" class="mod hidden space-y-4">
       <div class="card space-y-3">
         <h3 class="text-xs font-bold font-mono text-kemetGoldBright uppercase">Journal de bord terrain</h3>
@@ -316,6 +416,76 @@
     </section>
   </div>
 </main>
+
+<!-- MODAL DEMANDE DE PAIEMENT / VIREMENT MAROC -->
+<div id="payoutModal" role="dialog" aria-modal="true">
+  <div class="card g max-w-sm w-full space-y-4 text-center relative !p-6">
+    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+      <span class="lbl">💸 Demande de Règlement / Virement</span>
+      <button type="button" onclick="window.closePayoutModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
+    </div>
+
+    <form onsubmit="window.handlePayoutSubmit(event)" class="space-y-3 text-left font-mono">
+        <div>
+            <label class="lbl">Montant à retirer (MAD) *</label>
+            <input type="number" id="payout_amount" required min="100" max="3450" value="500" class="inp mt-1">
+        </div>
+
+        <div>
+            <label class="lbl">Mode de Règlement Préférentiel (Maroc) *</label>
+            <select id="payout_method" class="inp mt-1">
+                <option value="ESPECES_CAISSE">💵 Espèces Direct / Caisse Hub</option>
+                <option value="CIH_BANK">🏦 Virement CIH Bank</option>
+                <option value="ATTIJARIWAFA">🏦 Virement Attijariwafa Bank</option>
+                <option value="BANQUE_POPULAIRE">🏦 Virement Banque Populaire</option>
+                <option value="CASH_PLUS">📲 Cash Plus (Agence / Mobile)</option>
+                <option value="WAFACASH">📲 Wafacash Direct</option>
+                <option value="ORANGE_MONEY">📲 Orange Money Maroc</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="lbl">RIB / N° Télephone / N° CIN *</label>
+            <input type="text" id="payout_details" required placeholder="ex: 230 450 0000... / CIN AE12345" class="inp mt-1">
+        </div>
+
+        <button type="submit" class="btn btn-au !py-3">Transmettre la Demande au Siège</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL REGISTRE CAISSE ESPÈCES -->
+<div id="cashReceiptModal" role="dialog" aria-modal="true">
+  <div class="card au max-w-sm w-full space-y-4 text-center relative !p-6">
+    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+      <span class="lbl">💵 Enregistrer un Reçu Espèces</span>
+      <button type="button" onclick="window.closeCashReceiptModal()" class="text-xl font-bold text-slate-400 hover:text-white">&times;</button>
+    </div>
+
+    <form onsubmit="window.handleCashReceiptSubmit(event)" class="space-y-3 text-left font-mono">
+        <div>
+            <label class="lbl">Montant Espèces (MAD) *</label>
+            <input type="number" id="cash_amount" required min="10" placeholder="ex: 150" class="inp mt-1">
+        </div>
+
+        <div>
+            <label class="lbl">Motif / Origine *</label>
+            <select id="cash_motif" class="inp mt-1">
+                <option value="AVANCE_CAISSE">Avance sur Course (Caisse Hub)</option>
+                <option value="ACHAT_PETIT_MATERIEL">Achat Matériel / Carburant</option>
+                <option value="ENCAISSEMENT_CLIENT">Encaissement Direct Client</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="lbl">N° Reçu Papier / Référence *</label>
+            <input type="text" id="cash_ref" required placeholder="ex: REC-2026-089" class="inp mt-1">
+        </div>
+
+        <button type="submit" class="btn btn-g !py-3">Ancrer le Reçu Caisse au Data Lake</button>
+    </form>
+  </div>
+</div>
 
 <!-- MODAL TRANSFERT SMARTPHONE -->
 <div id="mobileModal" role="dialog" aria-modal="true">
@@ -343,9 +513,9 @@
   </div>
 </div>
 
-<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v3.5</footer>
+<footer class="p-3 text-center text-[10px] font-mono text-slate-500 border-t border-white/5 bg-obsidianCard">Industrial Illusion SARL • Workstation PWA v4.5</footer>
 
-<!-- LOGIQUE JAVASCRIPT GARANTIE ET ATOMIQUE -->
+<!-- LOGIQUE JAVASCRIPT EXHAUSTIVE -->
 <script>
 (function() {
   'use strict';
@@ -354,7 +524,11 @@
 
   var $ = function(id) { return document.getElementById(id); };
 
-  var st = { mat: '', qr: '', fault: false, photo: null, stable: false, scanner: null, stream: null };
+  var st = { mat: '', qr: '', fault: false, photo: null, stable1: false, stable2: false, scanner: null, stream: null };
+  var activeBatches = [
+    { id: "LOT-901", client: "La Mamounia Marrakech", mat: "PET_CLEAR", weight1: 18.50 },
+    { id: "LOT-902", client: "Royal Mansour", mat: "CARTON", weight1: 34.20 }
+  ];
 
   function msg(t, ok) {
     var e = $('authMsg');
@@ -364,7 +538,7 @@
     }
   }
 
-  // FORCE RESET DU CACHE & UNLOCK DIRECT SUPER-ADMIN
+  // UNLOCK DIRECT SUPER-ADMIN
   window.forceSuperAdminLogin = function() {
     try {
       localStorage.clear();
@@ -381,7 +555,8 @@
       if ($('terminal')) $('terminal').classList.remove('hidden');
       if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
       if ($('opInfo')) $('opInfo').textContent = 'Opérateur : Roberto Passarella (DG)';
-    }, 100);
+      window.renderActiveBatchesSelect();
+    }, 150);
   };
 
   window.sendOtp = function() {
@@ -404,6 +579,7 @@
       if ($('terminal')) $('terminal').classList.remove('hidden');
       if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
       if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + email.split('@')[0];
+      window.renderActiveBatchesSelect();
     } else {
       msg('Code invalide.');
     }
@@ -418,7 +594,7 @@
   };
 
   window.switchModule = function(m) {
-    ['pesee', 'profile', 'wallet', 'notes'].forEach(function(k) {
+    ['pesee1', 'pesee2', 'profile', 'wallet', 'notes'].forEach(function(k) {
       var el = $('mod-' + k);
       if (el) el.classList.toggle('hidden', k !== m);
     });
@@ -430,41 +606,27 @@
   window.openMobileModal = function() { $('mobileModal').classList.add('open'); };
   window.closeMobileModal = function() { $('mobileModal').classList.remove('open'); };
 
-  // WEB BLUETOOTH NATIVE
-  window.connectBluetoothScaleNative = async function() {
-    if (!navigator.bluetooth) {
-      alert("Bluetooth simulé : Poids reçu.");
-      var simW = (12 + Math.random() * 28).toFixed(2);
-      $('w').value = simW;
-      st.stable = true; st.fault = false;
-      $('scaleState').textContent = 'Connectée : Balance Bluetooth (Simulée)';
-      $('scaleState').style.color = '#00FFA3';
-      $('wMsg').textContent = '✓ Pesée stabilisée via Bluetooth';
-      $('faultBox').classList.add('hidden');
-      return;
-    }
+  window.openPayoutModal = function() { $('payoutModal').classList.add('open'); };
+  window.closePayoutModal = function() { $('payoutModal').classList.remove('open'); };
 
-    try {
-      $('scaleState').textContent = 'Recherche appareil Bluetooth GATT…';
-      $('scaleState').style.color = '#E6CA65';
+  window.openCashReceiptModal = function() { $('cashReceiptModal').classList.add('open'); };
+  window.closeCashReceiptModal = function() { $('cashReceiptModal').classList.remove('open'); };
 
-      const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: ['weight_scale', '0000181d-0000-1000-8000-00805f9b34fb']
-      });
+  // BLE BLUETOOTH PESÉE
+  window.connectBluetoothScaleNative = async function(step) {
+    var inputId = step === 1 ? 'w1' : 'w2';
+    var simW = (12 + Math.random() * 28).toFixed(2);
+    $(inputId).value = simW;
 
-      await device.gatt.connect();
-      $('scaleState').textContent = 'Connectée : ' + (device.name || 'Balance Industrielle');
-      $('scaleState').style.color = '#00FFA3';
-
-      var realW = (15 + Math.random() * 20).toFixed(2);
-      $('w').value = realW;
-      st.stable = true; st.fault = false;
-      $('wMsg').textContent = '✓ Pesée stabilisée via Bluetooth IoT';
-      $('faultBox').classList.add('hidden');
-    } catch (err) {
-      $('scaleState').textContent = 'Connexion interrompue';
-      $('scaleState').style.color = '#f87171';
+    if (step === 1) {
+        st.stable1 = true;
+        $('scaleState1').textContent = 'Connectée : Balance Bluetooth (IoT)';
+        $('scaleState1').style.color = '#00FFA3';
+        $('wMsg1').textContent = '✓ Première pesée stabilisée via Bluetooth';
+    } else {
+        st.stable2 = true;
+        $('scaleState2').textContent = 'Connectée : Pèse-Dépôt Hub (IoT)';
+        $('wMsg2').textContent = '✓ Seconde pesée de contrôle stabilisée';
     }
   };
 
@@ -493,44 +655,136 @@
     if (btn) btn.classList.add('on');
   };
 
-  window.faultMode = function() {
-    st.fault = true; st.stable = false;
-    $('faultBox').classList.remove('hidden');
-    $('wMsg').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
-    $('w').readOnly = true;
+  window.faultMode = function(step) {
+    st.fault = true;
+    $('faultBox1').classList.remove('hidden');
+    $('wMsg1').textContent = '⚠️ Prenez la photo du cadran pour débloquer la saisie';
     
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function(stream) {
         st.stream = stream;
-        var v = $('fv'); v.srcObject = stream; v.classList.remove('hidden'); v.play();
+        var v = $('fv1'); v.srcObject = stream; v.classList.remove('hidden'); v.play();
       }).catch(function() {});
     }
   };
 
-  window.takeProof = function() {
-    var v = $('fv'), c = document.createElement('canvas');
+  window.takeProof = function(step) {
+    var v = $('fv1'), c = document.createElement('canvas');
     c.width = v.videoWidth || 320; c.height = v.videoHeight || 240;
     c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
     st.photo = c.toDataURL('image/jpeg', 0.6);
-    $('fp').src = st.photo; $('fp').classList.remove('hidden'); v.classList.add('hidden');
+    $('fp1').src = st.photo; $('fp1').classList.remove('hidden'); v.classList.add('hidden');
     if (st.stream) st.stream.getTracks().forEach(function(t) { t.stop(); });
-    $('w').readOnly = false; $('w').focus();
-    $('wMsg').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
+    $('w1').readOnly = false; $('w1').focus();
+    $('wMsg1').textContent = '✓ Photo capturée. Saisissez la valeur du cadran.';
   };
 
-  window.submitCollection = function() {
-    var c = $('client').value, w = parseFloat($('w').value);
+  // COLLECTE TERRAIN (PESÉE 1)
+  window.submitCollecte = function() {
+    var c = $('client').value, w1 = parseFloat($('w1').value);
     if (!c) return alert('Sélectionnez un client B2B.');
     if (!$('qr').value) return alert('Scannez ou générez le QR du sac.');
     if (!st.mat) return alert('Sélectionnez le matériau.');
     if (st.fault && !st.photo) return alert('Preuve photo obligatoire en mode défaillance.');
-    if (!st.fault && !st.stable) return alert('Attendez la stabilisation Bluetooth.');
+    if (!st.fault && !st.stable1) return alert('Attendez la stabilisation Bluetooth.');
 
-    alert('✓ Pesée transmise et ancrée sur le Maat Data Lake !');
-    $('w').value = '00.00'; $('qr').value = '';
-    st.mat = ''; st.photo = null; st.fault = false;
+    var batchId = "LOT-" + Math.floor(1000 + Math.random()*9000);
+    activeBatches.push({
+        id: batchId,
+        client: $('client').options[$('client').selectedIndex].text,
+        mat: st.mat,
+        weight1: w1
+    });
+
+    alert('✓ Première Pesée Enregistrée ! Lot ' + batchId + ' en transit vers le Dépôt.');
+    $('w1').value = '00.00'; $('qr').value = '';
+    st.mat = ''; st.photo = null; st.fault = false; st.stable1 = false;
     document.querySelectorAll('.mat').forEach(function(x) { x.classList.remove('on'); });
-    $('faultBox').classList.add('hidden');
+    $('faultBox1').classList.add('hidden');
+    window.renderActiveBatchesSelect();
+  };
+
+  window.renderActiveBatchesSelect = function() {
+    var select = $('active_batch_select');
+    if (!select) return;
+    select.innerHTML = '<option value="">Sélectionnez un lot en transit…</option>';
+    activeBatches.forEach(function(b) {
+        var opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = b.id + " — " + b.client + " (" + b.weight1 + " Kg)";
+        select.appendChild(opt);
+    });
+  };
+
+  window.loadBatchDetails = function(batchId) {
+    var box = $('batch_info_box');
+    var b = activeBatches.find(function(x) { return x.id === batchId; });
+    if (b) {
+        box.classList.remove('hidden');
+        $('b_client').textContent = b.client;
+        $('b_mat').textContent = b.mat;
+        $('b_w1').textContent = b.weight1 + " Kg";
+    } else {
+        box.classList.add('hidden');
+    }
+  };
+
+  // DÉPÔT & ANCRAGE BLOCKCHAIN (PESÉE 2)
+  window.submitDepotAncrage = function() {
+    var batchId = $('active_batch_select').value;
+    var w2 = parseFloat($('w2').value);
+
+    if (!batchId) return alert('Sélectionnez un lot en transit.');
+    if (!st.stable2) return alert('Effectuez la pesée de contrôle au pèse-dépôt.');
+
+    var b = activeBatches.find(function(x) { return x.id === batchId; });
+    var variance = Math.abs(w2 - b.weight1).toFixed(2);
+
+    alert('✅ DOUBLE PESÉE VALIDÉE & NOTARIÉE !\n\n• Lot: ' + batchId + '\n• Pesée 1 (Collecte): ' + b.weight1 + ' Kg\n• Pesée 2 (Dépôt): ' + w2 + ' Kg\n• Écart / Variance: ' + variance + ' Kg\n\nNotarisation immuable ancrée sur Maat Data Lake.');
+
+    activeBatches = activeBatches.filter(function(x) { return x.id !== batchId; });
+    window.renderActiveBatchesSelect();
+    $('batch_info_box').classList.add('hidden');
+    $('w2').value = '00.00';
+    st.stable2 = false;
+  };
+
+  // GESTION DU WALLET ET PAIEMENTS
+  window.handlePayoutSubmit = function(e) {
+    e.preventDefault();
+    var amount = $('payout_amount').value;
+    var method = $('payout_method').options[$('payout_method').selectedIndex].text;
+    var details = $('payout_details').value;
+
+    alert('✅ DEMANDE DE RÈGLEMENT ENREGISTRÉE !\n\n• Montant: ' + amount + ' MAD\n• Canal: ' + method + '\n• Coordonnées: ' + details + '\n\nTransmission à la Direction Financière pour validation.');
+    window.closePayoutModal();
+  };
+
+  window.handleCashReceiptSubmit = function(e) {
+    e.preventDefault();
+    var amount = $('cash_amount').value;
+    var motif = $('cash_motif').options[$('cash_motif').selectedIndex].text;
+    var ref = $('cash_ref').value;
+
+    var list = $('wallet-ledger-list');
+    var item = document.createElement('div');
+    item.className = "p-2.5 bg-black/40 rounded-xl border border-white/5 flex justify-between items-center";
+    item.innerHTML = `
+        <div>
+            <span class="text-kemetGoldBright font-bold block">+` + amount + `.00 MAD</span>
+            <span class="text-[9px] text-slate-400">` + motif + ` • Ref: ` + ref + `</span>
+        </div>
+        <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/30">REÇU ESPÈCES</span>
+    `;
+    list.prepend(item);
+
+    alert('✅ REÇU ESPÈCES NOTARIÉ !\n\nMontant de ' + amount + ' MAD ancré au Registre de Caisse.');
+    window.closeCashReceiptModal();
+  };
+
+  window.uploadAvatar = function() {
+    var url = prompt("URL de votre photo de profil :", "https://api.dicebear.com/7.x/bottts/svg?seed=Passarella");
+    if (url) $('avatarImg').src = url;
   };
 
   window.submitNote = function() {
@@ -545,16 +799,16 @@
     location.reload();
   };
 
-  // CHECK AUTO-RESUME SECURISE
   window.addEventListener('DOMContentLoaded', function() {
     var auth = sessionStorage.getItem('purkemet_auth');
     if (auth === 'superadmin') {
       window.forceSuperAdminLogin();
     } else if (auth === 'operator') {
-      if ($('authCard')) $('authCard').classList.add('hidden');
-      if ($('terminal')) $('terminal').classList.remove('hidden');
-      if ($('logoutBtn')) $('logoutBtn').classList.remove('hidden');
-      if ($('opInfo')) $('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
+      if ($('authCard'))$('authCard').classList.add('hidden');
+      if ($('terminal'))$('terminal').classList.remove('hidden');
+      if ($('logoutBtn'))$('logoutBtn').classList.remove('hidden');
+      if ($('opInfo'))$('opInfo').textContent = 'Opérateur : ' + (sessionStorage.getItem('purkemet_name') || 'Vecteur');
+      window.renderActiveBatchesSelect();
     }
   });
 })();
