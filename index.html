@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Industrial Illusion SARL | Deep Tech Systems — Portail Institutionnel</title>
-    <meta name="description" content="Holding industrielle DeepTech spécialisée dans l'ingénierie environnementale, la gestion intégrale B2B et la traçabilité notariale au Maroc. Projet Illusion Kemet.">
+    <title>Industrial Illusion SARL | Deep Tech Systems — Projet Illusion Kemet</title>
+    <meta name="description" content="Plateforme DeepTech intégrée de logistique, Maat Data Lake et traçabilité ESG pour les grands producteurs B2B à Marrakech. Projet PurKemet & K-MEH-20.">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Cinzel, JetBrains Mono, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN & Supabase JS Client -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -28,9 +27,9 @@
                     },
                     colors: {
                         papyrusBase: '#E3D2BF',
-                        papyrusLight: '#F3E8DA',
-                        papyrusCard: '#EADBCB',
-                        papyrusDark: '#C9B59F',
+                        papyrusLight: '#F5EBE1',
+                        papyrusCard: '#E8D8C8',
+                        papyrusDark: '#C7B29B',
                         obsidian: '#090D10',
                         obsidianCard: '#11161C',
                         kemetGold: '#C5A059',
@@ -43,56 +42,74 @@
         }
     </script>
     <style>
+        /* TEXTURE PAPIRO EGIZIO ORGANICO CON FIBRE SVG */
         body {
             background-color: #E3D2BF;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(243, 232, 218, 0.9) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(201, 181, 159, 0.6) 0px, transparent 50%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.2 0 0 0 0.7 0.15 0 0 0 0.58 0.1 0 0 0 0.42 0 0 0 0.14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)'/%3E%3C/svg%3E"),
+                radial-gradient(at 0% 0%, rgba(245, 235, 225, 0.85) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(199, 178, 155, 0.6) 0px, transparent 50%),
                 radial-gradient(at 50% 100%, rgba(227, 210, 191, 0.95) 0px, transparent 50%),
-                radial-gradient(at 80% 50%, rgba(197, 160, 89, 0.15) 0px, transparent 50%);
+                radial-gradient(at 80% 50%, rgba(197, 160, 89, 0.18) 0px, transparent 50%);
             background-attachment: fixed;
         }
 
         .papyrus-border { 
-            border: 1px solid rgba(197, 160, 89, 0.4); 
+            border: 1px solid rgba(197, 160, 89, 0.45); 
+            box-shadow: inset 0 0 12px rgba(180, 140, 90, 0.15);
         }
 
         .papyrus-glass {
-            background: linear-gradient(135deg, rgba(243, 232, 218, 0.88), rgba(227, 210, 191, 0.82));
+            background: linear-gradient(135deg, rgba(245, 235, 225, 0.92), rgba(227, 210, 191, 0.85));
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(197, 160, 89, 0.35);
-            box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.07);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 15px 35px -5px rgba(9, 13, 16, 0.08);
         }
 
         .obsidian-glass {
             background: linear-gradient(145deg, #11161C, #090D10);
-            border: 1px solid rgba(197, 160, 89, 0.35);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
         }
 
-        .glow-green-sm {
-            box-shadow: 0 0 15px rgba(0, 255, 163, 0.25);
+        .text-glow-green {
+            text-shadow: 0 0 14px rgba(0, 255, 163, 0.5);
         }
 
-        .glow-gold-sm {
-            box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+        .text-glow-gold {
+            text-shadow: 0 0 12px rgba(197, 160, 89, 0.4);
+        }
+
+        /* ANIMAZIONE OCCHIO CIBERNETICO */
+        @keyframes cyberPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0,255,163,0.6)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(0,255,163,0.9)); }
+        }
+        .cyber-eye-anim {
+            animation: cyberPulse 4s ease-in-out infinite;
         }
     </style>
 </head>
 <body class="text-obsidian antialiased overflow-x-hidden selection:bg-cyberGreen selection:text-black min-h-screen flex flex-col justify-between">
 
     <!-- HEADER INSTITUTIONNEL -->
-    <header class="border-b border-kemetGold/40 bg-papyrusBase/90 backdrop-blur-xl fixed top-0 w-full z-50 transition-all duration-300">
+    <header class="border-b border-kemetGold/40 bg-papyrusBase/90 backdrop-blur-xl fixed top-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             
-            <!-- LOGO INSTITUTIONNEL -->
+            <!-- LOGO OCCHIO CIBERNETICO DI HORUS HD -->
             <a href="index.html" class="flex items-center space-x-3.5 group">
                 <div class="relative w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300">
-                    <svg class="w-9 h-9 text-cyberGreen transition-transform duration-500 group-hover:scale-105" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-                        <path d="M10 50 Q 50 15, 90 50 Q 50 85, 10 50 Z" stroke-width="3.5" stroke="#00FFA3"/>
-                        <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3" fill="#090D10"/>
-                        <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
-                        <path d="M25 32 L35 20 M75 32 L65 20 M25 68 L35 80 M75 68 L65 80" stroke="#00FFA3" stroke-width="2"/>
+                    <svg class="w-10 h-10 text-cyberGreen cyber-eye-anim" viewBox="0 0 100 100" fill="none">
+                        <!-- Profilo Occhio di Horus Cibernetico -->
+                        <path d="M8 50 Q 50 10, 92 50 Q 50 90, 8 50 Z" stroke="#00FFA3" stroke-width="3.5" fill="#090D10"/>
+                        <!-- Iride & Pupilla -->
+                        <circle cx="50" cy="50" r="18" stroke="#C5A059" stroke-width="3" fill="#11161C"/>
+                        <circle cx="50" cy="50" r="7" fill="#00FFA3"/>
+                        <!-- Linee di Circuiti Egizi -->
+                        <path d="M22 30 L32 18 M78 30 L68 18 M22 70 L32 82 M78 70 L68 82" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Lacrima di Horus Stilizzata -->
+                        <path d="M50 68 C 50 82, 38 88, 38 96" stroke="#C5A059" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M62 68 L 74 92" stroke="#C5A059" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div>
@@ -104,11 +121,11 @@
             <!-- NAVIGATION MULTI-PAGES -->
             <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-obsidian/80">
                 <a href="index.html" class="text-cyberGreenDark font-black border-b-2 border-cyberGreenDark pb-0.5">Accueil</a>
-                <a href="apropos.html" class="hover:text-cyberGreenDark transition-colors">Qui Sommes-Nous</a>
                 <a href="purkemet.html" class="hover:text-cyberGreenDark transition-colors">PurKemet B2B</a>
                 <a href="kmeh20.html" class="hover:text-cyberGreenDark transition-colors">K-MEH-20</a>
                 <a href="datalake.html" class="hover:text-cyberGreenDark transition-colors">Maat Data Lake</a>
                 <a href="carrieres.html" class="hover:text-cyberGreenDark transition-colors">Carrières</a>
+                <a href="apropos.html" class="hover:text-cyberGreenDark transition-colors">Qui Sommes-Nous</a>
             </nav>
 
             <!-- AUTH & PROFIL EN HAUT À DROITE -->
@@ -139,7 +156,7 @@
         </div>
     </header>
 
-    <!-- MAIN HERO & HUB SYSTEM -->
+    <!-- MAIN HUB -->
     <main class="mt-28 space-y-24 mb-20 max-w-7xl mx-auto px-6">
 
         <!-- HERO SECTION INSTITUTIONNELLE -->
@@ -147,28 +164,28 @@
             <div class="grid lg:grid-cols-12 gap-10 items-center">
                 
                 <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/80 text-obsidian text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
-                        🏛️ Holding Industrielle & Ingénierie Souveraine — Royaume du Maroc
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full papyrus-border bg-papyrusLight/90 text-obsidian text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
+                        📜 Genesis Master Document — Projet Illusion Kemet
                     </div>
                     
                     <h2 class="font-kemetTitle text-4xl sm:text-6xl font-black text-obsidian tracking-tight leading-tight">
-                        L'Infrastructures <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreenDark via-emerald-800 to-obsidian">DeepTech</span> de la Transition Écologique
+                        L'Ingénierie Souveraine de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreenDark via-emerald-800 to-obsidian">Nouvelle Révolution Industrielle</span>
                     </h2>
                     
                     <p class="text-base sm:text-lg text-obsidian/90 leading-relaxed font-medium">
-                        Industrial Illusion SARL déploie la plateforme unifiée de logistique intelligente e de traçabilité notariale pour les grands producteurs B2B au Maroc (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans). 
+                        Industrial Illusion SARL déploie la plateforme unifiée de logistique intelligente et de traçabilité notariale pour l'ensemble des Grands Producteurs B2B au Maroc (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans). 
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 pt-2">
-                        <a href="apropos.html" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center glow-green-sm">
-                            Découvrir la Société (Qui Sommes-Nous) →
+                        <a href="purkemet.html" class="px-8 py-4 bg-obsidian text-cyberGreen font-mono font-bold rounded-xl hover:bg-black transition-all shadow-xl text-xs uppercase tracking-wider border border-cyberGreen/40 text-center">
+                            Explorer PurKemet B2B →
                         </a>
-                        <a href="purkemet.html" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
-                            Services PurKemet B2B →
+                        <a href="kmeh20.html" class="px-8 py-4 border-2 border-obsidian text-obsidian font-mono font-bold rounded-xl hover:bg-obsidian hover:text-papyrusBase transition-all text-xs uppercase tracking-wider text-center">
+                            Découvrir K-MEH-20 →
                         </a>
                     </div>
 
-                    <div class="pt-4 flex items-center gap-6 text-xs font-mono font-bold text-obsidian/75 border-t border-kemetGold/40">
+                    <div class="pt-4 flex items-center gap-6 text-xs font-mono font-bold text-obsidian/80 border-t border-kemetGold/40">
                         <span>Conforme Loi n° 28-00</span>
                         <span>•</span>
                         <span>Souveraineté CNDP n° 09-08</span>
@@ -177,25 +194,26 @@
                     </div>
                 </div>
 
-                <!-- CARD MONOLITHE DIRECTION GÉNÉRALE -->
+                <!-- CARD MONOLITHE GENESIS DATA ROOM -->
                 <div class="lg:col-span-5 obsidian-glass text-white rounded-3xl p-8 space-y-6 relative overflow-hidden border-2 border-kemetGold/40 group hover:border-cyberGreen/50 transition-all duration-500">
-                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-cyberGreen/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
                     <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono">
-                        <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Direction Générale</span>
-                        <span class="text-xs text-kemetGoldBright">Marrakech, Maroc</span>
+                        <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Genesis Data Room</span>
+                        <span class="text-xs text-kemetGoldBright">Track 0 & K-MEH-20</span>
                     </div>
 
                     <div class="space-y-3">
-                        <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">Directeur Général & Fondateur</span>
-                        <h3 class="font-kemetTitle text-2xl font-black text-white">Roberto Passarella</h3>
+                        <h3 class="font-kemetTitle text-2xl font-black text-white">PROJET ILLUSION KEMET</h3>
                         <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                            « Industrial Illusion SARL combine rigueur industrielle, gouvernance participative et souveraineté numérique pour ériger un modèle de valorisation matérielle durable et transparent au bénéfice du territoire. »
+                            Écosystème unifié opérant par la double voie: la logistique d'urgence B2B <strong>PurKemet</strong> (Jour 0) et l'infrastructure bionique lourde <strong>K-MEH-20</strong> gouvernée par le système d'exploitation souverain <strong>Maat OS</strong>.
                         </p>
                     </div>
 
                     <div class="p-4 bg-obsidianCard/90 rounded-2xl border border-white/10 space-y-2 text-xs font-mono">
-                        <div class="flex justify-between items-center font-bold text-slate-300">
+                        <div class="flex justify-between font-bold text-cyberGreen">
+                            <span>Directeur Général:</span>
+                            <span class="text-white">Roberto Passarella</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-slate-400">
                             <span>Contact Officiel:</span>
                             <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline">r.passarella@industrialillusion.ma</a>
                         </div>
@@ -205,101 +223,134 @@
             </div>
         </section>
 
-        <!-- CARDS STRATÉGIQUES MULTI-PAGES -->
+        <!-- NOUVELLE SECTION: ÉTUDE DE MARCHÉ & ENJEUX DU GISEMENT B2B -->
+        <section class="papyrus-glass p-8 sm:p-12 rounded-3xl space-y-8 border-2 border-kemetGold/40">
+            <div class="max-w-3xl space-y-3">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Étude de Marché & Diagnostic Territorial</span>
+                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Les Défis du Gisement B2B & de la Valorisation à Marrakech</h3>
+                <p class="text-sm text-obsidian/85 leading-relaxed font-medium">
+                    L'expansion économique de la région Marrakech-Safi génère un volume croissant de déchets industriels et commerciaux. Sans infrastructure intégrée, ce gisement représente un risque réglementaire et financier majeur pour les établissements.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
+                    <div class="w-10 h-10 bg-obsidian text-kemetGoldBright rounded-xl flex items-center justify-center font-mono font-bold text-sm">01</div>
+                    <h4 class="font-bold text-obsidian text-base">Saturation des Infrastructures</h4>
+                    <p class="text-xs text-obsidian/80 leading-relaxed">
+                        Les centres d'enfouissement régionaux font face à des pressions accrues. L'absence de tri à la source dans le secteur Hôtelier et Commercial surcharge inutilement la collecte municipale.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
+                    <div class="w-10 h-10 bg-obsidian text-cyberGreen rounded-xl flex items-center justify-center font-mono font-bold text-sm">02</div>
+                    <h4 class="font-bold text-obsidian text-base">Risques Réglementaires (Loi 28-00)</h4>
+                    <p class="text-xs text-obsidian/80 leading-relaxed">
+                        La réglementation impose aux grands producteurs la gestion conforme de leurs déchets. L'absence de traçabilité expose les directions d'établissements à des pénalités environnementales.
+                    </p>
+                </div>
+
+                <div class="p-6 bg-papyrusLight/90 rounded-2xl papyrus-border space-y-3">
+                    <div class="w-10 h-10 bg-obsidian text-kemetGoldBright rounded-xl flex items-center justify-center font-mono font-bold text-sm">03</div>
+                    <h4 class="font-bold text-obsidian text-base">Contraintes d'Audit ESG & Labels</h4>
+                    <p class="text-xs text-obsidian/80 leading-relaxed">
+                        Les certifications internationales (Clef Verte, Travelife, ISO 14001) exigent des preuves tangibles et notarisées de la valorisation des matières sèches (PET, Verre, Carton, Aluminium).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PILIERS MULTI-PAGES -->
         <section class="space-y-8">
             <div class="text-center max-w-3xl mx-auto space-y-3">
                 <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreenDark">Architecture de la Plateforme</span>
-                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Les Piliers de l'Écosystème Illusion Kemet</h3>
-                <p class="text-sm text-obsidian/80 font-medium">Explorez chaque division à travers nos portails dédiés.</p>
+                <h3 class="font-kemetTitle text-3xl font-black text-obsidian">Les Piliers du Projet Illusion Kemet</h3>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <!-- CARD QUI SOMMES-NOUS -->
-                <div class="papyrus-glass p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.01] transition-all duration-300">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Institutionnel</span>
-                            <span class="text-[10px] font-mono font-bold text-obsidian/60">Gouvernance</span>
-                        </div>
-                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Qui Sommes-Nous</h4>
+                <!-- CARD PURKEMET -->
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                    <div class="space-y-3">
+                        <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Track 0 Immédiat</span>
+                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">PurKemet B2B</h4>
                         <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
-                            Présentation institutionnelle d'Industrial Illusion SARL, vision stratégique du Directoire, engagements RSE, modèle d'actionnariat des **Actions de Classe B** et conformité aux orientations régionales.
+                            Collecte gratuite de la fraction sèche à 0 MAD e gestion sous contrat de l'indifférencié (Loi 28-00).
                         </p>
                     </div>
-                    <a href="apropos.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
-                        En Savoir Plus →
-                    </a>
-                </div>
-
-                <!-- CARD PURKEMET B2B -->
-                <div class="papyrus-glass p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.01] transition-all duration-300">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Track 0 Immédiat</span>
-                            <span class="text-[10px] font-mono font-bold text-obsidian/60">0 MAD Fraction Sèche</span>
-                        </div>
-                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">PurKemet B2B</h4>
-                        <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
-                            Service clé en main pour les établissements B2B (HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans). Collecte gratuite du sec e traitement conforme de l'indifférencié (Loi n° 28-00).
-                        </p>
-                    </div>
-                    <a href="purkemet.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
+                    <a href="purkemet.html" class="w-full py-3 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all">
                         Portail PurKemet →
                     </a>
                 </div>
 
                 <!-- CARD K-MEH-20 -->
-                <div class="papyrus-glass p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.01] transition-all duration-300">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Infrastructure Lourde</span>
-                            <span class="text-[10px] font-mono font-bold text-obsidian/60">Brevet OMPIC</span>
-                        </div>
-                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">K-MEH-20</h4>
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                    <div class="space-y-3">
+                        <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Infrastructure</span>
+                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">K-MEH-20</h4>
                         <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
-                            Ingénierie de la Pyramide tronquée monumentale de 56 m × 56 m (3 136 m²), autonomie métabolique en biométhane, Maat OS e pôle manufacturier de Kénitra.
+                            Pyramide tronquée brevetée OMPIC (56m × 56m), autonomie biométhane et pôle de Kénitra.
                         </p>
                     </div>
-                    <a href="kmeh20.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
-                        Spécifications K-MEH-20 →
+                    <a href="kmeh20.html" class="w-full py-3 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all">
+                        Fiche K-MEH-20 →
                     </a>
                 </div>
 
                 <!-- CARD DATA LAKE -->
-                <div class="papyrus-glass p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.01] transition-all duration-300">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Registre Blockchain</span>
-                            <span class="text-[10px] font-mono font-bold text-obsidian/60">Loi CNDP 09-08</span>
-                        </div>
-                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Maat Data Lake</h4>
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                    <div class="space-y-3">
+                        <span class="px-3 py-1 bg-obsidian text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase">Registre Blockchain</span>
+                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Maat Data Lake</h4>
                         <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
-                            Réservoir sécurisé de notarisation cryptographique. Suivi en temps réel des volumes valorisés, bilan CO₂ certifié e rapports de conformité pour audits fiscaux et environnementaux.
+                            Traçabilité notariale, bilans CO₂ certifiés e transparence fiscale conforme CNDP 09-08.
                         </p>
                     </div>
-                    <a href="datalake.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
-                        Consulter le Data Lake →
+                    <a href="datalake.html" class="w-full py-3 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all">
+                        Data Lake Live →
                     </a>
                 </div>
 
                 <!-- CARD CARRIÈRES -->
-                <div class="papyrus-glass p-8 rounded-3xl space-y-6 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.01] transition-all duration-300 md:col-span-2 lg:col-span-2">
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Opportunités & Inclusivité</span>
-                            <span class="text-[10px] font-mono font-bold text-obsidian/60">Recrutement Marrakech</span>
-                        </div>
-                        <h4 class="font-kemetTitle text-2xl font-bold text-obsidian">Carrières, Ambassadeurs & Integration Des Chiffonniers (Mikhala)</h4>
+                <div class="papyrus-glass p-7 rounded-3xl space-y-5 border-2 border-kemetGold/40 flex flex-col justify-between hover:border-cyberGreenDark hover:scale-[1.02] transition-all duration-300">
+                    <div class="space-y-3">
+                        <span class="px-3 py-1 bg-obsidian text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase">Inclusivité</span>
+                        <h4 class="font-kemetTitle text-xl font-bold text-obsidian">Carrières & Mikhala</h4>
                         <p class="text-xs text-obsidian/85 leading-relaxed font-medium">
-                            Programme d'intégration des Chiffonniers (Mikhala) avec équipements de protection (EPI), formation continue, couverture sociale e opportunités d'accès aux **Actions de Classe B**. Recrutement actif des Vecteurs Logistiques Motorisés e Ambassadeurs Commerciaux B2B.
+                            Integration des Chiffonniers (Mikhala), Vecteurs Logistiques e Actions de Classe B.
                         </p>
                     </div>
-                    <a href="carrieres.html" class="w-full py-3.5 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all shadow-md">
-                        Espace Recrutement & Partenariats →
+                    <a href="carrieres.html" class="w-full py-3 bg-obsidian text-white font-mono font-bold rounded-xl text-xs uppercase tracking-wider text-center block hover:bg-black transition-all">
+                        Recrutement →
                     </a>
                 </div>
 
+            </div>
+        </section>
+
+        <!-- SEZIONE QUI SOMMES-NOUS / PRESENTATION EN BAS DE PAGE -->
+        <section class="obsidian-glass text-white p-8 sm:p-12 rounded-3xl border-2 border-kemetGold/40 space-y-8">
+            <div class="grid lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-8 space-y-4">
+                    <span class="text-xs font-mono text-cyberGreen font-bold uppercase tracking-widest">Présentation Institutionnelle</span>
+                    <h3 class="font-kemetTitle text-3xl font-black text-white">À Propos d'Industrial Illusion SARL</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+                        Société d'ingénierie environnementale DeepTech basée à Marrakech, Industrial Illusion SARL conçoit e déploie les infrastructures cyber-physiques régissant la collecte, la traçabilité e la valorisation industrielle des matières secondaires au Maroc. Notre gouvernance associe rigorisme technique e modèle inclusif à travers les Actions de Classe B e l'émancipation des Chiffonniers (Mikhala).
+                    </p>
+                </div>
+                <div class="lg:col-span-4 flex flex-col justify-center items-end border-l border-white/10 pl-6 space-y-3 font-mono text-xs">
+                    <div class="text-right">
+                        <span class="text-slate-400 block text-[10px]">SIÈGE SOCIAL</span>
+                        <span class="font-bold text-white">Marrakech, Maroc</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-slate-400 block text-[10px]">DIRECTION GÉNÉRALE</span>
+                        <span class="font-bold text-kemetGoldBright">Roberto Passarella</span>
+                    </div>
+                    <a href="apropos.html" class="mt-2 px-6 py-3 bg-cyberGreen text-black font-bold rounded-xl text-xs uppercase hover:bg-emerald-400 transition-all">
+                        Lire la Présentation Complète →
+                    </a>
+                </div>
             </div>
         </section>
 
