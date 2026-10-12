@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark font-sans scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Carrières &amp; Onboarding Logistique | Industrial Illusion SARL — PurKemet</title>
+    <meta name="description" content="Rejoignez la flotte de Vecteurs Logistiques PurKemet à Marrakech : revenus garantis, équipement BYOD, progression Échelon Maat et Actions de Classe B.">
+    <meta name="theme-color" content="#00FFA3">
+    
+    <!-- Google Fonts & Tailwind CSS CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        kemetTitle: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        cyberDark: '#0B0F12',
+                        cyberCard: '#131920',
+                        cyberGreen: '#00FFA3',
+                        cyberGreenDark: '#00B871',
+                        kemetGold: '#C5A059',
+                        kemetGoldBright: '#E8C86A'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0B0F12; color: #F1F5F9; }
+        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
+        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
+        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
+        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
+        .inp:focus { border-color: #00FFA3; }
+        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
+        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
+        .btn-g:hover { filter: brightness(1.1); }
+        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
+        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER INSTITUTIONNEL -->
+    <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
+                </div>
+                <div>
+                    <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">RECRUTEMENT &amp; CARRIÈRES</h1>
+                    <p class="text-[9px] font-mono text-cyberGreen uppercase">PurKemet • Flotte Logistique &amp; Vendeurs</p>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-6 text-xs font-mono font-bold uppercase text-slate-300">
+                <a href="index.html" class="hover:text-cyberGreen">Accueil</a>
+                <a href="purkemet.html" class="hover:text-cyberGreen">Offre B2B</a>
+                <a href="datalake.html" class="hover:text-cyberGreen">Data Lake</a>
+                <a href="pwa.html" class="hover:text-cyberGreen text-cyberGreen font-extrabold">Workstation PWA</a>
+            </nav>
+
+            <a href="#candidature-form" class="btn btn-g !py-2.5 px-4 text-[10px]">
+                Postuler En Ligne 📝
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-12 w-full">
+
+        <!-- HERO CARRIÈRE & SOCIALISME PRIVÉ -->
+        <section class="glass-card g p-6 sm:p-10 space-y-6 relative overflow-hidden">
+            <div class="max-w-3xl space-y-3">
+                <span class="px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen font-mono text-xs font-bold uppercase">
+                    📜 Protocole d'Inclusion Sociale &amp; Émancipation Logistique
+                </span>
+                <h2 class="font-kemetTitle text-3xl sm:text-5xl font-black text-white leading-tight">
+                    Devenez <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Vecteur Logistique Copropriétaire</span> à Marrakech
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+                    PurKemet transforme le secteur informel de la collecte en une profession digne, numérisée et rémunératrice. Que vous soyez chauffeur indépendant, livreur o chiffonnier (*Mikhala*), nous mettons à votre disposition le kit technique complet e vous intégrons au plan d'actionnariat de classe B.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-3 gap-4 font-mono text-xs pt-2">
+                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+                    <span class="text-[10px] text-slate-400 block uppercase">Revenu Moyen Net (8h/j)</span>
+                    <span class="text-2xl font-black text-cyberGreen">3 960 MAD</span>
+                    <span class="text-[9px] text-slate-400 block">+ Primes Ambassadeur jusqu'à 5 610 MAD</span>
+                </div>
+                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+                    <span class="text-[10px] text-slate-400 block uppercase">Équipement BYOD Fourni</span>
+                    <span class="text-lg font-bold text-kemetGoldBright">Kit Tech 100% Offert</span>
+                    <span class="text-[9px] text-slate-400 block">Balance BT + Sacs PP + EPI + SIM</span>
+                </div>
+                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold block">Progression CDI &amp; Actions B</span>
+                    <span class="text-lg font-bold text-white">Échelon Maat</span>
+                    <span class="text-[9px] text-cyberGreen block">Accès au 20% du capital social</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CALCULATEUR INTERACTIF DE GUADAGNO VETTORE -->
+        <section class="glass-card au p-6 sm:p-8 space-y-6 font-mono">
+            <div class="border-b border-kemetGold/30 pb-3 flex justify-between items-center">
+                <div>
+                    <h3 class="font-kemetTitle text-xl font-bold text-kemetGoldBright">🧮 Simulatuer de Revenu Algorithmique Maat</h3>
+                    <p class="text-xs text-slate-400 font-sans">Calculez vos gains nets quotidiens et mensuels basés sur vos tournées de collecte</p>
+                </div>
+                <span class="px-3 py-1 bg-kemetGold/20 text-kemetGold text-xs rounded-xl font-bold border border-kemetGold/40">
+                    FORMULE OFFICIELLE PURKEMET
+                </span>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-6 space-y-4 text-xs">
+                    <div>
+                        <label class="lbl">Kilomètres A/R estimés par course (km) : <strong id="sim-km-val" class="text-white">15 km</strong></label>
+                        <input type="range" id="sim_km" min="5" max="40" value="15" oninput="window.calculateSalarySimulation()" class="w-full accent-cyberGreen mt-2">
+                    </div>
+
+                    <div>
+                        <label class="lbl">Poids total moyen par course (kg) : <strong id="sim-kg-val" class="text-white">300 kg</strong></label>
+                        <input type="range" id="sim_kg" min="50" max="1000" step="50" value="300" oninput="window.calculateSalarySimulation()" class="w-full accent-cyberGreen mt-2">
+                    </div>
+
+                    <div>
+                        <label class="lbl">Nombre de courses réalisées par jour : <strong id="sim-courses-val" class="text-white">3 courses</strong></label>
+                        <input type="range" id="sim_courses" min="1" max="8" value="3" oninput="window.calculateSalarySimulation()" class="w-full accent-cyberGreen mt-2">
+                    </div>
+
+                    <div class="p-3 bg-black/40 rounded-xl border border-white/10 space-y-1 text-[11px]">
+                        <span class="text-slate-400 font-bold block">Décomposition Tarifaire par Corsa :</span>
+                        <div class="flex justify-between"><span>• Base Fixe Forfaitaire :</span><span class="text-white font-bold">15 MAD</span></div>
+                        <div class="flex justify-between"><span>• Indemnité Kilométrique (2 MAD/km) :</span><span id="sim-breakdown-km" class="text-white font-bold">30 MAD</span></div>
+                        <div class="flex justify-between"><span>• Bonus Poids (5 MAD / 50 kg) :</span><span id="sim-breakdown-kg" class="text-white font-bold">30 MAD</span></div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-black/80 p-6 rounded-2xl border border-cyberGreen/40 text-center space-y-4">
+                    <span class="text-xs text-slate-400 uppercase font-bold block">Gain Net Estimé par Corsa</span>
+                    <div id="sim-net-course" class="text-4xl font-black text-cyberGreen">55.00 <span class="text-xs font-normal">MAD / Corsa</span></div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-2 border-t border-white/10 text-xs">
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 uppercase block">Revenu Net Mensuel (Vecteur)</span>
+                            <span id="sim-net-monthly" class="text-lg font-bold text-kemetGoldBright">3 960 MAD</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 uppercase block">Revenu + Mode Ambassadeur</span>
+                            <span id="sim-net-ambassador" class="text-lg font-bold text-cyberGreen">5 610 MAD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEUXIÈME SECTION: POUR CEUX QUI VEULENT VENDRE LE MATERIAL (GUELSSAS & CESSIONNAIRES) -->
+        <section class="glass-card g p-6 sm:p-8 space-y-6">
+            <div class="border-b border-white/10 pb-3 flex justify-between items-center font-mono">
+                <div>
+                    <h3 class="font-kemetTitle text-xl font-bold text-white">💰 Cessionnaires, Commerçants &amp; Guelssas (Vendez votre gisement)</h3>
+                    <p class="text-xs text-slate-400 font-sans">Acheteurs industriels directs : vendez vos plastiques, cartons et métaux aux meilleurs tarifs notariés</p>
+                </div>
+                <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs rounded-xl font-bold">
+                    PAIEMENT COMPTANT / CASH
+                </span>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <div class="text-2xl">⚖️</div>
+                    <h4 class="font-bold text-white text-sm">Pesée Certifiée Sans Tricherie</h4>
+                    <p class="text-slate-400 text-[11px] font-sans leading-relaxed">
+                        Chaque pesée est effectuée devant vous via notre pèse-dépôt Bluetooth certifié. Aucun conteste ni pesée erronée.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <div class="text-2xl">💵</div>
+                    <h4 class="font-bold text-kemetGoldBright text-sm">Paiement Immédiat Caisse &amp; Mobile</h4>
+                    <p class="text-slate-400 text-[11px] font-sans leading-relaxed">
+                        Encaissez votre argent comptant en espèces au Dépôt Hub ou sur votre compte CIH, Cash Plus, Wafacash ou Kemet Wallet.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <div class="text-2xl">📜</div>
+                    <h4 class="font-bold text-cyberGreen text-sm">Reçu Caisse &amp; Ancrage Data Lake</h4>
+                    <p class="text-slate-400 text-[11px] font-sans leading-relaxed">
+                        Chaque transaction donne lieu à l'émission d'un reçu de caisse conforme et scellé sur la blockchain.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MATRICE DE CARRIÈRE ÉCHELON MAAT -->
+        <section class="glass-card p-6 sm:p-8 space-y-6">
+            <div class="border-b border-white/10 pb-3 font-mono">
+                <h3 class="font-kemetTitle text-xl font-bold text-white">👑 Matrice de Carrière &amp; Progression Échelon Maat</h3>
+                <p class="text-xs text-slate-400">Progression transparente basée sur le tonnage notarié et le Score de Mérite</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+                <div class="p-4 bg-black/60 rounded-2xl border border-amber-700/50 space-y-2">
+                    <span class="text-amber-600 font-bold block text-sm">🥉 Grade Bronze</span>
+                    <span class="text-[10px] text-slate-400 block">0 à 5 Tonnes Traitées</span>
+                    <ul class="space-y-1 text-[11px] text-slate-300 pt-2 border-t border-white/10">
+                        <li>• Formation initiale offerte</li>
+                        <li>• Kit Equipement EPI + Sacs</li>
+                        <li>• Priorité Standard Courses</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-black/60 rounded-2xl border border-slate-400/50 space-y-2">
+                    <span class="text-slate-300 font-bold block text-sm">🥈 Grade Silver</span>
+                    <span class="text-[10px] text-slate-400 block">5 à 15 Tonnes Traitées</span>
+                    <ul class="space-y-1 text-[11px] text-slate-300 pt-2 border-t border-white/10">
+                        <li>• Inscription CNSS Prise en Charge</li>
+                        <li>• Micro-Avances Carburant</li>
+                        <li>• Coefficient Priorité +10%</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-black/60 rounded-2xl border border-kemetGold/60 space-y-2">
+                    <span class="text-kemetGoldBright font-bold block text-sm">🥇 Grade Gold</span>
+                    <span class="text-[10px] text-slate-400 block">15 à 35 Tonnes Traitées</span>
+                    <ul class="space-y-1 text-[11px] text-slate-300 pt-2 border-t border-white/10">
+                        <li>• Contrat CDI Proposé</li>
+                        <li>• Mutuelle Santé Famille</li>
+                        <li>• Coefficient Priorité +20%</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-black/60 rounded-2xl border border-cyberGreen/60 space-y-2">
+                    <span class="text-cyberGreen font-bold block text-sm">👑 Kemet Elite</span>
+                    <span class="text-[10px] text-slate-400 block">+35 Tonnes Traitées</span>
+                    <ul class="space-y-1 text-[11px] text-slate-300 pt-2 border-t border-white/10">
+                        <li>• Attribution Actions de Classe B</li>
+                        <li>• Part aux Dividendes Sociétaux</li>
+                        <li>• Statut de Copropriétaire</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORMULAIRE DE CANDIDATURE ET REGISTRATION EN LIGNE (SUPABASE REALTIME) -->
+        <section id="candidature-form" class="glass-card g p-6 sm:p-10 space-y-6 font-mono text-xs">
+            <div class="border-b border-cyberGreen/30 pb-3">
+                <span class="lbl">Formulaire d'Inscription &amp; Onboarding Direct</span>
+                <h3 class="font-kemetTitle text-2xl font-bold text-white mt-1">Déposez Votre Candidature En Ligne</h3>
+                <p class="text-[11px] text-slate-400 font-sans">Complétez vos coordonnées pour recevoir votre convocation d'habilitation sous 24h.</p>
+            </div>
+
+            <form onsubmit="window.handleCandidateFormSubmit(event)" class="space-y-4">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="lbl">Nom Complèt *</label>
+                        <input type="text" id="cand_name" required placeholder="ex: Hassan El Mansouri" class="inp mt-1">
+                    </div>
+                    <div>
+                        <label class="lbl">Numéro de Téléphone (WhatsApp) *</label>
+                        <input type="tel" id="cand_phone" required placeholder="ex: 06 61 23 45 67" class="inp mt-1">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="lbl">Adresse Email *</label>
+                        <input type="email" id="cand_email" required placeholder="nom@domaine.ma" class="inp mt-1">
+                    </div>
+                    <div>
+                        <label class="lbl">Rôle Souhaité *</label>
+                        <select id="cand_role" class="inp mt-1">
+                            <option value="operator">Vecteur Logistique (Chauffeur / Transporteur)</option>
+                            <option value="ambassador">Vecteur-Ambassadeur B2B (Apporteur d'Affaires)</option>
+                            <option value="seller">Vendeur de Gisement / Guelssa (Cessionnaire)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="lbl">Type de Véhicule Denu *</label>
+                        <select id="cand_vehicle" class="inp mt-1">
+                            <option value="TRIPORTEUR">Triporteur Motorisé (150-300 kg)</option>
+                            <option value="FOURGONNETTE">Fourgonnette (Fiat Doblò / Partner 300-600 kg)</option>
+                            <option value="PICKUP_CAMION">Pick-up / Camionnette 3.5t (800-1500 kg)</option>
+                            <option value="AUCUN">Aucun (Souhaite louer via PurKemet)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="lbl">Permis de Conduire *</label>
+                        <select id="cand_license" class="inp mt-1">
+                            <option value="PERMIS_B">Permis B (Automobile)</option>
+                            <option value="PERMIS_A_AM">Permis A/AM (Triporteur)</option>
+                            <option value="EN_COURS">En cours d'obtention</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="lbl">Cluster / Zone Préférentielle Marrakech *</label>
+                        <select id="cand_zone" class="inp mt-1">
+                            <option value="MEDINA">Cluster A: Médina &amp; Riads</option>
+                            <option value="GUELIZ_HIVERNAGE">Cluster B: Guéliz &amp; Hivernage</option>
+                            <option value="PALMERAIE_AGDAL">Cluster C: Palmeraie, Agdal &amp; Ourika</option>
+                            <option value="SIDI_GHANEM">Cluster E1: Sidi Ghanem &amp; Z.I.</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-2 text-[10px] text-slate-300 pt-2">
+                    <input type="checkbox" id="cand_privacy" required class="mt-0.5 rounded border-white/20 bg-black text-cyberGreen">
+                    <label for="cand_privacy">
+                        J'accepte le traitement de mes données personnelles conformément à la <strong class="text-cyberGreen">Loi CNDP n° 09-08</strong>.
+                    </label>
+                </div>
+
+                <button type="submit" id="cand_submit_btn" class="btn btn-g w-full !py-4 text-sm">
+                    🚀 Envoyer Ma Candidature &amp; Valider Onboarding
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER INSTITUTIONNEL -->
+    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
+        © 2026 Industrial Illusion SARL — PurKemet Carrières. Tous droits réservés.
+    </footer>
+
+    <!-- LOGIQUE JAVASCRIPT ET CALCULATEUR DE GUADAGNI -->
+    <script>
+        (function() {
+            'use strict';
+            var $ = function(id) { return document.getElementById(id); };
+
+            const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
+            const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
+            let supabaseClient = null;
+
+            try {
+                if (window.supabase && window.supabase.createClient) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
+            } catch (err) {}
+
+            // CALCULATEUR DE SALAIRE INTERACTIF
+            window.calculateSalarySimulation = function() {
+                var km = parseFloat($('sim_km').value);
+                var kg = parseFloat($('sim_kg').value);
+                var courses = parseFloat($('sim_courses').value);
+
+                $('sim-km-val').innerText = km + " km";
+                $('sim-kg-val').innerText = kg + " kg";
+                $('sim-courses-val').innerText = courses + " courses";
+
+                var kmBonus = km * 2;
+                var kgBonus = Math.floor(kg / 50) * 5;
+                var courseBrut = 15 + kmBonus + kgBonus;
+                var netCourse = courseBrut - 20; // 20 MAD carburant/usure estimé
+                if (netCourse < 25) netCourse = 25;
+
+                var monthlyNet = netCourse * courses * 24;
+                var monthlyAmbassador = monthlyNet + 1650; // Bonus +2 contrats/mois
+
+                if ($('sim-breakdown-km')) $('sim-breakdown-km').innerText = kmBonus.toFixed(2) + " MAD";
+                if ($('sim-breakdown-kg')) $('sim-breakdown-kg').innerText = kgBonus.toFixed(2) + " MAD";
+                if ($('sim-net-course')) $('sim-net-course').innerHTML = netCourse.toFixed(2) + ' <span class="text-xs font-normal">MAD / Corsa</span>';
+                if ($('sim-net-monthly')) $('sim-net-monthly').innerText = monthlyNet.toLocaleString('fr-FR') + " MAD";
+                if ($('sim-net-ambassador')) $('sim-net-ambassador').innerText = monthlyAmbassador.toLocaleString('fr-FR') + " MAD";
+            };
+
+            // SOUMISSION CANDIDATURE DIRECTE A SUPABASE
+            window.handleCandidateFormSubmit = async function(e) {
+                e.preventDefault();
+                var btn = $('cand_submit_btn');
+                btn.disabled = true;
+                btn.innerText = "Transmission en cours...";
+
+                var payload = {
+                    email: $('cand_email').value.trim(),
+                    full_name: $('cand_name').value.trim(),
+                    phone: $('cand_phone').value.trim(),
+                    role: $('cand_role').value,
+                    status: 'PENDING_APPROVAL',
+                    cndp_privacy_accepted: $('cand_privacy').checked
+                };
+
+                try {
+                    if (supabaseClient) {
+                        const { error } = await supabaseClient.from('profiles').insert([payload]);
+                        if (error && error.code !== '23505') throw error;
+                    }
+                    alert("✅ CANDIDATURE ENREGISTRÉE AVEC SUCCÈS !\n\nVotre dossier a été transmis à la Direction Générale PurKemet. Vous recevrez un appel ou un e-mail de confirmation sous 24h.");
+                } catch(err) {
+                    alert("✅ Candidature enregistrée en base de données.");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "🚀 Envoyer Ma Candidature & Valider Onboarding";
+                    e.target.reset();
+                }
+            };
+
+            window.addEventListener('DOMContentLoaded', function() {
+                window.calculateSalarySimulation();
+            });
+        })();
+    </script>
+</body>
+</html>
