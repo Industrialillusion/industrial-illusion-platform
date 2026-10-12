@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Maat OS — Control Tower | Direction Générale</title>
+    <meta name="description" content="Control Tower de la Direction Générale — Industrial Illusion SARL">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#00FFA3">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Maat Control Tower">
+    <link rel="manifest" href="admin.webmanifest">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/maat.css">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="assets/tw-config.js"></script>
+    <script src="assets/config.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <!-- Override per Control Tower : pas de bottom-nav, toasts ancrés en bas -->
+    <style>.toasts { bottom: 1rem !important; }</style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden bg-obsidian text-slate-100 font-sans" style="background:#090D10">
+
+    <!-- HEADER DE DIRECTION -->
+    <header class="bg-obsidianCard/95 backdrop-blur border-b border-kemetGold/30 sticky top-0 z-40 shadow-lg" style="padding-top:env(safe-area-inset-top)">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="w-12 h-12 flex items-center justify-center bg-obsidian rounded-xl p-1 shadow-lg border border-cyberGreen/40 shrink-0">
+                    <svg class="w-10 h-10" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+                        <path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="3.5"/>
+                        <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3" fill="#0A0D10"/>
+                        <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
+                        <path d="M50 34V22M34 50H20M66 50H80M50 66v10" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <div class="min-w-0">
+                    <h1 class="font-kemetTitle text-sm sm:text-base font-black tracking-widest leading-none text-white">
+                        MAAT OS <span class="font-mono text-[9px] text-cyberGreen">CONTROL TOWER</span>
+                    </h1>
+                    <p id="who" class="text-[10px] text-slate-400 font-mono mt-0.5 truncate">Direction Générale</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 font-mono text-xs">
+                <a href="pwa.html" class="hidden sm:inline text-[10px] text-cyberGreen hover:underline" title="Ouvrir la workstation opérateurs">App opérateurs →</a>
+                <span id="qBadge" class="hidden text-[9px] px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/40">0</span>
+                <span id="netDot" class="dot" role="status" aria-label="État de la connexion réseau"></span>
+                <button type="button" id="out" class="hidden btn sm btn-r">Quitter 🔒</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- APPLICATION CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow">
+        <div id="root"></div>
+    </main>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+
+    <noscript>
+        <div style="padding:2rem;text-align:center;font-family:monospace;color:#f87171">
+            Maat OS nécessite JavaScript activé pour fonctionner.
+        </div>
+    </noscript>
+
+    <script src="assets/core.js"></script>
+    <script src="assets/admin.js"></script>
+</body>
+</html>
