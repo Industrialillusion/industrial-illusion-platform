@@ -1,0 +1,17 @@
+{
+  "name": "Maat OS PWA — Industrial Illusion",
+  "short_name": "MaatOS",
+  "description": "Workstation opérateur logistique — Projet Illusion Kemet",
+  "start_url": "pwa.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "fr",
+  "background_color": "#090D10",
+  "theme_color": "#00FFA3",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
