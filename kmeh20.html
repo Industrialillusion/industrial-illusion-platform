@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>K-MEH-20 | Industrial Illusion SARL — Infrastructure Bionique Lourde</title>
-    <meta name="description" content="Infrastructures lourdes de valorisation bionique K-MEH-20 : Pyramide Tronquée brevetée OMPIC (56m x 56m), biométhanisation industrielle et pôle de Kénitra/Marrakech.">
+    <title>Infrastucture Bionique K-MEH-20 | Industrial Illusion SARL — Deep Tech Heavy Industry</title>
+    <meta name="description" content="K-MEH-20 : Infrastructure bionique lourde brevetée OMPIC (Pyramide Tronquée 56m x 56m), biométhanisation industrielle et hub de valorisation à Marrakech et Kénitra.">
     <meta name="theme-color" content="#00FFA3">
     
     <!-- Google Fonts & Tailwind CSS CDN -->
@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
     <script>
@@ -38,30 +38,308 @@
         }
     </script>
     <style>
-        body { background-color: #0B0F12; color: #F1F5F9; }
-        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
-        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 30px -5px rgba(0, 255, 163, 0.18); }
-        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 30px -5px rgba(197, 160, 89, 0.2); }
-        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
-        .inp:focus { border-color: #00FFA3; }
-        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
-        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
+        /* STILI CSS NATIVI DI GARANZIA ANTI-SCHERMATA NERA */
+        body { 
+            background-color: #0B0F12 !important; 
+            color: #F1F5F9 !important; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .glass-card { 
+            background: linear-gradient(170deg, #131920, #0B0F12) !important; 
+            border: 1px solid rgba(197, 160, 89, 0.35) !important; 
+            border-radius: 1.25rem !important; 
+        }
+        .glass-card.g { 
+            border-color: rgba(0, 255, 163, 0.45) !important; 
+            box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.2) !important; 
+        }
+        .glass-card.au { 
+            border-color: rgba(197, 160, 89, 0.55) !important; 
+            box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2) !important; 
+        }
+        .inp { 
+            width: 100%; 
+            background: rgba(0,0,0,.6) !important; 
+            border: 1px solid rgba(255,255,255,.14) !important; 
+            border-radius: .75rem !important; 
+            padding: .75rem !important; 
+            font-size: .8rem !important; 
+            color: #fff !important; 
+            outline: none; 
+        }
+        .inp:focus { border-color: #00FFA3 !important; }
+        .btn { 
+            padding: .85rem; 
+            border-radius: .8rem; 
+            font: 800 .72rem 'JetBrains Mono', monospace; 
+            letter-spacing: .06em; 
+            text-transform: uppercase; 
+            transition: all .2s; 
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
         .btn-g:hover { filter: brightness(1.1); }
-        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
-        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
+        .btn-o { background: rgba(0,0,0,.8) !important; border: 1px solid rgba(0,255,163,.5) !important; color: #00FFA3 !important; }
 
         @keyframes scan { 0% { top: 0; opacity: .8; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
-        .beam { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FFA3, transparent); box-shadow: 0 0 14px #00FFA3; animation: scan 3.2s ease-in-out infinite; }
+        .beam { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FFA3, transparent); box-shadow: 0 0 12px #00FFA3; animation: scan 3.5s ease-in-out infinite; }
 
-        @keyframes floatPyramid { 0%, 100% { transform: translateY(0px) rotateX(15deg); } 50% { transform: translateY(-8px) rotateX(15deg); } }
-        .pyramid-anim { animation: floatPyramid 6s ease-in-out infinite; transform-style: preserve-3d; perspective: 1000px; }
+        @keyframes floatEffect { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .float-anim { animation: floatEffect 5s ease-in-out infinite; }
 
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
-        .glow-pulse { animation: pulseGlow 3s ease-in-out infinite; }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 8px rgba(0, 255, 163, 0.4)); } 50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 255, 163, 0.9)); } }
+        .pyramid-glow { animation: pulseGlow 4s ease-in-out infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
 
     <!-- HEADER INSTITUTIONNEL -->
     <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
-        <div class="max-w-7xl mx-auto
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center group-hover:border-cyberGreen transition-all">
+                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
+                </div>
+                <div>
+                    <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">K-MEH-20 HEAVY DEEPTECH</h1>
+                    <p class="text-[9px] font-mono text-cyberGreen uppercase">Industrial Illusion SARL • Brevet OMPIC</p>
+                </div>
+            </a>
+
+            <!-- NAVIGATION GLOBALE -->
+            <nav class="hidden md:flex items-center space-x-5 text-xs font-mono font-bold uppercase text-slate-300">
+                <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
+                <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
+                <a href="kmeh20.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">K-MEH-20</a>
+                <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
+                <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
+                <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <a href="pwa.html" class="btn btn-o !py-2 !px-3 text-[10px] hidden sm:inline-block">Workstation PWA 📲</a>
+                <a href="dashboard.html" class="btn btn-g !py-2 !px-3 text-[10px]">Espace ESG B2B 🏨</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-12 w-full">
+
+        <!-- HERO SECTION: PYRAMIDE BIONIQUE K-MEH-20 -->
+        <section class="glass-card g p-6 sm:p-10 space-y-6 relative overflow-hidden">
+            <div class="beam"></div>
+            <div class="grid lg:grid-cols-12 gap-8 items-center">
+                
+                <div class="lg:col-span-7 space-y-4">
+                    <span class="px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen font-mono text-xs font-bold uppercase tracking-widest">
+                        🏗️ INFRASTRUCTURE BIONIQUE LOURDE (PHASE 2)
+                    </span>
+                    <h2 class="font-kemetTitle text-3xl sm:text-5xl font-black text-white leading-tight">
+                        La Pyramide Bionique <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">K-MEH-20</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+                        K-MEH-20 est le monument bionique d'ingénierie lourde conçu par Industrial Illusion SARL. Protégé par brevet OMPIC, cet édifice en pyramide tronquée (emprise au sol de 56m × 56m) intègre le réacteur de méthanisation continue, la purification bio-chimique du biogaz et les chaînes de tri optique à haute efficacité pour le Royaume du Maroc.
+                    </p>
+
+                    <div class="grid sm:grid-cols-3 gap-3 font-mono text-xs pt-2">
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 block uppercase">Emprise au Sol</span>
+                            <span class="text-base font-bold text-cyberGreen">56m × 56m</span>
+                            <span class="text-[8px] text-slate-500 block">3 136 m² d'emprise bionique</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 block uppercase">Capacité Méthanisation</span>
+                            <span class="text-base font-bold text-kemetGoldBright">120 T / Jour</span>
+                            <span class="text-[8px] text-slate-500 block">Biométhane Grade Réseau</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 block uppercase">Notarisation Maat OS</span>
+                            <span class="text-base font-bold text-white">100% Automatique</span>
+                            <span class="text-[8px] text-cyberGreen block">Supervision IoT par Blockchain</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCHÉMA VECTORIEL INTERACTIF EN PYRAMIDE CIBERNETIQUE -->
+                <div class="lg:col-span-5 float-anim">
+                    <div class="bg-black/80 p-6 rounded-3xl border-2 border-kemetGold/40 text-center space-y-4 shadow-2xl relative">
+                        <div class="text-xs font-mono text-kemetGoldBright font-bold uppercase tracking-wider border-b border-white/10 pb-2">
+                            Architecture Bionique Brevetée OMPIC
+                        </div>
+
+                        <!-- SVG PYRAMIDE VECTORIELLE TRONQUÉE CON DÉGRADÉS GLOW -->
+                        <svg class="w-full h-56 mx-auto pyramid-glow" viewBox="0 0 300 220" fill="none">
+                            <ellipse cx="150" cy="200" rx="130" ry="15" fill="#00FFA3" fill-opacity="0.1" />
+                            <polygon points="30,195 270,195 220,90 80,90" fill="#131920" stroke="#C5A059" stroke-width="2.5" />
+                            <polygon points="80,90 220,90 190,40 110,40" fill="#0B0F12" stroke="#00FFA3" stroke-width="2.5" />
+                            <line x1="150" y1="40" x2="150" y2="195" stroke="#00FFA3" stroke-width="1.5" stroke-dasharray="4 4" />
+                            <line x1="80" y1="90" x2="220" y2="90" stroke="#C5A059" stroke-width="1.5" />
+                            <line x1="110" y1="40" x2="190" y2="40" stroke="#00FFA3" stroke-width="2" />
+                            <circle cx="150" cy="40" r="10" fill="#0B0F12" stroke="#00FFA3" stroke-width="2" />
+                            <circle cx="150" cy="40" r="4" fill="#00FFA3" />
+                            <text x="150" y="145" fill="#E8C86A" font-size="10" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">RÉACTEUR MÉTHANISATION</text>
+                            <text x="150" y="70" fill="#00FFA3" font-size="9" font-family="JetBrains Mono" font-weight="bold" text-anchor="middle">PURIFICATION BIOGAZ</text>
+                        </svg>
+
+                        <div class="p-3 bg-obsidianCard rounded-xl border border-white/10 text-[10px] font-mono text-slate-300 text-left space-y-1">
+                            <div class="flex justify-between"><span>• Modèle :</span><strong class="text-white">Pyramide K-MEH-20 v2</strong></div>
+                            <div class="flex justify-between"><span>• Brevet :</span><strong class="text-kemetGoldBright">OMPIC / Maat OS Heavy</strong></div>
+                            <div class="flex justify-between"><span>• Hubs :</span><strong class="text-cyberGreen">Marrakech &amp; Kénitra</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SIMULATEUR DE RENDEMENT ÉNERGÉTIQUE ET DE BIOMÉTHANE -->
+        <section class="glass-card au p-6 sm:p-8 space-y-6 font-mono">
+            <div class="border-b border-kemetGold/30 pb-3 flex justify-between items-center">
+                <div>
+                    <h3 class="font-kemetTitle text-xl font-bold text-kemetGoldBright">⚡ Calculateur de Rendement Énergétique K-MEH-20</h3>
+                    <p class="text-xs text-slate-400 font-sans">Simulez la production de biométhane et d'énergie verte à partir du tonnage organique brut</p>
+                </div>
+                <span class="px-3 py-1 bg-kemetGold/20 text-kemetGold text-xs rounded-xl font-bold border border-kemetGold/40">
+                    SOUVERAINETÉ ÉNERGÉTIQUE MAROC
+                </span>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-6 space-y-4 text-xs">
+                    <div>
+                        <label class="lbl">Tonnage Organique Traité par Jour (Tonnes/Jour) : <strong id="kmeh-tons-val" class="text-white">50 Tonnes</strong></label>
+                        <input type="range" id="kmeh_tons" min="10" max="200" step="5" value="50" oninput="window.calculateKmehEnergy()" class="w-full accent-cyberGreen mt-2">
+                    </div>
+
+                    <div>
+                        <label class="lbl">Rendement Biogaz Estimé : <strong class="text-cyberGreen">110 m³ / Tonne</strong></label>
+                    </div>
+
+                    <div class="p-3 bg-black/40 rounded-xl border border-white/10 space-y-1.5 text-[11px]">
+                        <span class="text-slate-400 font-bold block">Données Conversion Bionique :</span>
+                        <div class="flex justify-between"><span>• Biométhane Purifié (m³/jour) :</span><span id="kmeh-biomethane-val" class="text-cyberGreen font-bold">5 500 m³</span></div>
+                        <div class="flex justify-between"><span>• Équivalent Électrique (MWh/jour) :</span><span id="kmeh-mwh-val" class="text-kemetGoldBright font-bold">22.00 MWh</span></div>
+                        <div class="flex justify-between"><span>• Compost Bio-Fertilisant (Tonnes/jour) :</span><span id="kmeh-compost-val" class="text-white font-bold">15.00 Tonnes</span></div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 bg-black/80 p-6 rounded-2xl border border-cyberGreen/40 text-center space-y-4">
+                    <span class="text-xs text-slate-400 uppercase font-bold block">Production Annuelle Autonome de Biométhane</span>
+                    <div id="kmeh-annual-biomethane" class="text-4xl font-black text-cyberGreen">2 007 500 <span class="text-xs font-normal">m³ / An</span></div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-2 border-t border-white/10 text-xs">
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 uppercase block">Potentiel Réseau Électrique</span>
+                            <span id="kmeh-annual-mwh" class="text-lg font-bold text-kemetGoldBright">8 030 MWh/An</span>
+                        </div>
+                        <div class="p-3 bg-black/60 rounded-xl border border-white/10">
+                            <span class="text-[9px] text-slate-400 uppercase block">Réduction d'Emissions CO₂</span>
+                            <span id="kmeh-annual-co2" class="text-lg font-bold text-cyberGreen">4 850 T CO₂/An</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIFICATIONS TECHNIQUES DE L'INFRASTRUCTURE -->
+        <section class="glass-card p-6 sm:p-8 space-y-6 font-mono text-xs">
+            <div class="border-b border-white/10 pb-3 flex justify-between items-center">
+                <div>
+                    <h3 class="font-kemetTitle text-xl font-bold text-white">⚙️ Spécifications Techniques &amp; Pôles Industriels</h3>
+                    <p class="text-xs text-slate-400 font-sans">Ingénierie bionique lourde intégrée pour la valorisation ultime</p>
+                </div>
+                <span class="px-3 py-1 bg-cyberGreen/10 text-cyberGreen text-xs rounded-xl font-bold border border-cyberGreen/30">
+                    EXCELLENCE INDUSTRIELLE
+                </span>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <span class="text-cyberGreen font-bold text-sm block">1. Réacteur Digesteur Bionique</span>
+                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+                        Double boucle de digestion thermophile étanche en acier inoxydable. Température contrôlée automatiquement par régulation d'IA Maat OS pour maximiser la production de méthane pur.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <span class="text-kemetGoldBright font-bold text-sm block">2. Ligne de Tri Optique Haute Vitesse</span>
+                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+                        Séparation spectroscopique des polymères plastiques (PET transparent, PE-HD, PP) avec une précision de tri supérieure à 98.5%, garantissant la qualité de Grade A industrielle.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <span class="text-white font-bold text-sm block">3. Pôle Industriel de Kénitra</span>
+                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+                        Centre de livraison directe et compactage haute densité pour l'expédition maritime et ferroviaire du matériel valorisé vers les usines de recyclage partenaires du Royaume.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- APPEL A L'ACTION INSTITUTIONNEL -->
+        <section class="glass-card g p-8 text-center space-y-4 font-mono">
+            <h3 class="font-kemetTitle text-2xl font-bold text-white">Participez à la Transition Bionique Industrielle du Maroc</h3>
+            <p class="text-xs text-slate-300 max-w-2xl mx-auto font-sans leading-relaxed">
+                Industrial Illusion SARL ouvre son réseau d'infrastructure aux partenaires B2B, investisseurs institutionnels et collectivités publiques.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+                <a href="purkemet.html" class="btn btn-g px-6 !py-3">Découvrir l'Offre PurKemet B2B →</a>
+                <a href="datalake.html" class="btn btn-au px-6 !py-3">Explorer le Maat Data Lake 🔗</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER INSTITUTIONNEL UNIFIÉ -->
+    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
+        © 2026 Industrial Illusion SARL — Infrastructure K-MEH-20. Tous droits réservés.
+    </footer>
+
+    <!-- LOGIQUE JAVASCRIPT ET CALCULATEUR DE BIOMÉTHANE FAILSFE -->
+    <script>
+        (function() {
+            'use strict';
+            function $(id) { return document.getElementById(id); }
+
+            window.calculateKmehEnergy = function() {
+                try {
+                    var slider = $('kmeh_tons');
+                    if (!slider) return;
+                    var tons = parseFloat(slider.value) || 50;
+
+                    if ($('kmeh-tons-val')) $('kmeh-tons-val').innerText = tons + " Tonnes/Jour";
+
+                    var m3Daily = tons * 110;
+                    var mwhDaily = (m3Daily * 0.004).toFixed(2);
+                    var compostDaily = (tons * 0.30).toFixed(2);
+
+                    var m3Annual = m3Daily * 365;
+                    var mwhAnnual = Math.round(mwhDaily * 365);
+                    var co2Annual = Math.round(m3Annual * 0.002416);
+
+                    if ($('kmeh-biomethane-val')) $('kmeh-biomethane-val').innerText = m3Daily.toLocaleString('fr-FR') + " m³";
+                    if ($('kmeh-mwh-val')) $('kmeh-mwh-val').innerText = mwhDaily + " MWh";
+                    if ($('kmeh-compost-val')) $('kmeh-compost-val').innerText = compostDaily + " Tonnes";
+
+                    if ($('kmeh-annual-biomethane')) $('kmeh-annual-biomethane').innerHTML = m3Annual.toLocaleString('fr-FR') + ' <span class="text-xs font-normal">m³ / An</span>';
+                    if ($('kmeh-annual-mwh')) $('kmeh-annual-mwh').innerText = mwhAnnual.toLocaleString('fr-FR') + " MWh/An";
+                    if ($('kmeh-annual-co2')) $('kmeh-annual-co2').innerText = co2Annual.toLocaleString('fr-FR') + " T CO₂/An";
+                } catch(err) {
+                    console.error("Erreur calcul K-MEH-20:", err);
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', function() {
+                window.calculateKmehEnergy();
+            });
+        })();
+    </script>
+</body>
+</html>
