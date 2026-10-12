@@ -5,7 +5,7 @@
     return;
   }
   var M = window.Maat, $ = M.$, h = M.h, root = $('root');
-  var A = null, cur = 'overview', timer = null, chan = null;
+  var A = null, cur = 'overview', timer = null, chan = null, badgeTimer = null;
 
   var VIEWS = [
     ['overview', '📊', 'Vue d\'ensemble'],
@@ -52,6 +52,16 @@
     DISPUTED: 'bd-r', REJECTED: 'bd-r', CANCELLED: 'bd-r', PAUSED: 'bd-n'
   };
   var badge = function (s) { return h('span', { class: 'bd ' + (BD[s] || 'bd-n'), text: s }); };
+
+  /* ---------- Feedback vocal (accessibilité non-lecteurs, whitepaper §4.5.4) ---------- */
+  function voice(text) {
+    try {
+      if (!('speechSynthesis' in window)) return;
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'fr-FR'; u.rate = 1.05;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) {}
+  }
 
   /* ---------- Briques d'interface ---------- */
   function tbl(cols, rows, empty) {
@@ -123,21 +133,43 @@
   function shell() {
     root.innerHTML = '';
     var nav = h('nav', { class: 'flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 lg:sticky lg:top-20', 'aria-label': 'Modules' }, VIEWS.map(function (v) {
-      return h('button', { type: 'button', class: 'tab !text-left lg:w-full flex items-center gap-2 !px-3', 'data-v': v[0], onclick: function () { open(v[0]); } }, h('span', { text: v[1] }), h('span', { text: v[2] }), h('span', { class: 'ml-auto hidden bd bd-au', 'data-b': v[0] }));
+      return h('button', {
+        type: 'button',
+        class: 'tab !text-left lg:w-full flex items-center gap-2 !px-3',
+        'data-v': v[0],
+        'aria-label': 'Module ' + v[2],
+        onclick: function () { open(v[0]); }
+      },
+        h('span', { text: v[1] }),
+        h('span', { text: v[2] }),
+        h('span', { class: 'ml-auto hidden bd bd-au', 'data-b': v[0] }));
     }));
     root.appendChild(h('div', { class: 'grid lg:grid-cols-[15rem_1fr] gap-4' }, h('aside', null, nav), h('main', { id: 'view', class: 'min-w-0' })));
     open(cur);
   }
 
   async function open(v) {
-    cur = v; document.querySelectorAll('[data-v]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
+    cur = v;
+    /* Met à jour le titre du navigateur selon la vue courante. */
+    var lbl = (VIEWS.filter(function (x) { return x[0] === v; })[0] || [])[2] || 'Control Tower';
+    document.title = 'Maat OS · ' + lbl + ' — Control Tower';
+    document.querySelectorAll('[data-v]').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.v === v);
+      if (b.dataset.v === v) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
     var el = $('view'); el.innerHTML = ''; el.appendChild(h('div', { class: 'card skel h-40' }));
     var box = h('div', { class: 'space-y-4' });
     try { await ({ overview: vOverview, users: vUsers, clients: vClients, pickups: vPickups, weigh: vWeigh, contracts: vContracts, cash: vCash, factors: vFactors, audit: vAudit })[v](box); }
     catch (e) { box.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Erreur de chargement : ' + (e.message || e) })); }
-    el.innerHTML = ''; el.appendChild(box); badges();
+    el.innerHTML = ''; el.appendChild(box); scheduleBadges();
   }
 
+  /* Badges débouncés : évite les 4 COUNT répétés lors de navigations rapides. */
+  function scheduleBadges() {
+    clearTimeout(badgeTimer);
+    badgeTimer = setTimeout(badges, 800);
+  }
   async function badges() {
     var c = function (t, f) { return M.sb.from(t).select('id', { count: 'exact', head: true }).match(f); };
     try {
@@ -236,9 +268,12 @@
         if (v.role === 'operator' && v.status === 'ACTIVE' && !caps.length) return 'Un opérateur actif doit avoir au moins une modalité (vecteur et/ou ambassadeur).';
         var r = await M.sb.from('profiles').update({
           role: v.role, capabilities: v.role === 'operator' ? caps : [], status: v.status,
-          grade: v.grade || null, merit_score: v.merit === '' ? null : v.merit, cluster: v.cluster || null, vehicle: v.vehicle || null
+          grade: v.grade || null, merit_score: v.merit === '' ? null : Number(v.merit), cluster: v.cluster || null, vehicle: v.vehicle || null
         }).eq('id', u.id);
-        if (r.error) return r.error.message; M.toast('Permissions mises à jour.'); load(); badges();
+        if (r.error) return r.error.message;
+        M.toast('Permissions mises à jour.');
+        voice('Permissions enregistrées');
+        load(); scheduleBadges();
       });
     };
 
@@ -261,7 +296,7 @@
             u.status !== 'REJECTED' && u.id !== A.id ? btn('Bloquer', async function () {
               if (await M.confirm('Bloquer ' + u.email + ' ?')) {
                 var r = await M.sb.from('profiles').update({ status: 'REJECTED' }).eq('id', u.id);
-                if (!fail(r)) { M.toast('Compte bloqué.'); load(); badges(); }
+                if (!fail(r)) { M.toast('Compte bloqué.'); load(); scheduleBadges(); }
               }
             }, 'btn-r') : null,
             btn('Permissions', function () { perm(u); }));
@@ -474,7 +509,7 @@
             c.status === 'DISPUTED' ? btn('Valider', async function () {
               if (await M.confirm('Valider cet écart et ancrer la pesée ?')) {
                 var r = await M.sb.from('collections').update({ status: 'ANCHORED' }).eq('id', c.id);
-                if (!fail(r)) { M.toast('Pesée validée.'); load(); badges(); }
+                if (!fail(r)) { M.toast('Pesée validée.'); load(); scheduleBadges(); }
               }
             }, 'btn-g') : null);
         } }
@@ -520,9 +555,11 @@
               M.form('Valider — ' + c.company_name, [
                 { k: 'bonus', label: 'Prime ambassadeur (MAD) — fixée par la Direction', type: 'number', min: 0, step: '0.01', value: 0, required: true }
               ], 'Valider, créer le client & créditer', async function (v) {
-                var r = await M.sb.rpc('validate_contract', { p_id: c.id, p_bonus: v.bonus });
+                var r = await M.sb.rpc('validate_contract', { p_id: c.id, p_bonus: Number(v.bonus) });
                 if (r.error) return r.error.message;
-                M.toast('Contrat validé : client créé et prime créditée.'); load(); badges();
+                M.toast('Contrat validé : client créé et prime créditée.');
+                voice('Contrat validé, prime créditée');
+                load(); scheduleBadges();
               });
             }, 'btn-g') : null,
             c.status === 'SUBMITTED' ? btn('Refuser', function () {
@@ -531,7 +568,7 @@
               ], 'Refuser le contrat', async function (v) {
                 var r = await M.sb.from('ambassador_contracts').update({ status: 'REJECTED', review_note: v.note, reviewed_by: A.id, reviewed_at: new Date().toISOString() }).eq('id', c.id);
                 if (r.error) return r.error.message;
-                M.toast('Contrat refusé.'); load(); badges();
+                M.toast('Contrat refusé.'); load(); scheduleBadges();
               });
             }, 'btn-r') : null);
         } }
@@ -568,18 +605,20 @@
           return p.status === 'PAID' || p.status === 'REJECTED' ? null : h('div', { class: 'flex gap-1 flex-wrap' },
             p.status === 'PENDING' ? btn('Approuver', async function () {
               var r = await M.sb.from('payout_requests').update({ status: 'APPROVED', reviewed_by: A.id }).eq('id', p.id);
-              if (!fail(r)) { load(); badges(); }
+              if (!fail(r)) { load(); scheduleBadges(); }
             }) : null,
             btn('Marquer payé', async function () {
               if (await M.confirm('Confirmer le paiement de ' + M.fmt.n(p.amount_mad, 2) + ' MAD ? Le solde sera débité.')) {
                 var r = await M.sb.rpc('settle_payout', { p_id: p.id });
                 if (r.error) return M.toast(r.error.message, 'err');
-                M.toast('Paiement enregistré au registre.'); load(); badges();
+                M.toast('Paiement enregistré au registre.');
+                voice('Paiement enregistré');
+                load(); scheduleBadges();
               }
             }, 'btn-g'),
             btn('Rejeter', async function () {
               var r = await M.sb.from('payout_requests').update({ status: 'REJECTED', reviewed_by: A.id }).eq('id', p.id);
-              if (!fail(r)) { load(); badges(); }
+              if (!fail(r)) { load(); scheduleBadges(); }
             }, 'btn-r'));
         } }
       ], a.data || [], 'Aucune demande.'));
@@ -604,16 +643,18 @@
           { k: 'amt', label: 'Montant (MAD, négatif pour un débit)', type: 'number', step: '0.01', required: true }
         ], 'Inscrire au registre', async function (v) {
           if (!(await M.confirm('Inscrire le mouvement de ' + M.fmt.n(v.amt, 2) + ' MAD sur le wallet de cet opérateur ?'))) return;
-          var r = await M.sb.from('wallet_ledger').insert([{ user_id: v.u, kind: v.kind, label: v.label, amount_mad: v.amt, notarized: true }]);
+          var r = await M.sb.from('wallet_ledger').insert([{ user_id: v.u, kind: v.kind, label: v.label, amount_mad: Number(v.amt), notarized: true }]);
           if (r.error) return r.error.message;
-          M.toast('Mouvement inscrit.'); load();
+          M.toast('Mouvement inscrit.');
+          voice('Mouvement inscrit');
+          load();
         });
       }, 'btn-g')
     ]));
     box.append(h('p', { class: 'lbl au', text: 'Demandes de règlement' }), pay, h('p', { class: 'lbl au', text: 'Reçus espèces' }), rec); await load();
   }
 
-  /* ---------- Facteurs d'émission CO2 (NOUVELLE VUE) ---------- */
+  /* ---------- Facteurs d'émission CO2 ---------- */
   async function vFactors(box) {
     var list = h('div', { class: 'card !p-2' });
     var load = async function () {
@@ -629,7 +670,7 @@
             M.form('Modifier facteur CO₂ — ' + e.material_type, [
               { k: 'factor', label: 'kg CO₂ évité par kg recyclé', type: 'number', step: '0.001', min: 0, value: e.kg_co2_per_kg, required: true }
             ], 'Enregistrer', async function (v) {
-              var res = await M.sb.from('emission_factors').upsert({ material_type: e.material_type, kg_co2_per_kg: v.factor });
+              var res = await M.sb.from('emission_factors').upsert({ material_type: e.material_type, kg_co2_per_kg: Number(v.factor) });
               if (res.error) return res.error.message;
               M.toast('Facteur CO₂ mis à jour.'); load();
             });
@@ -644,7 +685,7 @@
           { k: 'mat', label: 'Type de matériau (ex: PET_CLEAR)', required: true },
           { k: 'factor', label: 'kg CO₂ évité par kg recyclé', type: 'number', step: '0.001', min: 0, value: 1.82, required: true }
         ], 'Ajouter', async function (v) {
-          var res = await M.sb.from('emission_factors').upsert({ material_type: v.mat.trim().toUpperCase(), kg_co2_per_kg: v.factor });
+          var res = await M.sb.from('emission_factors').upsert({ material_type: v.mat.trim().toUpperCase(), kg_co2_per_kg: Number(v.factor) });
           if (res.error) return res.error.message;
           M.toast('Facteur CO₂ ajouté.'); load();
         });
