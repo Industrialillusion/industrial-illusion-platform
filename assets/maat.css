@@ -1,1 +1,842 @@
 
+/* ============================================================
+   MAAT OS — Design System v8.1
+   Industrial Illusion SARL · Projet PurKemet Phase 1
+   ------------------------------------------------------------
+   Fogli di stile unificati per PWA Opérateurs, Control Tower Admin
+   e applicazioni brandizzate della holding.
+   ============================================================ */
+
+/* ============================================================
+   SEZIONE 1 — VARIABILI CSS (charte graphique Kemet)
+   ============================================================ */
+:root {
+  --g:   #00FFA3;   /* CyberGreen — accento primario */
+  --gd:  #00B871;   /* CyberGreen scuro — gradienti */
+  --au:  #C5A059;   /* Kemet Gold — accento secondario */
+  --au2: #E6CA65;   /* Kemet Gold chiaro — testi e badge */
+  --ob:  #0A0D10;   /* Obsidian — sfondo base */
+  --ob2: #12171C;   /* Obsidian Card — superfici rialzate */
+}
+
+
+/* ============================================================
+   SEZIONE 2 — RESET E BASE
+   ============================================================ */
+html, body { background: var(--ob); }
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #f1f5f9;
+  background-image: radial-gradient(
+    ellipse at 50% -10%,
+    rgba(0, 255, 163, .09),
+    transparent 60%
+  );
+}
+
+:focus-visible {
+  outline: 2px solid var(--g);
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   SEZIONE 3 — CARDS (unità di composizione universale)
+   ============================================================ */
+.card {
+  background: linear-gradient(170deg, var(--ob2), var(--ob));
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  animation: rise .45s cubic-bezier(.2, .8, .2, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.card.g {
+  border-color: rgba(0, 255, 163, .4);
+  box-shadow: 0 0 30px -8px rgba(0, 255, 163, .3);
+}
+.card.au {
+  border-color: rgba(197, 160, 89, .5);
+  box-shadow: 0 0 30px -8px rgba(197, 160, 89, .28);
+}
+
+
+/* ============================================================
+   SEZIONE 4 — LABELS (micro-titoli mono)
+   ============================================================ */
+.lbl {
+  font: 700 .62rem 'JetBrains Mono', monospace;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--g);
+  display: block;
+}
+.lbl.au { color: var(--au2); }
+
+
+/* ============================================================
+   SEZIONE 5 — INPUTS E FORM
+   ============================================================ */
+.inp {
+  width: 100%;
+  background: rgba(0, 0, 0, .6);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: .75rem;
+  padding: .7rem;
+  font-size: .8rem;
+  color: #fff;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.inp:focus {
+  border-color: var(--g);
+  box-shadow: 0 0 0 3px rgba(0, 255, 163, .15);
+}
+select.inp option { background: #12171C; }
+
+
+/* ============================================================
+   SEZIONE 6 — BOTTONI (varianti)
+   ============================================================ */
+.btn {
+  width: 100%;
+  padding: .8rem;
+  border-radius: .8rem;
+  font: 800 .7rem 'JetBrains Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: transform .12s, filter .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+}
+.btn:active { transform: scale(.96); }
+.btn:disabled { opacity: .45; pointer-events: none; }
+.btn.sm {
+  width: auto;
+  padding: .4rem .7rem;
+  font-size: .62rem;
+  border-radius: .55rem;
+}
+.btn-g {
+  background: linear-gradient(135deg, var(--gd), #059669);
+  color: #000;
+}
+.btn-g:hover { filter: brightness(1.1); }
+.btn-o {
+  background: rgba(0, 0, 0, .8);
+  border: 1px solid rgba(0, 255, 163, .5);
+  color: var(--g);
+}
+.btn-au {
+  background: linear-gradient(135deg, var(--au2), var(--au));
+  color: #1a1405;
+}
+.btn-r {
+  background: rgba(239, 68, 68, .12);
+  border: 1px solid rgba(239, 68, 68, .4);
+  color: #f87171;
+}
+
+
+/* ============================================================
+   SEZIONE 7 — EFFETTO RIPPLE (feedback tattile)
+   ============================================================ */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .35);
+  transform: scale(0);
+  animation: rip .55s linear;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   SEZIONE 8 — ANIMAZIONI
+   ============================================================ */
+@keyframes rip {
+  to { transform: scale(4); opacity: 0; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scan {
+  0%   { top: 0;    opacity: .8; }
+  50%  { opacity: 1; }
+  100% { top: 100%; opacity: .2; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: .55; }
+  50%      { opacity: 1; }
+}
+@keyframes lockflash {
+  0%   { text-shadow: 0 0 0 rgba(0, 255, 163, 0); transform: scale(1); }
+  40%  { text-shadow: 0 0 28px #00FFA3; transform: scale(1.06); }
+  100% { text-shadow: 0 0 12px rgba(0, 255, 163, .5); transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200px 0; }
+  100% { background-position:  200px 0; }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pop {
+  0%   { transform: scale(.6); opacity: 0; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ============================================================
+   SEZIONE 9 — BEAM SCANNER (animazione di scansione)
+   ============================================================ */
+.beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--g), transparent);
+  box-shadow: 0 0 14px var(--g);
+  animation: scan 3s ease-in-out infinite;
+}
+
+
+/* ============================================================
+   SEZIONE 10 — DOT DI STATO RETE
+   ============================================================ */
+.dot {
+  width: .7rem;
+  height: .7rem;
+  border-radius: 50%;
+  background: var(--g);
+  box-shadow: 0 0 10px var(--g);
+  animation: pulse 2s infinite;
+}
+.dot.off {
+  background: var(--au2);
+  box-shadow: 0 0 10px var(--au2);
+}
+
+
+/* ============================================================
+   SEZIONE 11 — BALANCE DISPLAY (numeri grandi del peso)
+   ============================================================ */
+.wnum {
+  font: 800 3rem 'JetBrains Mono', monospace;
+  color: var(--g);
+  text-align: center;
+  width: 100%;
+  background: transparent;
+  outline: none;
+  letter-spacing: -.02em;
+  transition: color .2s;
+}
+.wnum.settling {
+  animation: pulse .7s infinite;
+  color: var(--au2);
+}
+.wnum.locked {
+  animation: lockflash .7s ease-out both;
+}
+
+
+/* ============================================================
+   SEZIONE 12 — TABS (navigazione mobile + sidebar admin)
+   ============================================================ */
+.tab {
+  padding: .6rem .4rem;
+  border-radius: .8rem;
+  color: #94a3b8;
+  transition: background .25s, color .25s;
+  font: 700 .68rem 'JetBrains Mono', monospace;
+  text-align: center;
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.tab.on {
+  color: var(--g);
+  font-weight: 800;
+  background: rgba(0, 255, 163, .1);
+  box-shadow: inset 0 -2px 0 var(--g);
+}
+
+
+/* ============================================================
+   SEZIONE 13 — BADGES DI STATO
+   ============================================================ */
+.bd {
+  display: inline-block;
+  padding: .12rem .45rem;
+  border-radius: .4rem;
+  font: 800 .58rem 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border: 1px solid;
+}
+.bd-g {
+  background: rgba(0, 255, 163, .15);
+  color: var(--g);
+  border-color: rgba(0, 255, 163, .35);
+}
+.bd-au {
+  background: rgba(197, 160, 89, .18);
+  color: var(--au2);
+  border-color: rgba(197, 160, 89, .4);
+}
+.bd-r {
+  background: rgba(239, 68, 68, .15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, .4);
+}
+.bd-n {
+  background: rgba(148, 163, 184, .12);
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, .3);
+}
+
+
+/* ============================================================
+   SEZIONE 14 — TABLEAUX (tables admin)
+   ============================================================ */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font: 500 .72rem 'JetBrains Mono', monospace;
+}
+.tbl th {
+  text-align: left;
+  color: #94a3b8;
+  font-weight: 700;
+  padding: .5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  text-transform: uppercase;
+  font-size: .58rem;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.tbl td {
+  padding: .55rem .5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .05);
+  vertical-align: middle;
+}
+.tbl tr { animation: rise .3s both; }
+.tbl tbody tr:hover { background: rgba(0, 255, 163, .04); }
+
+
+/* ============================================================
+   SEZIONE 15 — MODALI (overlay)
+   ============================================================ */
+.ov {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 13, 16, .92);
+  backdrop-filter: blur(6px);
+  animation: fade .2s;
+}
+.ov .box {
+  max-height: 92vh;
+  overflow: auto;
+  width: 100%;
+  max-width: 28rem;
+}
+
+
+/* ============================================================
+   SEZIONE 16 — TOASTS (notifiche)
+   ============================================================ */
+.toasts {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(5.2rem + env(safe-area-inset-bottom));
+  z-index: 130;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  pointer-events: none;
+}
+.toast {
+  max-width: 92vw;
+  padding: .7rem 1rem;
+  border-radius: .8rem;
+  background: var(--ob);
+  border: 1px solid var(--g);
+  color: var(--g);
+  font: 700 .72rem 'JetBrains Mono', monospace;
+  animation: rise .3s both;
+  transition: opacity .3s, transform .3s;
+}
+.toast.err  { border-color: #f87171; color: #f87171; }
+.toast.warn { border-color: var(--au2); color: var(--au2); }
+.toast.out  { opacity: 0; transform: translateY(10px); }
+
+
+/* ============================================================
+   SEZIONE 17 — OVERLAY SUCCESSO (spunta animata)
+   ============================================================ */
+#okOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 13, 16, .9);
+  backdrop-filter: blur(4px);
+}
+#okOverlay.show { display: flex; }
+#okOverlay svg  { animation: pop .45s ease both; }
+#okOverlay path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: draw .6s .25s ease forwards;
+}
+
+
+/* ============================================================
+   SEZIONE 18 — BOTTOM NAV (PWA operatori)
+   ============================================================ */
+.bnav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  background: rgba(18, 23, 28, .96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  padding: .3rem .4rem calc(.3rem + env(safe-area-inset-bottom));
+  display: flex;
+  gap: .2rem;
+}
+.bnav .tab {
+  flex: 1;
+  font-size: .6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.bnav .tab span:first-child { font-size: 1.05rem; }
+
+
+/* ============================================================
+   SEZIONE 19 — CHART E SKELETON
+   ============================================================ */
+.chart-bar {
+  transform-origin: bottom;
+  animation: grow .8s cubic-bezier(.2, .8, .2, 1) both;
+}
+.bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--au), var(--g));
+  transition: width 1.2s cubic-bezier(.2, .8, .2, 1);
+}
+.skel {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, .04) 25%,
+    rgba(255, 255, 255, .12) 50%,
+    rgba(255, 255, 255, .04) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: .5rem;
+  color: transparent;
+}
+
+
+/* ============================================================
+   SEZIONE 20 — ACCESSIBILITÀ (riduzione movimento)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* ============================================================
+   ============================================================
+   EXTENSIONS v8.1 — PurKemet Phase 1
+   ============================================================
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   E1 — CARTES MATÉRIAUX (couleur-codée BP §3.1.6)
+   ------------------------------------------------------------ */
+.mat {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .85rem .7rem;
+  text-align: left;
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, .10);
+  background: rgba(0, 0, 0, .45);
+  overflow: hidden;
+  transition: border-color .2s, background .2s, transform .12s;
+}
+.mat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--m, var(--g));
+  opacity: .85;
+}
+.mat .mat-ico {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.mat .mat-lbl {
+  font: 800 .72rem 'JetBrains Mono', monospace;
+  color: #fff;
+  letter-spacing: .02em;
+}
+.mat .mat-hint {
+  font-size: .58rem;
+  color: #94a3b8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.mat.on {
+  border-color: var(--m, var(--g));
+  background: rgba(0, 255, 163, .08);
+  box-shadow: 0 0 20px -6px var(--m, #00FFA3);
+}
+.mat.on::after {
+  content: '✓';
+  position: absolute;
+  top: .4rem;
+  right: .5rem;
+  font-size: .8rem;
+  color: var(--m, var(--g));
+  font-weight: 900;
+}
+
+
+/* ------------------------------------------------------------
+   E2 — ZONE HEAD (regroupement tournée)
+   ------------------------------------------------------------ */
+.zone-head {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .6rem;
+  margin-bottom: .4rem;
+  font: 800 .62rem 'JetBrains Mono', monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--au2);
+  border-left: 3px solid var(--au2);
+}
+
+
+/* ------------------------------------------------------------
+   E3 — KPI STRIP (bandeau tournée opérateur)
+   ------------------------------------------------------------ */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.kpi-strip .kpi {
+  padding: .6rem .5rem;
+  border-radius: .85rem;
+  background: rgba(0, 0, 0, .55);
+  border: 1px solid rgba(255, 255, 255, .08);
+  text-align: center;
+}
+.kpi-strip .kpi b {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--g);
+}
+.kpi-strip .kpi span {
+  font-size: .55rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+
+/* ------------------------------------------------------------
+   E4 — JAUGE DE STABILITÉ (balance Bluetooth)
+   ------------------------------------------------------------ */
+.stab-wrap {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem 0;
+}
+.stab-track {
+  flex: 1;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .08);
+  overflow: hidden;
+}
+.stab-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--au), var(--g));
+  transition: width .25s ease-out;
+}
+.stab-fill.warn {
+  background: linear-gradient(90deg, #f87171, var(--au));
+}
+
+
+/* ------------------------------------------------------------
+   E5 — GRADE BADGE (échelon opérateur BP §3.3)
+   ------------------------------------------------------------ */
+.grade-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .22rem .55rem;
+  border-radius: .55rem;
+  font: 800 .62rem 'JetBrains Mono', monospace;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border: 1px solid var(--gc, var(--au));
+  color: var(--gc, var(--au2));
+  background: rgba(197, 160, 89, .12);
+}
+
+
+/* ------------------------------------------------------------
+   E6 — INSTALL PWA BANNER
+   ------------------------------------------------------------ */
+#installBar {
+  position: fixed;
+  left: .75rem;
+  right: .75rem;
+  bottom: calc(5.6rem + env(safe-area-inset-bottom));
+  padding: .7rem .9rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--ob2), var(--ob));
+  border: 1px solid var(--g);
+  box-shadow: 0 10px 40px -10px rgba(0, 255, 163, .4);
+  display: none;
+  align-items: center;
+  gap: .75rem;
+  z-index: 90;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  animation: rise .3s both;
+}
+#installBar.show { display: flex; }
+#installBar button.primary {
+  background: var(--g);
+  color: #000;
+  font-weight: 800;
+  padding: .45rem .8rem;
+  border-radius: .6rem;
+  font-size: .62rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+
+/* ------------------------------------------------------------
+   E7 — PHOTO-PREUVE (métadonnées brûlées)
+   ------------------------------------------------------------ */
+.photo-proof {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .15);
+}
+.photo-proof img {
+  display: block;
+  width: 100%;
+}
+.photo-proof .meta-stamp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: .35rem .55rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .85));
+  font: 700 .58rem 'JetBrains Mono', monospace;
+  color: var(--g);
+}
+
+
+/* ------------------------------------------------------------
+   E8 — LEDGER ROW (wallet Kemet)
+   ------------------------------------------------------------ */
+.ledger-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .6rem;
+  align-items: center;
+  padding: .55rem .7rem;
+  border-radius: .7rem;
+  background: rgba(0, 0, 0, .4);
+  border: 1px solid rgba(255, 255, 255, .05);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+}
+.ledger-row .ico { font-size: 1rem; }
+.ledger-row .lbl {
+  color: #cbd5e1;
+  line-height: 1.2;
+}
+.ledger-row .lbl small {
+  display: block;
+  color: #64748b;
+  font-size: .55rem;
+  margin-top: 2px;
+}
+.ledger-row .amt {
+  font-weight: 900;
+  text-align: right;
+  white-space: nowrap;
+}
+.ledger-row .amt.neg { color: #f87171; }
+.ledger-row .amt.pos { color: var(--g); }
+
+
+/* ------------------------------------------------------------
+   E9 — VOICE INDICATOR (feedback vocale accessibilité)
+   ------------------------------------------------------------ */
+.voice-indicator {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 4.5rem);
+  right: .75rem;
+  z-index: 100;
+  background: var(--ob);
+  border: 1px solid var(--g);
+  color: var(--g);
+  padding: .35rem .6rem;
+  border-radius: .55rem;
+  font: 800 .58rem 'JetBrains Mono', monospace;
+  letter-spacing: .06em;
+  animation: rise .25s both;
+}
+
+
+/* ------------------------------------------------------------
+   E10 — PROGRESS RING (score mérite Maat)
+   ------------------------------------------------------------ */
+.ring-wrap {
+  position: relative;
+  width: 68px;
+  height: 68px;
+}
+.ring-wrap svg { transform: rotate(-90deg); }
+.ring-wrap .ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, .08);
+  stroke-width: 5;
+}
+.ring-wrap .ring-fg {
+  fill: none;
+  stroke: var(--g);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+.ring-wrap .ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 900 .9rem 'JetBrains Mono', monospace;
+  color: var(--g);
+}
+
+
+/* ------------------------------------------------------------
+   E11 — EMPTY STATE (liste vuote)
+   ------------------------------------------------------------ */
+.empty-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  border-radius: 1.25rem;
+  border: 1px dashed rgba(255, 255, 255, .12);
+  background: rgba(0, 0, 0, .25);
+}
+.empty-state .ico {
+  font-size: 2.25rem;
+  margin-bottom: .5rem;
+  opacity: .6;
+}
+.empty-state p {
+  font-size: .72rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+
+/* ------------------------------------------------------------
+   E12 — PULL-TO-REFRESH
+   ------------------------------------------------------------ */
+.ptr {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 3.5rem);
+  left: 50%;
+  transform: translate(-50%, -6px);
+  opacity: 0;
+  background: var(--ob);
+  border: 1px solid var(--g);
+  color: var(--g);
+  padding: .35rem .8rem;
+  border-radius: 99px;
+  font: 800 .6rem 'JetBrains Mono', monospace;
+  letter-spacing: .05em;
+  z-index: 41;
+  transition: opacity .2s, transform .2s;
+  pointer-events: none;
+}
+.ptr.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.ptr.spin::before {
+  content: '⟳';
+  display: inline-block;
+  margin-right: .3rem;
+  animation: spin 1s linear infinite;
+}
+
+
+/* ============================================================
+   FINE FILE — MAAT OS v8.1
+   ============================================================ */
