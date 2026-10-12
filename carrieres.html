@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
     <script>
@@ -38,26 +38,62 @@
         }
     </script>
     <style>
-        body { background-color: #0B0F12; color: #F1F5F9; }
-        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
-        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
-        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
-        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
-        .inp:focus { border-color: #00FFA3; }
-        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
-        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
+        /* STILI CSS NATIVI DI GARANZIA ANTI-SCHERMATA NERA */
+        body { 
+            background-color: #0B0F12 !important; 
+            color: #F1F5F9 !important; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .glass-card { 
+            background: linear-gradient(170deg, #131920, #0B0F12) !important; 
+            border: 1px solid rgba(197, 160, 89, 0.35) !important; 
+            border-radius: 1.25rem !important; 
+        }
+        .glass-card.g { 
+            border-color: rgba(0, 255, 163, 0.45) !important; 
+            box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.2) !important; 
+        }
+        .glass-card.au { 
+            border-color: rgba(197, 160, 89, 0.55) !important; 
+            box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2) !important; 
+        }
+        .inp { 
+            width: 100%; 
+            background: rgba(0,0,0,.6) !important; 
+            border: 1px solid rgba(255,255,255,.14) !important; 
+            border-radius: .75rem !important; 
+            padding: .75rem !important; 
+            font-size: .8rem !important; 
+            color: #fff !important; 
+            outline: none; 
+        }
+        .inp:focus { border-color: #00FFA3 !important; }
+        .btn { 
+            padding: .85rem; 
+            border-radius: .8rem; 
+            font: 800 .72rem 'JetBrains Mono', monospace; 
+            letter-spacing: .06em; 
+            text-transform: uppercase; 
+            transition: all .2s; 
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
         .btn-g:hover { filter: brightness(1.1); }
-        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
-        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
+        .btn-o { background: rgba(0,0,0,.8) !important; border: 1px solid rgba(0,255,163,.5) !important; color: #00FFA3 !important; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
 
-    <!-- HEADER INSTITUTIONNEL -->
+    <!-- HEADER INSTITUTIONNEL UNIFIÉ -->
     <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center group-hover:border-cyberGreen transition-all">
                     <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
                 </div>
                 <div>
@@ -66,16 +102,20 @@
                 </div>
             </a>
 
-            <nav class="hidden md:flex items-center space-x-6 text-xs font-mono font-bold uppercase text-slate-300">
-                <a href="index.html" class="hover:text-cyberGreen">Accueil</a>
-                <a href="purkemet.html" class="hover:text-cyberGreen">Offre B2B</a>
-                <a href="datalake.html" class="hover:text-cyberGreen">Data Lake</a>
-                <a href="pwa.html" class="hover:text-cyberGreen text-cyberGreen font-extrabold">Workstation PWA</a>
+            <!-- NAVIGATION GLOBALE PARFAITEMENT UNIFIÉE -->
+            <nav class="hidden md:flex items-center space-x-5 text-xs font-mono font-bold uppercase text-slate-300">
+                <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
+                <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
+                <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
+                <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
+                <a href="carrieres.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">Carrières</a>
+                <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
             </nav>
 
-            <a href="#candidature-form" class="btn btn-g !py-2.5 px-4 text-[10px]">
-                Postuler En Ligne 📝
-            </a>
+            <div class="flex items-center space-x-3">
+                <a href="pwa.html" class="btn btn-o !py-2 !px-3 text-[10px] hidden sm:inline-block">Workstation PWA 📲</a>
+                <a href="dashboard.html" class="btn btn-g !py-2 !px-3 text-[10px]">Espace ESG B2B 🏨</a>
+            </div>
         </div>
     </header>
 
@@ -92,7 +132,7 @@
                     Devenez <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Vecteur Logistique Copropriétaire</span> à Marrakech
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-                    PurKemet transforme le secteur informel de la collecte en une profession digne, numérisée et rémunératrice. Que vous soyez chauffeur indépendant, livreur o chiffonnier (*Mikhala*), nous mettons à votre disposition le kit technique complet e vous intégrons au plan d'actionnariat de classe B.
+                    PurKemet transforme le secteur informel de la collecte en une profession digne, numérisée et rémunératrice. Que vous soyez chauffeur indépendant, livreur ou chiffonnier (*Mikhala*), nous mettons à votre disposition le kit technique complet et vous intégrons au plan d'actionnariat de classe B.
                 </p>
             </div>
 
@@ -115,11 +155,11 @@
             </div>
         </section>
 
-        <!-- CALCULATEUR INTERACTIF DE GUADAGNO VETTORE -->
+        <!-- CALCULATEUR INTERACTIF DE GAIN VECTEUR -->
         <section class="glass-card au p-6 sm:p-8 space-y-6 font-mono">
             <div class="border-b border-kemetGold/30 pb-3 flex justify-between items-center">
                 <div>
-                    <h3 class="font-kemetTitle text-xl font-bold text-kemetGoldBright">🧮 Simulatuer de Revenu Algorithmique Maat</h3>
+                    <h3 class="font-kemetTitle text-xl font-bold text-kemetGoldBright">🧮 Simulateur de Revenu Algorithmique Maat</h3>
                     <p class="text-xs text-slate-400 font-sans">Calculez vos gains nets quotidiens et mensuels basés sur vos tournées de collecte</p>
                 </div>
                 <span class="px-3 py-1 bg-kemetGold/20 text-kemetGold text-xs rounded-xl font-bold border border-kemetGold/40">
@@ -145,7 +185,7 @@
                     </div>
 
                     <div class="p-3 bg-black/40 rounded-xl border border-white/10 space-y-1 text-[11px]">
-                        <span class="text-slate-400 font-bold block">Décomposition Tarifaire par Corsa :</span>
+                        <span class="text-slate-400 font-bold block">Décomposition Tarifaire par Course :</span>
                         <div class="flex justify-between"><span>• Base Fixe Forfaitaire :</span><span class="text-white font-bold">15 MAD</span></div>
                         <div class="flex justify-between"><span>• Indemnité Kilométrique (2 MAD/km) :</span><span id="sim-breakdown-km" class="text-white font-bold">30 MAD</span></div>
                         <div class="flex justify-between"><span>• Bonus Poids (5 MAD / 50 kg) :</span><span id="sim-breakdown-kg" class="text-white font-bold">30 MAD</span></div>
@@ -153,8 +193,8 @@
                 </div>
 
                 <div class="lg:col-span-6 bg-black/80 p-6 rounded-2xl border border-cyberGreen/40 text-center space-y-4">
-                    <span class="text-xs text-slate-400 uppercase font-bold block">Gain Net Estimé par Corsa</span>
-                    <div id="sim-net-course" class="text-4xl font-black text-cyberGreen">55.00 <span class="text-xs font-normal">MAD / Corsa</span></div>
+                    <span class="text-xs text-slate-400 uppercase font-bold block">Gain Net Estimé par Course</span>
+                    <div id="sim-net-course" class="text-4xl font-black text-cyberGreen">55.00 <span class="text-xs font-normal">MAD / Course</span></div>
 
                     <div class="grid grid-cols-2 gap-3 pt-2 border-t border-white/10 text-xs">
                         <div class="p-3 bg-black/60 rounded-xl border border-white/10">
@@ -170,19 +210,50 @@
             </div>
         </section>
 
-        <!-- DEUXIÈME SECTION: POUR CEUX QUI VEULENT VENDRE LE MATERIAL (GUELSSAS & CESSIONNAIRES) -->
-        <section class="glass-card g p-6 sm:p-8 space-y-6">
-            <div class="border-b border-white/10 pb-3 flex justify-between items-center font-mono">
+        <!-- SECTION SIMPLIFIÉE COMMISSIONS VECTEUR-AMBASSADEUR -->
+        <section class="glass-card g p-6 sm:p-8 space-y-6 font-mono text-xs">
+            <div class="border-b border-cyberGreen/30 pb-3 flex justify-between items-center">
+                <div>
+                    <h3 class="font-kemetTitle text-xl font-bold text-white">🤝 Programme Vecteur-Ambassadeur B2B</h3>
+                    <p class="text-xs text-slate-400 font-sans">Convertissez vos contacts en revenus récurrents et encaissez deux niveaux de bonus</p>
+                </div>
+                <span class="px-3 py-1 bg-cyberGreen/10 text-cyberGreen text-xs rounded-xl font-bold border border-cyberGreen/30">
+                    +250 MAD D'ENTRÉE
+                </span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <span class="text-cyberGreen font-bold text-sm block">1. Bonus d'Entrée Express</span>
+                    <div class="text-2xl font-black text-white">250 MAD <span class="text-xs font-normal text-slate-400">/ Contrat</span></div>
+                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+                        Versés immédiatement sur votre Kemet Wallet dès la 3ème collecte effective effectuée auprès de l'hôtel ou restaurant procuré.
+                    </p>
+                </div>
+
+                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                    <span class="text-kemetGoldBright font-bold text-sm block">2. Bonus de Volume Au Fil des Livraisons</span>
+                    <div class="text-2xl font-black text-kemetGoldBright">~115 MAD <span class="text-xs font-normal text-slate-400">/ Tonne</span></div>
+                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+                        Commission continue de 2% sur chaque tonne livrée et notariée (jusqu'à 5 tonnes par établissement).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION GUELSSAS ET VENDERUS DE GISEMANT -->
+        <section class="glass-card p-6 sm:p-8 space-y-6 font-mono text-xs">
+            <div class="border-b border-white/10 pb-3 flex justify-between items-center">
                 <div>
                     <h3 class="font-kemetTitle text-xl font-bold text-white">💰 Cessionnaires, Commerçants &amp; Guelssas (Vendez votre gisement)</h3>
-                    <p class="text-xs text-slate-400 font-sans">Acheteurs industriels directs : vendez vos plastiques, cartons et métaux aux meilleurs tarifs notariés</p>
+                    <p class="text-xs text-slate-400 font-sans">Acheteurs industriels directs : vendez vos plastiques, cartons et métaux aux meilleurs tarifs</p>
                 </div>
                 <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs rounded-xl font-bold">
                     PAIEMENT COMPTANT / CASH
                 </span>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
+            <div class="grid md:grid-cols-3 gap-6">
                 <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
                     <div class="text-2xl">⚖️</div>
                     <h4 class="font-bold text-white text-sm">Pesée Certifiée Sans Tricherie</h4>
@@ -195,7 +266,7 @@
                     <div class="text-2xl">💵</div>
                     <h4 class="font-bold text-kemetGoldBright text-sm">Paiement Immédiat Caisse &amp; Mobile</h4>
                     <p class="text-slate-400 text-[11px] font-sans leading-relaxed">
-                        Encaissez votre argent comptant en espèces au Dépôt Hub ou sur votre compte CIH, Cash Plus, Wafacash ou Kemet Wallet.
+                        Encaissez votre argent comptant en espèces au Dépôt Hub ou via CIH, Cash Plus, Wafacash ou Kemet Wallet.
                     </p>
                 </div>
 
@@ -210,15 +281,15 @@
         </section>
 
         <!-- MATRICE DE CARRIÈRE ÉCHELON MAAT -->
-        <section class="glass-card p-6 sm:p-8 space-y-6">
-            <div class="border-b border-white/10 pb-3 font-mono">
+        <section class="glass-card p-6 sm:p-8 space-y-6 font-mono text-xs">
+            <div class="border-b border-white/10 pb-3">
                 <h3 class="font-kemetTitle text-xl font-bold text-white">👑 Matrice de Carrière &amp; Progression Échelon Maat</h3>
                 <p class="text-xs text-slate-400">Progression transparente basée sur le tonnage notarié et le Score de Mérite</p>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="p-4 bg-black/60 rounded-2xl border border-amber-700/50 space-y-2">
-                    <span class="text-amber-600 font-bold block text-sm">🥉 Grade Bronze</span>
+                    <span class="text-amber-500 font-bold block text-sm">🥉 Grade Bronze</span>
                     <span class="text-[10px] text-slate-400 block">0 à 5 Tonnes Traitées</span>
                     <ul class="space-y-1 text-[11px] text-slate-300 pt-2 border-t border-white/10">
                         <li>• Formation initiale offerte</li>
@@ -259,7 +330,7 @@
             </div>
         </section>
 
-        <!-- FORMULAIRE DE CANDIDATURE ET REGISTRATION EN LIGNE (SUPABASE REALTIME) -->
+        <!-- FORMULAIRE DE CANDIDATURE EN LIGNE -->
         <section id="candidature-form" class="glass-card g p-6 sm:p-10 space-y-6 font-mono text-xs">
             <div class="border-b border-cyberGreen/30 pb-3">
                 <span class="lbl">Formulaire d'Inscription &amp; Onboarding Direct</span>
@@ -296,7 +367,7 @@
 
                 <div class="grid sm:grid-cols-3 gap-4">
                     <div>
-                        <label class="lbl">Type de Véhicule Denu *</label>
+                        <label class="lbl">Type de Véhicule Détenu *</label>
                         <select id="cand_vehicle" class="inp mt-1">
                             <option value="TRIPORTEUR">Triporteur Motorisé (150-300 kg)</option>
                             <option value="FOURGONNETTE">Fourgonnette (Fiat Doblò / Partner 300-600 kg)</option>
@@ -340,16 +411,16 @@
 
     </main>
 
-    <!-- FOOTER INSTITUTIONNEL -->
+    <!-- FOOTER INSTITUTIONNEL UNIFIÉ -->
     <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
         © 2026 Industrial Illusion SARL — PurKemet Carrières. Tous droits réservés.
     </footer>
 
-    <!-- LOGIQUE JAVASCRIPT ET CALCULATEUR DE GUADAGNI -->
+    <!-- LOGIQUE JAVASCRIPT ET CALCULATEUR DE GAINS -->
     <script>
         (function() {
             'use strict';
-            var $ = function(id) { return document.getElementById(id); };
+            function $(id) { return document.getElementById(id); }
 
             const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
             const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
@@ -363,28 +434,30 @@
 
             // CALCULATEUR DE SALAIRE INTERACTIF
             window.calculateSalarySimulation = function() {
-                var km = parseFloat($('sim_km').value);
-                var kg = parseFloat($('sim_kg').value);
-                var courses = parseFloat($('sim_courses').value);
+                try {
+                    var km = parseFloat($('sim_km').value) || 15;
+                    var kg = parseFloat($('sim_kg').value) || 300;
+                    var courses = parseFloat($('sim_courses').value) || 3;
 
-                $('sim-km-val').innerText = km + " km";
-                $('sim-kg-val').innerText = kg + " kg";
-                $('sim-courses-val').innerText = courses + " courses";
+                    if ($('sim-km-val')) $('sim-km-val').innerText = km + " km";
+                    if ($('sim-kg-val')) $('sim-kg-val').innerText = kg + " kg";
+                    if ($('sim-courses-val')) $('sim-courses-val').innerText = courses + " courses";
 
-                var kmBonus = km * 2;
-                var kgBonus = Math.floor(kg / 50) * 5;
-                var courseBrut = 15 + kmBonus + kgBonus;
-                var netCourse = courseBrut - 20; // 20 MAD carburant/usure estimé
-                if (netCourse < 25) netCourse = 25;
+                    var kmBonus = km * 2;
+                    var kgBonus = Math.floor(kg / 50) * 5;
+                    var courseBrut = 15 + kmBonus + kgBonus;
+                    var netCourse = courseBrut - 20; // 20 MAD carburant/usure estimé
+                    if (netCourse < 25) netCourse = 25;
 
-                var monthlyNet = netCourse * courses * 24;
-                var monthlyAmbassador = monthlyNet + 1650; // Bonus +2 contrats/mois
+                    var monthlyNet = netCourse * courses * 24;
+                    var monthlyAmbassador = monthlyNet + 1650; // Bonus +2 contrats/mois
 
-                if ($('sim-breakdown-km')) $('sim-breakdown-km').innerText = kmBonus.toFixed(2) + " MAD";
-                if ($('sim-breakdown-kg')) $('sim-breakdown-kg').innerText = kgBonus.toFixed(2) + " MAD";
-                if ($('sim-net-course')) $('sim-net-course').innerHTML = netCourse.toFixed(2) + ' <span class="text-xs font-normal">MAD / Corsa</span>';
-                if ($('sim-net-monthly')) $('sim-net-monthly').innerText = monthlyNet.toLocaleString('fr-FR') + " MAD";
-                if ($('sim-net-ambassador')) $('sim-net-ambassador').innerText = monthlyAmbassador.toLocaleString('fr-FR') + " MAD";
+                    if ($('sim-breakdown-km')) $('sim-breakdown-km').innerText = kmBonus.toFixed(2) + " MAD";
+                    if ($('sim-breakdown-kg')) $('sim-breakdown-kg').innerText = kgBonus.toFixed(2) + " MAD";
+                    if ($('sim-net-course')) $('sim-net-course').innerHTML = netCourse.toFixed(2) + ' <span class="text-xs font-normal">MAD / Course</span>';
+                    if ($('sim-net-monthly')) $('sim-net-monthly').innerText = monthlyNet.toLocaleString('fr-FR') + " MAD";
+                    if ($('sim-net-ambassador')) $('sim-net-ambassador').innerText = monthlyAmbassador.toLocaleString('fr-FR') + " MAD";
+                } catch(e) {}
             };
 
             // SOUMISSION CANDIDATURE DIRECTE A SUPABASE
@@ -418,7 +491,7 @@
                 }
             };
 
-            window.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
                 window.calculateSalarySimulation();
             });
         })();
