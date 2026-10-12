@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark font-sans scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>K-MEH-20 | Industrial Illusion SARL — Infrastructure Bionique Lourde</title>
+    <meta name="description" content="Infrastructures lourdes de valorisation bionique K-MEH-20 : Pyramide Tronquée brevetée OMPIC (56m x 56m), biométhanisation industrielle et pôle de Kénitra/Marrakech.">
+    <meta name="theme-color" content="#00FFA3">
+    
+    <!-- Google Fonts & Tailwind CSS CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        kemetTitle: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        cyberDark: '#0B0F12',
+                        cyberCard: '#131920',
+                        cyberGreen: '#00FFA3',
+                        cyberGreenDark: '#00B871',
+                        kemetGold: '#C5A059',
+                        kemetGoldBright: '#E8C86A'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0B0F12; color: #F1F5F9; }
+        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
+        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 30px -5px rgba(0, 255, 163, 0.18); }
+        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 30px -5px rgba(197, 160, 89, 0.2); }
+        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
+        .inp:focus { border-color: #00FFA3; }
+        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
+        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
+        .btn-g:hover { filter: brightness(1.1); }
+        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
+        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+
+        @keyframes scan { 0% { top: 0; opacity: .8; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
+        .beam { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FFA3, transparent); box-shadow: 0 0 14px #00FFA3; animation: scan 3.2s ease-in-out infinite; }
+
+        @keyframes floatPyramid { 0%, 100% { transform: translateY(0px) rotateX(15deg); } 50% { transform: translateY(-8px) rotateX(15deg); } }
+        .pyramid-anim { animation: floatPyramid 6s ease-in-out infinite; transform-style: preserve-3d; perspective: 1000px; }
+
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+        .glow-pulse { animation: pulseGlow 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER INSTITUTIONNEL -->
+    <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
+        <div class="max-w-7xl mx-auto
