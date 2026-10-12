@@ -1,7 +1,12 @@
 (function () {
   'use strict';
+  if (!window.Maat) {
+    document.body.innerHTML = '<p style="font-family:monospace;color:#f87171;padding:2rem">Maat OS — kernel (core.js) introuvable. Vérifiez assets/core.js.</p>';
+    return;
+  }
   var M = window.Maat, $ = M.$, h = M.h, root = $('root');
   var A = null, cur = 'overview', timer = null, chan = null;
+
   var VIEWS = [
     ['overview', '📊', 'Vue d\'ensemble'],
     ['users', '👥', 'Utilisateurs & permissions'],
@@ -10,8 +15,10 @@
     ['weigh', '⚖️', 'Pesées'],
     ['contracts', '🤝', 'Contrats ambassadeurs'],
     ['cash', '💰', 'Caisse & virements'],
+    ['factors', '🌱', 'Facteurs CO₂'],
     ['audit', '🧾', 'Journal d\'audit']
   ];
+
   var CATS = [
     ['RIAD', 'Riad / maison d\'hôtes'],
     ['RESTAURANT', 'Restaurant / rooftop'],
@@ -21,6 +28,7 @@
     ['COMMERCE', 'Commerce / artisan'],
     ['SUPERMARCHE', 'Supermarché']
   ];
+
   var GRADES = [
     ['', '— aucun —'],
     ['Bronze', 'Bronze'],
@@ -28,6 +36,15 @@
     ['Gold', 'Gold'],
     ['Kemet Elite', 'Kemet Elite']
   ];
+
+  var TIME_FILTERS = [
+    ['ALL', 'Toute la période'],
+    ['TODAY', 'Aujourd\'hui'],
+    ['7D', '7 derniers jours'],
+    ['30D', '30 derniers jours'],
+    ['365D', '1 an']
+  ];
+
   var BD = {
     ACTIVE: 'bd-g', ANCHORED: 'bd-g', VALIDATED: 'bd-g', DONE: 'bd-g', PAID: 'bd-g',
     PENDING: 'bd-au', PROSPECT: 'bd-au', SUBMITTED: 'bd-au', IN_TRANSIT: 'bd-au', PLANNED: 'bd-au', ASSIGNED: 'bd-au',
@@ -64,9 +81,20 @@
   }
   function fail(r, ctx) { if (r && r.error) { M.toast((ctx || 'Erreur') + ' : ' + r.error.message, 'err'); return true; } return false; }
   var short = function (id) { return id ? String(id).slice(0, 8) : '—'; };
-  var week = function () { var d = new Date(); d.setDate(d.getDate() - 14); return d.toISOString(); };
 
-  /* ---------- Authentification : session Supabase réelle + rôle admin vérifié en base ---------- */
+  function applyTimeFilter(query, col, tf) {
+    if (tf === 'ALL') return query;
+    var now = new Date();
+    if (tf === 'TODAY') {
+      now.setHours(0, 0, 0, 0);
+      return query.gte(col, now.toISOString());
+    }
+    var days = tf === '7D' ? 7 : tf === '30D' ? 30 : 365;
+    now.setDate(now.getDate() - days);
+    return query.gte(col, now.toISOString());
+  }
+
+  /* ---------- Authentification ---------- */
   function login() {
     $('out').classList.add('hidden'); root.innerHTML = '';
     var out = h('p', { class: 'text-[11px] text-center font-mono font-bold min-h-[1rem]', role: 'alert' }), say = function (t) { out.textContent = t; out.style.color = '#f87171'; };
@@ -91,7 +119,7 @@
     A = p; $('who').textContent = (p.full_name || p.email) + ' — Direction Générale'; $('out').classList.remove('hidden'); $('out').onclick = M.signOut; shell(); M.flush(); live();
   }
 
-  /* ---------- Structure : barre latérale + zone de contenu ---------- */
+  /* ---------- Structure ---------- */
   function shell() {
     root.innerHTML = '';
     var nav = h('nav', { class: 'flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 lg:sticky lg:top-20', 'aria-label': 'Modules' }, VIEWS.map(function (v) {
@@ -105,7 +133,7 @@
     cur = v; document.querySelectorAll('[data-v]').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
     var el = $('view'); el.innerHTML = ''; el.appendChild(h('div', { class: 'card skel h-40' }));
     var box = h('div', { class: 'space-y-4' });
-    try { await ({ overview: vOverview, users: vUsers, clients: vClients, pickups: vPickups, weigh: vWeigh, contracts: vContracts, cash: vCash, audit: vAudit })[v](box); }
+    try { await ({ overview: vOverview, users: vUsers, clients: vClients, pickups: vPickups, weigh: vWeigh, contracts: vContracts, cash: vCash, factors: vFactors, audit: vAudit })[v](box); }
     catch (e) { box.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Erreur de chargement : ' + (e.message || e) })); }
     el.innerHTML = ''; el.appendChild(box); badges();
   }
@@ -121,7 +149,16 @@
   function live() {
     if (chan) return; chan = M.sb.channel('tower');
     ['collections', 'pickups', 'payout_requests', 'ambassador_contracts', 'profiles', 'clients'].forEach(function (t) {
-      chan.on('postgres_changes', { event: '*', schema: 'public', table: t }, function (e) { clearTimeout(timer); timer = setTimeout(function () { open(cur); }, 1200); if (e.eventType === 'INSERT') { M.toast('🔔 Nouveau : ' + t.replace('_', ' ')); M.buzz(40); } });
+      chan.on('postgres_changes', { event: '*', schema: 'public', table: t }, function (e) {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          var active = document.activeElement;
+          var isInput = active && (active.tagName === 'INPUT' || active.tagName === 'SELECT' || active.tagName === 'TEXTAREA');
+          var isModal = document.querySelector('.ov, [role="dialog"]:not(.hidden)');
+          if (!isInput && !isModal) open(cur);
+        }, 1200);
+        if (e.eventType === 'INSERT') { M.toast('🔔 Nouveau : ' + t.replace('_', ' ')); M.buzz(40); }
+      });
     }); chan.subscribe();
   }
 
@@ -129,8 +166,9 @@
   async function vOverview(box) {
     var head0 = function (t) { return M.sb.from(t.t).select('id', { count: 'exact', head: true }).match(t.f || {}); };
     var today = new Date(); today.setHours(0, 0, 0, 0); var tm = new Date(today); tm.setDate(tm.getDate() + 1);
+    var weekIso = new Date(Date.now() - 14 * 86400000).toISOString();
     var res = await Promise.all([
-      M.sb.from('collections').select('status,weight_collect_kg,weight_depot_kg,created_at').gte('created_at', week()).limit(3000),
+      M.sb.from('collections').select('status,weight_collect_kg,weight_depot_kg,created_at').gte('created_at', weekIso).limit(3000),
       head0({ t: 'clients', f: { status: 'ACTIVE' } }),
       M.sb.from('pickups').select('id', { count: 'exact', head: true }).gte('scheduled_at', today.toISOString()).lt('scheduled_at', tm.toISOString()).neq('status', 'CANCELLED'),
       head0({ t: 'profiles', f: { role: 'operator', status: 'ACTIVE' } }),
@@ -180,6 +218,30 @@
   /* ---------- Utilisateurs & permissions ---------- */
   async function vUsers(box) {
     var f = { role: 'ALL', status: 'ALL', q: '' }, list = h('div', { class: 'card !p-2' });
+
+    var perm = function (u, forceStatus) {
+      var has = function (c) { return (u.capabilities || []).indexOf(c) >= 0; };
+      M.form('Permissions — ' + (u.full_name || u.email), [
+        { k: 'role', label: 'Type de compte', type: 'select', options: [['public', 'Public / investisseur'], ['client', 'Client B2B'], ['operator', 'Opérateur'], ['admin', 'Administrateur']], value: u.role },
+        { k: 'vector', label: 'Modalité Vecteur logistique (collectes, double pesée)', type: 'checkbox', value: has('vector') },
+        { k: 'ambassador', label: 'Modalité Ambassadeur B2B (contrats, primes)', type: 'checkbox', value: has('ambassador') },
+        { k: 'status', label: 'Statut', type: 'select', options: [['ACTIVE', 'Actif'], ['PENDING', 'En attente'], ['REJECTED', 'Bloqué']], value: forceStatus || u.status },
+        { k: 'grade', label: 'Échelon', type: 'select', options: GRADES, value: u.grade || '' },
+        { k: 'merit', label: 'Score de mérite Maat (0-100)', type: 'number', min: 0, max: 100, step: '0.1', value: u.merit_score },
+        { k: 'cluster', label: 'Cluster affecté', value: u.cluster || '' },
+        { k: 'vehicle', label: 'Véhicule', value: u.vehicle || '' }
+      ], 'Enregistrer', async function (v) {
+        if (u.id === A.id && (v.role !== 'admin' || v.status !== 'ACTIVE')) return 'Vous ne pouvez pas retirer vos propres droits d\'administration.';
+        var caps = []; if (v.vector) caps.push('vector'); if (v.ambassador) caps.push('ambassador');
+        if (v.role === 'operator' && v.status === 'ACTIVE' && !caps.length) return 'Un opérateur actif doit avoir au moins une modalité (vecteur et/ou ambassadeur).';
+        var r = await M.sb.from('profiles').update({
+          role: v.role, capabilities: v.role === 'operator' ? caps : [], status: v.status,
+          grade: v.grade || null, merit_score: v.merit === '' ? null : v.merit, cluster: v.cluster || null, vehicle: v.vehicle || null
+        }).eq('id', u.id);
+        if (r.error) return r.error.message; M.toast('Permissions mises à jour.'); load(); badges();
+      });
+    };
+
     var load = async function () {
       var q = M.sb.from('profiles').select('*').order('created_at', { ascending: false }).limit(500);
       if (f.role !== 'ALL') q = q.eq('role', f.role);
@@ -205,29 +267,6 @@
             btn('Permissions', function () { perm(u); }));
         } }
       ], rows, 'Aucun utilisateur.'));
-    };
-
-    var perm = function (u, forceStatus) {
-      var has = function (c) { return (u.capabilities || []).indexOf(c) >= 0; };
-      M.form('Permissions — ' + (u.full_name || u.email), [
-        { k: 'role', label: 'Type de compte', type: 'select', options: [['public', 'Public / investisseur'], ['client', 'Client B2B'], ['operator', 'Opérateur'], ['admin', 'Administrateur']], value: u.role },
-        { k: 'vector', label: 'Modalité Vecteur logistique (collectes, double pesée)', type: 'checkbox', value: has('vector') },
-        { k: 'ambassador', label: 'Modalité Ambassadeur B2B (contrats, primes)', type: 'checkbox', value: has('ambassador') },
-        { k: 'status', label: 'Statut', type: 'select', options: [['ACTIVE', 'Actif'], ['PENDING', 'En attente'], ['REJECTED', 'Bloqué']], value: forceStatus || u.status },
-        { k: 'grade', label: 'Échelon', type: 'select', options: GRADES, value: u.grade || '' },
-        { k: 'merit', label: 'Score de mérite Maat (0-100)', type: 'number', min: 0, max: 100, step: '0.1', value: u.merit_score },
-        { k: 'cluster', label: 'Cluster affecté', value: u.cluster || '' },
-        { k: 'vehicle', label: 'Véhicule', value: u.vehicle || '' }
-      ], 'Enregistrer', async function (v) {
-        if (u.id === A.id && (v.role !== 'admin' || v.status !== 'ACTIVE')) return 'Vous ne pouvez pas retirer vos propres droits d\'administration.';
-        var caps = []; if (v.vector) caps.push('vector'); if (v.ambassador) caps.push('ambassador');
-        if (v.role === 'operator' && v.status === 'ACTIVE' && !caps.length) return 'Un opérateur actif doit avoir au moins une modalité (vecteur et/ou ambassadeur).';
-        var r = await M.sb.from('profiles').update({
-          role: v.role, capabilities: v.role === 'operator' ? caps : [], status: v.status,
-          grade: v.grade || null, merit_score: v.merit === '' ? null : v.merit, cluster: v.cluster || null, vehicle: v.vehicle || null
-        }).eq('id', u.id);
-        if (r.error) return r.error.message; M.toast('Permissions mises à jour.'); load(); badges();
-      });
     };
 
     box.appendChild(head('Utilisateurs & permissions', 'Attribuez les rôles. Un opérateur peut être vecteur, ambassadeur, ou les deux.', [
@@ -368,23 +407,57 @@
 
   /* ---------- Registre des pesées ---------- */
   async function vWeigh(box) {
-    var f = 'ALL', list = h('div', { class: 'card !p-2' }), data = [];
+    var f = 'ALL', tf = 'ALL', list = h('div', { class: 'card !p-2' }), data = [];
     var cl = (await M.sb.from('clients').select('id,company_name')).data || [], by = {};
     cl.forEach(function (c) { by[c.id] = c.company_name; });
-    var proof = async function (bucket, path) {
-      var u = await M.signed(bucket, path); if (!u) return M.toast('Photo introuvable.', 'err');
-      M.modal('Preuve photo — cadran de la balance', h('img', { src: u, alt: 'Photo du cadran', class: 'w-full rounded-lg' }));
+
+    var inspectBag = async function (c) {
+      var body = h('div', { class: 'space-y-3 font-mono text-xs' });
+      body.appendChild(h('div', { class: 'p-3 bg-black/60 rounded-xl border border-white/10 space-y-1' },
+        h('div', { class: 'flex justify-between' }, h('span', { class: 'text-slate-400', text: 'Sac QR :' }), h('strong', { class: 'text-cyberGreen', text: c.bag_qr_id })),
+        h('div', { class: 'flex justify-between' }, h('span', { class: 'text-slate-400', text: 'Client :' }), h('strong', { class: 'text-white', text: by[c.client_id] || '—' })),
+        h('div', { class: 'flex justify-between' }, h('span', { class: 'text-slate-400', text: 'Matière :' }), h('strong', { class: 'text-kemetGoldBright', text: c.material_type })),
+        h('div', { class: 'flex justify-between' }, h('span', { class: 'text-slate-400', text: 'Opérateur :' }), h('strong', { class: 'text-white', text: c.operator_email || '—' })),
+        h('div', { class: 'flex justify-between' }, h('span', { class: 'text-slate-400', text: 'GPS Location :' }), h('strong', { class: 'text-slate-200', text: c.gps_location || 'Non renseigné' }))
+      ));
+
+      if (c.blockchain_hash) {
+        body.appendChild(h('div', { class: 'p-2 bg-cyberGreen/10 rounded-lg border border-cyberGreen/30 text-[10px] space-y-1' },
+          h('span', { class: 'text-cyberGreen font-bold block', text: '🔗 Hash de Notarisation Blockchain :' }),
+          h('code', { class: 'text-white break-all block', text: c.blockchain_hash }),
+          btn('📋 Copier le Hash', function () {
+            navigator.clipboard.writeText(c.blockchain_hash);
+            M.toast('Hash copié dans le presse-papier.');
+          }, 'btn-o !py-1 !text-[9px]')
+        ));
+      }
+
+      if (c.scale_fault_photo || c.depot_fault_photo) {
+        var photos = h('div', { class: 'grid grid-cols-2 gap-2 pt-2' });
+        if (c.scale_fault_photo) {
+          var u1 = await M.signed('proofs', c.scale_fault_photo);
+          if (u1) photos.appendChild(h('div', null, h('span', { class: 'text-[9px] text-slate-400 block mb-1', text: 'Photo P1' }), h('img', { src: u1, class: 'rounded-lg border border-white/10' })));
+        }
+        if (c.depot_fault_photo) {
+          var u2 = await M.signed('proofs', c.depot_fault_photo);
+          if (u2) photos.appendChild(h('div', null, h('span', { class: 'text-[9px] text-slate-400 block mb-1', text: 'Photo P2' }), h('img', { src: u2, class: 'rounded-lg border border-white/10' })));
+        }
+        body.appendChild(photos);
+      }
+
+      M.modal('Inspection du sac — ' + c.bag_qr_id, body);
     };
 
     var load = async function () {
       var q = M.sb.from('collections').select('*').order('created_at', { ascending: false }).limit(300);
       if (f !== 'ALL') q = q.eq('status', f);
+      q = applyTimeFilter(q, 'created_at', tf);
       var r = await q; if (fail(r, 'Pesées')) return; data = r.data || [];
       var dl = function (c) { return c.weight_depot_kg ? Math.abs(c.weight_depot_kg - c.weight_collect_kg) / c.weight_collect_kg * 100 : null; };
       list.innerHTML = '';
       list.appendChild(tbl([
         { t: 'Date', f: function (c) { return M.fmt.dt(c.created_at); } },
-        { t: 'Sac', f: function (c) { return c.bag_qr_id; } },
+        { t: 'Sac', f: function (c) { return h('button', { type: 'button', class: 'font-bold text-cyberGreen hover:underline', text: c.bag_qr_id, onclick: function () { inspectBag(c); } }); } },
         { t: 'Client', f: function (c) { return by[c.client_id] || '—'; } },
         { t: 'Matériau', f: function (c) { return c.material_type; } },
         { t: 'P1 kg', f: function (c) { return M.fmt.n(c.weight_collect_kg, 2); } },
@@ -397,8 +470,7 @@
         { t: 'Ancrage', f: function (c) { return c.blockchain_hash ? c.blockchain_hash.slice(0, 12) + '…' : '—'; } },
         { t: 'Actions', f: function (c) {
           return h('div', { class: 'flex gap-1 flex-wrap' },
-            c.scale_fault_photo ? btn('📸 P1', function () { proof('proofs', c.scale_fault_photo); }) : null,
-            c.depot_fault_photo ? btn('📸 P2', function () { proof('proofs', c.depot_fault_photo); }) : null,
+            btn('🔍 Détail', function () { inspectBag(c); }),
             c.status === 'DISPUTED' ? btn('Valider', async function () {
               if (await M.confirm('Valider cet écart et ancrer la pesée ?')) {
                 var r = await M.sb.from('collections').update({ status: 'ANCHORED' }).eq('id', c.id);
@@ -410,6 +482,7 @@
     };
 
     box.appendChild(head('Registre des pesées', 'Double pesée collecte / dépôt. Un écart supérieur à 3 % place la pesée en litige.', [
+      sel(TIME_FILTERS, tf, function (v) { tf = v; load(); }),
       sel([['ALL', 'Toutes'], ['IN_TRANSIT', 'En transit'], ['ANCHORED', 'Ancrées'], ['DISPUTED', 'Litiges']], f, function (v) { f = v; load(); }),
       btn('⬇ CSV', function () {
         M.csv(data.map(function (c) {
@@ -422,7 +495,7 @@
 
   /* ---------- Contrats ambassadeurs ---------- */
   async function vContracts(box) {
-    var f = 'SUBMITTED', list = h('div', { class: 'card !p-2' });
+    var f = 'SUBMITTED', tf = 'ALL', list = h('div', { class: 'card !p-2' });
     var look = async function (c) {
       var u = await M.signed('contracts', c.photo_path); if (!u) return M.toast('Photo introuvable.', 'err');
       M.modal('Contrat — ' + c.company_name, h('img', { src: u, alt: 'Contrat signé', class: 'w-full rounded-lg' }), true);
@@ -431,6 +504,7 @@
     var load = async function () {
       var q = M.sb.from('ambassador_contracts').select('*').order('created_at', { ascending: false }).limit(300);
       if (f !== 'ALL') q = q.eq('status', f);
+      q = applyTimeFilter(q, 'created_at', tf);
       var r = await q; if (fail(r, 'Contrats')) return;
       list.innerHTML = '';
       list.appendChild(tbl([
@@ -465,6 +539,7 @@
     };
 
     box.appendChild(head('Contrats ambassadeurs', 'Contrôlez le contrat signé. La validation crée le client et crédite la prime que vous fixez.', [
+      sel(TIME_FILTERS, tf, function (v) { tf = v; load(); }),
       sel([['SUBMITTED', 'À valider'], ['VALIDATED', 'Validés'], ['REJECTED', 'Refusés'], ['ALL', 'Tous']], f, function (v) { f = v; load(); })
     ]));
     box.appendChild(list); await load();
@@ -528,13 +603,54 @@
           { k: 'label', label: 'Libellé', required: true },
           { k: 'amt', label: 'Montant (MAD, négatif pour un débit)', type: 'number', step: '0.01', required: true }
         ], 'Inscrire au registre', async function (v) {
+          if (!(await M.confirm('Inscrire le mouvement de ' + M.fmt.n(v.amt, 2) + ' MAD sur le wallet de cet opérateur ?'))) return;
           var r = await M.sb.from('wallet_ledger').insert([{ user_id: v.u, kind: v.kind, label: v.label, amount_mad: v.amt, notarized: true }]);
           if (r.error) return r.error.message;
-          M.toast('Mouvement inscrit.');
+          M.toast('Mouvement inscrit.'); load();
         });
       }, 'btn-g')
     ]));
     box.append(h('p', { class: 'lbl au', text: 'Demandes de règlement' }), pay, h('p', { class: 'lbl au', text: 'Reçus espèces' }), rec); await load();
+  }
+
+  /* ---------- Facteurs d'émission CO2 (NOUVELLE VUE) ---------- */
+  async function vFactors(box) {
+    var list = h('div', { class: 'card !p-2' });
+    var load = async function () {
+      var r = await M.sb.from('emission_factors').select('*').order('material_type');
+      if (fail(r, 'Facteurs CO₂')) return;
+      var rows = r.data || [];
+      list.innerHTML = '';
+      list.appendChild(tbl([
+        { t: 'Matériau', f: function (e) { return h('span', { class: 'font-bold text-cyberGreen', text: e.material_type }); } },
+        { t: 'Facteur (kg CO₂ / kg)', f: function (e) { return M.fmt.n(e.kg_co2_per_kg, 3); } },
+        { t: 'Actions', f: function (e) {
+          return btn('Modifier', function () {
+            M.form('Modifier facteur CO₂ — ' + e.material_type, [
+              { k: 'factor', label: 'kg CO₂ évité par kg recyclé', type: 'number', step: '0.001', min: 0, value: e.kg_co2_per_kg, required: true }
+            ], 'Enregistrer', async function (v) {
+              var res = await M.sb.from('emission_factors').upsert({ material_type: e.material_type, kg_co2_per_kg: v.factor });
+              if (res.error) return res.error.message;
+              M.toast('Facteur CO₂ mis à jour.'); load();
+            });
+          });
+        } }
+      ], rows, 'Aucun facteur CO₂ configuré.'));
+    };
+
+    box.appendChild(head('Facteurs d\'émission CO₂', 'Configurez le ratio de réduction d\'émission par matériau pour alimenter les compteurs ESG du Data Lake.', [
+      btn('+ Nouveau facteur', function () {
+        M.form('Nouveau facteur CO₂', [
+          { k: 'mat', label: 'Type de matériau (ex: PET_CLEAR)', required: true },
+          { k: 'factor', label: 'kg CO₂ évité par kg recyclé', type: 'number', step: '0.001', min: 0, value: 1.82, required: true }
+        ], 'Ajouter', async function (v) {
+          var res = await M.sb.from('emission_factors').upsert({ material_type: v.mat.trim().toUpperCase(), kg_co2_per_kg: v.factor });
+          if (res.error) return res.error.message;
+          M.toast('Facteur CO₂ ajouté.'); load();
+        });
+      }, 'btn-g')
+    ]));
+    box.appendChild(list); await load();
   }
 
   /* ---------- Journal d'audit ---------- */
