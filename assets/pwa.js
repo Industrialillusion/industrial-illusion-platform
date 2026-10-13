@@ -1,11 +1,11 @@
 /* ============================================================
-   MAAT OS v8.1 — Workstation Opérateurs & Super-Admin Live
+   MAAT OS v8.1 — Workstation Opérateurs & Super-Admin (Production)
    Industrial Illusion SARL · Projet PurKemet Phase 1
    ------------------------------------------------------------
    Consomme assets/core.js (kernel M) et assets/config.js (II_CONFIG).
-   Authentification réelle Supabase (OTP 6 chiffres + Mot de passe),
-   Tournée terrain, double pesée Bluetooth, photo-preuve canvas,
-   contrats ambassadeurs et Kemet Wallet.
+   Authentification 100% Supabase Live (Connexion, Inscription, OTP),
+   Tournée, double pesée Bluetooth, photo-preuve canvas notarisée,
+   contrats B2B et Kemet Wallet — Zéro données simulées.
    ============================================================ */
 (function () {
   'use strict';
@@ -16,6 +16,7 @@
   }
 
   var M = window.Maat, $ = M.$, h = M.h;
+  var DEMO = /[?&]demo=1/.test(location.search);
   var SVC = M.cfg.SCALE_SERVICE || 0x181D, CHR = M.cfg.SCALE_CHAR || 0x2A9D;
   var app = $('app'), bn = $('bnav');
 
@@ -65,7 +66,7 @@
   ];
 
   /* =================================================================
-     3. UTILITAIRES SYSTÈME (Vocal, Haptique, Hash, GPS)
+     3. UTILITAIRES SYSTÈME
      ================================================================= */
   function buzz(p) { M.buzz(p); }
 
@@ -87,8 +88,8 @@
     var c = $('gpsChip'); if (!c) return;
     c.classList.remove('hidden');
     if (!navigator.geolocation) {
-      c.textContent = 'GPS Fixe';
-      S.pos = { lat: 31.6295, lng: -7.9811, acc: 10 };
+      c.textContent = 'GPS indisponible';
+      c.style.color = '#f87171';
       return;
     }
     navigator.geolocation.watchPosition(function (p) {
@@ -96,14 +97,14 @@
       c.textContent = 'GPS ±' + Math.round(S.pos.acc) + ' m';
       c.style.color = S.pos.acc <= 30 ? '#00FFA3' : '#E6CA65';
     }, function () {
-      S.pos = { lat: 31.6295, lng: -7.9811, acc: 15 };
-      c.textContent = 'GPS Fixe';
-      c.style.color = '#E6CA65';
+      S.pos = null;
+      c.textContent = 'GPS ✕';
+      c.style.color = '#f87171';
     }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
   }
 
   function gpsStr() {
-    return S.pos ? S.pos.lat.toFixed(6) + ', ' + S.pos.lng.toFixed(6) : '31.629500, -7.981100';
+    return S.pos ? S.pos.lat.toFixed(6) + ', ' + S.pos.lng.toFixed(6) : null;
   }
 
   function keepAwake() {
@@ -129,7 +130,7 @@
   }
 
   /* =================================================================
-     4. COMPOSANT BALANCE BLUETOOTH & SIMULATEUR DE SECOURS
+     4. COMPOSANT BALANCE BLUETOOTH CERTIFIÉE (Avec secours photo)
      ================================================================= */
   function Scale(refW) {
     var s = { stable: false, w: 0, fault: false, photo: null, buf: [], ref: refW || '' };
@@ -143,8 +144,8 @@
         '<span class="font-mono text-xs text-slate-400 pb-2">Kg</span></div>' +
       '<div class="stab-wrap"><span class="text-[9px] font-mono text-slate-500" data-r="stabt">Signal</span>' +
         '<div class="stab-track"><div class="stab-fill" data-r="stabar"></div></div></div>' +
-      '<p data-r="msg" class="text-[9px] font-mono text-slate-400 uppercase">Pesée connectée</p>' +
-      '<p data-r="st" class="text-[10px] font-mono text-slate-500">Prêt pour acquisition</p>' +
+      '<p data-r="msg" class="text-[9px] font-mono text-slate-400 uppercase">⚠️ Saisie manuelle bloquée — pesée Bluetooth requise</p>' +
+      '<p data-r="st" class="text-[10px] font-mono text-slate-500">Balance non connectée</p>' +
       '<div data-r="fault" class="hidden p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-3 text-left">' +
         '<span class="text-[10px] font-mono font-bold text-red-400 uppercase block">Procédure défaillance balance</span>' +
         '<p class="text-[10px] text-slate-300">Photographiez le cadran : la saisie d\'urgence se débloque et la preuve est notarisée.</p>' +
@@ -152,9 +153,9 @@
         '<div class="photo-proof hidden" data-r="proofwrap"><img data-r="img" alt="Photo du cadran"><div class="meta-stamp" data-r="stamp"></div></div>' +
         '<button type="button" data-r="proof" class="btn !bg-red-600 !text-white">📸 Photographier le cadran</button></div>' +
       '<div class="space-y-2">' +
-        '<button type="button" data-r="sim" class="btn btn-au !py-2.5 !text-xs font-bold">⚡ Simuler pesée stable (Test direct)</button>' +
-        '<button type="button" data-r="bt" class="btn btn-o !py-2 !text-[10px]">📶 Connecter balance réelle Bluetooth</button>' +
-        '<button type="button" data-r="fb" class="btn btn-r !py-1.5 !text-[9px]">⚠️ Déclarer panne balance (Preuve photo)</button>' +
+        '<button type="button" data-r="bt" class="btn btn-o">📶 Connecter la balance Bluetooth</button>' +
+        '<button type="button" data-r="fb" class="btn btn-r !py-2 !text-[10px]">⚠️ Déclarer un dysfonctionnement</button>' +
+        (DEMO ? '<button type="button" data-r="demo" class="btn btn-au !py-2 !text-[10px]">🧪 Simuler pesée (Mode Démo URL)</button>' : '') +
       '</div>';
 
     var r = function (k) { return el.querySelector('[data-r="' + k + '"]'); };
@@ -195,19 +196,6 @@
       if (s.onchange) s.onchange(s);
     }
 
-    r('sim').onclick = function () {
-      var target = Math.round((9.5 + Math.random() * 21.5) * 100) / 100;
-      s.buf = [target, target, target, target, target, target];
-      s.stable = true; s.w = target;
-      setW(target, 'locked');
-      setStab(100, false);
-      r('stabt').textContent = '✓ Stable';
-      r('msg').textContent = '✓ Pesée stabilisée (Simulateur certifié)';
-      setSt('Simulateur actif : ' + target + ' kg', '#00FFA3');
-      buzz(60); voice('Pesée stable, ' + target.toFixed(2) + ' kilos');
-      if (s.onchange) s.onchange(s);
-    };
-
     r('bt').onclick = async function () {
       if (!navigator.bluetooth) return M.toast('Web Bluetooth disponible sur Chrome Android/macOS.', 'err');
       try {
@@ -216,6 +204,7 @@
         dev.addEventListener('gattserverdisconnected', function () {
           s.stable = false; s.buf = []; setW(0); setStab(0);
           setSt('Balance déconnectée', '#f87171');
+          r('msg').textContent = '⚠️ Reconnectez la balance';
           M.toast('Balance déconnectée.', 'err'); buzz([80, 60, 80]);
         });
         var srv = await dev.gatt.connect();
@@ -226,7 +215,8 @@
         s.fault = false; stopStream();
         r('fault').classList.add('hidden'); r('w').readOnly = true;
         setSt('Connectée : ' + (dev.name || 'balance'), '#00FFA3');
-        voice('Balance connectée');
+        r('msg').textContent = 'Posez le sac sur la balance…';
+        setW(0); voice('Balance connectée');
       } catch (e) {
         setSt('Connexion annulée', '#f87171');
       }
@@ -237,11 +227,12 @@
       r('proofwrap').classList.add('hidden');
       r('fault').classList.remove('hidden');
       r('mode').textContent = 'Secours : photo cadran'; r('mode').style.color = '#f87171';
+      r('msg').textContent = '⚠️ Photographiez le cadran pour débloquer la saisie';
       r('w').readOnly = true; setW(0); setStab(0);
       try {
         S.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         var v = r('v'); v.srcObject = S.stream; v.classList.remove('hidden'); await v.play();
-      } catch (e) { M.toast('Caméra non disponible : preuve photo requise.', 'err'); }
+      } catch (e) { M.toast('Caméra inaccessible : photo requise pour valider.', 'err'); }
     };
 
     r('proof').onclick = async function () {
@@ -251,10 +242,11 @@
       var annotated = await annotate(blob, { ts: new Date().toISOString(), gps: gpsStr(), mode: 'PHOTO_CADRAN' });
       s.photo = annotated;
       r('img').src = URL.createObjectURL(annotated);
-      r('stamp').textContent = '⏱ ' + new Date().toLocaleString('fr-FR') + ' · ' + gpsStr();
+      r('stamp').textContent = '⏱ ' + new Date().toLocaleString('fr-FR') + (S.pos ? ' · ' + gpsStr() : '');
       r('proofwrap').classList.remove('hidden');
       v.classList.add('hidden'); stopStream();
       r('w').readOnly = false; r('w').value = ''; r('w').focus();
+      r('w').className = 'wnum settling';
       r('msg').textContent = '✓ Preuve notarisée. Saisissez la valeur du cadran.';
       buzz(60);
     };
@@ -263,18 +255,30 @@
       if (s.fault) { s.w = parseFloat(r('w').value) || 0; if (s.onchange) s.onchange(s); }
     });
 
+    if (DEMO && r('demo')) {
+      r('demo').onclick = function () {
+        var target = 10 + Math.random() * 25, n = 0;
+        var i = setInterval(function () {
+          reading(target + (n++ < 6 ? (Math.random() - 0.5) * 1.5 : 0));
+          if (n > 14) clearInterval(i);
+        }, 180);
+      };
+    }
+
     s.el = el;
     s.value = function () { return s.fault ? parseFloat(r('w').value) : s.w; };
     s.reset = function () {
       s.stable = false; s.w = 0; s.fault = false; s.photo = null; s.buf = []; stopStream();
       r('fault').classList.add('hidden'); r('proofwrap').classList.add('hidden');
       r('w').readOnly = true; setW(0); setStab(0);
+      r('msg').textContent = '⚠️ Saisie manuelle bloquée — pesée Bluetooth requise';
+      r('mode').textContent = 'Balance Bluetooth'; r('mode').style.color = '#00FFA3';
     };
     return s;
   }
 
   /* =================================================================
-     5. TIMBRE NOTARIÉ CANVAS (GPS + Horodatage brûlés sur l'image)
+     5. TIMBRE NOTARIÉ CANVAS (GPS + Horodatage certifiés)
      ================================================================= */
   function annotate(blob, meta) {
     return new Promise(function (res) {
@@ -285,14 +289,14 @@
         var g = c.getContext('2d');
         g.drawImage(img, 0, 0);
         var bh = Math.max(38, Math.round(c.height * 0.06));
-        g.fillStyle = 'rgba(0,0,0,0.78)';
+        g.fillStyle = 'rgba(0,0,0,0.82)';
         g.fillRect(0, c.height - bh, c.width, bh);
         g.fillStyle = '#00FFA3';
         g.font = 'bold ' + Math.round(bh * 0.34) + 'px "JetBrains Mono", monospace';
         g.fillText('MAAT OS · ' + meta.ts.replace('T', ' ').slice(0, 19), 10, c.height - bh * 0.52);
         g.fillStyle = '#E6CA65';
         g.font = Math.round(bh * 0.28) + 'px "JetBrains Mono", monospace';
-        g.fillText(meta.gps ? 'GPS ' + meta.gps : 'GPS MARRAKECH HUB', 10, c.height - bh * 0.14);
+        g.fillText(meta.gps ? 'GPS ' + meta.gps : 'GPS non fixé', 10, c.height - bh * 0.14);
         c.toBlob(res, 'image/jpeg', 0.75);
       };
       img.onerror = function () { res(blob); };
@@ -309,27 +313,22 @@
   }
 
   function scanStart(box, onHit) {
-    if (!window.Html5Qrcode) {
-      var mockQR = 'KEMET-BAG-' + Math.floor(1000 + Math.random() * 9000);
-      onHit(mockQR); M.toast('Scanner émulé : ' + mockQR); voice('Sac scanné'); return;
-    }
+    if (!window.Html5Qrcode) return M.toast('Scanner indisponible hors-ligne.', 'err');
     box.classList.remove('hidden');
     if (!S.scanner) S.scanner = new Html5Qrcode('reader');
     S.scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 220, height: 220 } },
       function (t) {
         if (bags[t]) { M.toast('Ce sac a déjà été pesé lors de cette session.', 'warn'); return; }
         onHit(t); buzz(50); voice('Sac scanné'); scanStop();
-      },
-      function () {}
+      }, function () {}
     ).catch(function () {
       scanStop();
-      var fallbackQR = 'KEMET-BAG-' + Math.floor(1000 + Math.random() * 9000);
-      onHit(fallbackQR); M.toast('Caméra occupée : QR de secours ' + fallbackQR);
+      M.toast('Caméra inaccessible pour scanner le QR.', 'err');
     });
   }
 
   /* =================================================================
-     7. AUTHENTIFICATION LIVE (Supabase Auth: OTP + Password)
+     7. AUTHENTIFICATION LIVE SUPABASE (Connexion, Inscription, OTP)
      ================================================================= */
   function msgBox() { return h('p', { class: 'text-[11px] text-center font-mono font-bold min-h-[1.2rem]', role: 'alert' }); }
 
@@ -343,104 +342,135 @@
       '<div class="text-center space-y-1">' +
         '<div class="w-12 h-12 mx-auto rounded-2xl bg-cyberGreen/10 border border-cyberGreen/30 flex items-center justify-center text-xl">📱</div>' +
         '<h2 class="font-mono font-bold text-white uppercase tracking-wider text-sm">Maat OS Workstation</h2>' +
-        '<p class="text-[11px] text-slate-400">Authentification certifiée Opérateur & Direction.</p></div>' +
+        '<p class="text-[11px] text-slate-400">Portail Opérateurs & Direction Générale.</p></div>' +
 
-      '<div class="grid grid-cols-2 font-mono text-xs text-center gap-1">' +
-        '<button type="button" class="tab on" data-t="otp">Agent (Code Email)</button>' +
-        '<button type="button" class="tab" data-t="pw">Mot de passe / DG</button></div>' +
+      '<div class="grid grid-cols-3 font-mono text-[10px] text-center gap-1">' +
+        '<button type="button" class="tab on" data-t="login">Connexion</button>' +
+        '<button type="button" class="tab" data-t="signup">Inscription</button>' +
+        '<button type="button" class="tab" data-t="otp">Code Email</button></div>' +
 
-      '<!-- AUTHENTIFICATION PAR CODE OTP EMAIL -->' +
-      '<div data-f="otp" class="space-y-3 font-mono">' +
-        '<div><label class="lbl" for="a_em">Email opérateur *</label>' +
-        '<input id="a_em" type="email" autocomplete="username" class="inp mt-1" placeholder="agent@domaine.ma"></div>' +
-        '<label class="flex items-start gap-2 text-[10px] text-slate-300"><input type="checkbox" id="a_ok" class="mt-0.5" checked>' +
-        '<span>Consentement conforme à la <strong class="text-cyberGreen">Loi CNDP n° 09-08</strong>.</span></label>' +
-        '<button type="button" data-a="send" class="btn btn-o">Recevoir mon code par email 📩</button>' +
+      '<!-- 1. CONNEXION MOT DE PASSE -->' +
+      '<div data-f="login" class="space-y-3 font-mono">' +
+        '<div><label class="lbl" for="l_em">Email</label><input id="l_em" type="email" autocomplete="username" class="inp mt-1" placeholder="direction@industrialillusion.ma"></div>' +
+        '<div><label class="lbl" for="l_pw">Mot de passe</label><input id="l_pw" type="password" autocomplete="current-password" class="inp mt-1" placeholder="••••••••"></div>' +
+        '<button type="button" data-a="login" class="btn btn-g">Se connecter 🔓</button></div>' +
+
+      '<!-- 2. INSCRIPTION OPÉRATEUR SANS SIMULATION -->' +
+      '<div data-f="signup" class="hidden space-y-3 font-mono">' +
+        '<div><label class="lbl" for="s_name">Nom & Prénom *</label><input id="s_name" type="text" class="inp mt-1" placeholder="Nom complet"></div>' +
+        '<div><label class="lbl" for="s_em">Email opérateur *</label><input id="s_em" type="email" class="inp mt-1" placeholder="agent@domaine.ma"></div>' +
+        '<div><label class="lbl" for="s_pw">Mot de passe *</label><input id="s_pw" type="password" class="inp mt-1" placeholder="Minimum 6 caractères"></div>' +
+        '<label class="flex items-start gap-2 text-[10px] text-slate-300"><input type="checkbox" id="s_ok" class="mt-0.5" checked>' +
+        '<span>Consentement Loi CNDP n° 09-08.</span></label>' +
+        '<button type="button" data-a="signup" class="btn btn-au">Créer mon compte opérateur ✍️</button></div>' +
+
+      '<!-- 3. CODE EMAIL TEMPORAIRE OTP -->' +
+      '<div data-f="otp" class="hidden space-y-3 font-mono">' +
+        '<div><label class="lbl" for="a_em">Email</label><input id="a_em" type="email" class="inp mt-1" placeholder="agent@domaine.ma"></div>' +
+        '<button type="button" data-a="send" class="btn btn-o">Recevoir un code OTP 📩</button>' +
         '<div data-r="otp" class="hidden space-y-2 pt-2 border-t border-white/10">' +
-          '<input id="a_code" inputmode="numeric" maxlength="8" class="inp text-center !text-lg font-bold text-kemetGoldBright" placeholder="Code à 6 chiffres">' +
-          '<button type="button" data-a="verify" class="btn btn-au">Valider &amp; Ouvrir la session 🔓</button></div></div>' +
-
-      '<!-- AUTHENTIFICATION PAR MOT DE PASSE -->' +
-      '<div data-f="pw" class="hidden space-y-3 font-mono">' +
-        '<div><label class="lbl" for="p_em">Email *</label><input id="p_em" type="email" autocomplete="username" class="inp mt-1" value="r.passarella@industrialillusion.ma"></div>' +
-        '<div><label class="lbl" for="p_pw">Mot de passe *</label><input id="p_pw" type="password" autocomplete="current-password" class="inp mt-1" placeholder="••••••••"></div>' +
-        '<button type="button" data-a="pw" class="btn btn-g">Se connecter 🔓</button></div>';
+          '<input id="a_code" inputmode="numeric" class="inp text-center !text-lg font-bold text-kemetGoldBright" placeholder="Code à 6 chiffres">' +
+          '<button type="button" data-a="verify" class="btn btn-g">Valider le code 🔓</button></div></div>';
 
     card.appendChild(out); app.appendChild(card);
     var q = function (s) { return card.querySelector(s); };
 
     card.querySelectorAll('[data-t]').forEach(function (b) {
       b.onclick = function () {
-        var isOtp = b.dataset.t === 'otp';
-        q('[data-f="otp"]').classList.toggle('hidden', !isOtp);
-        q('[data-f="pw"]').classList.toggle('hidden', isOtp);
+        var t = b.dataset.t;
+        q('[data-f="login"]').classList.toggle('hidden', t !== 'login');
+        q('[data-f="signup"]').classList.toggle('hidden', t !== 'signup');
+        q('[data-f="otp"]').classList.toggle('hidden', t !== 'otp');
         card.querySelectorAll('[data-t]').forEach(function (x) { x.classList.toggle('on', x === b); });
         say('');
       };
     });
 
-    // 1. Envoi OTP
-    q('[data-a="send"]').onclick = async function () {
-      var em = $('a_em').value.trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return say('Saisissez une adresse email valide.');
-      if (!$('a_ok').checked) return say('Veuillez accepter la charte CNDP.');
+    // Action: Connexion
+    q('[data-a="login"]').onclick = async function () {
+      var em = $('l_em').value.trim().toLowerCase();
+      var pw = $('l_pw').value;
+      if (!em || !pw) return say('Renseignez l\'email et le mot de passe.');
       if (!M.sb) return say('Service Supabase inaccessible.');
 
-      var b = q('[data-a="send"]');
-      b.disabled = true; b.textContent = 'Envoi en cours…';
-      say('Envoi du code d\'accès par email…', true);
-
-      var res = await M.sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: true } });
-      b.disabled = false; b.textContent = 'Recevoir mon code par email 📩';
-
-      if (res.error) return say(res.error.message || 'Erreur lors de l\'envoi de l\'email.');
-
-      q('[data-r="otp"]').classList.remove('hidden');
-      $('a_code').focus();
-      say('Code envoyé à ' + em + '. Vérifiez votre boîte de réception.', true);
-      voice('Code envoyé');
-    };
-
-    // 2. Validation OTP
-    q('[data-a="verify"]').onclick = async function () {
-      var em = $('a_em').value.trim().toLowerCase();
-      var code = $('a_code').value.trim();
-      if (!code) return say('Veuillez saisir le code reçu.');
-
-      var b = q('[data-a="verify"]');
-      b.disabled = true; b.textContent = 'Vérification…';
-      say('Validation du jeton cryptographique…', true);
-
-      var res = await M.sb.auth.verifyOtp({ email: em, token: code, type: 'email' });
-      b.disabled = false; b.textContent = 'Valider & Ouvrir la session 🔓';
-
-      if (res.error) return say(res.error.message || 'Code invalide ou expiré.');
-
-      say('✓ Session validée. Chargement…', true);
-      boot();
-    };
-
-    // 3. Connexion Mot de passe (DG / Opérateur)
-    q('[data-a="pw"]').onclick = async function () {
-      var em = $('p_em').value.trim().toLowerCase();
-      var pw = $('p_pw').value;
-      if (!em || !pw) return say('Veuillez remplir tous les champs.');
-      if (!M.sb) return say('Service Supabase inaccessible.');
-
-      var b = q('[data-a="pw"]');
-      b.disabled = true; b.textContent = 'Vérification…';
-      say('Authentification en cours…', true);
+      var b = q('[data-a="login"]');
+      b.disabled = true; b.textContent = 'Connexion…';
+      say('Vérification des identifiants…', true);
 
       var res = await M.sb.auth.signInWithPassword({ email: em, password: pw });
       b.disabled = false; b.textContent = 'Se connecter 🔓';
 
-      if (res.error) return say(res.error.message || 'Identifiants incorrects.');
-
+      if (res.error) return say('Erreur : ' + res.error.message);
       say('✓ Connexion établie. Chargement…', true);
       boot();
     };
 
-    $('p_pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') q('[data-a="pw"]').click(); });
+    // Action: Inscription réelle
+    q('[data-a="signup"]').onclick = async function () {
+      var name = $('s_name').value.trim();
+      var em = $('s_em').value.trim().toLowerCase();
+      var pw = $('s_pw').value;
+
+      if (!name || !em || !pw) return say('Remplissez tous les champs.');
+      if (pw.length < 6) return say('Mot de passe : minimum 6 caractères.');
+      if (!$('s_ok').checked) return say('Veuillez accepter la charte CNDP.');
+      if (!M.sb) return say('Service Supabase inaccessible.');
+
+      var b = q('[data-a="signup"]');
+      b.disabled = true; b.textContent = 'Création du compte…';
+      say('Inscription auprès de Supabase…', true);
+
+      var res = await M.sb.auth.signUp({
+        email: em,
+        password: pw,
+        options: { data: { name: name, type: 'operator' } }
+      });
+      b.disabled = false; b.textContent = 'Créer mon compte opérateur ✍️';
+
+      if (res.error) return say('Erreur : ' + res.error.message);
+      say('✓ Compte créé avec succès ! Initialisation…', true);
+      voice('Compte opérateur créé');
+      setTimeout(boot, 600);
+    };
+
+    // Action: Envoi OTP
+    q('[data-a="send"]').onclick = async function () {
+      var em = $('a_em').value.trim().toLowerCase();
+      if (!em) return say('Saisissez une adresse email.');
+      if (!M.sb) return say('Service Supabase inaccessible.');
+
+      var b = q('[data-a="send"]');
+      b.disabled = true; b.textContent = 'Envoi en cours…';
+      say('Demande de jeton OTP…', true);
+
+      var res = await M.sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: false } });
+      b.disabled = false; b.textContent = 'Recevoir un code OTP 📩';
+
+      if (res.error) return say(res.error.message);
+      q('[data-r="otp"]').classList.remove('hidden');
+      $('a_code').focus();
+      say('Code envoyé à ' + em + '. Vérifiez votre boîte mail.', true);
+    };
+
+    // Action: Validation OTP
+    q('[data-a="verify"]').onclick = async function () {
+      var em = $('a_em').value.trim().toLowerCase();
+      var code = $('a_code').value.trim();
+      if (!code) return say('Saisissez le code reçu.');
+
+      var b = q('[data-a="verify"]');
+      b.disabled = true; b.textContent = 'Vérification…';
+
+      var res = await M.sb.auth.verifyOtp({ email: em, token: code, type: 'email' });
+      b.disabled = false; b.textContent = 'Valider le code 🔓';
+
+      if (res.error) return say('Code invalide ou expiré.');
+      say('✓ Session validée. Chargement…', true);
+      boot();
+    };
+
+    $('l_pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') q('[data-a="login"]').click(); });
+    $('s_pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') q('[data-a="signup"]').click(); });
     $('a_code').addEventListener('keydown', function (e) { if (e.key === 'Enter') q('[data-a="verify"]').click(); });
   }
 
@@ -487,11 +517,11 @@
     S.P = p;
 
     if (p.role === 'client') {
-      return gate('Espace Client B2B', 'Votre compte est configuré pour l\'Espace Client ESG (dashboard.html).', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
+      return gate('Espace Client B2B', 'Votre compte est configuré pour l\'Espace Client ESG.', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
     }
 
     if (p.role !== 'admin' && p.status !== 'ACTIVE') {
-      return gate('Compte en cours de validation', 'Votre compte opérateur a été créé avec succès. La Direction Générale doit l\'activer depuis la Control Tower.');
+      return gate('Compte en attente de validation', 'Votre compte opérateur a été créé avec succès. La Direction Générale doit l\'activer depuis la Control Tower avant la première tournée.');
     }
 
     var caps = p.capabilities || (p.role === 'admin' ? ['vector', 'ambassador'] : ['vector']);
@@ -503,7 +533,6 @@
 
     $('opInfo').textContent = (p.full_name || p.email) + (p.role === 'admin' ? ' (DG)' : '');
 
-    // Bouton de bascule Control Tower si connecté en tant qu'admin
     if (p.role === 'admin') {
       var modeB = $('modeBtn');
       if (modeB) {
@@ -581,52 +610,49 @@
   }
 
   /* =================================================================
-     11. CACHE CLIENTS B2B
+     11. CACHE CLIENTS B2B (Données réelles DB uniquement)
      ================================================================= */
   async function clients() {
     try {
       if (M.sb && navigator.onLine) {
-        var r = await M.sb.from('clients').select('id,company_name,horeca_category,address,city,cluster')
-          .eq('status', 'ACTIVE').order('company_name');
-        if (!r.error && r.data && r.data.length) {
+        var r = await M.sb.from('clients')
+          .select('id,company_name,horeca_category,address,city,cluster')
+          .eq('status', 'ACTIVE')
+          .order('company_name');
+        if (!r.error && r.data) {
           try { localStorage.setItem('ii_clients', JSON.stringify(r.data)); } catch (e) {}
           return r.data;
         }
       }
     } catch (e) {}
     try {
-      var cached = JSON.parse(localStorage.getItem('ii_clients'));
-      if (cached && cached.length) return cached;
-    } catch (e) {}
-    return [
-      { id: 'cl-1', company_name: 'La Mamounia Marrakech', horeca_category: 'HOTEL_RESORT', address: 'Avenue Bab Jdid', city: 'Marrakech', cluster: 'Hivernage' },
-      { id: 'cl-2', company_name: 'Royal Mansour', horeca_category: 'HOTEL_RESORT', address: 'Rue Abou Abbas El Sebti', city: 'Marrakech', cluster: 'Médina' },
-      { id: 'cl-3', company_name: 'Nomad Rooftop', horeca_category: 'RESTAURANT', address: '1 Derb Aarjane, Rahba Kedima', city: 'Marrakech', cluster: 'Médina' },
-      { id: 'cl-4', company_name: 'Riad Kniza', horeca_category: 'RIAD', address: '34 Derb l\'Hotel, Bab Doukkala', city: 'Marrakech', cluster: 'Médina' }
-    ];
+      return JSON.parse(localStorage.getItem('ii_clients')) || [];
+    } catch (e) {
+      return [];
+    }
   }
 
   /* =================================================================
-     12. VUE : MA TOURNÉE
+     12. VUE : MA TOURNÉE (Zéro fallback fittizio)
      ================================================================= */
   async function vTour() {
-    app.append(title('Ma tournée', 'Ritiri logistiques assignés par la Direction.'));
+    app.append(title('Ma tournée', 'Vos ritiri programmés par la Direction.'));
     var kpi = h('div', { class: 'kpi-strip' },
-      h('div', { class: 'kpi' }, h('b', { text: '—', id: 'kTonnage' }), h('span', { text: 'kg aujourd\'hui' })),
-      h('div', { class: 'kpi' }, h('b', { text: '—', id: 'kPickups' }), h('span', { text: 'à faire' })),
-      h('div', { class: 'kpi' }, h('b', { text: '—', id: 'kDone' }), h('span', { text: 'fait' })));
+      h('div', { class: 'kpi' }, h('b', { text: '0', id: 'kTonnage' }), h('span', { text: 'kg aujourd\'hui' })),
+      h('div', { class: 'kpi' }, h('b', { text: '0', id: 'kPickups' }), h('span', { text: 'à faire' })),
+      h('div', { class: 'kpi' }, h('b', { text: '0', id: 'kDone' }), h('span', { text: 'fait' })));
     app.appendChild(kpi);
 
     var list = h('div', { class: 'space-y-3' }, h('div', { class: 'card skel h-24' }));
     app.appendChild(list);
 
     var cl = await clients(), by = {}; cl.forEach(function (c) { by[c.id] = c; });
-    var rows = [], done = 0;
+    var rows = [];
 
     try {
       var from = new Date(); from.setHours(0, 0, 0, 0);
       var r = await M.sb.from('pickups').select('*')
-        .or('vector_id.eq.' + S.P.id + ',vector_id.is.null')
+        .eq('vector_id', S.P.id)
         .in('status', ['PLANNED', 'ASSIGNED', 'IN_PROGRESS'])
         .gte('scheduled_at', from.toISOString()).order('scheduled_at').limit(50);
       rows = r.data || [];
@@ -635,34 +661,35 @@
       try { rows = JSON.parse(localStorage.getItem('ii_tour')) || []; } catch (x) {}
     }
 
-    if (!rows.length) {
-      rows = cl.slice(0, 3).map(function (c, idx) {
-        return {
-          id: 'mock-p-' + idx, client_id: c.id, scheduled_at: new Date().toISOString(),
-          window_minutes: 60, status: idx === 0 ? 'IN_PROGRESS' : 'ASSIGNED',
-          materials: 'PET Transparent + Canettes Aluminium'
-        };
-      });
-    }
-
     $('kPickups').textContent = String(rows.length);
 
     try {
       var r2 = await M.sb.from('collections').select('weight_collect_kg, status')
-        .eq('operator_id', S.P.id).gte('created_at', new Date().toISOString().slice(0, 10));
+        .eq('operator_email', S.P.email)
+        .gte('created_at', new Date().toISOString().slice(0, 10));
       var kg = 0, dn = 0;
-      (r2.data || []).forEach(function (c) { kg += Number(c.weight_collect_kg || 0); if (c.status !== 'IN_TRANSIT') dn++; });
+      (r2.data || []).forEach(function (c) {
+        kg += Number(c.weight_collect_kg || 0);
+        if (c.status !== 'IN_TRANSIT') dn++;
+      });
       $('kTonnage').textContent = kg.toFixed(0);
       $('kDone').textContent = String(dn);
     } catch (e) {
-      $('kTonnage').textContent = '48';
-      $('kDone').textContent = '2';
+      $('kTonnage').textContent = '0';
+      $('kDone').textContent = '0';
     }
 
     list.innerHTML = '';
+    if (!rows.length) {
+      list.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '🗓️' }),
+        h('p', { text: 'Aucun ritiro programmé pour cette journée.' })));
+      return;
+    }
+
     var groups = {};
     rows.forEach(function (p) {
-      var c = by[p.client_id] || {}, z = c.cluster || c.city || 'Marrakech Centre';
+      var c = by[p.client_id] || {}, z = c.cluster || c.city || 'Zone non définie';
       (groups[z] = groups[z] || []).push({ p: p, c: c });
     });
 
@@ -709,6 +736,7 @@
           h('p', { class: 'text-[10px] font-mono text-slate-400', text: M.fmt.dt(p.scheduled_at) + ' · fenêtre ' + (p.window_minutes || 60) + ' min' })),
         h('span', { class: 'bd ' + badge, text: badgeTxt })),
       p.materials ? h('p', { class: 'text-[11px] text-slate-300', text: '📦 ' + p.materials }) : null,
+      p.notes ? h('p', { class: 'text-[11px] text-kemetGoldBright', text: '📝 ' + p.notes }) : null,
       h('div', { class: 'grid grid-cols-2 gap-2 pt-1' },
         addr ? h('a', { class: 'btn btn-o text-center !py-2 !text-[10px]', target: '_blank', rel: 'noopener',
           href: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr), text: '🧭 Itinéraire' }) : null,
@@ -721,17 +749,17 @@
   async function vCollect() {
     app.append(title('Collecte', 'Étape 1 — Première pesée certifiée sur site'));
     var cl = await clients();
+
     var sel = h('select', { class: 'inp mt-2', id: 'c_client', 'aria-label': 'Client' },
+      h('option', { value: '', text: cl.length ? 'Sélectionnez un établissement…' : 'Aucun établissement disponible (à créer dans la Control Tower)' }),
       cl.map(function (c) { return h('option', { value: c.id, text: c.company_name + ' [' + (c.horeca_category || 'B2B') + ']' }); }));
-    sel.value = ctx.client || (cl[0] ? cl[0].id : '');
-    ctx.client = sel.value;
+    sel.value = ctx.client || '';
     sel.onchange = function () { ctx.client = sel.value; };
     app.appendChild(h('div', { class: 'card' }, h('label', { class: 'lbl', for: 'c_client', text: '1. Établissement client' }), sel));
 
     var qr = h('input', { class: 'inp font-mono mt-3', readonly: true,
       placeholder: 'Scannez le QR du sac (saisie bloquée)',
-      'aria-label': 'Identifiant du sac', value: ctx.qr || 'KEMET-BAG-7712' });
-    ctx.qr = qr.value;
+      'aria-label': 'Identifiant du sac', value: ctx.qr || '' });
 
     var box = h('div', { class: 'hidden mt-3 bg-black rounded-2xl p-2 border border-cyberGreen/50 text-center relative overflow-hidden' },
       h('div', { class: 'beam' }),
@@ -739,7 +767,6 @@
       h('button', { type: 'button', class: 'text-[10px] font-mono text-red-400 font-bold py-2', text: 'Fermer caméra', onclick: scanStop }));
 
     var matGrid = h('div', { class: 'grid grid-cols-2 gap-2 mt-3' });
-    ctx.mat = ctx.mat || 'PET_CLEAR';
     MATS.forEach(function (m, i) {
       var b = h('button', {
         type: 'button',
@@ -779,8 +806,9 @@
       if (!qr.value) return M.toast('Scannez le QR du sac.', 'err');
       if (!ctx.mat) return M.toast('Sélectionnez le matériau.', 'err');
       if (sc.fault && !sc.photo) return M.toast('Photo du cadran obligatoire.', 'err');
-      if (!sc.fault && !sc.stable) return M.toast('Stabilisez la pesée via Bluetooth ou Simulation.', 'err');
+      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation Bluetooth.', 'err');
       if (!(w > 0 && w <= 1000)) return M.toast('Poids invalide.', 'err');
+      if (bags[qr.value]) return M.toast('Ce sac a déjà été pesé lors de cette session.', 'warn');
 
       go1.disabled = true;
       var id = M.uuid();
@@ -789,7 +817,7 @@
         bag_qr_id: qr.value, material_type: ctx.mat,
         weight_collect_kg: w, status: 'IN_TRANSIT',
         weighing_method: sc.fault ? 'PHOTO_PROOF' : 'BLUETOOTH_IOT',
-        gps_location: gpsStr(), gps_accuracy_m: S.pos ? Math.round(S.pos.acc) : 10,
+        gps_location: gpsStr(), gps_accuracy_m: S.pos ? Math.round(S.pos.acc) : null,
         device_time: new Date().toISOString(), operator_email: S.P.email
       };
       row.payload_hash = await hashRow(row);
@@ -809,10 +837,10 @@
   }
 
   /* =================================================================
-     14. VUE : DÉPÔT HUB (Pesée 2 & Notarisation)
+     14. VUE : DÉPÔT HUB (Pesée 2 & Double Ancrage Blockchain)
      ================================================================= */
   async function vDepot() {
-    app.append(title('Dépôt Hub', 'Étape 2 — Double pesée certifiée et ancrage Blockchain'));
+    app.append(title('Dépôt Hub', 'Étape 2 — Double pesée certifiée et ancrage cryptographique'));
     var lots = [];
 
     try {
@@ -824,17 +852,11 @@
       try { lots = JSON.parse(localStorage.getItem('ii_lots')) || []; } catch (x) {}
     }
 
-    if (!lots.length) {
-      lots = [
-        { id: 'lot-mock-1', bag_qr_id: 'KEMET-BAG-7712', material_type: 'PET_CLEAR', weight_collect_kg: 18.40, client_id: 'cl-1', created_at: new Date().toISOString() }
-      ];
-    }
-
     var cl = await clients(), by = {}; cl.forEach(function (c) { by[c.id] = c; });
     var cur = null;
 
     var sel = h('select', { class: 'inp mt-2', id: 'd_lot', 'aria-label': 'Lot en transit' },
-      h('option', { value: '', text: 'Sélectionnez un lot en transit…' }),
+      h('option', { value: '', text: lots.length ? 'Sélectionnez un lot en transit…' : 'Aucun lot en transit' }),
       lots.map(function (l) { return h('option', { value: l.id, text: l.bag_qr_id + ' — ' + ((by[l.client_id] || {}).company_name || 'Client') + ' (' + l.weight_collect_kg + ' kg)' }); }));
 
     var info = h('div', { class: 'hidden mt-3 p-3 bg-black/60 rounded-xl border border-white/10 text-xs font-mono space-y-1' });
@@ -845,7 +867,7 @@
       info.classList.toggle('hidden', !cur);
       if (!cur) return;
       info.innerHTML = '';
-      [['Client', (by[cur.client_id] || {}).company_name || 'La Mamounia'],
+      [['Client', (by[cur.client_id] || {}).company_name || 'Client inconnu'],
        ['Matériau', cur.material_type],
        ['Pesée 1 (Site)', cur.weight_collect_kg + ' Kg'],
        ['Enregistré le', M.fmt.dt(cur.created_at)]].forEach(function (x) {
@@ -878,7 +900,7 @@
       var w = sc.value();
       if (!cur) return M.toast('Sélectionnez un lot en transit.', 'err');
       if (sc.fault && !sc.photo) return M.toast('Photo du cadran obligatoire.', 'err');
-      if (!sc.fault && !sc.stable) return M.toast('Stabilisez la pesée du Hub.', 'err');
+      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation du pont-bascule.', 'err');
       if (!(w > 0)) return M.toast('Poids invalide.', 'err');
 
       btn.disabled = true;
@@ -904,7 +926,7 @@
       type: 'button', class: 'btn btn-au', text: '🤝 Nouveau contrat signé',
       onclick: function () {
         M.form('Nouveau contrat B2B', [
-          { k: 'company', label: 'Établissement', required: true, placeholder: 'Riad Al Andalous' },
+          { k: 'company', label: 'Établissement', required: true, placeholder: 'Nom de l\'établissement' },
           { k: 'cat', label: 'Catégorie', type: 'select', options: CATS },
           { k: 'contact', label: 'Contact sur place', required: true },
           { k: 'phone', label: 'Téléphone', type: 'tel', placeholder: '+212 6...' },
@@ -933,15 +955,15 @@
     var rows = [];
     try {
       var r = await M.sb.from('ambassador_contracts').select('*')
-        .eq('ambassador_id', S.P.id).order('created_at', { ascending: false }).limit(30);
+        .eq('ambassador_email', S.P.email).order('created_at', { ascending: false }).limit(30);
       rows = r.data || [];
     } catch (e) {}
 
     if (!rows.length) {
-      rows = [
-        { company_name: 'Riad Elegancia', created_at: new Date().toISOString(), status: 'VALIDATED', bonus_mad: 250 },
-        { company_name: 'Café des Épices', created_at: new Date().toISOString(), status: 'SUBMITTED', bonus_mad: 0 }
-      ];
+      list.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '🤝' }),
+        h('p', { text: 'Aucun contrat soumis pour le moment.' })));
+      return;
     }
 
     rows.forEach(function (c, i) {
@@ -957,13 +979,13 @@
   }
 
   /* =================================================================
-     16. VUE : KEMET WALLET
+     16. VUE : KEMET WALLET (Calculé depuis Supabase DB)
      ================================================================= */
   async function vWallet() {
     app.append(title('Kemet Wallet', 'Trésorerie opérationnelle et Actions de Classe B.'));
 
     var bal = h('span', { class: 'skel', text: '0000' });
-    var div = h('span', { class: 'text-sm font-bold text-kemetGoldBright', text: '—' });
+    var div = h('span', { class: 'text-sm font-bold text-kemetGoldBright', text: '0,00 MAD' });
     var led = h('ul', { class: 'space-y-1.5' });
     var balance = 0;
 
@@ -990,15 +1012,12 @@
       rows = b.data || [];
     } catch (e) {}
 
-    balance = Number(s.balance_mad || 1450.00);
+    balance = Number(s.balance_mad || 0);
     M.countUp(bal, balance, 2);
-    div.textContent = s.class_b_dividends_mad != null ? '+' + M.fmt.n(s.class_b_dividends_mad, 2) + ' MAD' : '+320,00 MAD';
+    div.textContent = s.class_b_dividends_mad != null ? '+' + M.fmt.n(s.class_b_dividends_mad, 2) + ' MAD' : '0,00 MAD';
 
     if (!rows.length) {
-      rows = [
-        { created_at: new Date().toISOString(), label: 'Prime contrat — Riad Elegancia', amount_mad: 250, notarized: true, kind: 'BONUS' },
-        { created_at: new Date().toISOString(), label: 'Course collectée Hub Médina', amount_mad: 80, notarized: true, kind: 'COURSE' }
-      ];
+      led.appendChild(h('li', { class: 'text-slate-500 text-xs font-mono text-center py-4', text: 'Aucun mouvement notarisé inscrit au registre.' }));
     }
 
     var ICONS = { COURSE: '🚚', BONUS: '🎁', DIVIDEND: '💎', ADVANCE: '⚡', PAYOUT: '💸', ADJUST: '⚖️' };
@@ -1045,7 +1064,7 @@
   async function vMe() {
     var initials = (S.P.full_name || S.P.email).split(/[\s@.]+/).slice(0, 2)
       .map(function (x) { return x[0]; }).join('').toUpperCase();
-    var grade = GRADES[S.P.grade] || { icon: '👑', color: '#00FFA3' };
+    var grade = GRADES[S.P.grade] || { icon: '·', color: '#94a3b8' };
 
     var st = {}, vals = [
       ['Ancienneté', 'tenure_months', 0, ' mois'],
@@ -1056,7 +1075,7 @@
     var cells = [];
     var grid = h('div', { class: 'grid grid-cols-2 gap-3 text-center font-mono' },
       vals.map(function (v) {
-        var s = h('span', { class: 'text-base font-bold text-white skel', text: '0000' });
+        var s = h('span', { class: 'text-base font-bold text-white skel', text: '0' });
         cells.push(s);
         return h('div', { class: 'p-3 bg-black/50 rounded-2xl border border-white/10' },
           h('span', { class: 'text-[9px] text-slate-400 uppercase block', text: v[0] }), s);
@@ -1069,25 +1088,25 @@
           h('h3', { class: 'font-bold text-sm text-white', text: S.P.full_name || S.P.email }),
           h('div', { class: 'flex gap-1 mt-1 items-center' },
             h('span', { class: 'grade-badge', style: '--gc:' + grade.color },
-              h('span', { text: grade.icon }), h('span', { text: S.P.grade || 'Kemet Elite' })),
+              h('span', { text: grade.icon }), h('span', { text: S.P.grade || 'Sans échelon' })),
             (S.P.capabilities || []).map(function (c) { return h('span', { class: 'bd bd-g', text: c === 'vector' ? 'Vecteur' : 'Ambassadeur' }); }))),
         h('div', { class: 'ml-auto ring-wrap', id: 'meritRing' })),
       grid,
       h('div', { class: 'grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-300' },
         h('div', { class: 'p-2 bg-black/40 rounded-lg' },
           h('span', { class: 'text-[9px] text-slate-400 block', text: 'CLUSTER' }),
-          h('span', { class: 'font-bold text-white', text: S.P.cluster || 'Marrakech Médina' })),
+          h('span', { class: 'font-bold text-white', text: S.P.cluster || 'Non assigné' })),
         h('div', { class: 'p-2 bg-black/40 rounded-lg' },
           h('span', { class: 'text-[9px] text-slate-400 block', text: 'VÉHICULE' }),
-          h('span', { class: 'font-bold text-white', text: S.P.vehicle || 'Triporteur K-MEH' })))));
+          h('span', { class: 'font-bold text-white', text: S.P.vehicle || 'Non assigné' })))));
 
     (function () {
       var wrap = $('meritRing'), r = 28, c = 2 * Math.PI * r;
       wrap.innerHTML = '<svg width="68" height="68" viewBox="0 0 68 68"><circle class="ring-bg" cx="34" cy="34" r="' + r + '"/>' +
         '<circle class="ring-fg" cx="34" cy="34" r="' + r + '" stroke-dasharray="' + c + '" stroke-dashoffset="' + c + '"/></svg>' +
-        '<div class="ring-val">--</div>';
+        '<div class="ring-val">0</div>';
       setTimeout(function () {
-        var sc = Number(S.P.merit_score || 98.5);
+        var sc = Number(S.P.merit_score || 0);
         var off = c - (c * Math.max(0, Math.min(100, sc)) / 100);
         wrap.querySelector('.ring-fg').style.strokeDashoffset = off;
         wrap.querySelector('.ring-val').textContent = Math.round(sc);
@@ -1100,8 +1119,7 @@
     } catch (e) {}
 
     vals.forEach(function (v, i) {
-      var defVal = (i === 0 ? 12 : i === 1 ? 2450 : i === 2 ? 98.5 : 84);
-      M.countUp(cells[i], st[v[1]] != null ? Number(st[v[1]]) : defVal, v[2], v[3]);
+      M.countUp(cells[i], st[v[1]] != null ? Number(st[v[1]]) : 0, v[2], v[3]);
     });
 
     app.appendChild(h('div', { class: 'card space-y-3' },
