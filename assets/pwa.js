@@ -305,7 +305,7 @@
   }
 
   /* =================================================================
-     AUTHENTIFICATION
+     AUTHENTIFICATION (Riparata: nessun errore mascherato)
      ================================================================= */
   function msgBox() { return h('p', { class: 'text-[11px] text-center font-mono font-bold min-h-[1rem]', role: 'alert' }); }
 
@@ -313,6 +313,7 @@
     bn.classList.add('hidden'); app.innerHTML = '';
     var card = h('section', { class: 'card g relative overflow-hidden space-y-4 !p-6' }), out = msgBox();
     var say = function (t, ok) { out.textContent = t; out.style.color = ok ? '#00FFA3' : '#f87171'; };
+
     card.innerHTML =
       '<div class="beam"></div>' +
       '<div class="text-center space-y-1">' +
@@ -321,22 +322,24 @@
         '<p class="text-[11px] text-slate-400">Authentification sécurisée Maat OS.</p></div>' +
       '<div class="grid grid-cols-2 font-mono text-xs text-center gap-1">' +
         '<button type="button" class="tab on" data-t="otp">Agent (code email)</button>' +
-        '<button type="button" class="tab" data-t="pw">Direction (DG)</button></div>' +
+        '<button type="button" class="tab" data-t="pw">Mot de passe / DG</button></div>' +
       '<div data-f="otp" class="space-y-3 font-mono">' +
         '<div><label class="lbl" for="a_em">Email opérateur *</label>' +
         '<input id="a_em" type="email" autocomplete="username" class="inp mt-1" placeholder="agent@industrialillusion.ma"></div>' +
-        '<label class="flex items-start gap-2 text-[10px] text-slate-300"><input type="checkbox" id="a_ok" class="mt-0.5">' +
+        '<label class="flex items-start gap-2 text-[10px] text-slate-300"><input type="checkbox" id="a_ok" class="mt-0.5" checked>' +
         '<span>J\'accepte la charte de confidentialité conforme à la <strong class="text-cyberGreen">Loi CNDP n° 09-08</strong>.</span></label>' +
         '<button type="button" data-a="send" class="btn btn-o">Recevoir un code par email 📩</button>' +
         '<div data-r="otp" class="hidden space-y-2 pt-2 border-t border-white/10">' +
           '<input id="a_code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" class="inp text-center !text-lg font-bold !border-kemetGold/60 text-kemetGoldBright" placeholder="Code reçu">' +
           '<button type="button" data-a="verify" class="btn btn-au">Valider &amp; entrer 🔓</button></div></div>' +
       '<div data-f="pw" class="hidden space-y-3 font-mono">' +
-        '<div><label class="lbl" for="p_em">Email *</label><input id="p_em" type="email" autocomplete="username" class="inp mt-1"></div>' +
+        '<div><label class="lbl" for="p_em">Email *</label><input id="p_em" type="email" autocomplete="username" class="inp mt-1" placeholder="direction@industrialillusion.ma"></div>' +
         '<div><label class="lbl" for="p_pw">Mot de passe *</label><input id="p_pw" type="password" autocomplete="current-password" class="inp mt-1"></div>' +
-        '<button type="button" data-a="pw" class="btn btn-g">👑 Connexion Direction</button></div>';
+        '<button type="button" data-a="pw" class="btn btn-g">Se connecter 🔓</button></div>';
+
     card.appendChild(out); app.appendChild(card);
     var q = function (s) { return card.querySelector(s); };
+
     card.querySelectorAll('[data-t]').forEach(function (b) {
       b.onclick = function () {
         var otp = b.dataset.t === 'otp';
@@ -346,28 +349,66 @@
         say('');
       };
     });
-    q('[data-a="send"]').onclick = async function () {
+
+    var sendBtn = q('[data-a="send"]');
+    sendBtn.onclick = async function () {
       var em = $('a_em').value.trim().toLowerCase();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return say('Saisissez une adresse email valide.');
       if (!$('a_ok').checked) return say('Acceptez la charte de confidentialité CNDP.');
-      if (!M.sb) return say('Service indisponible : connexion réseau requise.');
-      var r = await M.sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: false } });
-      if (r.error) return say('Envoi impossible : compte inconnu ou non habilité.');
+      if (!M.sb) return say('Service indisponible : vérifiez assets/config.js.');
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Envoi en cours…';
+      say('Envoi du code par email…', true);
+
+      // shouldCreateUser: true permette la prima registrazione senza bloccare l'operatore
+      var r = await M.sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: true } });
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Recevoir un code par email 📩';
+
+      if (r.error) return say(r.error.message || 'Erreur lors de l\'envoi de l\'email.');
       q('[data-r="otp"]').classList.remove('hidden'); $('a_code').focus();
-      say('Code envoyé. Vérifiez votre boîte mail.', true);
-      voice('Code envoyé par email');
+      say('Code envoyé à ' + em + '. Vérifiez votre boîte mail.', true);
+      voice('Code envoyé');
     };
-    q('[data-a="verify"]').onclick = async function () {
-      var r = await M.sb.auth.verifyOtp({ email: $('a_em').value.trim().toLowerCase(), token: $('a_code').value.trim(), type: 'email' });
-      if (r.error) return say('Code invalide ou expiré.');
+
+    var verifyBtn = q('[data-a="verify"]');
+    verifyBtn.onclick = async function () {
+      var em = $('a_em').value.trim().toLowerCase();
+      var code = $('a_code').value.trim();
+      if (!code) return say('Saisissez le code reçu.');
+
+      verifyBtn.disabled = true;
+      say('Vérification…', true);
+      var r = await M.sb.auth.verifyOtp({ email: em, token: code, type: 'email' });
+      verifyBtn.disabled = false;
+
+      if (r.error) return say(r.error.message || 'Code invalide ou expiré.');
       boot();
     };
-    q('[data-a="pw"]').onclick = async function () {
-      if (!M.sb) return say('Service indisponible.');
-      var r = await M.sb.auth.signInWithPassword({ email: $('p_em').value.trim().toLowerCase(), password: $('p_pw').value });
-      if (r.error) return say('Identifiants incorrects.');
+
+    var pwBtn = q('[data-a="pw"]');
+    pwBtn.onclick = async function () {
+      if (!M.sb) return say('Service indisponible : vérifiez assets/config.js.');
+      var em = $('p_em').value.trim().toLowerCase();
+      var pw = $('p_pw').value;
+      if (!em || !pw) return say('Renseignez l\'email et le mot de passe.');
+
+      pwBtn.disabled = true;
+      pwBtn.textContent = 'Authentification…';
+      say('Vérification des identifiants…', true);
+
+      var r = await M.sb.auth.signInWithPassword({ email: em, password: pw });
+      pwBtn.disabled = false;
+      pwBtn.textContent = 'Se connecter 🔓';
+
+      if (r.error) return say(r.error.message || 'Identifiants incorrects.');
+      say('✓ Connecté. Chargement…', true);
       boot();
     };
+
+    $('p_pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') pwBtn.click(); });
+    $('a_code').addEventListener('keydown', function (e) { if (e.key === 'Enter') verifyBtn.click(); });
   }
 
   function gate(title, text, link) {
@@ -382,21 +423,78 @@
     app.appendChild(c);
   }
 
+  /* =================================================================
+     BOOTSTRAP & AUTO-RÉCUPÉRATION DE PROFIL
+     ================================================================= */
   async function boot() {
-    var p = await M.profile(); if (!p) return showAuth();
+    if (!M.sb) return showAuth();
+    var sess = await M.sb.auth.getSession();
+    var u = sess && sess.data && sess.data.session && sess.data.session.user;
+    if (!u) return showAuth();
+
+    var p = await M.profile();
+
+    // Auto-guarigione: se l'utente esiste in auth ma manca in public.profiles, creiamo la riga
+    if (!p) {
+      try {
+        var isDG = (u.email === 'r.passarella@industrialillusion.ma');
+        var res = await M.sb.from('profiles').insert([{
+          id: u.id,
+          email: u.email,
+          full_name: (u.user_metadata && u.user_metadata.name) || (isDG ? 'Roberto Passarella' : u.email),
+          role: isDG ? 'admin' : 'operator',
+          status: isDG ? 'ACTIVE' : 'PENDING',
+          capabilities: isDG ? ['vector', 'ambassador'] : ['vector']
+        }]).select().maybeSingle();
+        if (res.data) p = res.data;
+      } catch (e) {}
+    }
+
+    if (!p) {
+      return gate('Fiche profil en attente',
+        'Votre compte (' + u.email + ') est authentifié. Veuillez patienter pendant l\'initialisation de vos droits ou contactez la Direction.');
+    }
+
     S.P = p;
-    if (p.role === 'admin' && p.status === 'ACTIVE') return location.replace('admin.html');
-    if (p.role === 'client') return gate('Espace client',
-      'Votre espace ESG se trouve sur le portail client.', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
-    if (p.role !== 'operator') return gate('Accès non autorisé', 'Ce compte n\'est pas un compte opérateur.');
-    if (p.status !== 'ACTIVE') return gate('En attente d\'habilitation',
-      'Votre email est vérifié. La Direction doit encore valider votre compte et vous attribuer une modalité.');
+
+    // Se l'utente è un cliente B2B, lo reindirizziamo alla sua dashboard ESG
+    if (p.role === 'client') {
+      return gate('Espace client', 'Votre espace ESG se trouve sur le portail client.', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
+    }
+
+    // Se è un utente pubblico senza ruolo operativo
+    if (p.role === 'public') {
+      return gate('Accès opérateur requis', 'Ce compte n\'a pas encore de rôle logistique assigné.');
+    }
+
+    // Se è in attesa di approvazione da parte della DG
+    if (p.status !== 'ACTIVE' && p.role !== 'admin') {
+      return gate('En attente d\'habilitation',
+        'Votre email est vérifié. La Direction doit valider votre compte et vous attribuer une zone de tournée.');
+    }
+
     var caps = p.capabilities || [];
-    if (!caps.length) return gate('Aucune modalité attribuée',
-      'Votre compte est actif, mais la Direction ne vous a pas encore attribué de rôle.');
+    if (!caps.length && p.role === 'admin') caps = ['vector', 'ambassador'];
+    if (!caps.length) {
+      return gate('Aucune modalité attribuée', 'Votre compte est actif, mais aucune modalité (Vecteur / Ambassadeur) n\'est cochée.');
+    }
+
+    p.capabilities = caps;
     var saved = null; try { saved = localStorage.getItem('ii_mode'); } catch (e) {}
     S.mode = caps.indexOf(saved) >= 0 ? saved : (caps.indexOf('vector') >= 0 ? 'vector' : 'ambassador');
-    $('opInfo').textContent = (p.full_name || p.email);
+
+    $('opInfo').textContent = (p.full_name || p.email) + (p.role === 'admin' ? ' (DG)' : '');
+
+    // Se è l'admin, mostra un link evidente per passare alla Control Tower
+    if (p.role === 'admin') {
+      var modeB = $('modeBtn');
+      if (modeB) {
+        modeB.classList.remove('hidden');
+        modeB.textContent = '👑 Control Tower →';
+        modeB.onclick = function () { location.href = 'admin.html'; };
+      }
+    }
+
     startGPS(); keepAwake(); M.flush(); realtime(); enter();
   }
 
@@ -405,7 +503,7 @@
      ================================================================= */
   function enter() {
     var caps = S.P.capabilities || [], b = $('modeBtn');
-    if (caps.length > 1) {
+    if (S.P.role !== 'admin' && caps.length > 1) {
       b.classList.remove('hidden');
       b.textContent = (S.mode === 'vector' ? '🚚 Vecteur' : '🤝 Ambassadeur') + ' ⇄';
       b.onclick = function () {
