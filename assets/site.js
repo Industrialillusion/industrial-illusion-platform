@@ -1,12 +1,12 @@
 /* ============================================================
-   MAAT OS — Portal Kernel & Smart Router (site.js v8.2.1)
+   MAAT OS — Portal Kernel & Smart Router (site.js v8.3)
    Industrial Illusion SARL · Projet PurKemet
    ------------------------------------------------------------
    Responsabilités :
-     - Smistamento utente post-login in base al ruolo
-     - Modale universale di accesso (email + password)
-     - Aggancio form pubblici (audit B2B, candidature vettori)
-     - Contatori live Data Lake (live_impact_summary)
+     - Navigation directe sans blocage vers pwa.html et admin.html
+     - Modale universelle de connexion pour l'Espace Client ESG
+     - Formulaires publics (Audit 0 MAD B2B & Candidatures)
+     - Calcul live des compteurs Data Lake (depuis public.collections)
    ------------------------------------------------------------
    Dépendances : assets/core.js (window.Maat), assets/config.js
    ============================================================ */
@@ -47,7 +47,9 @@
       if (loginModal) { loginModal.close(); loginModal = null; }
       routingLock = true;
       M.toast('Redirection vers votre espace…');
-      setTimeout(function () { window.location.href = target; }, 250);
+      setTimeout(function () { window.location.href = target; }, 200);
+      // Timeout di sicurezza per sbloccare routingLock se il cambio pagina fallisce
+      setTimeout(function () { routingLock = false; }, 4000);
       return;
     }
 
@@ -151,14 +153,14 @@
       submitBtn,
       errBox,
       h('p', { class: 'text-[10px] text-slate-500 text-center pt-2 border-t border-white/10',
-        text: 'Nouveau compte ? L\'inscription se fait via le formulaire d\'audit B2B ou auprès de la Direction.' })
+        text: 'Accès réservé aux partenaires B2B, Opérateurs et Direction.' })
     );
 
     loginModal = M.modal('Connexion Espace Membre', body);
   }
 
   /* ==========================================================
-     3. FORM PUBBLICI (Supporta sia FormData che ID legacy)
+     3. FORM PUBBLICI (FormData + fallback ID)
      ========================================================== */
   function extractField(form, names) {
     var fd = new FormData(form);
@@ -218,8 +220,11 @@
         return;
       }
 
-      var res = await M.sb.from('vectors').insert([{
-        full_name: name, email: email, phone: phone, vehicle: vehicle, status: 'NEW'
+      // Inserisce la nota candidatura tracciabile
+      var res = await M.sb.from('field_notes').insert([{
+        operator_email: email || 'candidat@externe',
+        note_type: 'GENERAL',
+        content: 'CANDIDATURE VECTEUR : ' + name + ' | Tél: ' + phone + ' | Véhicule: ' + (vehicle || 'Aucun')
       }]);
       if (res.error) return M.toast('Erreur : ' + res.error.message, 'err');
       M.toast('Candidature reçue par la Direction.');
@@ -229,24 +234,33 @@
   }
 
   /* ==========================================================
-     4. CONTATORI LIVE DATA LAKE
+     4. CONTATORI LIVE DATA LAKE (Query reale senza viste fittizie)
      ========================================================== */
   async function syncLiveCounters() {
     if (!M.sb) return;
     try {
-      var res = await M.sb.from('live_impact_summary').select('*').maybeSingle();
-      if (!res.data) return;
+      var res = await M.sb.from('collections')
+        .select('weight_depot_kg')
+        .eq('status', 'ANCHORED');
+
+      var totalKg = 0;
+      (res.data || []).forEach(function (r) {
+        totalKg += Number(r.weight_depot_kg || 0);
+      });
+      var totalCo2 = totalKg * 1.82;
+
       var kgEl = document.querySelector('#liveKg, [data-kpi="kg"]');
       var co2El = document.querySelector('#liveCo2, [data-kpi="co2"]');
-      if (kgEl) M.countUp(kgEl, Number(res.data.matiere_valorisee_kg || 0), 0);
-      if (co2El) M.countUp(co2El, Number(res.data.co2_evite_kg || 0), 0);
+      if (kgEl) M.countUp(kgEl, totalKg, 0);
+      if (co2El) M.countUp(co2El, totalCo2, 0);
     } catch (e) {}
   }
 
   /* ==========================================================
-     5. INIT
+     5. INIT: Navigazione Diretta per PWA & Admin
      ========================================================== */
   document.addEventListener('DOMContentLoaded', function () {
+    // 5.1 I pulsanti di login aprono la modale di accesso
     document.querySelectorAll(
       '#loginBtn, .login-btn, [data-action="login"], [href="#login"]'
     ).forEach(function (btn) {
@@ -256,19 +270,21 @@
       });
     });
 
-    document.querySelectorAll(
-      'a[href="pwa.html"], a[href="admin.html"], a[href="dashboard.html"]'
-    ).forEach(function (link) {
+    // 5.2 Se un utente clicca sulla Dashboard B2B senza essere loggato, apre il login
+    document.querySelectorAll('a[href="dashboard.html"]').forEach(function (link) {
       link.addEventListener('click', async function (e) {
-        var target = link.getAttribute('href');
-        if (!M.sb) { window.location.href = target; return; }
+        if (!M.sb) return;
         var s = await M.sb.auth.getSession();
         var has = s && s.data && s.data.session && s.data.session.user;
-        if (has) { window.location.href = target; return; }
-        e.preventDefault();
-        openUniversalLogin();
+        if (!has) {
+          e.preventDefault();
+          openUniversalLogin();
+        }
       });
     });
+
+    // NOTA: pwa.html e admin.html rimangono 100% liberi da intercettori
+    // per permettere l'atterraggio diretto e l'installazione PWA.
 
     bindAuditForm();
     bindCareerForm();
