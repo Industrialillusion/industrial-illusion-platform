@@ -1,0 +1,26 @@
+{
+  "name": "Maat OS — Workstation",
+  "short_name": "Maat OS",
+  "description": "Station de pesée et de traçabilité certifiée — Projet PurKemet",
+  "start_url": "./pwa.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A0D10",
+  "theme_color": "#0A0D10",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
