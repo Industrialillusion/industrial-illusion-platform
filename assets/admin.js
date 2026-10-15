@@ -1,3 +1,14 @@
+/* ============================================================
+   MAAT OS v8.1 — Control Tower (Direction Générale)
+   Industrial Illusion SARL · Projet PurKemet Phase 1
+   ------------------------------------------------------------
+   Architecture consolidée :
+     - Moteur vocal d'accessibilité (Whitepaper §4.5.4)
+     - RPC PostgreSQL sécurisés (validate_contract, settle_payout, admin_delete_user)
+     - Debounce des compteurs de badge (scheduleBadges)
+     - Titres de navigation dynamiques & conformité ARIA
+     - Casts stricts Number(...) pour l'intégrité DB
+   ============================================================ */
 (function () {
   'use strict';
   if (!window.Maat) {
@@ -10,9 +21,9 @@
   var VIEWS = [
     ['overview', '📊', 'Vue d\'ensemble'],
     ['users', '👥', 'Utilisateurs & permissions'],
-    ['clients', '🏨', 'Clients'],
+    ['clients', '🏨', 'Clients B2B'],
     ['pickups', '🗓️', 'Ritiri programmés'],
-    ['weigh', '⚖️', 'Pesées'],
+    ['weigh', '⚖️', 'Registre des pesées'],
     ['contracts', '🤝', 'Contrats ambassadeurs'],
     ['cash', '💰', 'Caisse & virements'],
     ['factors', '🌱', 'Facteurs CO₂'],
@@ -53,7 +64,7 @@
   };
   var badge = function (s) { return h('span', { class: 'bd ' + (BD[s] || 'bd-n'), text: s }); };
 
-  /* ---------- Feedback vocal (accessibilité non-lecteurs, whitepaper §4.5.4) ---------- */
+  /* ---------- Feedback vocal (accessibilité terrain & direction, §4.5.4) ---------- */
   function voice(text) {
     try {
       if (!('speechSynthesis' in window)) return;
@@ -63,7 +74,7 @@
     } catch (e) {}
   }
 
-  /* ---------- Briques d'interface ---------- */
+  /* ---------- Briques d'interface réutilisables ---------- */
   function tbl(cols, rows, empty) {
     if (!rows.length) return h('div', { class: 'p-6 text-center text-xs font-mono text-slate-500', text: empty || 'Aucune donnée.' });
     return h('div', { class: 'overflow-x-auto' }, h('table', { class: 'tbl' },
@@ -79,7 +90,7 @@
 
   function head(t, sub, actions) {
     return h('div', { class: 'flex flex-wrap justify-between items-end gap-3 mb-4' },
-      h('div', null, h('h2', { class: 'font-kemetTitle text-xl font-black', text: t }), sub ? h('p', { class: 'text-[11px] text-slate-400', text: sub }) : null),
+      h('div', null, h('h2', { class: 'font-kemetTitle text-xl font-black text-white', text: t }), sub ? h('p', { class: 'text-[11px] text-slate-400', text: sub }) : null),
       h('div', { class: 'flex flex-wrap gap-2 items-center' }, actions || []));
   }
 
@@ -104,7 +115,7 @@
     return query.gte(col, now.toISOString());
   }
 
-  /* ---------- Authentification ---------- */
+  /* ---------- Authentification autonome Control Tower ---------- */
   function login() {
     $('out').classList.add('hidden'); root.innerHTML = '';
     var out = h('p', { class: 'text-[11px] text-center font-mono font-bold min-h-[1rem]', role: 'alert' }), say = function (t) { out.textContent = t; out.style.color = '#f87171'; };
@@ -129,7 +140,7 @@
     A = p; $('who').textContent = (p.full_name || p.email) + ' — Direction Générale'; $('out').classList.remove('hidden'); $('out').onclick = M.signOut; shell(); M.flush(); live();
   }
 
-  /* ---------- Structure ---------- */
+  /* ---------- Structure & Navigation dynamique ---------- */
   function shell() {
     root.innerHTML = '';
     var nav = h('nav', { class: 'flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 lg:sticky lg:top-20', 'aria-label': 'Modules' }, VIEWS.map(function (v) {
@@ -150,7 +161,6 @@
 
   async function open(v) {
     cur = v;
-    /* Met à jour le titre du navigateur selon la vue courante. */
     var lbl = (VIEWS.filter(function (x) { return x[0] === v; })[0] || [])[2] || 'Control Tower';
     document.title = 'Maat OS · ' + lbl + ' — Control Tower';
     document.querySelectorAll('[data-v]').forEach(function (b) {
@@ -165,16 +175,26 @@
     el.innerHTML = ''; el.appendChild(box); scheduleBadges();
   }
 
-  /* Badges débouncés : évite les 4 COUNT répétés lors de navigations rapides. */
+  /* Badges débouncés à 800ms pour préserver le quota de requêtes DB */
   function scheduleBadges() {
     clearTimeout(badgeTimer);
     badgeTimer = setTimeout(badges, 800);
   }
+
   async function badges() {
     var c = function (t, f) { return M.sb.from(t).select('id', { count: 'exact', head: true }).match(f); };
     try {
-      var r = await Promise.all([c('profiles', { status: 'PENDING' }), c('ambassador_contracts', { status: 'SUBMITTED' }), c('payout_requests', { status: 'PENDING' }), c('collections', { status: 'DISPUTED' })]);
-      [['users', r[0]], ['contracts', r[1]], ['cash', r[2]], ['weigh', r[3]]].forEach(function (x) { var b = document.querySelector('[data-b="' + x[0] + '"]'); if (b) { b.textContent = x[1].count || 0; b.classList.toggle('hidden', !x[1].count); } });
+      var r = await Promise.all([
+        c('profiles', { status: 'PENDING' }),
+        c('ambassador_contracts', { status: 'SUBMITTED' }),
+        c('payout_requests', { status: 'PENDING' }),
+        c('collections', { status: 'DISPUTED' }),
+        c('clients', { status: 'PROSPECT' })
+      ]);
+      [['users', r[0]], ['contracts', r[1]], ['cash', r[2]], ['weigh', r[3]], ['clients', r[4]]].forEach(function (x) {
+        var b = document.querySelector('[data-b="' + x[0] + '"]');
+        if (b) { b.textContent = x[1].count || 0; b.classList.toggle('hidden', !x[1].count); }
+      });
     } catch (e) {}
   }
 
@@ -194,7 +214,7 @@
     }); chan.subscribe();
   }
 
-  /* ---------- Vue d'ensemble ---------- */
+  /* ---------- 1. Vue d'ensemble ---------- */
   async function vOverview(box) {
     var head0 = function (t) { return M.sb.from(t.t).select('id', { count: 'exact', head: true }).match(t.f || {}); };
     var today = new Date(); today.setHours(0, 0, 0, 0); var tm = new Date(today); tm.setDate(tm.getDate() + 1);
@@ -247,7 +267,7 @@
       ], res[4].data || [], 'Aucune activité.')));
   }
 
-  /* ---------- Utilisateurs & permissions ---------- */
+  /* ---------- 2. Utilisateurs & permissions ---------- */
   async function vUsers(box) {
     var f = { role: 'ALL', status: 'ALL', q: '' }, list = h('div', { class: 'card !p-2' });
 
@@ -292,14 +312,27 @@
         { t: 'Grade / score', f: function (u) { return (u.grade || '—') + ' / ' + (u.merit_score != null ? u.merit_score : '—'); } },
         { t: 'Actions', f: function (u) {
           return h('div', { class: 'flex gap-1 flex-wrap' },
-            u.status !== 'ACTIVE' ? btn('Approuver', function () { perm(u, 'ACTIVE'); }, 'btn-g') : null,
-            u.status !== 'REJECTED' && u.id !== A.id ? btn('Bloquer', async function () {
-              if (await M.confirm('Bloquer ' + u.email + ' ?')) {
-                var r = await M.sb.from('profiles').update({ status: 'REJECTED' }).eq('id', u.id);
-                if (!fail(r)) { M.toast('Compte bloqué.'); load(); scheduleBadges(); }
+            u.status === 'PENDING' ? btn('Activer (Onboarding)', function () {
+              M.form('Activer Nouvel Opérateur — ' + (u.full_name || u.email), [
+                { k: 'cap', label: 'Modalités opérationnelles', type: 'select', options: [['vector', 'Vecteur Logistique'], ['ambassador', 'Ambassadeur B2B'], ['vector,ambassador', 'Les deux (Kemet Elite)']] },
+                { k: 'cluster', label: 'Cluster d\'affectation', placeholder: 'Ex: Marrakech Médina', required: true },
+                { k: 'vehicle', label: 'Véhicule assigné', placeholder: 'Ex: Triporteur K-MEH 01' }
+              ], 'Activer le compte', async function (v) {
+                var caps = v.cap.split(',');
+                var res = await M.sb.from('profiles').update({ status: 'ACTIVE', capabilities: caps, cluster: v.cluster, vehicle: v.vehicle || null }).eq('id', u.id);
+                if (res.error) return res.error.message;
+                M.toast('Opérateur activé.'); voice('Opérateur activé'); load(); scheduleBadges();
+              });
+            }, 'btn-g') : null,
+            btn('Permissions', function () { perm(u); }),
+            u.id !== A.id ? btn('Supprimer', async function () {
+              if (await M.confirm('⚠️ Supprimer définitivement ' + u.email + ' ? Suppression irréversible conforme Loi CNDP 09-08.')) {
+                var res = await M.sb.rpc('admin_delete_user', { p_user_id: u.id });
+                if (res.error) return M.toast('Erreur suppression : ' + res.error.message, 'err');
+                M.toast('Utilisateur supprimé du registre.'); voice('Utilisateur supprimé'); load(); scheduleBadges();
               }
-            }, 'btn-r') : null,
-            btn('Permissions', function () { perm(u); }));
+            }, 'btn-r') : null
+          );
         } }
       ], rows, 'Aucun utilisateur.'));
     };
@@ -312,7 +345,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Clients & prospects ---------- */
+  /* ---------- 3. Clients & prospects ---------- */
   async function vClients(box) {
     var f = 'ACTIVE', list = h('div', { class: 'card !p-2' }), data = [];
     var form = function (c) {
@@ -334,7 +367,7 @@
           cluster: v.cluster || null, status: v.status
         };
         var r = e ? await M.sb.from('clients').update(row).eq('id', c.id) : await M.sb.from('clients').insert([row]);
-        if (r.error) return r.error.message; M.toast(e ? 'Client mis à jour.' : 'Client créé.'); load();
+        if (r.error) return r.error.message; M.toast(e ? 'Client mis à jour.' : 'Client créé.'); load(); scheduleBadges();
       }, true);
     };
 
@@ -347,25 +380,30 @@
         { t: 'Établissement', f: function (c) { return h('div', null, h('div', { class: 'font-bold text-white', text: c.company_name }), h('div', { class: 'text-[10px] text-slate-400', text: [c.contact_name, c.phone].filter(Boolean).join(' · ') })); } },
         { t: 'Catégorie', f: function (c) { return c.horeca_category; } },
         { t: 'Adresse', f: function (c) { return [c.address, c.city].filter(Boolean).join(', '); } },
-        { t: 'Cluster', f: function (c) { return c.cluster; } },
+        { t: 'Cluster', f: function (c) { return c.cluster || '—'; } },
         { t: 'Statut', f: function (c) { return badge(c.status); } },
         { t: 'Reçu le', f: function (c) { return M.fmt.d(c.created_at); } },
         { t: 'Actions', f: function (c) {
           return h('div', { class: 'flex gap-1 flex-wrap' },
-            c.status === 'PROSPECT' ? btn('Activer', async function () {
-              var r = await M.sb.from('clients').update({ status: 'ACTIVE' }).eq('id', c.id);
-              if (!fail(r)) { M.toast('Prospect activé.'); load(); }
+            c.status === 'PROSPECT' ? btn('Convertir en Client', function () {
+              M.form('Onboarding Client — ' + c.company_name, [
+                { k: 'cluster', label: 'Cluster logistique d\'affectation', placeholder: 'Ex: Hivernage', required: true }
+              ], 'Activer le client', async function (v) {
+                var res = await M.sb.from('clients').update({ status: 'ACTIVE', cluster: v.cluster }).eq('id', c.id);
+                if (res.error) return res.error.message;
+                M.toast('Prospect converti en client actif.'); voice('Client activé'); load(); scheduleBadges();
+              });
             }, 'btn-g') : null,
             btn('Modifier', function () { form(c); }));
         } }
       ], data, 'Aucun client dans cette vue.'));
     };
 
-    box.appendChild(head('Clients', 'Les demandes d\'audit du site arrivent ici en « Prospect ». Activez-les pour les rendre visibles aux vecteurs.', [
+    box.appendChild(head('Clients & prospects', 'Les demandes d\'audit du site arrivent ici en « Prospect ». Activez-les pour les rendre visibles aux vecteurs.', [
       sel([['ACTIVE', 'Actifs'], ['PROSPECT', 'Prospects (site)'], ['PAUSED', 'En pause'], ['ALL', 'Tous']], f, function (v) { f = v; load(); }),
       btn('⬇ CSV', function () {
         M.csv(data.map(function (c) {
-          return { societe: c.company_name, categorie: c.horeca_category, contact: c.contact_name, telephone: c.phone, email: c.email, adresse: c.address, ville: c.city, statut: c.status };
+          return { societe: c.company_name, categorie: c.horeca_category, contact: c.contact_name, telephone: c.phone, email: c.email, adresse: c.address, ville: c.city, cluster: c.cluster, statut: c.status };
         }), 'clients');
       }),
       btn('+ Ajouter un client', function () { form(); }, 'btn-g')
@@ -373,7 +411,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Ritiri programmés ---------- */
+  /* ---------- 4. Ritiri programmés ---------- */
   async function vPickups(box) {
     var cl = (await M.sb.from('clients').select('id,company_name').eq('status', 'ACTIVE').order('company_name')).data || [], by = {};
     cl.forEach(function (c) { by[c.id] = c.company_name; });
@@ -440,7 +478,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Registre des pesées ---------- */
+  /* ---------- 5. Registre des pesées ---------- */
   async function vWeigh(box) {
     var f = 'ALL', tf = 'ALL', list = h('div', { class: 'card !p-2' }), data = [];
     var cl = (await M.sb.from('clients').select('id,company_name')).data || [], by = {};
@@ -496,7 +534,7 @@
         { t: 'Client', f: function (c) { return by[c.client_id] || '—'; } },
         { t: 'Matériau', f: function (c) { return c.material_type; } },
         { t: 'P1 kg', f: function (c) { return M.fmt.n(c.weight_collect_kg, 2); } },
-        { t: 'P2 kg', f: function (c) { return M.fmt.n(c.weight_depot_kg, 2); } },
+        { t: 'P2 kg', f: function (c) { return c.weight_depot_kg ? M.fmt.n(c.weight_depot_kg, 2) : '—'; } },
         { t: 'Écart', f: function (c) {
           var d = dl(c); return d == null ? '—' : h('span', { class: d > 3 ? 'text-red-400 font-bold' : 'text-cyberGreen', text: d.toFixed(1) + ' %' });
         } },
@@ -528,7 +566,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Contrats ambassadeurs ---------- */
+  /* ---------- 6. Contrats ambassadeurs ---------- */
   async function vContracts(box) {
     var f = 'SUBMITTED', tf = 'ALL', list = h('div', { class: 'card !p-2' });
     var look = async function (c) {
@@ -553,7 +591,7 @@
             c.photo_path ? btn('👁 Contrat', function () { look(c); }) : null,
             c.status === 'SUBMITTED' ? btn('Valider', function () {
               M.form('Valider — ' + c.company_name, [
-                { k: 'bonus', label: 'Prime ambassadeur (MAD) — fixée par la Direction', type: 'number', min: 0, step: '0.01', value: 0, required: true }
+                { k: 'bonus', label: 'Prime ambassadeur (MAD) — fixée par la Direction', type: 'number', min: 0, step: '0.01', value: 250, required: true }
               ], 'Valider, créer le client & créditer', async function (v) {
                 var r = await M.sb.rpc('validate_contract', { p_id: c.id, p_bonus: Number(v.bonus) });
                 if (r.error) return r.error.message;
@@ -582,7 +620,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Caisse, virements, wallet ---------- */
+  /* ---------- 7. Caisse, virements, wallet ---------- */
   async function vCash(box) {
     var pay = h('div', { class: 'card !p-2' }), rec = h('div', { class: 'card !p-2' });
     var us = (await M.sb.from('profiles').select('id,full_name,email').eq('role', 'operator').eq('status', 'ACTIVE')).data || [], un = {};
@@ -654,7 +692,7 @@
     box.append(h('p', { class: 'lbl au', text: 'Demandes de règlement' }), pay, h('p', { class: 'lbl au', text: 'Reçus espèces' }), rec); await load();
   }
 
-  /* ---------- Facteurs d'émission CO2 ---------- */
+  /* ---------- 8. Facteurs d'émission CO2 ---------- */
   async function vFactors(box) {
     var list = h('div', { class: 'card !p-2' });
     var load = async function () {
@@ -694,7 +732,7 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- Journal d'audit ---------- */
+  /* ---------- 9. Journal d'audit ---------- */
   async function vAudit(box) {
     var r = await M.sb.from('audit_log').select('*').order('id', { ascending: false }).limit(150);
     if (fail(r, 'Audit')) return;
