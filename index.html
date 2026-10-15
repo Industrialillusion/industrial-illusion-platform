@@ -27,7 +27,7 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · v6.3 — Design System Local
+   INDUSTRIAL ILLUSION · v6.4 — Design System Local
    ============================================================ */
 html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
@@ -44,9 +44,6 @@ body {
   margin: 0;
 }
 
-/* ============================================================
-   FIX v6.3 : CTA INLINE — pulsanti in contesti flex-row
-   ============================================================ */
 .cta-inline {
   width: auto !important;
   max-width: 100%;
@@ -60,9 +57,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* ============================================================
-   ANIMATION 1 : Barre de progression du scroll
-   ============================================================ */
 #scrollProgress {
   position: fixed;
   top: 0; left: 0;
@@ -74,9 +68,6 @@ body {
   transition: width .1s ease-out;
 }
 
-/* ============================================================
-   ANIMATION 2 : Particules flottantes en arrière-plan
-   ============================================================ */
 #particleField {
   position: fixed;
   inset: 0;
@@ -99,9 +90,6 @@ body {
   to { transform: translateY(-100vh) scale(.3); opacity: 0; }
 }
 
-/* ============================================================
-   ANIMATION 3 : Glitch sur titre hover
-   ============================================================ */
 .glitch-hover {
   display: inline-block;
   position: relative;
@@ -118,9 +106,6 @@ body {
   80% { text-shadow: -2px 0 #00FFA3, 2px 0 #C5A059; transform: translate(1px, 1px); }
 }
 
-/* ============================================================
-   ANIMATION 4 : Effet machine à écrire sur le badge hero
-   ============================================================ */
 .typewriter {
   overflow: hidden;
   white-space: nowrap;
@@ -128,31 +113,16 @@ body {
   animation: typing 3.5s steps(50) 1s both, blinkCursor 0.8s step-end infinite 4.5s;
   max-width: 100%;
 }
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-@keyframes blinkCursor {
-  0%, 50% { border-color: #00FFA3; }
-  51%, 100% { border-color: transparent; }
-}
+@keyframes typing { from { width: 0; } to { width: 100%; } }
+@keyframes blinkCursor { 0%, 50% { border-color: #00FFA3; } 51%, 100% { border-color: transparent; } }
 
-/* ============================================================
-   ANIMATION 5 : Reveal on scroll
-   ============================================================ */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ============================================================
-   ANIMATION 6 : Tilt 3D sur les cartes pilier
-   ============================================================ */
 .tilt-card {
   transform-style: preserve-3d;
   transition: transform .3s ease-out, box-shadow .3s;
@@ -162,14 +132,8 @@ body {
   box-shadow: 0 30px 60px -15px rgba(0, 255, 163, .35);
 }
 
-/* ============================================================
-   ANIMATION 7 : Pulse rings autour du bouton contact
-   ============================================================ */
-.pulse-ring {
-  position: relative;
-}
-.pulse-ring::before,
-.pulse-ring::after {
+.pulse-ring { position: relative; }
+.pulse-ring::before, .pulse-ring::after {
   content: '';
   position: absolute;
   inset: -6px;
@@ -178,22 +142,10 @@ body {
   animation: pulseRing 2.4s cubic-bezier(.2,.8,.2,1) infinite;
   pointer-events: none;
 }
-.pulse-ring::after {
-  animation-delay: 1.2s;
-}
-@keyframes pulseRing {
-  0% { transform: scale(1); opacity: .8; }
-  100% { transform: scale(1.35); opacity: 0; }
-}
+.pulse-ring::after { animation-delay: 1.2s; }
+@keyframes pulseRing { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.35); opacity: 0; } }
 
-/* ============================================================
-   ANIMATION 8 : Light sweep sur titres de section
-   ============================================================ */
-.section-title-sweep {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
+.section-title-sweep { position: relative; overflow: hidden; display: inline-block; }
 .section-title-sweep::after {
   content: '';
   position: absolute;
@@ -202,14 +154,8 @@ body {
   background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .25), transparent);
   animation: sweepAcross 5s ease-in-out infinite;
 }
-@keyframes sweepAcross {
-  0%, 60% { left: -100%; }
-  100% { left: 200%; }
-}
+@keyframes sweepAcross { 0%, 60% { left: -100%; } 100% { left: 200%; } }
 
-/* ============================================================
-   ANIMATION 9 : Séparateurs animés
-   ============================================================ */
 .animated-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
@@ -217,43 +163,15 @@ body {
   margin: 3rem auto;
   max-width: 60%;
 }
-@keyframes dividerPulse {
-  0%, 100% { opacity: .3; transform: scaleX(.7); }
-  50% { opacity: 1; transform: scaleX(1); }
-}
+@keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
 
-/* ============================================================
-   ANIMATION 10 : Compteur KPI avec reset
-   ============================================================ */
-.kpi-counter {
-  display: inline-block;
-  transition: transform .3s, color .3s;
-}
-.kpi-counter.updating {
-  animation: kpiFlip .6s ease-out;
-}
-@keyframes kpiFlip {
-  0% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.08); color: #E8C86A; }
-  100% { transform: translateY(0) scale(1); }
-}
+.kpi-counter { display: inline-block; transition: transform .3s, color .3s; }
+.kpi-counter.updating { animation: kpiFlip .6s ease-out; }
+@keyframes kpiFlip { 0% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.08); color: #E8C86A; } 100% { transform: translateY(0) scale(1); } }
 
-/* ============================================================
-   ANIMATION v6.3 : Curseur clignotant terminal CLI
-   ============================================================ */
-.cursor-blink {
-  display: inline-block;
-  color: #00FFA3;
-  animation: cursorBlink 1s step-end infinite;
-}
-@keyframes cursorBlink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
+.cursor-blink { display: inline-block; color: #00FFA3; animation: cursorBlink 1s step-end infinite; }
+@keyframes cursorBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
-/* ============================================================
-   ANIMATION v6.3 : Micro-badges PWA avec hover
-   ============================================================ */
 .micro-badge {
   display: inline-block;
   padding: .1rem .4rem;
@@ -268,20 +186,9 @@ body {
 .micro-badge.iot { background: rgba(0,255,163,.12); color: #00FFA3; border-color: rgba(0,255,163,.35); }
 .micro-badge.idb { background: rgba(197,160,89,.15); color: #E8C86A; border-color: rgba(197,160,89,.4); }
 .micro-badge.rwa { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.25); }
-.pwa-box {
-  transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s;
-}
-.pwa-box:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0,255,163,.4) !important;
-}
-.pwa-box:hover .micro-badge.iot { background: rgba(0,255,163,.25); box-shadow: 0 0 12px rgba(0,255,163,.4); }
-.pwa-box:hover .micro-badge.idb { background: rgba(197,160,89,.28); box-shadow: 0 0 12px rgba(197,160,89,.4); }
-.pwa-box:hover .micro-badge.rwa { background: rgba(255,255,255,.15); box-shadow: 0 0 12px rgba(255,255,255,.3); }
+.pwa-box { transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s; }
+.pwa-box:hover { transform: translateY(-2px); border-color: rgba(0,255,163,.4) !important; }
 
-/* ============================================================
-   GLASS PANELS
-   ============================================================ */
 .glass-panel {
   background: linear-gradient(165deg, rgba(19, 25, 32, 0.85), rgba(9, 13, 16, 0.95)) !important;
   border: 1px solid rgba(197, 160, 89, 0.35) !important;
@@ -347,40 +254,7 @@ body {
   animation: scanLine 3.8s ease-in-out infinite;
   pointer-events: none;
 }
-@keyframes scanLine {
-  0% { top: 0%; opacity: .85; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: .2; }
-}
-
-.slider-esg {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 99px;
-  background: linear-gradient(90deg, #C5A059 0%, #00FFA3 100%);
-  outline: none;
-  cursor: pointer;
-}
-.slider-esg::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #090D10;
-  border: 2px solid #00FFA3;
-  box-shadow: 0 0 12px #00FFA3;
-  cursor: pointer;
-  transition: transform .15s;
-}
-.slider-esg::-webkit-slider-thumb:hover { transform: scale(1.15); }
-.slider-esg::-moz-range-thumb {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: #090D10; border: 2px solid #00FFA3;
-  box-shadow: 0 0 12px #00FFA3; cursor: pointer;
-}
+@keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
 
 #heroSection {
   position: relative;
@@ -409,11 +283,7 @@ body {
   z-index: 0;
   pointer-events: none;
 }
-.hero-overlay {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-}
+.hero-overlay { position: relative; z-index: 10; width: 100%; }
 .hero-hud-panel {
   background: linear-gradient(160deg, rgba(19,25,32,.88) 0%, rgba(9,13,16,.95) 100%);
   border: 1px solid rgba(0, 255, 163, 0.45);
@@ -422,10 +292,7 @@ body {
   box-shadow: 0 0 40px -10px rgba(0,255,163,.25), 0 25px 55px -12px rgba(0,0,0,.85);
 }
 
-@keyframes heroFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes heroFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .hero-fade { animation: heroFade 1.2s cubic-bezier(.2,.8,.2,1) both; }
 .hero-fade-d1 { animation-delay: .1s; }
 .hero-fade-d2 { animation-delay: .25s; }
@@ -433,12 +300,8 @@ body {
 .hero-fade-d4 { animation-delay: .55s; }
 
 .scroll-hint { animation: bounceY 2.4s ease-in-out infinite; }
-@keyframes bounceY {
-  0%, 100% { transform: translateY(0); opacity: .4; }
-  50% { transform: translateY(10px); opacity: 1; }
-}
+@keyframes bounceY { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(10px); opacity: 1; } }
 
-/* Contact drawer */
 #contactDrawer {
   position: fixed;
   inset: 0;
@@ -447,9 +310,7 @@ body {
   align-items: stretch;
   justify-content: flex-end;
 }
-#contactDrawer.open {
-  display: flex;
-}
+#contactDrawer.open { display: flex; }
 #contactDrawer .backdrop {
   position: absolute;
   inset: 0;
@@ -467,37 +328,8 @@ body {
   overflow-y: auto;
   animation: slideInRight .35s cubic-bezier(.2,.8,.2,1);
 }
-@keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@media print {
-  body > *:not(#brochureModal) { display: none !important; }
-  #brochureModal {
-    position: static !important;
-    display: block !important;
-    background: #fff !important;
-    padding: 0 !important;
-    inset: auto !important;
-  }
-  #brochureModal .glass-panel {
-    border: 1px solid #000 !important;
-    box-shadow: none !important;
-    background: #fff !important;
-    color: #000 !important;
-    max-height: none !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
-  #brochureModal .no-print { display: none !important; }
-  #brochureModal * { color: #000 !important; text-shadow: none !important; }
-  #brochureModal .max-h-\[60vh\] { max-height: none !important; overflow: visible !important; }
-}
+@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .safe-top { padding-top: env(safe-area-inset-top); }
 
@@ -513,10 +345,10 @@ body {
 
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-<!-- SCROLL PROGRESS -->
+<!-- PROGRESS BAR -->
 <div id="scrollProgress" aria-hidden="true"></div>
 
-<!-- PARTICLE FIELD -->
+<!-- PARTICLES -->
 <div id="particleField" aria-hidden="true"></div>
 
 <!-- HEADER -->
@@ -596,7 +428,7 @@ body {
   </nav>
 </header>
 
-<!-- HERO -->
+<!-- HERO SECTION -->
 <section id="heroSection" class="pt-20 sm:pt-0">
   <video id="heroCyberVideo" autoplay loop muted playsinline onerror="this.style.display='none'">
     <source src="assets/eye-core.mp4" type="video/mp4">
@@ -704,6 +536,7 @@ body {
   </div>
 </section>
 
+<!-- MAIN SECTIONS -->
 <main class="space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
   <!-- KPI STRIP -->
@@ -736,7 +569,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- ÉTUDE -->
+  <!-- ÉTUDE DE MARCHÉ HORECA 2026 -->
   <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold reveal" aria-labelledby="etude-title">
     <div class="grid lg:grid-cols-12 gap-10 items-start">
       <div class="lg:col-span-7 space-y-5">
@@ -816,7 +649,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- BROCHURE -->
+  <!-- BROCHURE PURKEMET B2B -->
   <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8 reveal" aria-labelledby="brochure-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
       <div class="space-y-2 max-w-2xl">
@@ -891,7 +724,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- MANIFESTE -->
+  <!-- MANIFESTE INDUSTRIEL -->
   <section class="glass-panel p-6 sm:p-12 space-y-8 reveal" aria-labelledby="manifesto-title">
     <div class="max-w-3xl space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Manifeste Industriel &amp; Souveraineté Territoriale</span>
@@ -928,7 +761,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- 4 PILIERS -->
+  <!-- LES 4 PILIERS DE L'ÉCOSYSTÈME -->
   <section class="space-y-8 reveal" aria-labelledby="piliers-title">
     <div class="text-center max-w-3xl mx-auto space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
@@ -1085,7 +918,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- WORKSTATION PWA — v6.3 REDESIGN -->
+  <!-- WORKSTATION PWA -->
   <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6 reveal" aria-labelledby="pwa-title">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
       <div class="min-w-0">
@@ -1125,7 +958,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- DATA LAKE TERMINAL — v6.3 (données réelles Supabase) -->
+  <!-- DATA LAKE TERMINAL — DONNÉES RÉELLES SUPABASE (0 FAKE DATA) -->
   <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="datalake-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div class="min-w-0">
@@ -1166,6 +999,7 @@ body {
 
 </main>
 
+<!-- FOOTER -->
 <footer class="border-t border-white/10 py-8 bg-black">
   <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
     <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
@@ -1174,9 +1008,7 @@ body {
   </div>
 </footer>
 
-<!-- ============================================================
-     CONTACT DRAWER v6.3 — Form direct Supabase
-     ============================================================ -->
+<!-- CONTACT DRAWER -->
 <div id="contactDrawer" role="dialog" aria-modal="true" aria-label="Contact institutionnel">
   <div class="backdrop" onclick="window.closeContactDrawer()"></div>
   <div class="panel">
@@ -1238,10 +1070,7 @@ body {
   </div>
 </div>
 
-<!-- ============================================================
-     MODALES
-     ============================================================ -->
-
+<!-- MODAL BROCHURE B2B -->
 <div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
   <div class="glass-panel g max-w-3xl w-full p-6 sm:p-8 space-y-6 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
@@ -1299,6 +1128,7 @@ body {
   </div>
 </div>
 
+<!-- MODAL EMAIL BROCHURE -->
 <div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
   <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
@@ -1320,6 +1150,7 @@ body {
   </div>
 </div>
 
+<!-- MODAL AUDIT GRATUIT -->
 <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
   <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeAuditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
@@ -1366,7 +1197,7 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML v6.3
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.4
    ============================================================ */
 (function () {
   'use strict';
@@ -1376,9 +1207,7 @@ body {
     if (y) y.textContent = String(new Date().getFullYear());
   })();
 
-  /* ============================================================
-     ANIMATION 1 : Barre de progression du scroll
-     ============================================================ */
+  /* ANIMATION SCROLL PROGRESS */
   (function () {
     var bar = document.getElementById('scrollProgress');
     if (!bar) return;
@@ -1392,9 +1221,7 @@ body {
     update();
   })();
 
-  /* ============================================================
-     ANIMATION 2 : Particules flottantes
-     ============================================================ */
+  /* PARTICULES FLOTTANTES */
   (function () {
     var field = document.getElementById('particleField');
     if (!field) return;
@@ -1413,9 +1240,7 @@ body {
     }
   })();
 
-  /* ============================================================
-     ANIMATION 5 : Reveal on scroll
-     ============================================================ */
+  /* REVEAL ON SCROLL */
   (function () {
     if (!('IntersectionObserver' in window)) return;
     var obs = new IntersectionObserver(function (entries) {
@@ -1429,9 +1254,7 @@ body {
     document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
   })();
 
-  /* ============================================================
-     ANIMATION 6 : Tilt 3D sur cartes
-     ============================================================ */
+  /* TILT 3D CARTES */
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if ('ontouchstart' in window && window.innerWidth < 1024) return;
@@ -1444,9 +1267,7 @@ body {
         var ry = (x - 0.5) * -6;
         card.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)';
       });
-      card.addEventListener('mouseleave', function () {
-        card.style.transform = '';
-      });
+      card.addEventListener('mouseleave', function () { card.style.transform = ''; });
     });
   })();
 
@@ -1571,7 +1392,7 @@ body {
   };
   (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
 
-  /* Form : Market Study */
+  /* FORM : MARKET STUDY */
   window.handleMarketStudySubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1630,7 +1451,7 @@ body {
     }
   };
 
-  /* Form : Audit */
+  /* FORM : AUDIT */
   window.handleAuditSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1679,7 +1500,7 @@ body {
     }
   };
 
-  /* Form : Brochure Email */
+  /* FORM : BROCHURE EMAIL */
   window.handleBrochureEmailSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1718,7 +1539,7 @@ body {
     }
   };
 
-  /* Form : Contact Drawer */
+  /* FORM : CONTACT DRAWER (SUPABASE) */
   window.handleContactSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1779,7 +1600,7 @@ body {
   };
 
   /* ============================================================
-     CANVAS NUCLEUS CYBER-HORUS
+     CANVAS NUCLEUS CYBER-HORUS PATH2D
      ============================================================ */
   (function () {
     var canvas = document.getElementById('heroCyberCanvas');
@@ -1918,7 +1739,7 @@ body {
       var anchor = getAnchor();
       var centerX = anchor.x, centerY = anchor.y;
 
-      /* PCB */
+      /* PCB Traces */
       ctx.lineWidth = 1.2;
       ctx.lineCap = 'round';
       for (var i = 0; i < pcbTraces.length; i++) {
@@ -1978,8 +1799,13 @@ body {
         if (!pTrace) continue;
         var pt = pulse.t;
         var ppx, ppy;
-        if (pt < 0.5) { ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2); ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2); }
-        else { ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2); ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2); }
+        if (pt < 0.5) {
+          ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2);
+          ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2);
+        } else {
+          ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2);
+          ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2);
+        }
         ctx.fillStyle = '#FFFFFF';
         ctx.shadowColor = '#00FFA3';
         ctx.shadowBlur = 10;
@@ -2142,4 +1968,100 @@ body {
       try {
         var r = await sb.from('collections').select('weight_depot_kg').eq('status', 'ANCHORED');
         var kg = 0;
-        (r.data || []).forEach
+        (r.data || []).forEach(function (c) { kg += Number(c.weight_depot_kg || 0); });
+        var co2 = kg * 1.82;
+        var rc = await sb.from('clients').select('id', { count: 'exact', head: true }).eq('status', 'ACTIVE');
+        var clients = (rc && rc.count) || 0;
+
+        var kgStr = Math.round(kg).toLocaleString('fr-FR');
+        var co2Str = Math.round(co2).toLocaleString('fr-FR');
+
+        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) {
+          if (el.textContent !== kgStr) { el.textContent = kgStr; flipCounter(el); }
+        });
+        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) {
+          if (el.textContent !== co2Str) { el.textContent = co2Str; flipCounter(el); }
+        });
+        var clEl = document.getElementById('liveClientsDisplay');
+        if (clEl && clEl.textContent !== String(clients)) {
+          clEl.textContent = String(clients);
+          flipCounter(clEl);
+        }
+      } catch (e) { /* silent */ }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncCounters);
+    else syncCounters();
+    setInterval(syncCounters, 30000);
+  })();
+
+  /* ============================================================
+     DATA LAKE TERMINAL — DONNÉES RÉELLES SUPABASE (0 FAKE DATA)
+     ============================================================ */
+  (function () {
+    var track = document.getElementById('streamTrack');
+    var counter = document.getElementById('streamCounter');
+    if (!track) return;
+
+    async function renderRealDataLake() {
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      if (!sb) {
+        track.innerHTML = '<div class="text-slate-500 py-6 text-center">&gt; INITIALISATION DU NOEUD SOUVERAIN EN COURS... <span class="cursor-blink">_</span></div>';
+        return;
+      }
+
+      try {
+        var r = await sb.from('collections')
+          .select('created_at, bag_qr_id, material_type, weight_depot_kg, blockchain_hash, status')
+          .eq('status', 'ANCHORED')
+          .order('created_at', { ascending: false })
+          .limit(25);
+
+        var rows = r.data || [];
+        if (counter) counter.textContent = rows.length + ' tx notarisées';
+
+        if (!rows.length) {
+          track.innerHTML =
+            '<div class="py-8 px-4 text-center space-y-2">' +
+              '<div class="text-cyberGreen font-bold text-xs tracking-wider">&gt; NODE HUB-MARRAKECH-01 [STATUS: ONLINE / STANDBY] <span class="cursor-blink">_</span></div>' +
+              '<div class="text-slate-400 text-[11px]">En attente des premières pesées d\'enlèvement scellées au Hub.</div>' +
+              '<div class="text-slate-600 text-[10px]">Ancrage cryptographique SHA-256 et Bitcoin OpenTimestamps actif.</div>' +
+            '</div>';
+          return;
+        }
+
+        track.innerHTML = rows.map(function (row) {
+          var ts = (row.created_at || '').replace('T', ' ').slice(0, 19);
+          var kg = Number(row.weight_depot_kg || 0).toFixed(2);
+          var hash = row.blockchain_hash ? (row.blockchain_hash.slice(0, 16) + '…') : '0xPending';
+          return '<div class="flex justify-between items-center gap-3 border-b border-white/5 py-1.5 hover:bg-white/[0.02] transition-colors">' +
+            '<span class="text-slate-500 shrink-0 text-[10px]">' + ts + '</span>' +
+            '<span class="text-white font-bold shrink-0">' + (row.bag_qr_id || 'LOT') + '</span>' +
+            '<span class="text-cyberGreen shrink-0">' + (row.material_type || 'MIX') + '</span>' +
+            '<span class="text-kemetGoldBright font-bold shrink-0">' + kg + ' kg</span>' +
+            '<span class="text-slate-400 truncate text-[10px]" style="max-width:14rem">' + hash + '</span>' +
+            '<span class="bd bd-g shrink-0 !text-[9px]">ANCHORED</span>' +
+          '</div>';
+        }).join('');
+      } catch (err) {
+        track.innerHTML = '<div class="text-red-400/80 py-4 text-center">&gt; ERREUR DE CONNEXION AU DATA LAKE. NOUVELLE TENTATIVE... <span class="cursor-blink">_</span></div>';
+      }
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderRealDataLake);
+    else renderRealDataLake();
+    setInterval(renderRealDataLake, 25000);
+  })();
+
+  /* SERVICE WORKER */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('[SW]', err); });
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>
