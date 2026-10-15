@@ -7,12 +7,7 @@
   <meta name="description" content="Holding industrielle DeepTech basée à Marrakech : ingénierie bionique K-MEH-20, logistique d'urgence PurKemet B2B et traçabilité notariale Maat OS.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Maat OS">
 
-  <!-- Manifest e Icone Ufficiali caricate -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -106,17 +101,17 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER : ULTRA-CLEAN (LOGO REALE + TASTO INSTALLER PWA SU MOBILE) -->
+  <!-- HEADER INSTITUTIONNEL : RESPONSIVE & SANS DÉBORDEMENT -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur fixed top-0 w-full z-50">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between gap-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       
-      <!-- LOGO UFFICIALE SOCIETÀ & BRAND -->
-      <a href="index.html" class="flex items-center space-x-2 sm:space-x-3.5 shrink min-w-0 group">
+      <!-- LOGO OFFICIEL DE LA SOCIÉTÉ -->
+      <a href="index.html" class="flex items-center space-x-2.5 sm:space-x-3.5 shrink min-w-0 group">
         <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-black/60 rounded-xl p-1 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300 shrink-0 overflow-hidden">
           <img 
             src="icons/icon-192.png" 
             onerror="this.onerror=null; this.src='assets/icon-192.png';"
-            alt="Industrial Illusion Logo" 
+            alt="Logo Industrial Illusion" 
             class="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,255,163,0.5)]"
           >
         </div>
@@ -126,7 +121,7 @@
         </div>
       </a>
       
-      <!-- NAVIGAZIONE ESCLUSIVA DESKTOP -->
+      <!-- NAVIGATION DESKTOP -->
       <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300">
         <a href="index.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">Accueil</a>
         <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
@@ -136,27 +131,38 @@
         <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
       </nav>
 
-      <!-- ZONA AZIONI: SU MOBILE RESTA SOLO "INSTALLER PWA" -->
+      <!-- BOUTON CONNEXION : TOUJOURS ACCESSIBLE ET PARFAITEMENT PROPORTIONNÉ -->
       <div class="flex items-center space-x-2 shrink-0">
-        <!-- TASTO PWA: Attiva il download/installazione icona nativa su blocco schermo e home -->
-        <button type="button" id="btnInstallApp" onclick="window.triggerPwaInstall()" class="btn btn-o !py-1.5 sm:!py-2 !px-2.5 sm:!px-3 text-[10px] sm:text-xs flex items-center gap-1 font-bold whitespace-nowrap shadow-md">
-          <span>📲</span>
-          <span>Installer PWA</span>
+        <button type="button" onclick="window.openUniversalLogin && window.openUniversalLogin()" class="btn btn-g !py-2 !px-3.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          Connexion 🔒
         </button>
 
-        <!-- TASTO CONNESSIONE: VISIBILE SOLO SU COMPUTER (DESKTOP) -->
-        <button type="button" id="loginBtn" class="hidden lg:inline-flex btn btn-g !py-2 !px-3 text-[10px] font-bold whitespace-nowrap">
-          <span>Connexion 🔒</span>
+        <button type="button" onclick="window.toggleMobileNav()" class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-base shrink-0" aria-label="Menu">
+          ☰
         </button>
       </div>
 
     </div>
+
+    <!-- TIROIR MENU MOBILE (SMARTPHONE) -->
+    <div id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider">
+      <a href="index.html" class="block text-cyberGreen font-bold py-1">Accueil</a>
+      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Data Lake</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
+      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
+      <hr class="border-white/10 my-2">
+      <a href="pwa.html" class="block text-cyberGreen py-1 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
+      <a href="admin.html" class="block text-slate-400 hover:text-white py-1">👑 Control Tower DG</a>
+    </div>
   </header>
 
   <!-- MAIN CONTENT -->
-  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-20 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION SOUVERAINE & INDUSTRIELLE -->
     <section class="pt-4">
       <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         
@@ -170,16 +176,16 @@
           </h2>
           
           <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans font-normal">
-            Depuis Marrakech jusqu'à l'axe industriel de Kénitra, Industrial Illusion SARL déploie la plateforme unifiée de logistique cyber-physique, de valorisation bionique et de traçabilité notariale. Un modèle souverain dédié aux Grands Producteurs B2B (HoReCa, Cliniques, Écoles &amp; Commerces).
+            Depuis Marrakech jusqu'à l'axe manufacturier de Kénitra, Industrial Illusion SARL déploie la plateforme unifiée de logistique cyber-physique, de valorisation bionique et de traçabilité notariale. Un modèle souverain dédié aux Grands Producteurs B2B (HoReCa, Cliniques, Écoles &amp; Commerces).
           </p>
           
           <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono">
             <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6">
               Demander un Audit Gratuit (0 MAD) →
             </button>
-            <button type="button" onclick="window.triggerPwaInstall()" class="btn btn-o text-xs !py-3.5 px-6">
-              Installer l'Application Mobile 📲
-            </button>
+            <a href="purkemet.html" class="btn btn-o text-xs !py-3.5 px-6">
+              Découvrir la Filière PurKemet B2B →
+            </a>
           </div>
 
           <div class="pt-4 flex flex-wrap items-center gap-3 sm:gap-6 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
@@ -191,7 +197,7 @@
           </div>
         </div>
 
-        <!-- MONOLITHE DATA ROOM -->
+        <!-- MONOLITHE DATA ROOM CYBER KEMET -->
         <div class="lg:col-span-5 glass-card g p-6 sm:p-8 space-y-6 relative overflow-hidden float-anim">
           <div class="scanner-beam"></div>
           <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono">
@@ -221,16 +227,16 @@
       </div>
     </section>
 
-    <!-- COMPTEURS D'IMPACT LIVE -->
+    <!-- COMPTEURS D'IMPACT EN DIRECT DU DATA LAKE -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-center">
       <div class="glass-card p-6 border-l-4 border-l-cyberGreen">
-        <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée (Cumul)</span>
+        <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée (Cumul Hub)</span>
         <div class="text-3xl font-black text-cyberGreen">
           <span id="liveKg">0</span> <span class="text-xs font-normal">kg</span>
         </div>
       </div>
       <div class="glass-card p-6 border-l-4 border-l-kemetGold">
-        <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité (ADEME)</span>
+        <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité (Scope 3 ADEME)</span>
         <div class="text-3xl font-black text-kemetGoldBright">
           <span id="liveCo2">0</span> <span class="text-xs font-normal">kg eq.</span>
         </div>
@@ -243,11 +249,11 @@
       </div>
     </section>
 
-    <!-- LES PILIERS DE L'ÉCOSYSTÈME -->
+    <!-- ARCHITECTURE DES 4 PILIERS DE L'ÉCOSYSTÈME -->
     <section class="space-y-8">
       <div class="text-center max-w-3xl mx-auto space-y-3">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
-        <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Piliers de l'Écosystème</h3>
+        <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Piliers Industriels de la Holding</h3>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono text-xs">
@@ -256,7 +262,7 @@
             <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">PurKemet B2B</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Collecte B2B 0 MAD</h4>
             <p class="text-slate-400 font-sans text-xs leading-relaxed">
-              Collecte gratuite de la fraction sèche à 0 MAD et gestion sous contrat conforme à la Loi 28-00.
+              Enlèvement gratuit de la fraction sèche à 0 MAD et gestion sous contrat conforme à la Loi 28-00.
             </p>
           </div>
           <a href="purkemet.html" class="btn btn-g w-full !py-2.5 text-center">
@@ -269,7 +275,7 @@
             <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">K-MEH-20</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Usine Bionique</h4>
             <p class="text-slate-400 font-sans text-xs leading-relaxed">
-              Pyramide tronquée brevetée OMPIC (56m × 56m), biométhanisation et pôle de valorisation.
+              Pyramide tronquée brevetée OMPIC (56m × 56m), biométhanisation et pôle de valorisation de Kénitra.
             </p>
           </div>
           <a href="kmeh20.html" class="btn btn-au w-full !py-2.5 text-center">
@@ -305,6 +311,35 @@
       </div>
     </section>
 
+    <!-- SECTION LOGISTIQUE TERRAIN & ACCÈS WORKSTATION PWA -->
+    <section class="glass-card p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
+        <div>
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Logistique Terrain &amp; Déploiement</span>
+          <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Workstation Opérateur Maat OS</h3>
+          <p class="text-xs text-slate-300 font-sans mt-1">Application mobile de pesée certifiée Bluetooth, tournée logistique et Kemet Wallet.</p>
+        </div>
+        <a href="pwa.html" class="btn btn-g !py-3 !px-5 text-xs font-mono font-bold whitespace-nowrap shrink-0">
+          Lancer la Workstation Opérateur 📱 →
+        </a>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-4 font-mono text-xs text-slate-300">
+        <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
+          <span class="text-cyberGreen font-bold block">01 • Double Pesée IoT</span>
+          <p class="text-[11px] text-slate-400 font-sans">Acquisition certifiée sur site client et scellement d'écart au pont-bascule du Hub.</p>
+        </div>
+        <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
+          <span class="text-kemetGoldBright font-bold block">02 • Mode Hors-Ligne</span>
+          <p class="text-[11px] text-slate-400 font-sans">Fonctionnement complet dans les ruelles de la Médina sans réseau avec synchronisation automatique.</p>
+        </div>
+        <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
+          <span class="text-white font-bold block">03 • Kemet Wallet</span>
+          <p class="text-[11px] text-slate-400 font-sans">Paiement des courses, primes d'apport d'affaires B2B et versement des dividendes d'actions.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER INSTITUTIONNEL -->
@@ -314,30 +349,6 @@
       <p class="text-[10px]">Siège Social &amp; Représentation Opérationnelle: Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc • Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
     </div>
   </footer>
-
-  <!-- MODAL GUIDE INSTALLATION SMARTPHONE (FALLBACK) -->
-  <div id="installGuideModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card g max-w-sm w-full p-6 space-y-4 text-center font-mono text-xs relative">
-      <button type="button" onclick="document.getElementById('installGuideModal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
-      
-      <div class="text-3xl">📲</div>
-      <h3 class="font-kemetTitle text-base font-bold text-white">Installer l'Application</h3>
-      
-      <div id="guideTxtAndroid" class="space-y-2 text-slate-300 text-[11px] text-left bg-black/50 p-4 rounded-xl border border-white/10">
-        <p>1. Appuyez sur les <strong>trois points verticaux (⋮)</strong> en haut à droite de Google Chrome.</p>
-        <p>2. Choisissez <strong>« Installer l'application »</strong> ou <strong>« Ajouter à l'écran d'accueil »</strong>.</p>
-        <p>3. L'icône dorée apparaîtra directement sur votre écran d'accueil et écran de verrouillage.</p>
-      </div>
-
-      <div id="guideTxtIOS" class="hidden space-y-2 text-slate-300 text-[11px] text-left bg-black/50 p-4 rounded-xl border border-white/10">
-        <p>1. Touchez le bouton <strong>Partager</strong> en bas de Safari (icône carré avec flèche vers le haut ⎋).</p>
-        <p>2. Faites défiler vers le bas et touchez <strong>« Sur l'écran d'accueil » ➕</strong>.</p>
-        <p>3. Touchez <strong>Ajouter</strong> en haut à droite.</p>
-      </div>
-
-      <button type="button" onclick="document.getElementById('installGuideModal').classList.add('hidden')" class="btn btn-g w-full !py-2.5">J'ai Compris</button>
-    </div>
-  </div>
 
   <!-- MODAL DEMANDE AUDIT GRATUIT (0 MAD) -->
   <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -392,52 +403,7 @@
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
 
-  <!-- MOTEUR INSTALLATION PWA NATIVO -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./sw.js').catch(function (err) {
-          console.warn('[SW Home] Enregistrement silencieux:', err);
-        });
-      });
-    }
-
-    var deferredInstallPrompt = null;
-    window.addEventListener('beforeinstallprompt', function (e) {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-      var btn = document.getElementById('btnInstallApp');
-      if (btn) {
-        btn.classList.remove('btn-o');
-        btn.classList.add('btn-g');
-      }
-    });
-
-    window.triggerPwaInstall = async function () {
-      if (deferredInstallPrompt) {
-        deferredInstallPrompt.prompt();
-        var choice = await deferredInstallPrompt.userChoice;
-        if (choice.outcome === 'accepted') {
-          if (window.Maat && window.Maat.toast) window.Maat.toast("Installation sur votre écran d'accueil confirmée !");
-        }
-        deferredInstallPrompt = null;
-      } else {
-        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        var modal = document.getElementById('installGuideModal');
-        var iosTxt = document.getElementById('guideTxtIOS');
-        var androidTxt = document.getElementById('guideTxtAndroid');
-        
-        if (isIOS) {
-          if (iosTxt) iosTxt.classList.remove('hidden');
-          if (androidTxt) androidTxt.classList.add('hidden');
-        } else {
-          if (iosTxt) iosTxt.classList.add('hidden');
-          if (androidTxt) androidTxt.classList.remove('hidden');
-        }
-        if (modal) modal.classList.remove('hidden');
-      }
-    };
-
     window.openAuditModal = function () {
       var m = document.getElementById('auditModal');
       if (m) m.classList.remove('hidden');
@@ -445,6 +411,10 @@
     window.closeAuditModal = function () {
       var m = document.getElementById('auditModal');
       if (m) m.classList.add('hidden');
+    };
+    window.toggleMobileNav = function () {
+      var nav = document.getElementById('mobileNavMenu');
+      if (nav) nav.classList.toggle('hidden');
     };
   </script>
 </body>
