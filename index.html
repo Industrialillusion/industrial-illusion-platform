@@ -27,7 +27,7 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · v6.4 — Design System Local
+   INDUSTRIAL ILLUSION · v6.5 — Design System Local
    ============================================================ */
 html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
@@ -338,6 +338,17 @@ body {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================
+   v6.5 — Responsive Data Lake Terminal : masque 2 colonnes
+   sur mobile pour éviter le tassement des 6 colonnes.
+   ============================================================ */
+@media (max-width: 640px) {
+  #streamTrack > div > span:nth-child(4),
+  #streamTrack > div > span:nth-child(5) {
+    display: none;
   }
 }
 </style>
@@ -1197,7 +1208,7 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML v6.4
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.5
    ============================================================ */
 (function () {
   'use strict';
@@ -2022,10 +2033,10 @@ body {
 
         if (!rows.length) {
           track.innerHTML =
-            '<div class="py-8 px-4 text-center space-y-2">' +
-              '<div class="text-cyberGreen font-bold text-xs tracking-wider">&gt; NODE HUB-MARRAKECH-01 [STATUS: ONLINE / STANDBY] <span class="cursor-blink">_</span></div>' +
-              '<div class="text-slate-400 text-[11px]">En attente des premières pesées d\'enlèvement scellées au Hub.</div>' +
-              '<div class="text-slate-600 text-[10px]">Ancrage cryptographique SHA-256 et Bitcoin OpenTimestamps actif.</div>' +
+            '<div class="py-8 px-4 text-center">' +
+              '<div class="text-cyberGreen font-bold text-[11px] leading-relaxed tracking-wide break-words">' +
+                '&gt; NODE HUB-MARRAKECH-01 [STATUS: ONLINE] — EN ATTENTE DES NOTARISATIONS D\'ENLÈVEMENT… [BTC/FABRIC STANDBY<span class="cursor-blink">_</span>]' +
+              '</div>' +
             '</div>';
           return;
         }
