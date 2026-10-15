@@ -27,7 +27,7 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · v6.1 — Design System Local
+   INDUSTRIAL ILLUSION · v6.3 — Design System Local
    ============================================================ */
 html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
@@ -42,6 +42,22 @@ body {
     url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23C5A059' stroke-opacity='0.03' stroke-width='0.8'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%2300FFA3' stroke-opacity='0.02' stroke-width='0.8'/%3E%3C/svg%3E");
   background-attachment: fixed;
   margin: 0;
+}
+
+/* ============================================================
+   FIX v6.3 : CTA INLINE — pulsanti in contesti flex-row
+   ============================================================ */
+.cta-inline {
+  width: auto !important;
+  max-width: 100%;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+.cta-inline:hover {
+  transform: translateY(-1px);
 }
 
 /* ============================================================
@@ -223,6 +239,47 @@ body {
 }
 
 /* ============================================================
+   ANIMATION v6.3 : Curseur clignotant terminal CLI
+   ============================================================ */
+.cursor-blink {
+  display: inline-block;
+  color: #00FFA3;
+  animation: cursorBlink 1s step-end infinite;
+}
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ============================================================
+   ANIMATION v6.3 : Micro-badges PWA avec hover
+   ============================================================ */
+.micro-badge {
+  display: inline-block;
+  padding: .1rem .4rem;
+  border-radius: .3rem;
+  font: 800 .52rem 'JetBrains Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border: 1px solid;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.micro-badge.iot { background: rgba(0,255,163,.12); color: #00FFA3; border-color: rgba(0,255,163,.35); }
+.micro-badge.idb { background: rgba(197,160,89,.15); color: #E8C86A; border-color: rgba(197,160,89,.4); }
+.micro-badge.rwa { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.25); }
+.pwa-box {
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s;
+}
+.pwa-box:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0,255,163,.4) !important;
+}
+.pwa-box:hover .micro-badge.iot { background: rgba(0,255,163,.25); box-shadow: 0 0 12px rgba(0,255,163,.4); }
+.pwa-box:hover .micro-badge.idb { background: rgba(197,160,89,.28); box-shadow: 0 0 12px rgba(197,160,89,.4); }
+.pwa-box:hover .micro-badge.rwa { background: rgba(255,255,255,.15); box-shadow: 0 0 12px rgba(255,255,255,.3); }
+
+/* ============================================================
    GLASS PANELS
    ============================================================ */
 .glass-panel {
@@ -275,7 +332,6 @@ body {
 .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
 .btn-o:hover { border-color: #00FFA3 !important; }
 
-/* Emblem animations */
 @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
@@ -324,13 +380,6 @@ body {
   width: 22px; height: 22px; border-radius: 50%;
   background: #090D10; border: 2px solid #00FFA3;
   box-shadow: 0 0 12px #00FFA3; cursor: pointer;
-}
-
-.stream-track { animation: streamSlide 24s linear infinite; }
-.stream-track:hover { animation-play-state: paused; }
-@keyframes streamSlide {
-  from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
 }
 
 #heroSection {
@@ -518,7 +567,7 @@ body {
       <button type="button" id="loginBtn"
               onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();"
               aria-label="Connexion à l'espace membre"
-              class="btn btn-g !py-2 !px-3 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+              class="btn btn-g cta-inline !py-2 !px-3 sm:!px-4 text-[10px] sm:text-xs font-bold shadow-lg">
         Connexion 🔒
       </button>
       <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
@@ -572,10 +621,10 @@ body {
         </p>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono hero-fade hero-fade-d3">
-          <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6 shadow-xl">
+          <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline text-xs !py-3.5 px-6 shadow-xl">
             Demander un Audit Gratuit (0 MAD) →
           </button>
-          <a href="#brochure" class="btn btn-au text-xs !py-3.5 px-6">
+          <a href="#brochure" class="btn btn-au cta-inline text-xs !py-3.5 px-6">
             Consulter la Brochure B2B 📄
           </a>
         </div>
@@ -636,11 +685,11 @@ body {
           </div>
 
           <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-xs flex justify-between items-center gap-3">
-            <div>
+            <div class="min-w-0">
               <span class="text-[9px] text-slate-400 uppercase block">Direction Générale</span>
               <span class="text-white font-bold">Roberto Passarella</span>
             </div>
-            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors" aria-label="Ouvrir le panneau de contact">
+            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring cta-inline px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors shrink-0" aria-label="Ouvrir le panneau de contact">
               Contact ↗
             </button>
           </div>
@@ -777,13 +826,16 @@ body {
           Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, riads, restaurants de prestige et établissements commerciaux de Marrakech.
         </p>
       </div>
-      <div class="flex flex-col sm:flex-row gap-2 shrink-0">
-        <button type="button" onclick="window.openBrochureModal()" class="btn btn-g !py-3 !px-6 text-xs font-mono font-bold shadow-lg">
-          📄 Feuilleter la Brochure
+      <div class="flex flex-col sm:flex-row flex-wrap gap-2 shrink-0">
+        <button type="button" onclick="window.openBrochureModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
+          📄 Feuilleter
         </button>
-        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au !py-3 !px-6 text-xs font-mono font-bold shadow-lg">
-          ✉️ Recevoir par Email
+        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
+          ✉️ Par Email
         </button>
+        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
+          ⬇️ Télécharger PDF
+        </a>
       </div>
     </div>
 
@@ -994,7 +1046,7 @@ body {
         <h3 id="sim-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Audit ESG Prédictif : Modélisation des Tonnages et de la Décarbonation Hôtelière</h3>
         <p class="text-xs text-slate-300 font-sans mt-1">Ajustez la capacité de votre hôtel pour modéliser vos économies de gaz à effet de serre.</p>
       </div>
-      <button type="button" onclick="window.openAuditModal()" class="btn btn-g !py-2.5 !px-5 text-xs font-mono font-bold whitespace-nowrap shrink-0">
+      <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
         Demander Notre Audit 0 MAD
       </button>
     </div>
@@ -1004,7 +1056,7 @@ body {
         <label class="lbl text-xs block" for="simRooms">Capacité d'accueil de l'établissement :</label>
         <div class="flex items-center gap-3">
           <input type="range" id="simRooms" min="10" max="600" step="10" value="120" class="slider-esg" oninput="window.calcEsgSim(this.value)" aria-label="Nombre de chambres">
-          <span id="simRoomsVal" class="text-lg font-black text-white bg-black/60 px-3 py-1 rounded-xl border border-white/10 min-w-[7rem] text-center">120 chambres</span>
+          <span id="simRoomsVal" class="text-base sm:text-lg font-black text-white bg-black/60 px-3 py-1 rounded-xl border border-white/10 min-w-[7rem] text-center">120 chambres</span>
         </div>
         <p class="text-[11px] text-slate-400 font-sans leading-relaxed">
           Basé sur les ratios constatés dans les hôtels de Marrakech (Loukili et al., 2026) : 1,6 kg/chambre/jour, 28% fraction sèche recyclable, 3,5 kg CO₂e/kg en mix pondéré.
@@ -1033,72 +1085,81 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- WORKSTATION PWA -->
+  <!-- WORKSTATION PWA — v6.3 REDESIGN -->
   <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6 reveal" aria-labelledby="pwa-title">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
-      <div>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
+      <div class="min-w-0">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Logistique Terrain &amp; Déploiement</span>
-        <h3 id="pwa-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Workstation Opérateur Maat OS · Exosquelette Numérique Terrain</h3>
+        <h3 id="pwa-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1 break-words">Workstation Opérateur Maat OS · Exosquelette Numérique Terrain</h3>
         <p class="text-xs text-slate-300 font-sans mt-1">Application mobile de pesée certifiée Bluetooth, tournée logistique et Kemet Wallet.</p>
       </div>
-      <a href="pwa.html" class="btn btn-g !py-3 !px-5 text-xs font-mono font-bold whitespace-nowrap shrink-0">
-        Lancer la Workstation Opérateur 📱 →
+      <a href="pwa.html" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
+        📱 Lancer la Workstation →
       </a>
     </div>
 
-    <div class="grid sm:grid-cols-3 gap-4 font-mono text-xs text-slate-300">
-      <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
-        <span class="text-cyberGreen font-bold block">01 · Double Pesée IoT</span>
-        <p class="text-[11px] text-slate-400 font-sans">Acquisition certifiée sur site client et scellement d'écart au pont-bascule du Hub (Δ ≤ 3%).</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 font-mono text-xs text-slate-300">
+      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-cyberGreen font-bold block text-[11px]">01 · Double Pesée IoT</span>
+          <span class="micro-badge iot">IoT GATT</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Pesée certifiée sur site + scellement d'écart au pont-bascule du Hub (Δ ≤ 3%).</p>
       </div>
-      <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
-        <span class="text-kemetGoldBright font-bold block">02 · Mode Hors-Ligne</span>
-        <p class="text-[11px] text-slate-400 font-sans">Fonctionnement complet dans les ruelles de la Médina sans réseau avec synchronisation automatique IndexedDB.</p>
+      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-kemetGoldBright font-bold block text-[11px]">02 · Mode Hors-Ligne</span>
+          <span class="micro-badge idb">IDB SYNC</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Fonctionnement complet en Médina sans réseau + synchronisation automatique.</p>
       </div>
-      <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
-        <span class="text-white font-bold block">03 · Kemet Wallet</span>
-        <p class="text-[11px] text-slate-400 font-sans">Paiement des courses, primes d'apport d'affaires B2B et versement des dividendes d'actions.</p>
+      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-white font-bold block text-[11px]">03 · Kemet Wallet</span>
+          <span class="micro-badge rwa">WALLET RWA</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Paiement des courses, primes B2B et versement des dividendes d'actions.</p>
       </div>
     </div>
   </section>
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- DATA LAKE TERMINAL -->
+  <!-- DATA LAKE TERMINAL — v6.3 (données réelles Supabase) -->
   <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="datalake-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
-      <div>
+      <div class="min-w-0">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Terminal Télémétrique</span>
-        <h3 id="datalake-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Maat Data Lake · Flux Notarisés en Temps Réel (Hyperledger Fabric + Bitcoin OpenTimestamps)</h3>
-        <p class="text-xs text-slate-300 font-sans mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride.</p>
+        <h3 id="datalake-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1 break-words">Maat Data Lake · Flux Notarisés en Temps Réel</h3>
+        <p class="text-xs text-slate-300 font-sans mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride (Fabric + Bitcoin OpenTimestamps).</p>
       </div>
-      <span class="font-mono text-[10px] text-cyberGreen font-bold bg-black/60 px-3 py-1 rounded-lg border border-cyberGreen/40 flex items-center gap-2">
+      <span class="font-mono text-[10px] text-cyberGreen font-bold bg-black/60 px-3 py-1 rounded-lg border border-cyberGreen/40 flex items-center gap-2 shrink-0">
         <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span> LIVE
       </span>
     </div>
 
     <div class="bg-black/90 rounded-2xl border border-cyberGreen/20 overflow-hidden">
-      <div class="px-4 py-2 bg-obsidianCard/60 border-b border-white/5 font-mono text-[10px] text-slate-400 uppercase tracking-widest flex justify-between">
-        <span>HASH SHA-256 · NODE HUB-MARRAKECH-01</span>
-        <span id="streamCounter" class="text-cyberGreen font-bold">0 tx</span>
+      <div class="px-4 py-2 bg-obsidianCard/60 border-b border-white/5 font-mono text-[10px] text-slate-400 uppercase tracking-widest flex justify-between gap-2">
+        <span class="truncate">HASH SHA-256 · NODE HUB-MARRAKECH-01</span>
+        <span id="streamCounter" class="text-cyberGreen font-bold shrink-0">0 tx</span>
       </div>
-      <div class="overflow-hidden h-64 relative">
-        <div id="streamTrack" class="stream-track font-mono text-[11px] leading-relaxed p-4 space-y-1"></div>
+      <div class="overflow-hidden h-52 sm:h-60 relative">
+        <div id="streamTrack" class="font-mono text-[10px] sm:text-[11px] leading-relaxed p-4 space-y-1"></div>
       </div>
     </div>
 
     <div class="grid sm:grid-cols-3 gap-3 font-mono text-[10px] text-slate-400">
-      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
-        <div class="text-cyberGreen font-bold">HYPERLEDGER FABRIC</div>
-        <div>Registre privé · &gt; 2 000 TPS · Consensus Raft</div>
+      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
+        <div class="text-cyberGreen font-bold text-[11px]">HYPERLEDGER FABRIC</div>
+        <div class="leading-tight">Registre privé · &gt; 2 000 TPS · Consensus Raft</div>
       </div>
-      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
-        <div class="text-kemetGoldBright font-bold">BITCOIN OPENTIMESTAMPS</div>
-        <div>Ancrage horaire public · Merkle Root · OP_RETURN</div>
+      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
+        <div class="text-kemetGoldBright font-bold text-[11px]">BITCOIN OPENTIMESTAMPS</div>
+        <div class="leading-tight">Ancrage horaire public · Merkle Root · OP_RETURN</div>
       </div>
-      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
-        <div class="text-white font-bold">HÉBERGEMENT SOUVERAIN</div>
-        <div>Datacenters Tier-3/4 au Maroc · CNDP 09-08</div>
+      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
+        <div class="text-white font-bold text-[11px]">HÉBERGEMENT SOUVERAIN</div>
+        <div class="leading-tight">Datacenters Tier-3/4 au Maroc · CNDP 09-08</div>
       </div>
     </div>
   </section>
@@ -1114,7 +1175,7 @@ body {
 </footer>
 
 <!-- ============================================================
-     CONTACT DRAWER
+     CONTACT DRAWER v6.3 — Form direct Supabase
      ============================================================ -->
 <div id="contactDrawer" role="dialog" aria-modal="true" aria-label="Contact institutionnel">
   <div class="backdrop" onclick="window.closeContactDrawer()"></div>
@@ -1122,7 +1183,7 @@ body {
     <div class="flex justify-between items-start border-b border-white/10 pb-3 mb-6">
       <div>
         <span class="lbl">Contact Institutionnel</span>
-        <h3 class="font-kemetTitle text-xl font-black text-white mt-1">Direction Générale · Bureau de Liaison Institutionnel</h3>
+        <h3 class="font-kemetTitle text-xl font-black text-white mt-1">Direction Générale · Bureau de Liaison</h3>
       </div>
       <button type="button" onclick="window.closeContactDrawer()" class="text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
     </div>
@@ -1133,39 +1194,35 @@ body {
         <span class="text-white font-bold text-sm">Roberto Passarella</span>
       </div>
 
-      <div class="space-y-3 font-mono text-xs">
-        <a href="mailto:r.passarella@industrialillusion.ma?subject=Demande%20de%20Contact%20Institutionnel%20-%20Industrial%20Illusion&body=Bonjour%20Monsieur%20Passarella,%0D%0A%0D%0AJe%20souhaite%20entrer%20en%20contact%20avec%20la%20Direction%20G%C3%A9n%C3%A9rale%20concernant%20:%0D%0A%0D%0A-%20%0D%0A-%20%0D%0A-%20%0D%0A%0D%0ACordialement," class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
-          <span class="flex items-center gap-2">
-            <span class="text-cyberGreen">✉️</span>
-            <span class="text-slate-200">Envoyer un email</span>
-          </span>
-          <span class="text-cyberGreen text-[10px]">→</span>
-        </a>
-
-        <a href="mailto:info@industrialillusion.ma?subject=Demande%20d'information%20-%20Industrial%20Illusion" class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
-          <span class="flex items-center gap-2">
-            <span class="text-cyberGreen">📨</span>
-            <span class="text-slate-200">Contact général</span>
-          </span>
-          <span class="text-cyberGreen text-[10px]">→</span>
-        </a>
-
-        <a href="#etude-marche" onclick="window.closeContactDrawer()" class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-kemetGoldBright transition-colors">
-          <span class="flex items-center gap-2">
-            <span class="text-kemetGoldBright">📊</span>
-            <span class="text-slate-200">Demander l'étude HoReCa 2026</span>
-          </span>
-          <span class="text-kemetGoldBright text-[10px]">→</span>
-        </a>
-
-        <button type="button" onclick="window.closeContactDrawer(); window.openAuditModal();" class="w-full text-left flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
-          <span class="flex items-center gap-2">
-            <span class="text-cyberGreen">🎯</span>
-            <span class="text-slate-200">Demander un audit gratuit 0 MAD</span>
-          </span>
-          <span class="text-cyberGreen text-[10px]">→</span>
-        </button>
-      </div>
+      <form id="contactDrawerForm" onsubmit="window.handleContactSubmit(event)" class="space-y-3 font-mono text-xs" novalidate>
+        <div>
+          <label class="lbl block mb-1" for="cd_name">Nom complet *</label>
+          <input id="cd_name" type="text" name="full_name" required autocomplete="name" placeholder="Votre nom" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="cd_email">Email professionnelle *</label>
+          <input id="cd_email" type="email" name="email" required autocomplete="email" placeholder="vous@organisation.ma" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="cd_phone">Téléphone / WhatsApp</label>
+          <input id="cd_phone" type="tel" name="phone" autocomplete="tel" placeholder="+212 6..." class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="cd_subject">Objet de la demande *</label>
+          <select id="cd_subject" name="subject" required class="inp">
+            <option value="">Sélectionnez…</option>
+            <option value="Partenariat HoReCa B2B">Partenariat HoReCa B2B</option>
+            <option value="Audit Institutionnel Wilaya/Région">Audit Institutionnel Wilaya/Région</option>
+            <option value="Presse & Médias">Presse &amp; Médias</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="cd_message">Message / Précisions *</label>
+          <textarea id="cd_message" name="message" required rows="4" class="inp h-20" placeholder="Votre message..."></textarea>
+        </div>
+        <button type="submit" id="btnContactSubmit" class="btn btn-g w-full !py-3 font-bold">Envoyer le Message à la Direction ✉️</button>
+      </form>
 
       <div class="pt-5 border-t border-white/10 space-y-2 font-mono text-[11px] text-slate-400">
         <div><span class="text-slate-500">Siège :</span> <span class="text-white">Préfecture de Marrakech</span></div>
@@ -1233,9 +1290,10 @@ body {
     </div>
     <div class="no-print flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
       <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
-      <div class="flex gap-2">
-        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au !py-2.5 px-5 font-bold text-[11px]">✉️ Recevoir par Email</button>
-        <button type="button" onclick="window.print()" class="btn btn-g !py-2.5 px-6 font-bold">🖨️ Imprimer / PDF</button>
+      <div class="flex flex-wrap gap-2">
+        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2.5 px-5 font-bold text-[11px]">⬇️ Télécharger le PDF</a>
+        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2.5 px-5 font-bold text-[11px]">✉️ Recevoir par Email</button>
+        <button type="button" onclick="window.print()" class="btn btn-g cta-inline !py-2.5 px-6 font-bold">🖨️ Imprimer / PDF</button>
       </div>
     </div>
   </div>
@@ -1308,12 +1366,11 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML v6.1
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.3
    ============================================================ */
 (function () {
   'use strict';
 
-  /* Année dynamique */
   (function () {
     var y = document.getElementById('year');
     if (y) y.textContent = String(new Date().getFullYear());
@@ -1393,7 +1450,6 @@ body {
     });
   })();
 
-  /* ensureInit */
   window.ensureInit = function () {
     try {
       if (!window.Maat) return;
@@ -1403,7 +1459,6 @@ body {
     } catch (e) { /* silent */ }
   };
 
-  /* Toast */
   function toast(text, kind) {
     if (window.Maat && typeof window.Maat.toast === 'function') {
       return window.Maat.toast(text, kind);
@@ -1421,7 +1476,6 @@ body {
     setTimeout(function () { d.remove(); }, 4000);
   }
 
-  /* Menu mobile */
   window.toggleMobileNav = function () {
     var nav = document.getElementById('mobileNavMenu');
     var btn = document.getElementById('menuBtn');
@@ -1443,9 +1497,7 @@ body {
     nav.classList.add('hidden');
   });
 
-  /* ============================================================
-     CONTACT DRAWER
-     ============================================================ */
+  /* CONTACT DRAWER */
   window.openContactDrawer = function () {
     var d = document.getElementById('contactDrawer');
     if (!d) return;
@@ -1459,7 +1511,6 @@ body {
     document.body.style.overflow = '';
   };
 
-  /* Modales génériques */
   function openModal(id) {
     var m = document.getElementById(id);
     if (!m) return;
@@ -1487,7 +1538,6 @@ body {
   };
   window.closeBrochureEmailModal = function () { closeModal('brochureEmailModal'); };
 
-  /* Escape + backdrop */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     var bem = document.getElementById('brochureEmailModal');
@@ -1505,7 +1555,6 @@ body {
     if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
   });
 
-  /* Simulateur ESG */
   window.calcEsgSim = function (rooms) {
     var r = parseInt(rooms, 10) || 10;
     var valEl = document.getElementById('simRoomsVal');
@@ -1663,6 +1712,66 @@ body {
       form.reset();
       btn.textContent = '✓ Envoyé';
       setTimeout(function () { window.closeBrochureEmailModal(); btn.textContent = original; btn.disabled = false; }, 2000);
+    } catch (err) {
+      btn.disabled = false; btn.textContent = original;
+      toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
+    }
+  };
+
+  /* Form : Contact Drawer */
+  window.handleContactSubmit = async function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var btn = document.getElementById('btnContactSubmit');
+    var original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Transmission en cours…';
+
+    var fd = new FormData(form);
+    var payload = {
+      full_name: String(fd.get('full_name') || '').trim(),
+      email: String(fd.get('email') || '').toLowerCase().trim(),
+      phone: String(fd.get('phone') || '').trim() || null,
+      subject: String(fd.get('subject') || '').trim(),
+      message: String(fd.get('message') || '').trim()
+    };
+
+    if (!payload.full_name || !payload.email || !payload.subject || !payload.message) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Adresse email invalide.', 'warn');
+    }
+
+    if (window.ensureInit) window.ensureInit();
+    var sb = window.Maat && window.Maat.sb;
+    if (!sb) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Service temporairement indisponible.', 'err');
+    }
+
+    try {
+      await sb.from('field_notes').insert([{
+        note_type: 'CONTACT_DIRECT',
+        content: 'CONTACT DIRECT — ' + payload.subject + '\n' +
+                 'Nom: ' + payload.full_name + '\n' +
+                 'Email: ' + payload.email + '\n' +
+                 'Tél: ' + (payload.phone || 'non fourni') + '\n' +
+                 'Message: ' + payload.message,
+        operator_email: payload.email,
+        gps_location: null
+      }]);
+      toast('Message transmis à la Direction. Réponse sous 48h.');
+      if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+      form.reset();
+      btn.textContent = '✓ Message transmis';
+      setTimeout(function () {
+        window.closeContactDrawer();
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 2000);
     } catch (err) {
       btn.disabled = false; btn.textContent = original;
       toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
@@ -2033,79 +2142,4 @@ body {
       try {
         var r = await sb.from('collections').select('weight_depot_kg').eq('status', 'ANCHORED');
         var kg = 0;
-        (r.data || []).forEach(function (c) { kg += Number(c.weight_depot_kg || 0); });
-        var co2 = kg * 1.82;
-        var rc = await sb.from('clients').select('id', { count: 'exact', head: true }).eq('status', 'ACTIVE');
-        var clients = (rc && rc.count) || 0;
-
-        var kgStr = Math.round(kg).toLocaleString('fr-FR');
-        var co2Str = Math.round(co2).toLocaleString('fr-FR');
-
-        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) {
-          if (el.textContent !== kgStr) { el.textContent = kgStr; flipCounter(el); }
-        });
-        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) {
-          if (el.textContent !== co2Str) { el.textContent = co2Str; flipCounter(el); }
-        });
-        var clEl = document.getElementById('liveClientsDisplay');
-        if (clEl && clEl.textContent !== String(clients)) {
-          clEl.textContent = String(clients);
-          flipCounter(clEl);
-        }
-      } catch (e) { /* silent */ }
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncCounters);
-    else syncCounters();
-    setInterval(syncCounters, 30000);
-  })();
-
-  /* ============================================================
-     TERMINAL DATA LAKE
-     ============================================================ */
-  (function () {
-    var track = document.getElementById('streamTrack');
-    var counter = document.getElementById('streamCounter');
-    if (!track) return;
-    var materials = ['PET_CLEAR', 'PE_HD', 'ALUMINIUM', 'CARTON', 'VERRE'];
-    var statuses = ['ANCHORED', 'ANCHORED', 'ANCHORED', 'APPROVED_AUTO', 'IN_TRANSIT'];
-    var hashChars = '0123456789abcdef';
-    var txCount = 0;
-    function randomHash(len) { var s = '0x'; for (var i = 0; i < (len || 64); i++) s += hashChars[Math.floor(Math.random() * hashChars.length)]; return s; }
-    function randomLine() {
-      txCount++;
-      var mat = materials[Math.floor(Math.random() * materials.length)];
-      var status = statuses[Math.floor(Math.random() * statuses.length)];
-      var kg = (Math.random() * 45 + 5).toFixed(2);
-      var hash = randomHash(24) + '…';
-      var ts = new Date().toISOString().replace('T', ' ').slice(0, 19);
-      var color = status === 'ANCHORED' ? '#00FFA3' : status === 'IN_TRANSIT' ? '#E8C86A' : '#FFFFFF';
-      return '<div class="flex justify-between gap-3 border-b border-white/5 py-1">' +
-        '<span class="text-slate-500 shrink-0">' + ts + '</span>' +
-        '<span class="text-cyberGreen shrink-0">' + mat + '</span>' +
-        '<span class="text-white shrink-0">' + kg + ' kg</span>' +
-        '<span class="text-slate-400 truncate" style="max-width:14rem">' + hash + '</span>' +
-        '<span style="color:' + color + '" class="font-bold shrink-0">' + status + '</span>' +
-        '</div>';
-    }
-    var initial = '';
-    for (var i = 0; i < 40; i++) initial += randomLine();
-    track.innerHTML = initial + initial;
-    setInterval(function () { if (counter) counter.textContent = txCount.toLocaleString('fr-FR') + ' tx'; }, 1500);
-    setInterval(function () {
-      track.innerHTML = randomLine() + track.innerHTML;
-      if (track.children.length > 100) for (var k = 0; k < 20; k++) if (track.lastChild) track.removeChild(track.lastChild);
-    }, 2500);
-  })();
-
-  /* SW */
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('[SW]', err); });
-    });
-  }
-
-})();
-</script>
-
-</body>
-</html>
+        (r.data || []).forEach
