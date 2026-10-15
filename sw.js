@@ -1,4 +1,3 @@
-
 /* ============================================================
    MAAT OS — Service Worker
    Industrial Illusion SARL · Projet PurKemet
@@ -14,7 +13,7 @@
       la constante V pour forcer l'invalidation du cache.
    ============================================================ */
 
-const V = 'maatos-v8.1.0';
+const V = 'maatos-v8.1.1'; // Version incrémentée pour forcer la mise à jour
 
 /* Coquille mise en cache dès l'installation.
    Chemins relatifs au scope du SW (racine du repo). */
@@ -35,6 +34,7 @@ const SHELL = [
   'assets/site.js',
   'assets/pwa.js',
   'assets/admin.js',
+  'assets/dashboard.js', /* NOUVEAU: Ajout du script Dashboard ESG */
   'manifest.webmanifest',
   'admin.webmanifest',
   'icons/icon-192.png',
