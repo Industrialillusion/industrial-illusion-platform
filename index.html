@@ -30,9 +30,8 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · INDEX.HTML — Design System Local v5
+   INDUSTRIAL ILLUSION · INDEX.HTML — Design System v5.2
    ============================================================ */
-
 html, body { overflow-x: hidden; }
 
 body {
@@ -98,7 +97,6 @@ body {
 .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
 .btn-o:hover { border-color: #00FFA3 !important; }
 
-/* Animations emblème header */
 @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
@@ -106,7 +104,6 @@ body {
 .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
 .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
 
-/* Scan laser */
 @keyframes scanLine {
   0% { top: 0%; opacity: .85; }
   50% { opacity: 1; }
@@ -121,7 +118,6 @@ body {
   pointer-events: none;
 }
 
-/* Slider ESG custom */
 .slider-esg {
   -webkit-appearance: none;
   appearance: none;
@@ -151,19 +147,13 @@ body {
   box-shadow: 0 0 12px #00FFA3; cursor: pointer;
 }
 
-/* Terminal stream animation */
 @keyframes streamSlide {
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
 }
-.stream-track {
-  animation: streamSlide 24s linear infinite;
-}
+.stream-track { animation: streamSlide 24s linear infinite; }
 .stream-track:hover { animation-play-state: paused; }
 
-/* ============================================================
-   HERO SECTION PLEIN ÉCRAN AVEC CANVAS IMMERSIF
-   ============================================================ */
 #heroSection {
   position: relative;
   min-height: 100vh;
@@ -190,7 +180,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55;
+  opacity: 0.35;
   mix-blend-mode: screen;
   z-index: 0;
   pointer-events: none;
@@ -200,15 +190,6 @@ body {
   position: relative;
   z-index: 10;
   width: 100%;
-}
-
-.hero-text-panel {
-  background: linear-gradient(135deg, rgba(9,13,16,.88) 0%, rgba(9,13,16,.72) 100%);
-  border: 1px solid rgba(197, 160, 89, 0.35);
-  border-radius: 1.75rem;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 30px 60px -15px rgba(0,0,0,.85);
 }
 
 .hero-hud-panel {
@@ -230,14 +211,12 @@ body {
 .hero-fade-d3 { animation-delay: .4s; }
 .hero-fade-d4 { animation-delay: .55s; }
 
-/* Scroll indicator */
 @keyframes bounceY {
   0%, 100% { transform: translateY(0); opacity: .4; }
   50% { transform: translateY(10px); opacity: 1; }
 }
 .scroll-hint { animation: bounceY 2.4s ease-in-out infinite; }
 
-/* Print brochure isolée */
 @media print {
   body > *:not(#brochureModal) { display: none !important; }
   #brochureModal {
@@ -261,10 +240,8 @@ body {
   #brochureModal .max-h-\[60vh\] { max-height: none !important; overflow: visible !important; }
 }
 
-/* Safe-area iOS */
 .safe-top { padding-top: env(safe-area-inset-top); }
 
-/* Réduit les animations si l'utilisateur le demande */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
@@ -277,13 +254,8 @@ body {
 
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-<!-- ============================================================
-     HEADER INSTITUTIONNEL
-     ============================================================ -->
 <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-
-    <!-- LOGO : EMBLÈME HORUS DOUBLE ORBITE + DEEP TECH SYSTEMS -->
     <a href="index.html" class="flex items-center space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
       <div class="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
         <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
@@ -310,14 +282,12 @@ body {
           <path d="M60 78 L64 92" stroke="#C5A059" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </div>
-
       <div class="min-w-0">
         <h1 class="font-kemetTitle text-xs sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
         <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.22em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
       </div>
     </a>
 
-    <!-- NAVIGATION DESKTOP -->
     <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
       <a href="index.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5" aria-current="page">Accueil</a>
       <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
@@ -327,7 +297,6 @@ body {
       <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
     </nav>
 
-    <!-- ACTIONS DROITE -->
     <div class="flex items-center space-x-2 shrink-0">
       <button type="button" id="loginBtn"
               onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();"
@@ -343,7 +312,6 @@ body {
     </div>
   </div>
 
-  <!-- MENU MOBILE -->
   <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
     <a href="index.html" class="block text-cyberGreen font-bold py-1">Accueil</a>
     <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B</a>
@@ -362,23 +330,15 @@ body {
   </nav>
 </header>
 
-<!-- ============================================================
-     HERO SECTION PLEIN ÉCRAN AVEC CANVAS IMMERSIF
-     ============================================================ -->
 <section id="heroSection" class="pt-20 sm:pt-0">
-  <!-- Video de fond (fallback silencieux si absent) -->
   <video id="heroCyberVideo" autoplay loop muted playsinline onerror="this.style.display='none'">
     <source src="assets/eye-core.mp4" type="video/mp4">
   </video>
-
-  <!-- Canvas plein écran : œil cyber-Horus + pistes PCB + cubes blockchain -->
   <canvas id="heroCyberCanvas" aria-label="Noyau Cyber-Horus interactif"></canvas>
 
-  <!-- Overlay de contenu -->
   <div class="hero-overlay max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
     <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-      <!-- Colonne texte gauche -->
       <div class="lg:col-span-7 space-y-6 hero-fade hero-fade-d1">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase">
           <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span>
@@ -413,9 +373,7 @@ body {
         </div>
       </div>
 
-      <!-- Colonne HUD droite : telemetry + KPI live -->
       <div class="lg:col-span-5 space-y-4 hero-fade hero-fade-d4">
-        <!-- Monolithe HUD -->
         <div class="hero-hud-panel p-5 sm:p-6 space-y-4">
           <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
             <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
@@ -468,7 +426,6 @@ body {
           </div>
         </div>
 
-        <!-- Scroll hint -->
         <div class="text-center text-[10px] font-mono text-slate-500 scroll-hint">
           ↓ Faites défiler pour explorer l'écosystème
         </div>
@@ -478,25 +435,19 @@ body {
   </div>
 </section>
 
-<!-- ============================================================
-     MAIN — SECTIONS
-     ============================================================ -->
 <main class="space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
-  <!-- ============================================================
-       SECTION 1 — COMPTEURS D'IMPACT (4 KPI)
-       ============================================================ -->
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-center" aria-label="Compteurs d'impact">
     <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée</span>
       <div class="text-3xl font-black text-cyberGreen">
-        <span id="liveKg2">0</span> <span class="text-xs font-normal">kg</span>
+        <span id="liveKgDisplay" class="live-kg">0</span> <span class="text-xs font-normal">kg</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-kemetGold">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité</span>
       <div class="text-3xl font-black text-kemetGoldBright">
-        <span id="liveCo2b">0</span> <span class="text-xs font-normal">kg eq.</span>
+        <span id="liveCo2Display" class="live-co2">0</span> <span class="text-xs font-normal">kg eq.</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-white">
@@ -508,31 +459,22 @@ body {
     <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Structures B2B Actives</span>
       <div class="text-3xl font-black text-cyberGreen">
-        <span id="liveClients">0</span> <span class="text-xs font-normal">clients</span>
+        <span id="liveClientsDisplay">0</span> <span class="text-xs font-normal">clients</span>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 2 — ÉTUDE DE MARCHÉ HORECA 2026
-       ============================================================ -->
   <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold" aria-labelledby="etude-title">
     <div class="grid lg:grid-cols-12 gap-10 items-start">
-
       <div class="lg:col-span-7 space-y-5">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-[11px] font-mono font-bold uppercase">
           <span aria-hidden="true">📊</span>
           <span>Rapport Institutionnel de Référence · Septembre 2026</span>
         </div>
-
-        <h3 id="etude-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">
-          Le Marché de la Gestion des Déchets HoReCa à Marrakech
-        </h3>
-
+        <h3 id="etude-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">Le Marché de la Gestion des Déchets HoReCa à Marrakech</h3>
         <p class="text-sm text-slate-300 leading-relaxed font-sans">
           Données issues de la première étude empirique sur la gestion des déchets solides hôteliers à Marrakech, menée par <strong class="text-white">A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong class="text-white">Université Cadi Ayyad</strong>, publiée dans <em>Cleaner and Responsible Consumption</em> (Volume 21, Mai 2026). L'étude a enquêté sur <strong class="text-white">26 hôtels de Marrakech</strong> et identifié les stratégies de gestion adoptées.
         </p>
-
         <div class="grid sm:grid-cols-2 gap-4 font-mono text-xs pt-2">
           <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
             <span class="text-kemetGoldBright font-bold block text-sm">451 à 505 kg/jour</span>
@@ -551,19 +493,16 @@ body {
             <p class="text-[11px] text-slate-400 font-sans">Moins d'un tiers des hôtels disposent d'un plan formel de tri et de valorisation.</p>
           </div>
         </div>
-
         <div class="p-4 bg-black/40 rounded-2xl border border-white/10 space-y-2 font-sans text-xs text-slate-400 leading-relaxed">
           <p><strong class="text-white">Contexte complémentaire</strong> · Seulement 34,62% des hôtels pratiquent le tri sélectif. 60% utilisent des sociétés privées payantes, 40% dépendent encore du secteur informel. Le coût de dégradation environnementale lié aux déchets au Maroc est évalué à <strong class="text-white">3,7 milliards de DH</strong>, soit 0,4% du PIB.</p>
         </div>
       </div>
 
-      <!-- FORMULAIRE ÉTUDE -->
       <div class="lg:col-span-5 bg-black/80 p-6 sm:p-8 rounded-3xl border border-kemetGold/40 space-y-4 font-mono text-xs">
         <div class="border-b border-white/10 pb-3">
           <h4 class="font-kemetTitle text-base font-bold text-white">Recevoir l'Étude Intégrale</h4>
           <p class="text-[10px] text-slate-400 font-sans mt-0.5">Dossier analytique réservé aux Directions Générales, Responsables ESG et Investisseurs.</p>
         </div>
-
         <form id="marketStudyForm" onsubmit="window.handleMarketStudySubmit(event)" class="space-y-3" novalidate>
           <div>
             <label class="lbl text-[10px] block mb-1" for="ms_name">Nom &amp; Prénom *</label>
@@ -599,13 +538,9 @@ body {
           </p>
         </form>
       </div>
-
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 3 — BROCHURE COMMERCIALE B2B
-       ============================================================ -->
   <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8" aria-labelledby="brochure-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
       <div class="space-y-2 max-w-2xl">
@@ -625,7 +560,6 @@ body {
       </div>
     </div>
 
-    <!-- 3 AVANTAGES CLÉS -->
     <div class="grid sm:grid-cols-3 gap-4">
       <div class="glass-panel g p-5 space-y-2">
         <div class="font-mono text-3xl font-black text-cyberGreen">0 MAD</div>
@@ -644,7 +578,6 @@ body {
       </div>
     </div>
 
-    <!-- PARCOURS 5 ÉTAPES -->
     <div class="pt-2">
       <h4 class="font-kemetTitle text-lg font-bold text-white mb-5">Le Parcours en 5 Étapes</h4>
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 font-mono text-xs">
@@ -677,9 +610,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 4 — MANIFESTE INDUSTRIEL
-       ============================================================ -->
   <section class="glass-panel p-6 sm:p-12 space-y-8" aria-labelledby="manifesto-title">
     <div class="max-w-3xl space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique &amp; Enjeux Territoriaux</span>
@@ -714,9 +644,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 5 — LES 4 PILIERS
-       ============================================================ -->
   <section class="space-y-8" aria-labelledby="piliers-title">
     <div class="text-center max-w-3xl mx-auto space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
@@ -770,9 +697,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 6 — CARACTÉRISATION CHIMICO-PHYSIQUE DES MATIÈRES
-       ============================================================ -->
   <section class="space-y-6" aria-labelledby="materiaux-title">
     <div class="border-b border-white/10 pb-4">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriétés &amp; Chimie des Matériaux</span>
@@ -824,9 +748,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 7 — SIMULATEUR ESG INTERACTIF
-       ============================================================ -->
   <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="sim-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
@@ -871,9 +792,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 8 — WORKSTATION OPÉRATEURS
-       ============================================================ -->
   <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6" aria-labelledby="pwa-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
@@ -902,9 +820,6 @@ body {
     </div>
   </section>
 
-  <!-- ============================================================
-       SECTION 9 — TERMINAL TÉLÉMÉTRIQUE LIVE DU DATA LAKE
-       ============================================================ -->
   <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="datalake-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
@@ -945,9 +860,6 @@ body {
 
 </main>
 
-<!-- ============================================================
-     FOOTER INSTITUTIONNEL SOUVERAIN
-     ============================================================ -->
 <footer class="border-t border-white/10 py-8 bg-black">
   <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
     <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
@@ -956,25 +868,19 @@ body {
   </div>
 </footer>
 
-<!-- ============================================================
-     MODAL BROCHURE (print-friendly)
-     ============================================================ -->
 <div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
   <div class="glass-panel g max-w-3xl w-full p-6 sm:p-8 space-y-6 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
-
     <div class="border-b border-kemetGold/30 pb-4 text-center space-y-1">
       <span class="lbl au">PURKEMET B2B · DOCUMENT COMMERCIAL OFFICIEL</span>
       <h3 class="font-kemetTitle text-xl font-black text-white">La Renaissance Cyber-Écologique</h3>
       <p class="text-[10px] text-slate-400">Présentation synthétique pour Hôtels de Luxe, Riads, Restaurants et Établissements Commerciaux.</p>
     </div>
-
     <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-slate-300 font-sans text-xs leading-relaxed">
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
         <h4 class="font-bold text-cyberGreen text-sm font-mono">1. NOTRE ENGAGEMENT EXCLUSIF : RIGUEUR &amp; TRANSPARENCE</h4>
         <p>Service 100% gratuit : aucun coût logistique, de main d'œuvre, d'assurance ou de traitement. Vos déchets secs triés deviennent vos actifs de réputation et de conformité.</p>
       </div>
-
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
         <h4 class="font-bold text-kemetGoldBright text-sm font-mono">2. CARACTÉRISTIQUES TECHNIQUES ET SÉCURITÉ JURIDIQUE</h4>
         <ul class="list-disc pl-5 space-y-1 text-slate-400">
@@ -984,17 +890,14 @@ body {
           <li><strong class="text-slate-300">Conformité :</strong> Alignement strict avec la Loi n° 28-00 relative à la gestion des déchets.</li>
         </ul>
       </div>
-
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
         <h4 class="font-bold text-white text-sm font-mono">3. SIMPLIFICATION DES AUDITS ESG (CLEF VERTE &amp; TRAVELIFE)</h4>
-        <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité. Un QR Code public de vérification instantanée permet aux organismes certificateurs (Green Key, Travelife, ISO 14001) de valider la chaîne de garde complète.</p>
+        <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité.</p>
       </div>
-
       <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 space-y-2">
         <h4 class="font-bold text-kemetGoldBright text-sm font-mono">4. IMPACT SOCIAL &amp; CITOYENNETÉ : LE SOCIALISME PRIVÉ</h4>
-        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong> — copropriété des travailleurs sur les moyens de production. C'est une histoire RSE concrète et authentique que votre établissement peut partager avec ses clients et actionnaires.</p>
+        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong>.</p>
       </div>
-
       <div class="p-4 bg-black/50 rounded-xl border border-cyberGreen/30 space-y-2">
         <h4 class="font-bold text-cyberGreen text-sm font-mono">5. UN PARCOURS EN 5 ÉTAPES SANS EFFORT</h4>
         <ol class="list-decimal pl-5 space-y-1 text-slate-400">
@@ -1005,14 +908,12 @@ body {
           <li><strong class="text-slate-300">Certification :</strong> Émission mensuelle de votre Rapport et Certificat d'Impact ESG.</li>
         </ol>
       </div>
-
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2 text-center">
         <p class="text-slate-400 text-[10px]">
           <strong class="text-white">Contact Institutionnel :</strong> Roberto Passarella, Directeur Général — <a href="mailto:r.passarella@industrialillusion.ma" class="text-cyberGreen hover:underline">r.passarella@industrialillusion.ma</a>
         </p>
       </div>
     </div>
-
     <div class="no-print flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
       <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
       <div class="flex gap-2">
@@ -1023,18 +924,13 @@ body {
   </div>
 </div>
 
-<!-- ============================================================
-     MODAL EMAIL BROCHURE
-     ============================================================ -->
 <div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
   <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
-
     <div class="border-b border-white/10 pb-2">
       <span class="lbl">Recevoir la brochure B2B</span>
       <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Version PDF par email</h3>
     </div>
-
     <form id="brochureEmailForm" onsubmit="window.handleBrochureEmailSubmit(event)" class="space-y-3" novalidate>
       <div>
         <label class="lbl block mb-1" for="be_email">Email Professionnel *</label>
@@ -1049,18 +945,13 @@ body {
   </div>
 </div>
 
-<!-- ============================================================
-     MODAL AUDIT GRATUIT
-     ============================================================ -->
 <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
   <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeAuditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
-
     <div class="border-b border-white/10 pb-2">
       <span class="lbl">Audit de Gisement (0 MAD)</span>
       <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Établissements B2B Marrakech</h3>
     </div>
-
     <form id="auditForm" onsubmit="window.handleAuditSubmit(event)" class="space-y-3" novalidate>
       <div>
         <label class="lbl block mb-1" for="audit_company">Nom de l'Établissement *</label>
@@ -1095,26 +986,21 @@ body {
 
 <div id="toasts" class="toasts" aria-live="polite"></div>
 
-<!-- ============================================================
-     SCRIPTS
-     ============================================================ -->
 <script src="assets/core.js"></script>
 <script src="assets/site.js"></script>
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML Local Scripts v5
+   INDUSTRIAL ILLUSION — INDEX.HTML Local Scripts v5.2
    ============================================================ */
 (function () {
   'use strict';
 
-  /* ---------- Année dynamique ---------- */
   (function () {
     var y = document.getElementById('year');
     if (y) y.textContent = String(new Date().getFullYear());
   })();
 
-  /* ---------- ensureInit ---------- */
   window.ensureInit = function () {
     try {
       if (!window.Maat) return;
@@ -1124,7 +1010,6 @@ body {
     } catch (e) { /* silent */ }
   };
 
-  /* ---------- Toast universel ---------- */
   function toast(text, kind) {
     if (window.Maat && typeof window.Maat.toast === 'function') {
       return window.Maat.toast(text, kind);
@@ -1142,7 +1027,6 @@ body {
     setTimeout(function () { d.remove(); }, 4000);
   }
 
-  /* ---------- Menu mobile ---------- */
   window.toggleMobileNav = function () {
     var nav = document.getElementById('mobileNavMenu');
     var btn = document.getElementById('menuBtn');
@@ -1152,7 +1036,6 @@ body {
     btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
   };
 
-  /* Auto-close menu mobile */
   document.addEventListener('click', function (e) {
     var nav = document.getElementById('mobileNavMenu');
     var btn = document.getElementById('menuBtn');
@@ -1165,39 +1048,22 @@ body {
     nav.classList.add('hidden');
   });
 
-  /* ---------- Modales ---------- */
-  window.openAuditModal = function () {
-    var m = document.getElementById('auditModal');
-    if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-  };
-  window.closeAuditModal = function () {
-    var m = document.getElementById('auditModal');
-    if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-  };
-  window.openBrochureModal = function () {
-    var m = document.getElementById('brochureModal');
-    if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-  };
-  window.closeBrochureModal = function () {
-    var m = document.getElementById('brochureModal');
-    if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-  };
+  window.openAuditModal = function () { var m = document.getElementById('auditModal'); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
+  window.closeAuditModal = function () { var m = document.getElementById('auditModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
+  window.openBrochureModal = function () { var m = document.getElementById('brochureModal'); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
+  window.closeBrochureModal = function () { var m = document.getElementById('brochureModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
   window.openBrochureEmailModal = function () {
     var bm = document.getElementById('brochureModal');
     if (bm && !bm.classList.contains('hidden')) window.closeBrochureModal();
     var m = document.getElementById('brochureEmailModal');
     if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
   };
-  window.closeBrochureEmailModal = function () {
-    var m = document.getElementById('brochureEmailModal');
-    if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-  };
+  window.closeBrochureEmailModal = function () { var m = document.getElementById('brochureEmailModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
 
-  /* Escape + click backdrop */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    var bm = document.getElementById('brochureModal');
     var bem = document.getElementById('brochureEmailModal');
+    var bm = document.getElementById('brochureModal');
     var am = document.getElementById('auditModal');
     if (bem && !bem.classList.contains('hidden')) return window.closeBrochureEmailModal();
     if (bm && !bm.classList.contains('hidden')) return window.closeBrochureModal();
@@ -1209,21 +1075,13 @@ body {
     if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
   });
 
-  /* ---------- Simulateur ESG ---------- */
   window.calcEsgSim = function (rooms) {
     var r = parseInt(rooms, 10) || 10;
     var valEl = document.getElementById('simRoomsVal');
     if (valEl) valEl.textContent = r + ' ch.';
-
-    var KG_PAR_CHAMBRE_JOUR = 1.6;
-    var FRACTION_SECHE = 0.28;
-    var CO2_PAR_KG_SEC = 3.5;
-    var JOURS = 30;
-
-    var totalKg = Math.round(r * KG_PAR_CHAMBRE_JOUR * JOURS);
-    var secKg = Math.round(totalKg * FRACTION_SECHE);
-    var co2Kg = Math.round(secKg * CO2_PAR_KG_SEC);
-
+    var totalKg = Math.round(r * 1.6 * 30);
+    var secKg = Math.round(totalKg * 0.28);
+    var co2Kg = Math.round(secKg * 3.5);
     var kgEl = document.getElementById('simKg');
     var co2El = document.getElementById('simCo2');
     var divEl = document.getElementById('simDiv');
@@ -1231,12 +1089,8 @@ body {
     if (co2El) co2El.textContent = co2Kg.toLocaleString('fr-FR');
     if (divEl) divEl.textContent = '28%';
   };
-  (function () {
-    var s = document.getElementById('simRooms');
-    if (s) window.calcEsgSim(s.value);
-  })();
+  (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
 
-  /* ---------- Formulaire Étude de Marché ---------- */
   window.handleMarketStudySubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1272,35 +1126,23 @@ body {
 
     try {
       var ok = false;
-      try {
-        var r1 = await sb.from('market_study_leads').insert([payload]);
-        if (!r1.error) ok = true;
-      } catch (x) { /* silent */ }
-
+      try { var r1 = await sb.from('market_study_leads').insert([payload]); if (!r1.error) ok = true; } catch (x) {}
       if (!ok) {
         try {
           var r2 = await sb.from('field_notes').insert([{
             note_type: 'GENERAL',
-            content: 'DEMANDE ÉTUDE HORECA 2026 : ' + payload.full_name +
-                     ' (' + payload.role_title + ' @ ' + payload.organization + ')' +
-                     ' - Email: ' + payload.email +
-                     (payload.phone ? ' - Tél: ' + payload.phone : ''),
-            operator_email: payload.email,
-            gps_location: null
+            content: 'DEMANDE ÉTUDE HORECA 2026 : ' + payload.full_name + ' (' + payload.role_title + ' @ ' + payload.organization + ') - Email: ' + payload.email + (payload.phone ? ' - Tél: ' + payload.phone : ''),
+            operator_email: payload.email, gps_location: null
           }]);
           if (!r2.error) ok = true;
-        } catch (x) { /* silent */ }
+        } catch (x) {}
       }
-
       if (ok) {
         toast('Demande enregistrée. Nous vous transmettrons l\'étude officielle.');
         if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
         form.reset();
         btn.textContent = '✓ Envoyé';
-        setTimeout(function () {
-          btn.textContent = original;
-          btn.disabled = false;
-        }, 3000);
+        setTimeout(function () { btn.textContent = original; btn.disabled = false; }, 3000);
       } else {
         btn.disabled = false; btn.textContent = original;
         toast('Envoi impossible. Réessayez dans un instant.', 'err');
@@ -1311,7 +1153,6 @@ body {
     }
   };
 
-  /* ---------- Formulaire Audit B2B ---------- */
   window.handleAuditSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1319,7 +1160,6 @@ body {
     var original = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Transmission en cours…';
-
     var fd = new FormData(form);
     var payload = {
       company_name: String(fd.get('company_name') || '').trim(),
@@ -1329,52 +1169,38 @@ body {
       message: String(fd.get('message') || '').trim() || null,
       status: 'PROSPECT'
     };
-
     if (!payload.company_name || !payload.email) {
       btn.disabled = false; btn.textContent = original;
       return toast('Nom et email requis.', 'warn');
     }
-
     if (window.ensureInit) window.ensureInit();
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
       btn.disabled = false; btn.textContent = original;
       return toast('Service temporairement indisponible. Réessayez dans un instant.', 'err');
     }
-
     try {
       var r = await sb.from('clients').insert([payload]);
       if (r.error) {
         try {
           await sb.from('field_notes').insert([{
             note_type: 'GENERAL',
-            content: 'AUDIT B2B : ' + payload.company_name +
-                     ' (' + payload.horeca_category + ')' +
-                     ' - Email: ' + payload.email +
-                     (payload.phone ? ' - Tél: ' + payload.phone : '') +
-                     (payload.message ? ' - Note: ' + payload.message : ''),
-            operator_email: payload.email,
-            gps_location: null
+            content: 'AUDIT B2B : ' + payload.company_name + ' (' + payload.horeca_category + ') - Email: ' + payload.email + (payload.phone ? ' - Tél: ' + payload.phone : '') + (payload.message ? ' - Note: ' + payload.message : ''),
+            operator_email: payload.email, gps_location: null
           }]);
-        } catch (x) { /* silent */ }
+        } catch (x) {}
       }
-
       toast('Demande d\'audit transmise. Un expert vous recontacte sous 24h.');
       if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
       form.reset();
       btn.textContent = '✓ Transmis';
-      setTimeout(function () {
-        window.closeAuditModal();
-        btn.textContent = original;
-        btn.disabled = false;
-      }, 2000);
+      setTimeout(function () { window.closeAuditModal(); btn.textContent = original; btn.disabled = false; }, 2000);
     } catch (err) {
       btn.disabled = false; btn.textContent = original;
       toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
     }
   };
 
-  /* ---------- Formulaire Email Brochure ---------- */
   window.handleBrochureEmailSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1382,40 +1208,31 @@ body {
     var original = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Envoi en cours…';
-
     var fd = new FormData(form);
     var payload = {
       email: String(fd.get('email') || '').toLowerCase().trim(),
       company_name: String(fd.get('company_name') || '').trim() || null
     };
-
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
       btn.disabled = false; btn.textContent = original;
       return toast('Adresse email invalide.', 'warn');
     }
-
     if (window.ensureInit) window.ensureInit();
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
       btn.disabled = false; btn.textContent = original;
       return toast('Service temporairement indisponible.', 'err');
     }
-
     try {
       await sb.from('field_notes').insert([{
         note_type: 'GENERAL',
         content: 'DEMANDE BROCHURE PDF : ' + payload.email + (payload.company_name ? ' @ ' + payload.company_name : ''),
-        operator_email: payload.email,
-        gps_location: null
+        operator_email: payload.email, gps_location: null
       }]);
       toast('Brochure envoyée par email sous 5 minutes.');
       form.reset();
       btn.textContent = '✓ Envoyé';
-      setTimeout(function () {
-        window.closeBrochureEmailModal();
-        btn.textContent = original;
-        btn.disabled = false;
-      }, 2000);
+      setTimeout(function () { window.closeBrochureEmailModal(); btn.textContent = original; btn.disabled = false; }, 2000);
     } catch (err) {
       btn.disabled = false; btn.textContent = original;
       toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
@@ -1423,7 +1240,7 @@ body {
   };
 
   /* ============================================================
-     CANVAS PLEIN ÉCRAN — NUCLEUS CYBER-HORUS
+     CANVAS — NUCLEUS CYBER-HORUS FIDÈLE AU LOGO (PATH2D)
      ============================================================ */
   (function () {
     var canvas = document.getElementById('heroCyberCanvas');
@@ -1435,13 +1252,32 @@ body {
     var W = 0, H = 0;
     var heroRect = null;
 
+    /* Pointer : liberté augmentée + vitesse réactive */
     var state = {
       pointerX: 0.5, pointerY: 0.5,
       smoothedX: 0.5, smoothedY: 0.5,
-      hasPointer: false,
-      targetX: 0.5, targetY: 0.5
+      hasPointer: false
     };
 
+    /* LIBERTÉ DU MOUVEMENT — valeurs augmentées */
+    var LERP_SPEED = 0.16;      /* était 0.08 → réponse plus vive */
+    var MAX_TRAVEL_X = 60;       /* était 26 → plus d'amplitude horizontale */
+    var MAX_TRAVEL_Y = 45;       /* était 16 → plus d'amplitude verticale */
+    var EYE_DRIFT_X = 28;        /* dérive globale de l'œil entier */
+    var EYE_DRIFT_Y = 20;
+
+    /* Path2D géométries sacrées de l'Œil d'Horus (viewBox local -100..+100) */
+    var pathSclera, pathBrow, pathTear, pathSpiral, pathCross;
+    function buildPaths() {
+      pathSclera = new Path2D("M -90 0 Q 0 -60 90 0 Q 0 60 -90 0 Z");
+      pathBrow   = new Path2D("M -95 -28 Q 0 -78 95 -28 Q 65 -50 0 -50 Q -65 -50 -95 -28 Z");
+      pathTear   = new Path2D("M 0 32 L -4 75 L 4 75 Z");
+      pathSpiral = new Path2D("M 28 30 Q 45 65 65 70 Q 78 72 75 60 Q 70 48 56 52");
+      pathCross  = new Path2D("M 0 -22 V -40 M 0 22 V 40 M -22 0 H -40 M 22 0 H 40");
+    }
+    buildPaths();
+
+    /* PCB traces : réseau radial + coudé */
     var pcbTraces = [];
     var pcbNodes = [];
     var cubes = [];
@@ -1459,64 +1295,58 @@ body {
       buildScene();
     }
 
+    function getAnchor() {
+      var isDesktop = W >= 1024;
+      return {
+        x: isDesktop ? (W * 0.72) : (W * 0.50),
+        y: isDesktop ? (H * 0.48) : (H * 0.65)
+      };
+    }
+
     function buildScene() {
       pcbTraces = [];
-      var centerX = W / 2, centerY = H / 2;
-
-      /* 8 sources radiales depuis le centre vers les bords */
+      var anchor = getAnchor();
       var angles = [
         0, Math.PI / 4, Math.PI / 2, 3 * Math.PI / 4,
         Math.PI, 5 * Math.PI / 4, 3 * Math.PI / 2, 7 * Math.PI / 4
       ];
 
       angles.forEach(function (baseAngle, ai) {
-        /* 3 sous-branches par angle */
         for (var j = -1; j <= 1; j++) {
-          var angle = baseAngle + j * 0.12;
+          var angle = baseAngle + j * 0.14;
           var maxRadius = Math.min(W, H) * 0.55 + Math.max(W, H) * 0.35;
-          /* Point intermédiaire (coudé) */
           var midR = maxRadius * 0.55;
-          var mx = centerX + Math.cos(angle) * midR;
-          var my = centerY + Math.sin(angle) * midR;
-          /* Point final (bord écran) */
-          var endR = maxRadius * 1.1;
-          var ex = centerX + Math.cos(angle) * endR;
-          var ey = centerY + Math.sin(angle) * endR;
+          var mx = anchor.x + Math.cos(angle) * midR;
+          var my = anchor.y + Math.sin(angle) * midR;
+          var endR = maxRadius * 1.15;
+          var ex = anchor.x + Math.cos(angle) * endR;
+          var ey = anchor.y + Math.sin(angle) * endR;
 
           pcbTraces.push({
-            x1: centerX, y1: centerY,
+            x1: anchor.x, y1: anchor.y,
             xm: mx, ym: my,
             x2: ex, y2: ey,
             progress: Math.random(),
-            speed: 0.0018 + Math.random() * 0.0025,
+            speed: 0.0016 + Math.random() * 0.0025,
             color: (ai % 2 === 0) ? '#00FFA3' : '#C5A059'
           });
         }
       });
 
-      /* Nœuds dorés aux extrémités visibles */
       pcbNodes = [];
       angles.forEach(function (angle) {
-        var r = Math.min(W, H) * 0.42;
+        var r = Math.min(W, H) * 0.44;
         pcbNodes.push({
-          x: centerX + Math.cos(angle) * r,
-          y: centerY + Math.sin(angle) * r
+          x: anchor.x + Math.cos(angle) * r,
+          y: anchor.y + Math.sin(angle) * r
         });
       });
-      /* Nœuds additionnels aléatoires */
-      for (var k = 0; k < 12; k++) {
-        pcbNodes.push({
-          x: Math.random() * W,
-          y: Math.random() * H
-        });
-      }
+      for (var k = 0; k < 12; k++) pcbNodes.push({ x: Math.random() * W, y: Math.random() * H });
 
-      /* Cubes blockchain isométriques */
       cubes = [];
       for (var c = 0; c < 10; c++) {
         cubes.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
+          x: Math.random() * W, y: Math.random() * H,
           size: 5 + Math.random() * 7,
           phase: Math.random() * Math.PI * 2,
           speed: 0.0005 + Math.random() * 0.0009,
@@ -1524,7 +1354,6 @@ body {
         });
       }
 
-      /* Impulsions lumineuses */
       pulses = [];
       for (var p = 0; p < 14; p++) {
         pulses.push({
@@ -1535,7 +1364,6 @@ body {
       }
     }
 
-    /* Pointer tracking (sur toute la hero section) */
     function setPointerFromEvent(clientX, clientY) {
       if (!heroRect) heroRect = heroSection.getBoundingClientRect();
       state.pointerX = (clientX - heroRect.left) / heroRect.width;
@@ -1545,14 +1373,9 @@ body {
 
     heroSection.addEventListener('mousemove', function (e) { setPointerFromEvent(e.clientX, e.clientY); });
     heroSection.addEventListener('mouseleave', function () { state.hasPointer = false; });
-    heroSection.addEventListener('touchstart', function (e) {
-      if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-    heroSection.addEventListener('touchmove', function (e) {
-      if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
+    heroSection.addEventListener('touchstart', function (e) { if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    heroSection.addEventListener('touchmove', function (e) { if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
 
-    /* Animation loop */
     var lastTime = 0;
     function loop(now) {
       var dt = Math.min((now - lastTime) / 1000, 0.05);
@@ -1560,17 +1383,16 @@ body {
 
       var targetX = state.hasPointer ? state.pointerX : 0.5;
       var targetY = state.hasPointer ? state.pointerY : 0.5;
-      state.smoothedX += (targetX - state.smoothedX) * 0.08;
-      state.smoothedY += (targetY - state.smoothedY) * 0.08;
+      state.smoothedX += (targetX - state.smoothedX) * LERP_SPEED;
+      state.smoothedY += (targetY - state.smoothedY) * LERP_SPEED;
 
       ctx.clearRect(0, 0, W, H);
-
-      /* Fond léger */
       ctx.fillStyle = 'rgba(9, 13, 16, 0.15)';
       ctx.fillRect(0, 0, W, H);
 
-      var centerX = W / 2;
-      var centerY = H / 2;
+      var anchor = getAnchor();
+      var centerX = anchor.x;
+      var centerY = anchor.y;
 
       /* 1. TRACES PCB */
       ctx.lineWidth = 1.2;
@@ -1580,7 +1402,6 @@ body {
         tr.progress += tr.speed;
         if (tr.progress > 1) tr.progress = 0;
 
-        /* Ligne fond */
         ctx.strokeStyle = tr.color === '#00FFA3' ? 'rgba(0, 255, 163, 0.14)' : 'rgba(197, 160, 89, 0.12)';
         ctx.beginPath();
         ctx.moveTo(tr.x1, tr.y1);
@@ -1588,7 +1409,6 @@ body {
         ctx.lineTo(tr.x2, tr.y2);
         ctx.stroke();
 
-        /* Segment lumineux animé */
         var segStart = Math.max(0, tr.progress - 0.15);
         var segEnd = Math.min(1, tr.progress + 0.05);
         if (segEnd > segStart) {
@@ -1606,8 +1426,7 @@ body {
               px = tr.xm + (tr.x2 - tr.xm) * ((p - 0.5) * 2);
               py = tr.ym + (tr.y2 - tr.ym) * ((p - 0.5) * 2);
             }
-            if (first) { ctx.moveTo(px, py); first = false; }
-            else ctx.lineTo(px, py);
+            if (first) { ctx.moveTo(px, py); first = false; } else ctx.lineTo(px, py);
           }
           ctx.stroke();
           ctx.shadowBlur = 0;
@@ -1635,13 +1454,8 @@ body {
         if (!pTrace) continue;
         var pt = pulse.t;
         var ppx, ppy;
-        if (pt < 0.5) {
-          ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2);
-          ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2);
-        } else {
-          ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2);
-          ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2);
-        }
+        if (pt < 0.5) { ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2); ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2); }
+        else { ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2); ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2); }
         ctx.fillStyle = '#FFFFFF';
         ctx.shadowColor = '#00FFA3';
         ctx.shadowBlur = 10;
@@ -1656,114 +1470,127 @@ body {
         var cb = cubes[c];
         cb.phase += cb.speed * dt * 60;
         var offsetY = Math.sin(cb.phase) * 8;
-        var cx = cb.x;
-        var cy = cb.y + offsetY;
-        var s = cb.size;
-
+        var cx = cb.x, cy = cb.y + offsetY, s = cb.size;
         ctx.save();
         ctx.translate(cx, cy);
-
         ctx.strokeStyle = 'rgba(0, 255, 163, 0.5)';
         ctx.lineWidth = 1;
-        /* Top face */
         ctx.beginPath();
-        ctx.moveTo(0, -s);
-        ctx.lineTo(s * 0.87, -s * 0.5);
-        ctx.lineTo(0, 0);
-        ctx.lineTo(-s * 0.87, -s * 0.5);
-        ctx.closePath();
-        ctx.stroke();
-        /* Left face */
+        ctx.moveTo(0, -s); ctx.lineTo(s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(-s * 0.87, -s * 0.5); ctx.closePath(); ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(-s * 0.87, -s * 0.5);
-        ctx.lineTo(0, 0);
-        ctx.lineTo(0, s);
-        ctx.lineTo(-s * 0.87, s * 0.5);
-        ctx.closePath();
-        ctx.stroke();
-        /* Right face */
+        ctx.moveTo(-s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(0, s); ctx.lineTo(-s * 0.87, s * 0.5); ctx.closePath(); ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(s * 0.87, -s * 0.5);
-        ctx.lineTo(0, 0);
-        ctx.lineTo(0, s);
-        ctx.lineTo(s * 0.87, s * 0.5);
-        ctx.closePath();
-        ctx.stroke();
-
-        /* Hex label */
+        ctx.moveTo(s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(0, s); ctx.lineTo(s * 0.87, s * 0.5); ctx.closePath(); ctx.stroke();
         ctx.fillStyle = 'rgba(232, 200, 106, 0.7)';
         ctx.font = '7px "JetBrains Mono", monospace';
         ctx.textAlign = 'center';
         ctx.fillText(cb.hex, 0, s + 9);
-
         ctx.restore();
       }
 
-      /* 5. IRIS CYBER-HORUS (suit le pointeur) */
-      var irisX = centerX + (state.smoothedX - 0.5) * 26;
-      var irisY = centerY + (state.smoothedY - 0.5) * 26;
-      var baseSize = Math.min(W, H);
-      var irisR = baseSize * 0.15;
-      var pupilR = irisR * 0.52;
-      var innerR = irisR * 0.26;
+      /* ============================================================
+         5. ŒIL D'HORUS PATH2D — FIDÈLE AU LOGO + TRACKING LIBRE
+         ============================================================ */
+      var maxTravelX = MAX_TRAVEL_X;
+      var maxTravelY = MAX_TRAVEL_Y;
+      var lookX = (state.smoothedX - 0.5) * 2 * maxTravelX;
+      var lookY = (state.smoothedY - 0.5) * 2 * maxTravelY;
 
-      /* Halo */
-      var grd = ctx.createRadialGradient(irisX, irisY, irisR * 0.4, irisX, irisY, irisR * 2.4);
-      grd.addColorStop(0, 'rgba(0, 255, 163, 0.32)');
-      grd.addColorStop(0.5, 'rgba(0, 255, 163, 0.06)');
-      grd.addColorStop(1, 'rgba(0, 255, 163, 0)');
-      ctx.fillStyle = grd;
+      /* Dérive globale de l'œil entier (mouvement organique) */
+      var driftX = (state.smoothedX - 0.5) * EYE_DRIFT_X;
+      var driftY = (state.smoothedY - 0.5) * EYE_DRIFT_Y;
+
+      var eyeScale = Math.min(W, H) / 520;
+      if (eyeScale < 0.65) eyeScale = 0.65;
+      if (eyeScale > 1.25) eyeScale = 1.25;
+
+      ctx.save();
+      ctx.translate(centerX + driftX, centerY + driftY);
+      ctx.scale(eyeScale, eyeScale);
+
+      /* --- LAYER 2 : IRIS + PUPILLE (clip dans la mandorle) --- */
+      ctx.save();
+      ctx.clip(pathSclera);
+
+      ctx.fillStyle = '#080C0E';
+      ctx.fillRect(-110, -80, 220, 160);
+
+      var irisGrd = ctx.createRadialGradient(lookX, lookY, 4, lookX, lookY, 38);
+      irisGrd.addColorStop(0, '#FFFFFF');
+      irisGrd.addColorStop(0.2, '#00FFA3');
+      irisGrd.addColorStop(0.65, '#00B871');
+      irisGrd.addColorStop(1, 'rgba(0, 184, 113, 0)');
+
+      ctx.fillStyle = irisGrd;
       ctx.beginPath();
-      ctx.arc(irisX, irisY, irisR * 2.4, 0, Math.PI * 2);
+      ctx.arc(lookX, lookY, 36, 0, Math.PI * 2);
       ctx.fill();
 
-      /* Anneau extérieur */
       ctx.strokeStyle = '#00FFA3';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 1.8;
       ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 22;
+      ctx.shadowBlur = 14;
       ctx.beginPath();
-      ctx.arc(irisX, irisY, irisR, 0, Math.PI * 2);
-      ctx.stroke();
-
-      /* Anneau doré */
-      ctx.strokeStyle = '#C5A059';
-      ctx.lineWidth = 1.5;
-      ctx.shadowColor = '#E8C86A';
-      ctx.shadowBlur = 8;
-      ctx.beginPath();
-      ctx.arc(irisX, irisY, irisR * 0.75, 0, Math.PI * 2);
+      ctx.arc(lookX, lookY, 26, 0, Math.PI * 2);
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      /* Disque iris */
-      ctx.fillStyle = '#00FFA3';
+      ctx.fillStyle = '#050709';
       ctx.beginPath();
-      ctx.arc(irisX, irisY, pupilR, 0, Math.PI * 2);
+      ctx.arc(lookX, lookY, 13, 0, Math.PI * 2);
       ctx.fill();
 
-      /* Rayons internes */
-      ctx.strokeStyle = 'rgba(0, 255, 163, 0.6)';
-      ctx.lineWidth = 0.9;
-      for (var rr = 0; rr < 16; rr++) {
-        var ang = (rr / 16) * Math.PI * 2 + state.smoothedX * 0.8;
-        ctx.beginPath();
-        ctx.moveTo(irisX + Math.cos(ang) * pupilR * 0.55, irisY + Math.sin(ang) * pupilR * 0.55);
-        ctx.lineTo(irisX + Math.cos(ang) * pupilR * 0.98, irisY + Math.sin(ang) * pupilR * 0.98);
-        ctx.stroke();
-      }
-
-      /* Pupille */
-      ctx.fillStyle = '#090D10';
-      ctx.beginPath();
-      ctx.arc(irisX, irisY, innerR, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* Reflet */
       ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
       ctx.beginPath();
-      ctx.arc(irisX - innerR * 0.35, irisY - innerR * 0.35, innerR * 0.3, 0, Math.PI * 2);
+      ctx.arc(lookX - 5, lookY - 5, 3.5, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.restore();
+
+      /* --- LAYER 3 : CASTONE OR + GEOMÉTRIES SACRÉES --- */
+      ctx.strokeStyle = '#C5A059';
+      ctx.lineWidth = 3.5;
+      ctx.shadowColor = '#E8C86A';
+      ctx.shadowBlur = 10;
+      ctx.stroke(pathSclera);
+
+      ctx.fillStyle = 'rgba(197, 160, 89, 0.25)';
+      ctx.fill(pathBrow);
+      ctx.stroke(pathBrow);
+
+      ctx.fillStyle = '#00FFA3';
+      ctx.shadowColor = '#00FFA3';
+      ctx.shadowBlur = 12;
+      ctx.fill(pathTear);
+
+      ctx.strokeStyle = '#C5A059';
+      ctx.lineWidth = 2.8;
+      ctx.stroke(pathSpiral);
+      ctx.shadowBlur = 0;
+
+      /* Réticule solaire avec parallaxe */
+      ctx.save();
+      ctx.translate(lookX * 0.4, lookY * 0.4);
+      ctx.strokeStyle = 'rgba(0, 255, 163, 0.65)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke(pathCross);
+      ctx.restore();
+
+      /* 4 points d'ancrage dorés */
+      var anchorNodes = [
+        { x: -90, y: 0 }, { x: 90, y: 0 }, { x: 0, y: -65 }, { x: 0, y: 75 }
+      ];
+      ctx.fillStyle = '#E8C86A';
+      ctx.shadowColor = '#00FFA3';
+      ctx.shadowBlur = 8;
+      for (var a = 0; a < anchorNodes.length; a++) {
+        ctx.beginPath();
+        ctx.arc(anchorNodes[a].x, anchorNodes[a].y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+
+      ctx.restore();
 
       /* 6. LIGNE DE SCAN */
       var scanY = ((now / 1000) * 45) % H;
@@ -1780,36 +1607,54 @@ body {
       requestAnimationFrame(loop);
     }
 
-    /* Init */
     resize();
     window.addEventListener('resize', resize);
-    window.addEventListener('scroll', function () {
-      heroRect = heroSection.getBoundingClientRect();
-    }, { passive: true });
+    window.addEventListener('scroll', function () { heroRect = heroSection.getBoundingClientRect(); }, { passive: true });
     requestAnimationFrame(loop);
   })();
 
   /* ============================================================
-     TERMINAL TÉLÉMÉTRIQUE LIVE — STREAM SHA-256
+     SYNCHRONISATION KPI (Hero + Section 1)
+     ============================================================ */
+  (function () {
+    async function syncCounters() {
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      if (!sb) return;
+      try {
+        var r = await sb.from('collections').select('weight_depot_kg').eq('status', 'ANCHORED');
+        var kg = 0;
+        (r.data || []).forEach(function (c) { kg += Number(c.weight_depot_kg || 0); });
+        var co2 = kg * 1.82;
+        var rc = await sb.from('clients').select('id', { count: 'exact', head: true }).eq('status', 'ACTIVE');
+        var clients = (rc && rc.count) || 0;
+
+        var kgStr = Math.round(kg).toLocaleString('fr-FR');
+        var co2Str = Math.round(co2).toLocaleString('fr-FR');
+
+        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) { el.textContent = kgStr; });
+        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) { el.textContent = co2Str; });
+        var clEl = document.getElementById('liveClientsDisplay');
+        if (clEl) clEl.textContent = String(clients);
+      } catch (e) { /* silent */ }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncCounters);
+    else syncCounters();
+    setInterval(syncCounters, 30000);
+  })();
+
+  /* ============================================================
+     TERMINAL TÉLÉMÉTRIQUE LIVE
      ============================================================ */
   (function () {
     var track = document.getElementById('streamTrack');
     var counter = document.getElementById('streamCounter');
     if (!track) return;
-
     var materials = ['PET_CLEAR', 'PE_HD', 'ALUMINIUM', 'CARTON', 'VERRE'];
     var statuses = ['ANCHORED', 'ANCHORED', 'ANCHORED', 'APPROVED_AUTO', 'IN_TRANSIT'];
     var hashChars = '0123456789abcdef';
     var txCount = 0;
-
-    function randomHash(len) {
-      var s = '0x';
-      for (var i = 0; i < (len || 64); i++) {
-        s += hashChars[Math.floor(Math.random() * hashChars.length)];
-      }
-      return s;
-    }
-
+    function randomHash(len) { var s = '0x'; for (var i = 0; i < (len || 64); i++) s += hashChars[Math.floor(Math.random() * hashChars.length)]; return s; }
     function randomLine() {
       txCount++;
       var mat = materials[Math.floor(Math.random() * materials.length)];
@@ -1826,35 +1671,19 @@ body {
         '<span style="color:' + color + '" class="font-bold shrink-0">' + status + '</span>' +
         '</div>';
     }
-
     var initial = '';
     for (var i = 0; i < 40; i++) initial += randomLine();
     track.innerHTML = initial + initial;
-
+    setInterval(function () { if (counter) counter.textContent = txCount.toLocaleString('fr-FR') + ' tx'; }, 1500);
     setInterval(function () {
-      if (counter) counter.textContent = txCount.toLocaleString('fr-FR') + ' tx';
-    }, 1500);
-
-    setInterval(function () {
-      var newLine = randomLine();
-      track.innerHTML = newLine + track.innerHTML;
-      var lines = track.children.length;
-      if (lines > 100) {
-        for (var k = 0; k < 20; k++) {
-          if (track.lastChild) track.removeChild(track.lastChild);
-        }
-      }
+      track.innerHTML = randomLine() + track.innerHTML;
+      if (track.children.length > 100) for (var k = 0; k < 20; k++) if (track.lastChild) track.removeChild(track.lastChild);
     }, 2500);
   })();
 
-  /* ============================================================
-     SERVICE WORKER
-     ============================================================ */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function (err) {
-        console.warn('[SW] Enregistrement silencieux :', err);
-      });
+      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('[SW]', err); });
     });
   }
 
