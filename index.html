@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Industrial Illusion SARL | Sovereign DeepTech & Industrial Infrastructure</title>
   <meta name="description" content="Holding industrielle DeepTech basée à Marrakech : ingénierie bionique K-MEH-20, logistique d'urgence PurKemet B2B et traçabilité notariale Maat OS.">
-  <meta name="theme-color" content="#00FFA3">
+  <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Industrial Illusion">
+  <meta name="apple-mobile-web-app-title" content="Maat OS">
 
-  <!-- Manifest e Icone PWA Ufficiali -->
+  <!-- Manifest e Icone Ufficiali caricate -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS & Kernel Config -->
+  <!-- Tailwind CSS & Maat OS Design System -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="assets/tw-config.js"></script>
   <script src="assets/config.js"></script>
@@ -57,12 +57,6 @@
       box-shadow: 0 0 30px -8px rgba(0, 255, 163, 0.2) !important;
     }
 
-    .glass-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 255, 163, 0.6) !important;
-      box-shadow: 0 25px 50px -10px rgba(0, 255, 163, 0.2) !important;
-    }
-
     .inp {
       width: 100%;
       background: rgba(0,0,0,.6) !important;
@@ -90,12 +84,6 @@
     .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
     .btn-o { background: rgba(0,0,0,.8) !important; border: 1px solid rgba(0,255,163,.5) !important; color: #00FFA3 !important; }
 
-    @keyframes cyberPulse {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(0,255,163,0.6)); }
-      50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(0,255,163,0.95)); }
-    }
-    .cyber-eye-anim { animation: cyberPulse 3.5s ease-in-out infinite; }
-
     @keyframes scanLine {
       0% { top: 0%; opacity: 0.8; }
       50% { opacity: 1; }
@@ -118,27 +106,27 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER INSTITUTIONNEL -->
+  <!-- HEADER : ULTRA-CLEAN (LOGO REALE + TASTO INSTALLER PWA SU MOBILE) -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur fixed top-0 w-full z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-2">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between gap-2">
       
-      <!-- LOGO OEIL DE HORUS -->
-      <a href="index.html" class="flex items-center space-x-3 shrink-0 group">
-        <div class="relative w-10 h-10 flex items-center justify-center bg-black rounded-xl p-1 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300">
-          <svg class="w-8 h-8 text-cyberGreen cyber-eye-anim" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-            <path d="M8 50 Q 50 10, 92 50 Q 50 90, 8 50 Z" stroke="#00FFA3" stroke-width="3.5" fill="#090D10"/>
-            <circle cx="50" cy="50" r="18" stroke="#C5A059" stroke-width="3" fill="#11161C"/>
-            <circle cx="50" cy="50" r="7" fill="#00FFA3"/>
-            <path d="M22 30 L32 18 M78 30 L68 18 M22 70 L32 82 M78 70 L68 82" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+      <!-- LOGO UFFICIALE SOCIETÀ & BRAND -->
+      <a href="index.html" class="flex items-center space-x-2 sm:space-x-3.5 shrink min-w-0 group">
+        <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-black/60 rounded-xl p-1 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300 shrink-0 overflow-hidden">
+          <img 
+            src="icons/icon-192.png" 
+            onerror="this.onerror=null; this.src='assets/icon-192.png';"
+            alt="Industrial Illusion Logo" 
+            class="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,255,163,0.5)]"
+          >
         </div>
-        <div>
-          <h1 class="font-kemetTitle text-sm sm:text-base font-black tracking-widest text-white leading-none group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
-          <p class="text-[8px] sm:text-[9px] font-mono tracking-[0.24em] text-cyberGreen font-extrabold uppercase mt-1">SOVEREIGN DEEPTECH MAROC</p>
+        <div class="min-w-0">
+          <h1 class="font-kemetTitle text-xs sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
+          <p class="text-[7.5px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">SOVEREIGN DEEPTECH</p>
         </div>
       </a>
       
-      <!-- NAVIGATION DESKTOP -->
+      <!-- NAVIGAZIONE ESCLUSIVA DESKTOP -->
       <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300">
         <a href="index.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">Accueil</a>
         <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
@@ -148,50 +136,32 @@
         <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
       </nav>
 
-      <!-- BOUTONS D'ACCÈS : VISIBLES SUR SMARTPHONE ET PC -->
+      <!-- ZONA AZIONI: SU MOBILE RESTA SOLO "INSTALLER PWA" -->
       <div class="flex items-center space-x-2 shrink-0">
-        <!-- TASTO PWA DIRETTO: Nessun display:none, accessibile da mobile -->
-        <a href="pwa.html" class="btn btn-o !py-2 !px-2.5 sm:!px-3 text-[10px] flex items-center gap-1 font-bold">
-          <span>📱</span>
-          <span class="inline">App PWA</span>
-        </a>
-
-        <!-- BOUTON CONNEXION MODALE UNIVERSAL -->
-        <button type="button" id="loginBtn" class="btn btn-g !py-2 !px-2.5 sm:!px-3 text-[10px] font-bold">
-          <span>Connexion 🔒</span>
+        <!-- TASTO PWA: Attiva il download/installazione icona nativa su blocco schermo e home -->
+        <button type="button" id="btnInstallApp" onclick="window.triggerPwaInstall()" class="btn btn-o !py-1.5 sm:!py-2 !px-2.5 sm:!px-3 text-[10px] sm:text-xs flex items-center gap-1 font-bold whitespace-nowrap shadow-md">
+          <span>📲</span>
+          <span>Installer PWA</span>
         </button>
 
-        <!-- MENU MOBILE TOGGLE -->
-        <button type="button" onclick="window.toggleMobileNav()" class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-base" aria-label="Menu de navigation">
-          ☰
+        <!-- TASTO CONNESSIONE: VISIBILE SOLO SU COMPUTER (DESKTOP) -->
+        <button type="button" id="loginBtn" class="hidden lg:inline-flex btn btn-g !py-2 !px-3 text-[10px] font-bold whitespace-nowrap">
+          <span>Connexion 🔒</span>
         </button>
       </div>
 
     </div>
-
-    <!-- TIROIR MENU MOBILE (SMARTPHONE) -->
-    <div id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard px-6 py-4 space-y-3 font-mono text-xs uppercase tracking-wider">
-      <a href="index.html" class="block text-cyberGreen font-bold py-1">Accueil</a>
-      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B</a>
-      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">K-MEH-20</a>
-      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Data Lake</a>
-      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
-      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
-      <hr class="border-white/10 my-2">
-      <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
-      <a href="admin.html" class="block text-slate-400 hover:text-white py-1">👑 Control Tower DG</a>
-    </div>
   </header>
 
   <!-- MAIN CONTENT -->
-  <main class="mt-28 space-y-20 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-20 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
     <!-- HERO SECTION -->
     <section class="pt-4">
-      <div class="grid lg:grid-cols-12 gap-10 items-center">
+      <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         
-        <div class="lg:col-span-7 space-y-6">
-          <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-xs font-mono font-bold tracking-wider uppercase">
+        <div class="lg:col-span-7 space-y-5 sm:space-y-6">
+          <div class="inline-flex items-center px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[11px] font-mono font-bold tracking-wider uppercase">
             🇲🇦 Souveraineté Industrielle du Royaume du Maroc • Loi n° 28-00
           </div>
           
@@ -207,12 +177,12 @@
             <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6">
               Demander un Audit Gratuit (0 MAD) →
             </button>
-            <a href="pwa.html" class="btn btn-o text-xs !py-3.5 px-6">
-              Ouvrir la Workstation PWA 📱
-            </a>
+            <button type="button" onclick="window.triggerPwaInstall()" class="btn btn-o text-xs !py-3.5 px-6">
+              Installer l'Application Mobile 📲
+            </button>
           </div>
 
-          <div class="pt-4 flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
+          <div class="pt-4 flex flex-wrap items-center gap-3 sm:gap-6 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
             <span>Conforme Loi n° 28-00</span>
             <span>•</span>
             <span>Loi CNDP n° 09-08</span>
@@ -345,6 +315,30 @@
     </div>
   </footer>
 
+  <!-- MODAL GUIDE INSTALLATION SMARTPHONE (FALLBACK) -->
+  <div id="installGuideModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card g max-w-sm w-full p-6 space-y-4 text-center font-mono text-xs relative">
+      <button type="button" onclick="document.getElementById('installGuideModal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      
+      <div class="text-3xl">📲</div>
+      <h3 class="font-kemetTitle text-base font-bold text-white">Installer l'Application</h3>
+      
+      <div id="guideTxtAndroid" class="space-y-2 text-slate-300 text-[11px] text-left bg-black/50 p-4 rounded-xl border border-white/10">
+        <p>1. Appuyez sur les <strong>trois points verticaux (⋮)</strong> en haut à droite de Google Chrome.</p>
+        <p>2. Choisissez <strong>« Installer l'application »</strong> ou <strong>« Ajouter à l'écran d'accueil »</strong>.</p>
+        <p>3. L'icône dorée apparaîtra directement sur votre écran d'accueil et écran de verrouillage.</p>
+      </div>
+
+      <div id="guideTxtIOS" class="hidden space-y-2 text-slate-300 text-[11px] text-left bg-black/50 p-4 rounded-xl border border-white/10">
+        <p>1. Touchez le bouton <strong>Partager</strong> en bas de Safari (icône carré avec flèche vers le haut ⎋).</p>
+        <p>2. Faites défiler vers le bas et touchez <strong>« Sur l'écran d'accueil » ➕</strong>.</p>
+        <p>3. Touchez <strong>Ajouter</strong> en haut à droite.</p>
+      </div>
+
+      <button type="button" onclick="document.getElementById('installGuideModal').classList.add('hidden')" class="btn btn-g w-full !py-2.5">J'ai Compris</button>
+    </div>
+  </div>
+
   <!-- MODAL DEMANDE AUDIT GRATUIT (0 MAD) -->
   <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-card g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative">
@@ -394,10 +388,56 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- KERNEL MAAT OS ET ROUTER SMART -->
+  <!-- KERNEL MAAT OS ET ROUTER -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
+
+  <!-- MOTEUR INSTALLATION PWA NATIVO -->
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (err) {
+          console.warn('[SW Home] Enregistrement silencieux:', err);
+        });
+      });
+    }
+
+    var deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      var btn = document.getElementById('btnInstallApp');
+      if (btn) {
+        btn.classList.remove('btn-o');
+        btn.classList.add('btn-g');
+      }
+    });
+
+    window.triggerPwaInstall = async function () {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        var choice = await deferredInstallPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          if (window.Maat && window.Maat.toast) window.Maat.toast("Installation sur votre écran d'accueil confirmée !");
+        }
+        deferredInstallPrompt = null;
+      } else {
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        var modal = document.getElementById('installGuideModal');
+        var iosTxt = document.getElementById('guideTxtIOS');
+        var androidTxt = document.getElementById('guideTxtAndroid');
+        
+        if (isIOS) {
+          if (iosTxt) iosTxt.classList.remove('hidden');
+          if (androidTxt) androidTxt.classList.add('hidden');
+        } else {
+          if (iosTxt) iosTxt.classList.add('hidden');
+          if (androidTxt) androidTxt.classList.remove('hidden');
+        }
+        if (modal) modal.classList.remove('hidden');
+      }
+    };
+
     window.openAuditModal = function () {
       var m = document.getElementById('auditModal');
       if (m) m.classList.remove('hidden');
@@ -405,10 +445,6 @@
     window.closeAuditModal = function () {
       var m = document.getElementById('auditModal');
       if (m) m.classList.add('hidden');
-    };
-    window.toggleMobileNav = function () {
-      var nav = document.getElementById('mobileNavMenu');
-      if (nav) nav.classList.toggle('hidden');
     };
   </script>
 </body>
