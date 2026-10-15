@@ -1,634 +1,392 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark font-sans">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Espace Client ESG & DG Inspection | Industrial Illusion SARL</title>
-    <meta name="description" content="Portail Client B2B PurKemet & DG Control Tower: Suivi des pesées notariées, identification des vecteurs logistiques, bilans CO2 et Certificat Zéro-Déchet ESG.">
-    <meta name="theme-color" content="#00FFA3">
-    
-    <!-- Google Fonts & Tailwind CSS CDN -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Espace Client ESG & DG Inspection | Industrial Illusion SARL</title>
+  <meta name="description" content="Portail Client B2B PurKemet & DG Control Tower: Suivi des pesées notariées, identification des vecteurs logistiques, bilans CO2 et Certificat Zéro-Déchet ESG.">
+  <meta name="theme-color" content="#00FFA3">
+  <meta name="color-scheme" content="dark">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="assets/tw-config.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <link rel="stylesheet" href="assets/maat.css">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        kemetTitle: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    },
-                    colors: {
-                        cyberDark: '#0B0F12',
-                        cyberCard: '#131920',
-                        cyberGreen: '#00FFA3',
-                        cyberGreenDark: '#00B871',
-                        kemetGold: '#C5A059',
-                        kemetGoldBright: '#E8C86A'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #0B0F12; color: #F1F5F9; }
-        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
-        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
-        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
-        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
-        .inp:focus { border-color: #00FFA3; }
-        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
-        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
-        .btn-g:hover { filter: brightness(1.1); }
-        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
-        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+  <style>
+    body { background-color: #0B0F12; color: #F1F5F9; }
+    .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
+    .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
+    .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
+    .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
+    .inp:focus { border-color: #00FFA3; }
+    .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
+    .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
+    .btn-g:hover { filter: brightness(1.1); }
+    .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
+    .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
 
-        @media print {
-            body * { visibility: hidden; }
-            #printable-esg-cert, #printable-esg-cert * { visibility: visible; }
-            #printable-esg-cert { position: absolute; left: 0; top: 0; width: 100%; }
-        }
-    </style>
+    @media print {
+      body * { visibility: hidden; }
+      #printable-esg-cert, #printable-esg-cert * { visibility: visible; }
+      #printable-esg-cert { position: absolute; left: 0; top: 0; width: 100%; border: none !important; box-shadow: none !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- HEADER CLIENT / SUPER-ADMIN -->
-    <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
-                </div>
-                <div>
-                    <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">ESPACE CLIENT ESG B2B</h1>
-                    <p class="text-[9px] font-mono text-cyberGreen uppercase">Industrial Illusion SARL • Data Lake Privé</p>
-                </div>
-            </a>
-
-            <!-- ID CLIENT & ACCÈS SUPER-ADMIN -->
-            <div class="flex items-center space-x-3 sm:space-x-6 font-mono text-xs">
-                <div class="text-right hidden sm:block">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-slate-400 text-[10px]">MODE ACCÈS:</span>
-                        <span id="access-role-tag" class="font-bold text-cyberGreen bg-cyberGreen/10 px-2 py-0.5 rounded border border-cyberGreen/30">CLIENT B2B</span>
-                    </div>
-                    <span id="client-company-name" class="font-bold text-white text-[11px] block mt-0.5">La Mamounia Marrakech</span>
-                </div>
-
-                <button type="button" onclick="window.handleClientLogout()" class="px-3.5 py-2 bg-black border border-white/15 text-slate-300 hover:text-white rounded-xl text-[10px] font-bold">
-                    Quitter 🔒
-                </button>
-            </div>
+  <!-- HEADER CLIENT / SUPER-ADMIN -->
+  <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
+          <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none">
+            <path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/>
+            <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/>
+            <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
+          </svg>
         </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-8 w-full">
-
-        <!-- SUPER-ADMIN DG CONTROL BAR (VISIBILE SOLO SE LOGGATO COME DG) -->
-        <section id="dg-control-bar" class="hidden glass-card au p-4 sm:p-5 font-mono text-xs space-y-3">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-kemetGold/30 pb-3">
-                <div class="flex items-center space-x-2">
-                    <span class="text-lg">👑</span>
-                    <div>
-                        <span class="text-kemetGoldBright font-extrabold text-sm block">BUREAU DE DIRECTION (DG INSPECTION DESK)</span>
-                        <span class="text-[10px] text-slate-400">Roberto Passarella • Super-Admin Control Panel</span>
-                    </div>
-                </div>
-                <div class="text-[10px] text-cyberGreen font-bold bg-cyberGreen/10 px-2.5 py-1 rounded border border-cyberGreen/30">
-                    VUE GLOBALE SYSTEME ACTIVES
-                </div>
-            </div>
-
-            <!-- SELETTORE CLIENTE B2B PER IL SUPER-ADMIN -->
-            <div class="grid sm:grid-cols-12 gap-3 items-center">
-                <label class="sm:col-span-4 lbl !text-kemetGoldBright">Sélectionner un Établissement Client à Inspecter :</label>
-                <div class="sm:col-span-8 flex gap-2">
-                    <select id="dg-client-selector" onchange="window.switchInspectedClient(this.value)" class="inp !py-2 text-xs">
-                        <option value="CL-001">CL-001 — La Mamounia Marrakech [Hôtel / Resort]</option>
-                        <option value="CL-002">CL-002 — Royal Mansour [Hôtel / Resort]</option>
-                        <option value="CL-003">CL-003 — Le Jardin Restaurant [Restaurant B2B]</option>
-                        <option value="CL-004">CL-004 — Clinique Internationale Marrakech [Clinique]</option>
-                    </select>
-                    <button type="button" onclick="window.reloadCurrentInspectedData()" class="px-4 py-2 bg-kemetGold text-black font-bold rounded-xl text-[10px] hover:brightness-110 shrink-0">
-                        Rafraîchir ↻
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- BANNIÈRE ASSISTANCE & CONTACTS DIRECTION -->
-        <section class="glass-card g p-4 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-cyberGreen/20 border border-cyberGreen/40 flex items-center justify-center text-lg shrink-0">
-                    ☎️
-                </div>
-                <div>
-                    <span class="text-cyberGreen font-bold block text-sm">Assistance Client &amp; Support Direct</span>
-                    <p class="text-[11px] text-slate-300">Votre chargé de compte dédié et la Direction Générale PurKemet sont à votre disposition.</p>
-                </div>
-            </div>
-
-            <div class="flex flex-wrap gap-2 w-full md:w-auto text-[11px]">
-                <a href="mailto:info@industrialillusion.ma" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-slate-200 hover:text-cyberGreen flex items-center space-x-1.5">
-                    <span>✉️</span> <span>info@industrialillusion.ma</span>
-                </a>
-                <a href="tel:+212661234567" class="px-3 py-2 bg-black/60 border border-kemetGold/40 rounded-xl text-kemetGoldBright font-bold flex items-center space-x-1.5">
-                    <span>📞</span> <span>+212 6 61 23 45 67</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- KPIS CO2 ET TONNAGE SCELLES -->
-        <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 font-mono">
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-cyberGreen">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Tonnage Notarié (Cumul)</span>
-                <span id="kpi-tonnage" class="text-3xl font-black text-cyberGreen">14.85 <span class="text-xs font-normal">T</span></span>
-                <p class="text-[10px] text-slate-400">Scellé par double pesée Bluetooth</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-kemetGold">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Émissions CO₂ Évitées</span>
-                <span id="kpi-co2" class="text-3xl font-black text-kemetGoldBright">27.02 <span class="text-xs font-normal">T</span></span>
-                <p class="text-[10px] text-slate-400">Facteur UNEP/ADEME 1.82 kg CO₂/kg</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-emerald-500">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Programme Récurrent Active</span>
-                <span id="kpi-schedule" class="text-sm font-bold text-white block pt-1">Lun. &amp; Mer. • 09:00</span>
-                <p class="text-[10px] text-emerald-400">✓ Enlèvement automatique garanti</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-blue-500">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Certificat Zéro-Déchet ESG</span>
-                <span class="text-xs font-bold text-white block pt-1">MENSUEL OFFICIEL</span>
-                <button type="button" onclick="window.generateEsgPdfModal()" class="w-full mt-2 btn btn-g !py-2 !text-[10px] flex items-center justify-center space-x-1">
-                    <span>📜 Exporter Certificat PDF</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- MODULE PROGRAMMATION DES ENLÈVEMENTS (PONCTUEL ET CONTINU) -->
-        <section class="grid lg:grid-cols-2 gap-6">
-            
-            <!-- FORM 1: ENLÈVEMENT SINGLE / EXPRESS -->
-            <div class="glass-card p-6 space-y-4 font-mono text-xs">
-                <div class="border-b border-white/10 pb-3 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold text-white text-sm">🚚 Demander un Enlèvement Ponctuel</h3>
-                        <p class="text-[10px] text-slate-400 font-sans">Intervention sous SLA &lt; 12h ou Urgence Express &lt; 3h</p>
-                    </div>
-                    <span class="px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 text-[9px]">SLA 12H GUARANTEE</span>
-                </div>
-
-                <form onsubmit="window.handleSinglePickupSubmit(event)" class="space-y-3">
-                    <div>
-                        <label class="lbl">Date &amp; Plage Souhaitée *</label>
-                        <input type="datetime-local" id="pickup_datetime" required class="inp mt-1">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="lbl">Sacs Estimés *</label>
-                            <input type="number" id="pickup_bags" required min="1" max="100" value="5" class="inp mt-1">
-                        </div>
-                        <div>
-                            <label class="lbl">Urgence / Type *</label>
-                            <select id="pickup_type" class="inp mt-1">
-                                <option value="STANDARD">Standard (SLA 12h)</option>
-                                <option value="EXPRESS">Express (&lt; 3h)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="lbl">Quiet Window (Plage de Silence Client) *</label>
-                        <select id="pickup_quiet_window" class="inp mt-1">
-                            <option value="NONE">Aucune restriction</option>
-                            <option value="NO_CHECKOUT">Pas de passage 11:00 - 12:30 (Check-out)</option>
-                            <option value="NO_AFTERNOON">Pas de passage 14:00 - 16:00 (Repos)</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-au w-full !py-3">Envoyer Demande d'Enlèvement</button>
-                </form>
-            </div>
-
-            <!-- FORM 2: PROGRAMMATION RECURRENTE (RITIRO CONTINUO) -->
-            <div class="glass-card p-6 space-y-4 font-mono text-xs border-l-4 border-l-kemetGold">
-                <div class="border-b border-white/10 pb-3 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold text-kemetGoldBright text-sm">📅 Enlèvement Récurrent (Programme Continu)</h3>
-                        <p class="text-[10px] text-slate-400 font-sans">Fixez vos jours et heures de passage hebdomadaires automatiques</p>
-                    </div>
-                    <span class="px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/40 text-[9px]">AUTOMATIQUE</span>
-                </div>
-
-                <form onsubmit="window.handleRecurringScheduleSubmit(event)" class="space-y-3">
-                    <div>
-                        <label class="lbl !text-kemetGoldBright">Jours de Passages Hebdomadaires *</label>
-                        <div class="grid grid-cols-3 gap-2 text-[10px] pt-1">
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Lundi" checked class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Lundi</span>
-                            </label>
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Mardi" class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Mardi</span>
-                            </label>
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Mercredi" checked class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Mercredi</span>
-                            </label>
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Jeudi" class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Jeudi</span>
-                            </label>
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Vendredi" class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Vendredi</span>
-                            </label>
-                            <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                                <input type="checkbox" name="schedule_days" value="Samedi" class="rounded border-white/20 bg-black text-kemetGold">
-                                <span>Samedi</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="lbl !text-kemetGoldBright">Heure Fixe de Passage *</label>
-                        <select id="schedule_time" class="inp mt-1">
-                            <option value="08:00">08:00 (Matinée haute efficacité)</option>
-                            <option value="09:00" selected>09:00 (Créneau standard recommandé)</option>
-                            <option value="10:00">10:00 (Avant quiet window)</option>
-                            <option value="16:30">16:30 (Après-midi)</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-g w-full !py-3">Enregistrer le Programme Continu</button>
-                </form>
-            </div>
-
-        </section>
-
-        <!-- DATA LAKE PRIVÉ: HISTORIQUE DES PESÉES NOTARIÉES AVEC DETAILS VECTEUR -->
-        <section class="glass-card p-6 space-y-4">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3 font-mono">
-                <div>
-                    <h3 class="font-kemetTitle text-lg font-bold text-white">Registre Privé Maat Data Lake</h3>
-                    <p class="text-xs text-slate-400">Traçabilité complète avec identification exacte du Vecteur Logistique et notariation double pesée.</p>
-                </div>
-                <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs rounded-xl font-bold">
-                    CONNECTED SUPABASE REALTIME
-                </span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left font-mono text-xs">
-                    <thead>
-                        <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
-                            <th class="py-3 px-2">N° Lot</th>
-                            <th class="py-3 px-2">Matériau</th>
-                            <th class="py-3 px-2">Pesée 1 (Site)</th>
-                            <th class="py-3 px-2">Pesée 2 (Dépôt)</th>
-                            <th class="py-3 px-2">Écart Δ</th>
-                            <th class="py-3 px-2">Vecteur Logistique (ID &amp; Nom)</th>
-                            <th class="py-3 px-2">Statut</th>
-                            <th class="py-3 px-2 text-right">Cryptographic Key</th>
-                        </tr>
-                    </thead>
-                    <tbody id="client-pesees-tbody" class="divide-y divide-white/5 text-slate-300">
-                        <tr>
-                            <td colspan="8" class="py-4 text-center text-slate-500">Chargement de l'historique des pesées depuis Supabase...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL APERÇU / IMPRESSION CERTIFICAT ZÉRO-DÉCHET ESG -->
-    <div id="esgCertModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="max-w-2xl w-full space-y-4">
-            
-            <!-- ZONE D'IMPRESSION DU CERTIFICAT -->
-            <div id="printable-esg-cert" class="bg-slate-900 text-slate-100 border-2 border-kemetGold p-8 rounded-3xl space-y-6 relative font-mono shadow-2xl">
-                
-                <!-- HEADER CERTIFICAT -->
-                <div class="flex justify-between items-start border-b border-kemetGold/40 pb-4">
-                    <div>
-                        <h2 class="font-kemetTitle text-xl font-black text-cyberGreen tracking-wider">INDUSTRIAL ILLUSION SARL</h2>
-                        <p class="text-[10px] text-kemetGoldBright uppercase font-bold">CERTIFICAT ESG ZÉRO-DÉCHET AU MAAT DATA LAKE</p>
-                    </div>
-                    <div class="text-right text-[9px] text-slate-400">
-                        <span>DOCUMENT REF: <strong id="cert-ref-id" class="text-white">ESG-2026-CL9082</strong></span><br>
-                        <span>DATE D'ÉMISSION: <strong id="cert-date-now">11/10/2026</strong></span>
-                    </div>
-                </div>
-
-                <!-- ATTESTATION PRINCIPALE -->
-                <div class="space-y-2 text-xs font-sans text-slate-200">
-                    <p class="text-sm font-bold text-white">Nous attestons par la présente que l'établissement :</p>
-                    <div class="p-3 bg-black/60 border border-kemetGold/30 rounded-xl font-mono text-center">
-                        <span id="cert-client-title" class="text-base font-black text-kemetGoldBright block">LA MAMOUNIA MARRAKECH</span>
-                        <span id="cert-client-ice" class="text-[10px] text-slate-400">ICE : 001928374000082 • Préfecture de Marrakech</span>
-                    </div>
-                    <p class="text-xs leading-relaxed text-slate-300 pt-1">
-                        A satisfait aux exigences du protocole de valorisation sélective <strong>PurKemet B2B</strong> et de la <strong>Loi n° 28-00</strong>. L'ensemble des gisements de matières sèches secondaires a été mesuré par double pesée Bluetooth certifiée et notarié de manière immuable sur le Maat Data Lake.
-                    </p>
-                </div>
-
-                <!-- TABLEAU DES DONNÉES NOTARIÉES -->
-                <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono">
-                    <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-                        <span class="text-[9px] text-slate-400 block uppercase">Matières Valorisées</span>
-                        <span id="cert-tonnage-val" class="text-lg font-black text-cyberGreen">14.85 T</span>
-                    </div>
-                    <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-                        <span class="text-[9px] text-slate-400 block uppercase">CO₂ Évité (ADEME)</span>
-                        <span id="cert-co2-val" class="text-lg font-black text-kemetGoldBright">27.02 T</span>
-                    </div>
-                    <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-                        <span class="text-[9px] text-slate-400 block uppercase">Conformité CNDP</span>
-                        <span class="text-lg font-black text-white">100% Notarié</span>
-                    </div>
-                </div>
-
-                <!-- SIGNATURE & HASH BLOCKCHAIN -->
-                <div class="flex justify-between items-end border-t border-white/10 pt-4 text-[10px] font-mono">
-                    <div>
-                        <span class="text-slate-400 block">SIGNATURE DIRECTION GÉNÉRALE:</span>
-                        <span class="font-bold text-white text-xs">Roberto Passarella</span><br>
-                        <span class="text-[9px] text-slate-500">Directeur Général • Industrial Illusion SARL</span>
-                    </div>
-
-                    <div class="text-right space-y-1">
-                        <span class="text-slate-400 block">HASH CRYPTOGRAPHIQUE MASTER:</span>
-                        <span id="cert-hash-master" class="text-[8px] font-bold text-cyberGreen block bg-black/80 px-2 py-1 rounded border border-cyberGreen/30">0x9F82A4C0018274B3819208472910</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- CONTROLES MODAL -->
-            <div class="flex justify-between items-center font-mono text-xs">
-                <button type="button" onclick="window.closeEsgPdfModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
-                <button type="button" onclick="window.printEsgCert()" class="btn btn-g !py-2.5 px-6">🖨️ Imprimer / Sauvegarder PDF</button>
-            </div>
+        <div>
+          <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">ESPACE CLIENT ESG B2B</h1>
+          <p class="text-[9px] font-mono text-cyberGreen uppercase">Industrial Illusion SARL • Data Lake Privé</p>
         </div>
+      </a>
+
+      <!-- ID CLIENT & ACCÈS SUPER-ADMIN -->
+      <div class="flex items-center space-x-3 sm:space-x-6 font-mono text-xs">
+        <div class="text-right hidden sm:block">
+          <div class="flex items-center space-x-2">
+            <span class="text-slate-400 text-[10px]">MODE ACCÈS:</span>
+            <span id="access-role-tag" class="font-bold text-cyberGreen bg-cyberGreen/10 px-2 py-0.5 rounded border border-cyberGreen/30">CLIENT B2B</span>
+          </div>
+          <span id="client-company-name" class="font-bold text-white text-[11px] block mt-0.5">Chargement...</span>
+        </div>
+
+        <button type="button" onclick="window.handleClientLogout()" class="px-3.5 py-2 bg-black border border-white/15 text-slate-300 hover:text-white rounded-xl text-[10px] font-bold">
+          Quitter 🔒
+        </button>
+      </div>
     </div>
+  </header>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
-        © 2026 Industrial Illusion SARL — Espace ESG B2B. Tous droits réservés.
-    </footer>
+  <!-- MAIN CONTAINER -->
+  <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-8 w-full flex-1">
 
-    <!-- LOGIQUE JAVASCRIPT ESPACE CLIENT & DG CONTROL PANEL -->
-    <script>
-        (function() {
-            'use strict';
-            var $ = function(id) { return document.getElementById(id); };
+    <!-- SUPER-ADMIN DG CONTROL BAR (VISIBILE SOLO SE LOGGATO COME DG) -->
+    <section id="dg-control-bar" class="hidden glass-card au p-4 sm:p-5 font-mono text-xs space-y-3">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-kemetGold/30 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-lg">👑</span>
+          <div>
+            <span class="text-kemetGoldBright font-extrabold text-sm block">BUREAU DE DIRECTION (DG INSPECTION DESK)</span>
+            <span class="text-[10px] text-slate-400">Roberto Passarella • Super-Admin Control Panel</span>
+          </div>
+        </div>
+        <div class="text-[10px] text-cyberGreen font-bold bg-cyberGreen/10 px-2.5 py-1 rounded border border-cyberGreen/30">
+          VUE GLOBALE SYSTÈME ACTIVE
+        </div>
+      </div>
 
-            const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
-            const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
-            let supabaseClient = null;
+      <!-- SELETTORE CLIENTE B2B PER IL SUPER-ADMIN -->
+      <div class="grid sm:grid-cols-12 gap-3 items-center">
+        <label class="sm:col-span-4 lbl !text-kemetGoldBright">Sélectionner un Établissement Client à Inspecter :</label>
+        <div class="sm:col-span-8 flex gap-2">
+          <select id="dg-client-selector" onchange="window.switchInspectedClient(this.value)" class="inp !py-2 text-xs">
+            <option value="">Chargement des établissements actifs...</option>
+          </select>
+          <button type="button" onclick="window.reloadCurrentInspectedData()" class="px-4 py-2 bg-kemetGold text-black font-bold rounded-xl text-[10px] hover:brightness-110 shrink-0">
+            Rafraîchir ↻
+          </button>
+        </div>
+      </div>
+    </section>
 
-            try {
-                if (window.supabase && window.supabase.createClient) {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                }
-            } catch (err) {}
+    <!-- BANNIÈRE ASSISTANCE & CONTACTS DIRECTION -->
+    <section class="glass-card g p-4 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-cyberGreen/20 border border-cyberGreen/40 flex items-center justify-center text-lg shrink-0">
+          ☎️
+        </div>
+        <div>
+          <span class="text-cyberGreen font-bold block text-sm">Assistance Client &amp; Support Direct</span>
+          <p class="text-[11px] text-slate-300">Votre chargé de compte dédié et la Direction Générale PurKemet sont à votre disposition.</p>
+        </div>
+      </div>
 
-            var isSuperAdmin = sessionStorage.getItem('purkemet_auth') === 'superadmin' || sessionStorage.getItem('purkemet_role') === 'superadmin';
-            var selectedClientId = sessionStorage.getItem('purkemet_client_id') || 'CL-001';
-            var selectedClientName = sessionStorage.getItem('purkemet_name') || 'La Mamounia Marrakech';
+      <div class="flex flex-wrap gap-2 w-full md:w-auto text-[11px]">
+        <a href="mailto:r.passarella@industrialillusion.ma" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-slate-200 hover:text-cyberGreen flex items-center space-x-1.5">
+          <span>✉️</span> <span>r.passarella@industrialillusion.ma</span>
+        </a>
+        <a href="tel:+212600000000" class="px-3 py-2 bg-black/60 border border-kemetGold/40 rounded-xl text-kemetGoldBright font-bold flex items-center space-x-1.5">
+          <span>📞</span> <span>+212 6 00 00 00 00</span>
+        </a>
+      </div>
+    </section>
 
-            // BASE DATI DIMOSTRATIVA / FALLBACK PER I CLIENTI B2B
-            var fallbackClientsDb = {
-                'CL-001': {
-                    name: 'La Mamounia Marrakech',
-                    category: 'Hôtel / Resort 5*',
-                    ice: '001928374000082',
-                    pesees: [
-                        { lot: 'LOT-901', mat: 'PET Transparent', w1: '18.50', w2: '18.45', delta: '-0.05', vector: 'VEC-502 | Hassan M.', status: 'ANCHORED', hash: '0x8f2a...901' },
-                        { lot: 'LOT-884', mat: 'Carton Ondulé', w1: '124.00', w2: '123.80', delta: '-0.20', vector: 'VEC-502 | Hassan M.', status: 'ANCHORED', hash: '0x4c9e...884' },
-                        { lot: 'LOT-812', mat: 'Aluminium Cannettes', w1: '42.10', w2: '42.10', delta: '0.00', vector: 'VEC-508 | Omar K.', status: 'ANCHORED', hash: '0x12b4...812' }
-                    ]
-                },
-                'CL-002': {
-                    name: 'Royal Mansour',
-                    category: 'Hôtel / Palace 5*',
-                    ice: '002847591000033',
-                    pesees: [
-                        { lot: 'LOT-902', mat: 'Carton Ondulé', w1: '34.20', w2: '34.10', delta: '-0.10', vector: 'VEC-508 | Omar K.', status: 'ANCHORED', hash: '0x7b1c...902' },
-                        { lot: 'LOT-871', mat: 'Verre Bouteilles', w1: '210.00', w2: '209.50', delta: '-0.50', vector: 'VEC-502 | Hassan M.', status: 'ANCHORED', hash: '0x33a1...871' }
-                    ]
-                },
-                'CL-003': {
-                    name: 'Le Jardin Restaurant',
-                    category: 'Restaurant / Médina',
-                    ice: '003192847000012',
-                    pesees: [
-                        { lot: 'LOT-792', mat: 'PE-HD Flaconnage', w1: '12.40', w2: '12.40', delta: '0.00', vector: 'VEC-508 | Omar K.', status: 'ANCHORED', hash: '0x99e2...792' }
-                    ]
-                },
-                'CL-004': {
-                    name: 'Clinique Internationale Marrakech',
-                    category: 'Établissement de Santé',
-                    ice: '004829301000055',
-                    pesees: [
-                        { lot: 'LOT-750', mat: 'Carton Pharmacie', w1: '85.00', w2: '84.90', delta: '-0.10', vector: 'VEC-502 | Hassan M.', status: 'ANCHORED', hash: '0x55f1...750' }
-                    ]
-                }
-            };
+    <!-- KPIS CO2 ET TONNAGE SCELLES -->
+    <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 font-mono">
+      <div class="glass-card p-5 space-y-2 border-l-4 border-l-cyberGreen">
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Tonnage Notarié (Cumul P2)</span>
+        <span id="kpi-tonnage" class="text-3xl font-black text-cyberGreen">0.00 <span class="text-xs font-normal">T</span></span>
+        <p class="text-[10px] text-slate-400">Scellé par double pesée Bluetooth Hub</p>
+      </div>
 
-            // INITIALISATION INTERFACE
-            function initDashboardUI() {
-                if (isSuperAdmin) {
-                    if ($('dg-control-bar'))$('dg-control-bar').classList.remove('hidden');
-                    if ($('access-role-tag')) {$('access-role-tag').innerText = "SUPER-ADMIN (DG)";
-                        $('access-role-tag').className = "font-bold text-kemetGoldBright bg-kemetGold/20 px-2 py-0.5 rounded border border-kemetGold/40";
-                    }
-                    loadRealClientsForDgSelector();
-                } else {
-                    if ($('dg-control-bar'))$('dg-control-bar').classList.add('hidden');
-                    if ($('access-role-tag')) {$('access-role-tag').innerText = "CLIENT B2B";
-                        $('access-role-tag').className = "font-bold text-cyberGreen bg-cyberGreen/10 px-2 py-0.5 rounded border border-cyberGreen/30";
-                    }
-                }
+      <div class="glass-card p-5 space-y-2 border-l-4 border-l-kemetGold">
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Émissions CO₂ Évitées</span>
+        <span id="kpi-co2" class="text-3xl font-black text-kemetGoldBright">0.00 <span class="text-xs font-normal">T eq.</span></span>
+        <p class="text-[10px] text-slate-400">Ratios officiels PurKemet / ADEME</p>
+      </div>
 
-                window.loadClientData(selectedClientId);
-            }
+      <div class="glass-card p-5 space-y-2 border-l-4 border-l-emerald-500">
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Programme Actif / Statut</span>
+        <span id="kpi-schedule" class="text-sm font-bold text-white block pt-1">Sur Demande</span>
+        <p class="text-[10px] text-emerald-400">✓ Enlèvement garanti sous SLA</p>
+      </div>
 
-            // CARICAMENTO LISTA CLIENTI REALE SU SUPABASE PER IL MENU A TENDINA DG
-            async function loadRealClientsForDgSelector() {
-                var selector = $('dg-client-selector');
-                if (!selector) return;
+      <div class="glass-card p-5 space-y-2 border-l-4 border-l-blue-500">
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Certificat Zéro-Déchet ESG</span>
+        <span id="kpi-cert-status" class="text-xs font-bold text-white block pt-1">DISPONIBLE</span>
+        <button type="button" id="btn-cert-action" onclick="window.handleEsgCertAction()" class="w-full mt-2 btn btn-g !py-2 !text-[10px] flex items-center justify-center space-x-1">
+          <span>📜 Demander / Voir Attestation</span>
+        </button>
+      </div>
+    </section>
 
-                try {
-                    if (supabaseClient) {
-                        const { data: clients, error } = await supabaseClient.from('clients').select('*');
-                        if (!error && clients && clients.length > 0) {
-                            selector.innerHTML = clients.map(c => `
-                                <option value="${c.id}">${c.id} — ${c.company_name} [${c.horeca_category || 'B2B'}]</option>
-                            `).join('');
-                            return;
-                        }
-                    }
-                } catch(e) {}
-            }
+    <!-- MODULE PROGRAMMATION DES ENLÈVEMENTS (PONCTUEL ET CONTINU) -->
+    <section class="grid lg:grid-cols-2 gap-6">
+      
+      <!-- FORM 1: ENLÈVEMENT SINGLE / EXPRESS -->
+      <div class="glass-card p-6 space-y-4 font-mono text-xs">
+        <div class="border-b border-white/10 pb-3 flex justify-between items-center">
+          <div>
+            <h3 class="font-bold text-white text-sm">🚚 Demander un Enlèvement Ponctuel (On-Demand)</h3>
+            <p class="text-[10px] text-slate-400 font-sans">Intervention sous SLA &lt; 12h ou Urgence Express &lt; 3h</p>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 text-[9px]">SLA GUARANTEE</span>
+        </div>
 
-            // CARICAMENTO ED ISPEZIONE DATI CLIENTE SELEZIONATO
-            window.loadClientData = async function(clientId) {
-                selectedClientId = clientId || 'CL-001';
-                var clientInfo = fallbackClientsDb[selectedClientId] || { name: 'Établissement B2B', category: 'HoReCa', ice: '00100000000000', pesees: [] };
+        <form onsubmit="window.handleSinglePickupSubmit(event)" class="space-y-3">
+          <div>
+            <label class="lbl">Date &amp; Heure Souhaitée *</label>
+            <input type="datetime-local" id="pickup_datetime" required class="inp mt-1">
+          </div>
 
-                if ($('client-company-name'))$('client-company-name').innerText = clientInfo.name;
-                if ($('cert-client-title'))$('cert-client-title').innerText = clientInfo.name.toUpperCase();
-                if ($('cert-client-ice'))$('cert-client-ice').innerText = "ICE : " + clientInfo.ice + " • Préfecture de Marrakech";
-                if ($('cert-ref-id'))$('cert-ref-id').innerText = "ESG-2026-" + selectedClientId;
-                if ($('cert-date-now'))$('cert-date-now').innerText = new Date().toLocaleDateString('fr-FR');
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="lbl">Sacs / Bacs Estimés *</label>
+              <input type="number" id="pickup_bags" required min="1" max="200" value="5" class="inp mt-1">
+            </div>
+            <div>
+              <label class="lbl">Priorité / Type *</label>
+              <select id="pickup_type" class="inp mt-1">
+                <option value="STANDARD">Standard (SLA 12h)</option>
+                <option value="EXPRESS">Express (&lt; 3h)</option>
+              </select>
+            </div>
+          </div>
 
-                var tbody = $('client-pesees-tbody');
-                if (!tbody) return;
+          <div>
+            <label class="lbl">Matières Prédominantes *</label>
+            <input type="text" id="pickup_materials" required placeholder="Ex: Cartons livraison + Verre événement" class="inp mt-1">
+          </div>
 
-                try {
-                    if (supabaseClient) {
-                        const { data: pesees, error } = await supabaseClient
-                            .from('collections')
-                            .select('*')
-                            .eq('client_id', selectedClientId)
-                            .order('created_at', { ascending: false });
+          <div>
+            <label class="lbl">Quiet Window (Plage de Silence Établissement) *</label>
+            <select id="pickup_quiet_window" class="inp mt-1">
+              <option value="NONE">Aucune restriction</option>
+              <option value="NO_CHECKOUT">Pas de passage 11:00 - 12:30 (Check-out)</option>
+              <option value="NO_AFTERNOON">Pas de passage 14:00 - 16:00 (Repos)</option>
+            </select>
+          </div>
 
-                        if (!error && pesees && pesees.length > 0) {
-                            renderPeseesTable(pesees);
-                            return;
-                        }
-                    }
-                } catch(e) {}
+          <div>
+            <label class="lbl">Contact Référent sur place (Stewarding / Quai)</label>
+            <input type="text" id="pickup_contact" placeholder="Nom et n° de poste / GSM" class="inp mt-1">
+          </div>
 
-                // FALLBACK DIMOSTRATIVO DAL DB LOCALE
-                renderPeseesTableFallback(clientInfo.pesees);
-            };
+          <button type="submit" id="btn-submit-single" class="btn btn-au w-full !py-3">Envoyer Demande d'Enlèvement</button>
+        </form>
+      </div>
 
-            function renderPeseesTable(pesees) {
-                var tbody = $('client-pesees-tbody');
-                let totalKg = 0;
+      <!-- FORM 2: PROGRAMMATION RÉCURRENTE (RITIRO CONTINUO) -->
+      <div class="glass-card p-6 space-y-4 font-mono text-xs border-l-4 border-l-kemetGold">
+        <div class="border-b border-white/10 pb-3 flex justify-between items-center">
+          <div>
+            <h3 class="font-bold text-kemetGoldBright text-sm">📅 Enlèvement Récurrent (Programme Continu)</h3>
+            <p class="text-[10px] text-slate-400 font-sans">Fixez vos jours et heures de passage hebdomadaires automatiques</p>
+          </div>
+          <span class="px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/40 text-[9px]">AUTOMATIQUE</span>
+        </div>
 
-                tbody.innerHTML = pesees.map(p => {
-                    var w1 = parseFloat(p.weight_collect_kg || 0);
-                    var w2 = p.weight_depot_kg ? parseFloat(p.weight_depot_kg) : 0;
-                    totalKg += (w2 > 0 ? w2 : w1);
+        <form onsubmit="window.handleRecurringScheduleSubmit(event)" class="space-y-3">
+          <div>
+            <label class="lbl !text-kemetGoldBright">Jours de Passages Hebdomadaires *</label>
+            <div class="grid grid-cols-3 gap-2 text-[10px] pt-1">
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Lundi" checked class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Lundi</span>
+              </label>
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Mardi" class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Mardi</span>
+              </label>
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Mercredi" checked class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Mercredi</span>
+              </label>
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Jeudi" class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Jeudi</span>
+              </label>
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Vendredi" class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Vendredi</span>
+              </label>
+              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
+                <input type="checkbox" name="schedule_days" value="Samedi" class="rounded border-white/20 bg-black text-kemetGold">
+                <span>Samedi</span>
+              </label>
+            </div>
+          </div>
 
-                    var deltaStr = p.weight_depot_kg ? (w2 - w1).toFixed(2) + ' Kg' : '-';
-                    var vectorStr = p.operator_email ? 'VEC-' + Math.floor(500 + Math.random()*50) + ' | ' + p.operator_email.split('@')[0] : 'VEC-502 | Hassan M.';
+          <div>
+            <label class="lbl !text-kemetGoldBright">Heure Fixe de Passage *</label>
+            <select id="schedule_time" class="inp mt-1">
+              <option value="08:00">08:00 (Matinée haute efficacité)</option>
+              <option value="09:00" selected>09:00 (Créneau standard recommandé)</option>
+              <option value="10:00">10:00 (Avant quiet window)</option>
+              <option value="16:30">16:30 (Après-midi)</option>
+            </select>
+          </div>
 
-                    return `
-                        <tr>
-                            <td class="py-3.5 px-2 font-bold text-white">${p.bag_qr_id}</td>
-                            <td class="py-3.5 px-2 text-cyberGreen font-bold">${p.material_type}</td>
-                            <td class="py-3.5 px-2">${w1.toFixed(2)} Kg</td>
-                            <td class="py-3.5 px-2">${w2 > 0 ? w2.toFixed(2) + ' Kg' : '-'}</td>
-                            <td class="py-3.5 px-2 text-kemetGoldBright">${deltaStr}</td>
-                            <td class="py-3.5 px-2 text-slate-300 font-bold">${vectorStr}</td>
-                            <td class="py-3.5 px-2"><span class="px-2 py-0.5 rounded ${p.status === 'ANCHORED' ? 'bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30' : 'bg-kemetGold/20 text-kemetGold'} font-bold">${p.status || 'IN_TRANSIT'}</span></td>
-                            <td class="py-3.5 px-2 text-right text-slate-400 font-bold">${p.blockchain_hash || '0xPending'}</td>
-                        </tr>
-                    `;
-                }).join('');
+          <div>
+            <label class="lbl !text-kemetGoldBright">Matières concernées par la récurrence</label>
+            <input type="text" id="schedule_materials" placeholder="PET, Cartons, Aluminium..." class="inp mt-1" value="Carton ondulé, Bouteilles PET">
+          </div>
 
-                updateKpiCards(totalKg);
-            }
+          <button type="submit" id="btn-submit-recurring" class="btn btn-g w-full !py-3">Enregistrer le Programme Continu</button>
+        </form>
+      </div>
 
-            function renderPeseesTableFallback(pesees) {
-                var tbody = $('client-pesees-tbody');
-                let totalKg = 0;
+    </section>
 
-                if (pesees.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-500">Aucune pesée notariée enregistrée pour cet établissement.</td></tr>';
-                    updateKpiCards(0);
-                    return;
-                }
+    <!-- DATA LAKE PRIVÉ: HISTORIQUE DES PESÉES NOTARIÉES AVEC DÉTAILS VECTEUR -->
+    <section class="glass-card p-6 space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-white/10 pb-3 font-mono">
+        <div>
+          <h3 class="font-kemetTitle text-lg font-bold text-white">Registre Privé Maat Data Lake</h3>
+          <p class="text-xs text-slate-400">Traçabilité complète avec double pesée scellée et identification de l'opérateur logistique.</p>
+        </div>
+        <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs rounded-xl font-bold">
+          IMMUTABLE ANCHORING
+        </span>
+      </div>
 
-                tbody.innerHTML = pesees.map(p => {
-                    var wVal = parseFloat(p.w2 !== '-' ? p.w2 : p.w1);
-                    totalKg += wVal;
+      <div class="overflow-x-auto">
+        <table class="w-full text-left font-mono text-xs">
+          <thead>
+            <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
+              <th class="py-3 px-2">Date &amp; Heure</th>
+              <th class="py-3 px-2">N° Lot QR</th>
+              <th class="py-3 px-2">Matériau</th>
+              <th class="py-3 px-2 text-right">Pesée 1 (Site)</th>
+              <th class="py-3 px-2 text-right">Pesée 2 (Hub)</th>
+              <th class="py-3 px-2 text-right">Écart Δ</th>
+              <th class="py-3 px-2">Opérateur / Vecteur</th>
+              <th class="py-3 px-2 text-center">Statut</th>
+              <th class="py-3 px-2 text-right">Hash Blockchain</th>
+            </tr>
+          </thead>
+          <tbody id="client-pesees-tbody" class="divide-y divide-white/5 text-slate-300">
+            <tr>
+              <td colspan="9" class="py-8 text-center text-slate-500 font-mono">Chargement du Data Lake privé...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-                    return `
-                        <tr>
-                            <td class="py-3.5 px-2 font-bold text-white">${p.lot}</td>
-                            <td class="py-3.5 px-2 text-cyberGreen font-bold">${p.mat}</td>
-                            <td class="py-3.5 px-2">${p.w1} Kg</td>
-                            <td class="py-3.5 px-2">${p.w2} Kg</td>
-                            <td class="py-3.5 px-2 text-kemetGoldBright">${p.delta} Kg</td>
-                            <td class="py-3.5 px-2 text-slate-300 font-bold">${p.vector}</td>
-                            <td class="py-3.5 px-2"><span class="px-2 py-0.5 rounded bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30 font-bold">${p.status}</span></td>
-                            <td class="py-3.5 px-2 text-right text-slate-400 font-bold">${p.hash}</td>
-                        </tr>
-                    `;
-                }).join('');
+  </main>
 
-                updateKpiCards(totalKg);
-            }
+  <!-- MODAL CERTIFICAT ZÉRO-DÉCHET ESG -->
+  <div id="esgCertModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="max-w-2xl w-full space-y-4">
+      
+      <!-- ZONE D'IMPRESSION DU CERTIFICAT -->
+      <div id="printable-esg-cert" class="bg-slate-900 text-slate-100 border-2 border-kemetGold p-8 rounded-3xl space-y-6 relative font-mono shadow-2xl">
+        
+        <div class="flex justify-between items-start border-b border-kemetGold/40 pb-4">
+          <div>
+            <h2 class="font-kemetTitle text-xl font-black text-cyberGreen tracking-wider">INDUSTRIAL ILLUSION SARL</h2>
+            <p class="text-[10px] text-kemetGoldBright uppercase font-bold">CERTIFICAT ESG ZÉRO-DÉCHET AU MAAT DATA LAKE</p>
+          </div>
+          <div class="text-right text-[9px] text-slate-400">
+            <span>RÉFÉRENCE: <strong id="cert-ref-id" class="text-white">ESG-2026-CL01</strong></span><br>
+            <span>DATE D'ÉMISSION: <strong id="cert-date-now">15/10/2026</strong></span>
+          </div>
+        </div>
 
-            function updateKpiCards(totalKg) {
-                var totalTonnageT = (totalKg / 1000).toFixed(2);
-                var totalCo2T = (totalTonnageT * 1.82).toFixed(2);
+        <div class="space-y-2 text-xs font-sans text-slate-200">
+          <p class="text-sm font-bold text-white">Nous attestons par la présente que l'établissement partenaire :</p>
+          <div class="p-3 bg-black/60 border border-kemetGold/30 rounded-xl font-mono text-center">
+            <span id="cert-client-title" class="text-base font-black text-kemetGoldBright block">ÉTABLISSEMENT PARTENAIRE</span>
+            <span id="cert-client-ice" class="text-[10px] text-slate-400">ICE : Enregistré au Registre Central PurKemet</span>
+          </div>
+          <p class="text-xs leading-relaxed text-slate-300 pt-1">
+            A satisfait aux exigences du protocole de valorisation sélective <strong>PurKemet B2B</strong> et de la <strong>Loi marocaine n° 28-00</strong>. L'ensemble des gisements de matières secondaires a été mesuré par double pesée Bluetooth certifiée et notarié de manière immuable sur le Maat Data Lake.
+          </p>
+        </div>
 
-                if ($('kpi-tonnage'))$('kpi-tonnage').innerHTML = totalTonnageT + ' <span class="text-xs font-normal">T</span>';
-                if ($('kpi-co2'))$('kpi-co2').innerHTML = totalCo2T + ' <span class="text-xs font-normal">T</span>';
-                if ($('cert-tonnage-val'))$('cert-tonnage-val').innerText = totalTonnageT + ' T';
-                if ($('cert-co2-val'))$('cert-co2-val').innerText = totalCo2T + ' T';
-            }
+        <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono">
+          <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
+            <span class="text-[9px] text-slate-400 block uppercase">Matières Valorisées</span>
+            <span id="cert-tonnage-val" class="text-lg font-black text-cyberGreen">0.00 T</span>
+          </div>
+          <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
+            <span class="text-[9px] text-slate-400 block uppercase">CO₂ Évité (ADEME)</span>
+            <span id="cert-co2-val" class="text-lg font-black text-kemetGoldBright">0.00 T</span>
+          </div>
+          <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
+            <span class="text-[9px] text-slate-400 block uppercase">Conformité RSE</span>
+            <span class="text-lg font-black text-white">100% Notarié</span>
+          </div>
+        </div>
 
-            // SWITCH CLIENT DA PARTE DEL SUPER-ADMIN
-            window.switchInspectedClient = function(clientId) {
-                window.loadClientData(clientId);
-            };
+        <div class="flex justify-between items-end border-t border-white/10 pt-4 text-[10px] font-mono">
+          <div>
+            <span class="text-slate-400 block">SIGNATURE DIRECTION GÉNÉRALE:</span>
+            <span class="font-bold text-white text-xs">Roberto Passarella</span><br>
+            <span class="text-[9px] text-slate-500">Directeur Général • Industrial Illusion SARL</span>
+          </div>
 
-            window.reloadCurrentInspectedData = function() {
-                var selector = $('dg-client-selector');
-                window.loadClientData(selector ? selector.value : selectedClientId);
-            };
+          <div class="text-right space-y-1">
+            <span class="text-slate-400 block">HASH CRYPTOGRAPHIQUE MASTER:</span>
+            <span id="cert-hash-master" class="text-[8px] font-bold text-cyberGreen block bg-black/80 px-2 py-1 rounded border border-cyberGreen/30">0xPending</span>
+          </div>
+        </div>
 
-            // HANDLERS RITIRI
-            window.handleSinglePickupSubmit = function(e) {
-                e.preventDefault();
-                var datetime = $('pickup_datetime').value;
-                var bags = $('pickup_bags').value;
-                alert("✅ DEMANDE D'ENLÈVEMENT ENREGISTRÉE POUR " + selectedClientName + " !\n\n• Date: " + datetime + "\n• Sacs: " + bags + "\n\nUn vecteur PurKemet a été affecté.");
-            };
+      </div>
 
-            window.handleRecurringScheduleSubmit = function(e) {
-                e.preventDefault();
-                var days = Array.from(document.querySelectorAll('input[name="schedule_days"]:checked')).map(cb => cb.value);
-                var time = $('schedule_time').value;
+      <div class="flex justify-between items-center font-mono text-xs no-print">
+        <button type="button" onclick="window.closeEsgPdfModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
+        <button type="button" onclick="window.printEsgCert()" class="btn btn-g !py-2.5 px-6">🖨️ Imprimer / Sauvegarder PDF</button>
+      </div>
+    </div>
+  </div>
 
-                if (days.length === 0) return alert("Sélectionnez au moins un jour de passage.");
-                if ($('kpi-schedule'))$('kpi-schedule').innerText = days.slice(0, 2).join(' & ') + ' • ' + time;
+  <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
+    © 2026 Industrial Illusion SARL — Espace ESG B2B. Tous droits réservés.
+  </footer>
 
-                alert("✅ PROGRAMME RECURRENT ENREGISTRÉ POUR " + selectedClientName + " !\n\nJours: " + days.join(', ') + " à " + time);
-            };
+  <div id="toasts" class="toasts" aria-live="polite"></div>
 
-            window.generateEsgPdfModal = function() { $('esgCertModal').classList.remove('hidden'); };
-            window.closeEsgPdfModal = function() { $('esgCertModal').classList.add('hidden'); };
-            window.printEsgCert = function() { window.print(); };
-
-            window.handleClientLogout = function() {
-                try { sessionStorage.clear(); localStorage.clear(); } catch(e) {}
-                window.location.href = 'index.html';
-            };
-
-            window.addEventListener('DOMContentLoaded', initDashboardUI);
-        })();
-    </script>
+  <script src="assets/core.js"></script>
+  <script src="assets/dashboard.js"></script>
 </body>
 </html>
