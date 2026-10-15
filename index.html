@@ -12,16 +12,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Industrial Illusion">
-<meta name="referrer" content="no-referrer">
 
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="assets/tw-config.js"></script>
 <script src="assets/config.js"></script>
@@ -30,9 +27,9 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · INDEX.HTML — Design System v5.2
+   INDUSTRIAL ILLUSION · v6.0 — Design System Local
    ============================================================ */
-html, body { overflow-x: hidden; }
+html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
 body {
   background-color: #090D10 !important;
@@ -47,6 +44,187 @@ body {
   margin: 0;
 }
 
+/* ============================================================
+   ANIMATION 1 : Barre de progression du scroll
+   ============================================================ */
+#scrollProgress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
+  z-index: 9999;
+  box-shadow: 0 0 12px rgba(0, 255, 163, .6);
+  transition: width .1s ease-out;
+}
+
+/* ============================================================
+   ANIMATION 2 : Particules flottantes en arrière-plan
+   ============================================================ */
+#particleField {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .4;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: #00FFA3;
+  box-shadow: 0 0 6px #00FFA3;
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  to { transform: translateY(-100vh) scale(.3); opacity: 0; }
+}
+
+/* ============================================================
+   ANIMATION 3 : Glitch sur titre hover
+   ============================================================ */
+.glitch-hover {
+  display: inline-block;
+  position: relative;
+  transition: color .3s;
+}
+.glitch-hover:hover {
+  animation: glitchText 0.5s ease;
+}
+@keyframes glitchText {
+  0%, 100% { text-shadow: none; transform: translate(0); }
+  20% { text-shadow: 2px 0 #00FFA3, -2px 0 #C5A059; transform: translate(-1px, 1px); }
+  40% { text-shadow: -2px 0 #00FFA3, 2px 0 #C5A059; transform: translate(1px, -1px); }
+  60% { text-shadow: 2px 0 #00FFA3, -2px 0 #C5A059; transform: translate(-1px, 0); }
+  80% { text-shadow: -2px 0 #00FFA3, 2px 0 #C5A059; transform: translate(1px, 1px); }
+}
+
+/* ============================================================
+   ANIMATION 4 : Effet machine à écrire sur le badge hero
+   ============================================================ */
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #00FFA3;
+  animation: typing 3.5s steps(50) 1s both, blinkCursor 0.8s step-end infinite 4.5s;
+  max-width: 100%;
+}
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blinkCursor {
+  0%, 50% { border-color: #00FFA3; }
+  51%, 100% { border-color: transparent; }
+}
+
+/* ============================================================
+   ANIMATION 5 : Reveal on scroll
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   ANIMATION 6 : Tilt 3D sur les cartes pilier
+   ============================================================ */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform .3s ease-out, box-shadow .3s;
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow: 0 30px 60px -15px rgba(0, 255, 163, .35);
+}
+
+/* ============================================================
+   ANIMATION 7 : Pulse rings autour du bouton contact
+   ============================================================ */
+.pulse-ring {
+  position: relative;
+}
+.pulse-ring::before,
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1px solid rgba(0, 255, 163, .5);
+  animation: pulseRing 2.4s cubic-bezier(.2,.8,.2,1) infinite;
+  pointer-events: none;
+}
+.pulse-ring::after {
+  animation-delay: 1.2s;
+}
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: .8; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* ============================================================
+   ANIMATION 8 : Light sweep sur titres de section
+   ============================================================ */
+.section-title-sweep {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.section-title-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .25), transparent);
+  animation: sweepAcross 5s ease-in-out infinite;
+}
+@keyframes sweepAcross {
+  0%, 60% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ============================================================
+   ANIMATION 9 : Séparateurs animés
+   ============================================================ */
+.animated-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
+  animation: dividerPulse 3s ease-in-out infinite;
+  margin: 3rem auto;
+  max-width: 60%;
+}
+@keyframes dividerPulse {
+  0%, 100% { opacity: .3; transform: scaleX(.7); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+/* ============================================================
+   ANIMATION 10 : Compteur KPI avec reset
+   ============================================================ */
+.kpi-counter {
+  display: inline-block;
+  transition: transform .3s, color .3s;
+}
+.kpi-counter.updating {
+  animation: kpiFlip .6s ease-out;
+}
+@keyframes kpiFlip {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.08); color: #E8C86A; }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   GLASS PANELS
+   ============================================================ */
 .glass-panel {
   background: linear-gradient(165deg, rgba(19, 25, 32, 0.85), rgba(9, 13, 16, 0.95)) !important;
   border: 1px solid rgba(197, 160, 89, 0.35) !important;
@@ -97,6 +275,7 @@ body {
 .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
 .btn-o:hover { border-color: #00FFA3 !important; }
 
+/* Emblem animations */
 @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
@@ -104,11 +283,6 @@ body {
 .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
 .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
 
-@keyframes scanLine {
-  0% { top: 0%; opacity: .85; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: .2; }
-}
 .scanner-beam {
   position: absolute;
   left: 0; right: 0; height: 2px;
@@ -116,6 +290,11 @@ body {
   box-shadow: 0 0 14px #00FFA3;
   animation: scanLine 3.8s ease-in-out infinite;
   pointer-events: none;
+}
+@keyframes scanLine {
+  0% { top: 0%; opacity: .85; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: .2; }
 }
 
 .slider-esg {
@@ -147,12 +326,12 @@ body {
   box-shadow: 0 0 12px #00FFA3; cursor: pointer;
 }
 
+.stream-track { animation: streamSlide 24s linear infinite; }
+.stream-track:hover { animation-play-state: paused; }
 @keyframes streamSlide {
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
 }
-.stream-track { animation: streamSlide 24s linear infinite; }
-.stream-track:hover { animation-play-state: paused; }
 
 #heroSection {
   position: relative;
@@ -163,41 +342,34 @@ body {
   align-items: center;
   padding-top: 4rem;
 }
-
 #heroCyberCanvas {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   z-index: 0;
   display: block;
   pointer-events: none;
 }
-
 #heroCyberVideo {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   opacity: 0.35;
   mix-blend-mode: screen;
   z-index: 0;
   pointer-events: none;
 }
-
 .hero-overlay {
   position: relative;
   z-index: 10;
   width: 100%;
 }
-
 .hero-hud-panel {
   background: linear-gradient(160deg, rgba(19,25,32,.88) 0%, rgba(9,13,16,.95) 100%);
   border: 1px solid rgba(0, 255, 163, 0.45);
   border-radius: 1.5rem;
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 0 40px -10px rgba(0,255,163,.25), 0 25px 55px -12px rgba(0,0,0,.85);
 }
 
@@ -211,11 +383,49 @@ body {
 .hero-fade-d3 { animation-delay: .4s; }
 .hero-fade-d4 { animation-delay: .55s; }
 
+.scroll-hint { animation: bounceY 2.4s ease-in-out infinite; }
 @keyframes bounceY {
   0%, 100% { transform: translateY(0); opacity: .4; }
   50% { transform: translateY(10px); opacity: 1; }
 }
-.scroll-hint { animation: bounceY 2.4s ease-in-out infinite; }
+
+/* Contact drawer */
+#contactDrawer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+#contactDrawer.open {
+  display: flex;
+}
+#contactDrawer .backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(6px);
+  animation: fadeIn .3s ease;
+}
+#contactDrawer .panel {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  background: linear-gradient(165deg, #12171C, #090D10);
+  border-left: 1px solid rgba(0, 255, 163, .45);
+  padding: 2rem;
+  overflow-y: auto;
+  animation: slideInRight .35s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 @media print {
   body > *:not(#brochureModal) { display: none !important; }
@@ -254,6 +464,13 @@ body {
 
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
+<!-- SCROLL PROGRESS -->
+<div id="scrollProgress" aria-hidden="true"></div>
+
+<!-- PARTICLE FIELD -->
+<div id="particleField" aria-hidden="true"></div>
+
+<!-- HEADER -->
 <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
     <a href="index.html" class="flex items-center space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
@@ -330,6 +547,7 @@ body {
   </nav>
 </header>
 
+<!-- HERO -->
 <section id="heroSection" class="pt-20 sm:pt-0">
   <video id="heroCyberVideo" autoplay loop muted playsinline onerror="this.style.display='none'">
     <source src="assets/eye-core.mp4" type="video/mp4">
@@ -340,13 +558,13 @@ body {
     <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
       <div class="lg:col-span-7 space-y-6 hero-fade hero-fade-d1">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase">
-          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span>
-          🇲🇦 Souveraineté Numérique du Royaume du Maroc · Loi n° 28-00
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
+          <span class="typewriter">🇲🇦 Souveraineté Numérique du Royaume · Loi n° 28-00</span>
         </div>
 
         <h2 class="font-kemetTitle text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] hero-fade hero-fade-d2">
-          L'Alliance de la Sagesse de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Maat</span> &amp; de la DeepTech Industrielle
+          L'Alliance de la Sagesse de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright glitch-hover">Maat</span> &amp; de la DeepTech Industrielle
         </h2>
 
         <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl hero-fade hero-fade-d3">
@@ -387,13 +605,13 @@ body {
             <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 text-center">
               <span class="text-[9px] text-slate-400 uppercase block tracking-wider">Matière valorisée</span>
               <div class="text-xl font-black text-cyberGreen mt-1">
-                <span id="liveKg">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
+                <span id="liveKg" class="kpi-counter">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
               </div>
             </div>
             <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 text-center">
               <span class="text-[9px] text-slate-400 uppercase block tracking-wider">CO₂ évité</span>
               <div class="text-xl font-black text-kemetGoldBright mt-1">
-                <span id="liveCo2">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
+                <span id="liveCo2" class="kpi-counter">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
               </div>
             </div>
           </div>
@@ -422,7 +640,9 @@ body {
               <span class="text-[9px] text-slate-400 uppercase block">Direction Générale</span>
               <span class="text-white font-bold">Roberto Passarella</span>
             </div>
-            <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline text-[10px]" aria-label="Contacter la Direction">Contact ↗</a>
+            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors" aria-label="Ouvrir le panneau de contact">
+              Contact ↗
+            </button>
           </div>
         </div>
 
@@ -437,17 +657,18 @@ body {
 
 <main class="space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
-  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-center" aria-label="Compteurs d'impact">
+  <!-- KPI STRIP -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-center reveal" aria-label="Compteurs d'impact">
     <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée</span>
       <div class="text-3xl font-black text-cyberGreen">
-        <span id="liveKgDisplay" class="live-kg">0</span> <span class="text-xs font-normal">kg</span>
+        <span id="liveKgDisplay" class="live-kg kpi-counter">0</span> <span class="text-xs font-normal">kg</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-kemetGold">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité</span>
       <div class="text-3xl font-black text-kemetGoldBright">
-        <span id="liveCo2Display" class="live-co2">0</span> <span class="text-xs font-normal">kg eq.</span>
+        <span id="liveCo2Display" class="live-co2 kpi-counter">0</span> <span class="text-xs font-normal">kg eq.</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-white">
@@ -459,19 +680,22 @@ body {
     <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Structures B2B Actives</span>
       <div class="text-3xl font-black text-cyberGreen">
-        <span id="liveClientsDisplay">0</span> <span class="text-xs font-normal">clients</span>
+        <span id="liveClientsDisplay" class="kpi-counter">0</span> <span class="text-xs font-normal">clients</span>
       </div>
     </div>
   </section>
 
-  <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold" aria-labelledby="etude-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- ÉTUDE -->
+  <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold reveal" aria-labelledby="etude-title">
     <div class="grid lg:grid-cols-12 gap-10 items-start">
       <div class="lg:col-span-7 space-y-5">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-[11px] font-mono font-bold uppercase">
           <span aria-hidden="true">📊</span>
           <span>Rapport Institutionnel de Référence · Septembre 2026</span>
         </div>
-        <h3 id="etude-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">Le Marché de la Gestion des Déchets HoReCa à Marrakech</h3>
+        <h3 id="etude-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight section-title-sweep">Le Marché de la Gestion des Déchets HoReCa à Marrakech</h3>
         <p class="text-sm text-slate-300 leading-relaxed font-sans">
           Données issues de la première étude empirique sur la gestion des déchets solides hôteliers à Marrakech, menée par <strong class="text-white">A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong class="text-white">Université Cadi Ayyad</strong>, publiée dans <em>Cleaner and Responsible Consumption</em> (Volume 21, Mai 2026). L'étude a enquêté sur <strong class="text-white">26 hôtels de Marrakech</strong> et identifié les stratégies de gestion adoptées.
         </p>
@@ -541,11 +765,14 @@ body {
     </div>
   </section>
 
-  <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8" aria-labelledby="brochure-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- BROCHURE -->
+  <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8 reveal" aria-labelledby="brochure-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
       <div class="space-y-2 max-w-2xl">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Documentation Officielle Partenaires</span>
-        <h3 id="brochure-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Brochure PurKemet B2B : La Renaissance Cyber-Écologique</h3>
+        <h3 id="brochure-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white section-title-sweep">Brochure PurKemet B2B : La Renaissance Cyber-Écologique</h3>
         <p class="text-sm text-slate-300 font-sans leading-relaxed">
           Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, riads, restaurants de prestige et établissements commerciaux de Marrakech.
         </p>
@@ -610,31 +837,34 @@ body {
     </div>
   </section>
 
-  <section class="glass-panel p-6 sm:p-12 space-y-8" aria-labelledby="manifesto-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- MANIFESTE -->
+  <section class="glass-panel p-6 sm:p-12 space-y-8 reveal" aria-labelledby="manifesto-title">
     <div class="max-w-3xl space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique &amp; Enjeux Territoriaux</span>
-      <h3 id="manifesto-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
+      <h3 id="manifesto-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white section-title-sweep">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
       <p class="text-sm text-slate-300 leading-relaxed font-sans">
         Chaque jour, la ville de Marrakech génère plus de 1 000 tonnes de déchets, dont une part importante de matières sèches à haute valeur industrielle finit enfouie ou brûlée. Industrial Illusion a été fondée pour briser cette hémorragie économique et environnementale.
       </p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
         <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">01</div>
         <h4 class="font-bold text-white text-base">Saturation des Centres d'Enfouissement</h4>
         <p class="text-slate-400 leading-relaxed font-sans">
           L'augmentation des volumes touristiques pèse lourdement sur la décharge contrôlée de M'Nabha. Capter les matières recyclables à la source libère la logistique municipale et préserve le sol marocain.
         </p>
       </div>
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
         <div class="w-10 h-10 bg-kemetGold/10 text-kemetGoldBright rounded-xl flex items-center justify-center font-bold text-sm border border-kemetGold/30">02</div>
         <h4 class="font-bold text-white text-base">Risques Réglementaires B2B</h4>
         <p class="text-slate-400 leading-relaxed font-sans">
           La Loi n° 28-00 impose la responsabilité du producteur. Les hôtels ne peuvent plus dépendre de collecteurs informels sans traçabilité. Nous fournissons des attestations inattaquables pour les audits Clef Verte et ISO 14001.
         </p>
       </div>
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
         <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">03</div>
         <h4 class="font-bold text-white text-base">Dignité Sociale des Mikhala</h4>
         <p class="text-slate-400 leading-relaxed font-sans">
@@ -644,14 +874,17 @@ body {
     </div>
   </section>
 
-  <section class="space-y-8" aria-labelledby="piliers-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- 4 PILIERS -->
+  <section class="space-y-8 reveal" aria-labelledby="piliers-title">
     <div class="text-center max-w-3xl mx-auto space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
       <h3 id="piliers-title" class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Quatre Piliers de l'Écosystème</h3>
     </div>
 
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono text-xs">
-      <a href="purkemet.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+      <a href="purkemet.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
         <div class="space-y-3">
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">PurKemet B2B</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Collecte B2B 0 MAD</h4>
@@ -662,7 +895,7 @@ body {
         <span class="text-[10px] font-mono text-cyberGreen font-bold">Portail PurKemet →</span>
       </a>
 
-      <a href="kmeh20.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform" style="border-color:rgba(197,160,89,.5) !important">
+      <a href="kmeh20.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
         <div class="space-y-3">
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">K-MEH-20</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Usine Logicielle</h4>
@@ -673,7 +906,7 @@ body {
         <span class="text-[10px] font-mono text-kemetGoldBright font-bold">Fiche K-MEH-20 →</span>
       </a>
 
-      <a href="datalake.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+      <a href="datalake.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
         <div class="space-y-3">
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">Maat Data Lake</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Traçabilité Immuable</h4>
@@ -684,7 +917,7 @@ body {
         <span class="text-[10px] font-mono text-cyberGreen font-bold">Consulter le registre →</span>
       </a>
 
-      <a href="carrieres.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform" style="border-color:rgba(197,160,89,.5) !important">
+      <a href="carrieres.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
         <div class="space-y-3">
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">Modèle Social</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Actions Classe B</h4>
@@ -697,7 +930,10 @@ body {
     </div>
   </section>
 
-  <section class="space-y-6" aria-labelledby="materiaux-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- MATIÈRES -->
+  <section class="space-y-6 reveal" aria-labelledby="materiaux-title">
     <div class="border-b border-white/10 pb-4">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriétés &amp; Chimie des Matériaux</span>
       <h3 id="materiaux-title" class="font-kemetTitle text-2xl font-black text-white mt-1">Caractérisation des Gisements de Seconde Génération</h3>
@@ -705,7 +941,7 @@ body {
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
         <span class="text-cyberGreen font-bold block text-sm">🟢 PET Transparent</span>
         <p class="text-[11px] text-slate-400 font-sans">Polyéthylène téréphtalate pur (bouteilles eau minérale &amp; sodas).</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -713,7 +949,7 @@ body {
           <div>CO₂ évité : 1.82 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
         <span class="text-kemetGoldBright font-bold block text-sm">🟡 PE-HD Rigide</span>
         <p class="text-[11px] text-slate-400 font-sans">Polyéthylène haute densité (flacons détergents, bidons).</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -721,7 +957,7 @@ body {
           <div>CO₂ évité : 1.54 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
         <span class="text-kemetGold font-bold block text-sm">🥫 Aluminium</span>
         <p class="text-[11px] text-slate-400 font-sans">Alliages 3004 / 6061 recyclables à l'infini sans perte mécanique.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -729,7 +965,7 @@ body {
           <div>CO₂ évité : 9.13 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
         <span class="text-amber-600 font-bold block text-sm">📦 Carton Ondulé</span>
         <p class="text-[11px] text-slate-400 font-sans">Fibres cellulosiques d'emballage et cartons de déballage logistique.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -737,7 +973,7 @@ body {
           <div>CO₂ évité : 0.95 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 sm:col-span-2 lg:col-span-1">
+      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 sm:col-span-2 lg:col-span-1 tilt-card">
         <span class="text-sky-400 font-bold block text-sm">🍾 Verre Blanc</span>
         <p class="text-[11px] text-slate-400 font-sans">Bouteilles et récipients silico-calciques pour verreries partenaires.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -748,7 +984,10 @@ body {
     </div>
   </section>
 
-  <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="sim-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- SIMULATEUR ESG -->
+  <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="sim-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Simulateur d'Impact RSE</span>
@@ -792,7 +1031,10 @@ body {
     </div>
   </section>
 
-  <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6" aria-labelledby="pwa-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- WORKSTATION PWA -->
+  <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6 reveal" aria-labelledby="pwa-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Logistique Terrain &amp; Déploiement</span>
@@ -820,7 +1062,10 @@ body {
     </div>
   </section>
 
-  <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="datalake-title">
+  <div class="animated-divider" aria-hidden="true"></div>
+
+  <!-- DATA LAKE TERMINAL -->
+  <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="datalake-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Terminal Télémétrique</span>
@@ -868,6 +1113,78 @@ body {
   </div>
 </footer>
 
+<!-- ============================================================
+     CONTACT DRAWER (nouveau — bouton Contact fonctionnel)
+     ============================================================ -->
+<div id="contactDrawer" role="dialog" aria-modal="true" aria-label="Contact institutionnel">
+  <div class="backdrop" onclick="window.closeContactDrawer()"></div>
+  <div class="panel">
+    <div class="flex justify-between items-start border-b border-white/10 pb-3 mb-6">
+      <div>
+        <span class="lbl">Contact Institutionnel</span>
+        <h3 class="font-kemetTitle text-xl font-black text-white mt-1">Direction Générale</h3>
+      </div>
+      <button type="button" onclick="window.closeContactDrawer()" class="text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
+    </div>
+
+    <div class="space-y-5 text-slate-300">
+      <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1 font-mono text-xs">
+        <span class="text-[10px] text-slate-400 uppercase block tracking-wider">Directeur Général</span>
+        <span class="text-white font-bold text-sm">Roberto Passarella</span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <a href="mailto:r.passarella@industrialillusion.ma?subject=Demande%20de%20Contact%20Institutionnel%20-%20Industrial%20Illusion&body=Bonjour%20Monsieur%20Passarella,%0D%0A%0D%0AJe%20souhaite%20entrer%20en%20contact%20avec%20la%20Direction%20G%C3%A9n%C3%A9rale%20concernant%20:%0D%0A%0D%0A-%20%0D%0A-%20%0D%0A-%20%0D%0A%0D%0ACordialement," class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
+          <span class="flex items-center gap-2">
+            <span class="text-cyberGreen">✉️</span>
+            <span class="text-slate-200">Envoyer un email</span>
+          </span>
+          <span class="text-cyberGreen text-[10px]">→</span>
+        </a>
+
+        <a href="mailto:info@industrialillusion.ma?subject=Demande%20d'information%20-%20Industrial%20Illusion" class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
+          <span class="flex items-center gap-2">
+            <span class="text-cyberGreen">📨</span>
+            <span class="text-slate-200">Contact général</span>
+          </span>
+          <span class="text-cyberGreen text-[10px]">→</span>
+        </a>
+
+        <a href="#etude-marche" onclick="window.closeContactDrawer()" class="flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-kemetGoldBright transition-colors">
+          <span class="flex items-center gap-2">
+            <span class="text-kemetGoldBright">📊</span>
+            <span class="text-slate-200">Demander l'étude HoReCa 2026</span>
+          </span>
+          <span class="text-kemetGoldBright text-[10px]">→</span>
+        </a>
+
+        <button type="button" onclick="window.closeContactDrawer(); window.openAuditModal();" class="w-full text-left flex items-center justify-between gap-3 p-3 bg-black/60 rounded-xl border border-white/10 hover:border-cyberGreen transition-colors">
+          <span class="flex items-center gap-2">
+            <span class="text-cyberGreen">🎯</span>
+            <span class="text-slate-200">Demander un audit gratuit 0 MAD</span>
+          </span>
+          <span class="text-cyberGreen text-[10px]">→</span>
+        </button>
+      </div>
+
+      <div class="pt-5 border-t border-white/10 space-y-2 font-mono text-[11px] text-slate-400">
+        <div><span class="text-slate-500">Siège :</span> <span class="text-white">Préfecture de Marrakech</span></div>
+        <div><span class="text-slate-500">Région :</span> <span class="text-white">Marrakech-Safi, Royaume du Maroc</span></div>
+        <div><span class="text-slate-500">Coordonnées :</span> <span class="text-white">31.6295° N, 7.9811° W</span></div>
+      </div>
+
+      <div class="p-3 bg-cyberGreen/5 rounded-xl border border-cyberGreen/30 text-[10px] font-mono text-slate-400 leading-relaxed">
+        <strong class="text-cyberGreen block mb-1">Conformité</strong>
+        Loi n° 28-00 · CNDP n° 09-08 · Hébergement souverain Maroc · Ancrage blockchain Bitcoin OpenTimestamps
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODALES
+     ============================================================ -->
+
 <div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
   <div class="glass-panel g max-w-3xl w-full p-6 sm:p-8 space-y-6 text-left font-mono text-xs relative my-8">
     <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
@@ -896,7 +1213,7 @@ body {
       </div>
       <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 space-y-2">
         <h4 class="font-bold text-kemetGoldBright text-sm font-mono">4. IMPACT SOCIAL &amp; CITOYENNETÉ : LE SOCIALISME PRIVÉ</h4>
-        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong>.</p>
+        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong> — copropriété des travailleurs sur les moyens de production.</p>
       </div>
       <div class="p-4 bg-black/50 rounded-xl border border-cyberGreen/30 space-y-2">
         <h4 class="font-bold text-cyberGreen text-sm font-mono">5. UN PARCOURS EN 5 ÉTAPES SANS EFFORT</h4>
@@ -991,16 +1308,92 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML Local Scripts v5.2
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.0
    ============================================================ */
 (function () {
   'use strict';
 
+  /* Année dynamique */
   (function () {
     var y = document.getElementById('year');
     if (y) y.textContent = String(new Date().getFullYear());
   })();
 
+  /* ============================================================
+     ANIMATION 1 : Barre de progression du scroll
+     ============================================================ */
+  (function () {
+    var bar = document.getElementById('scrollProgress');
+    if (!bar) return;
+    function update() {
+      var scrolled = window.scrollY;
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = total > 0 ? (scrolled / total) * 100 : 0;
+      bar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+
+  /* ============================================================
+     ANIMATION 2 : Particules flottantes
+     ============================================================ */
+  (function () {
+    var field = document.getElementById('particleField');
+    if (!field) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var count = window.innerWidth < 640 ? 12 : 24;
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.bottom = '-10px';
+      p.style.animationDuration = (12 + Math.random() * 18) + 's';
+      p.style.animationDelay = (Math.random() * 15) + 's';
+      p.style.opacity = (0.3 + Math.random() * 0.6);
+      if (Math.random() > 0.7) p.style.background = '#C5A059';
+      field.appendChild(p);
+    }
+  })();
+
+  /* ============================================================
+     ANIMATION 5 : Reveal on scroll
+     ============================================================ */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+  })();
+
+  /* ============================================================
+     ANIMATION 6 : Tilt 3D sur cartes
+     ============================================================ */
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if ('ontouchstart' in window && window.innerWidth < 1024) return;
+    document.querySelectorAll('.tilt-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        var rx = (y - 0.5) * 6;
+        var ry = (x - 0.5) * -6;
+        card.style.transform = 'perspective(900px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(6px)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+      });
+    });
+  })();
+
+  /* ensureInit */
   window.ensureInit = function () {
     try {
       if (!window.Maat) return;
@@ -1010,6 +1403,7 @@ body {
     } catch (e) { /* silent */ }
   };
 
+  /* Toast */
   function toast(text, kind) {
     if (window.Maat && typeof window.Maat.toast === 'function') {
       return window.Maat.toast(text, kind);
@@ -1027,6 +1421,7 @@ body {
     setTimeout(function () { d.remove(); }, 4000);
   }
 
+  /* Menu mobile */
   window.toggleMobileNav = function () {
     var nav = document.getElementById('mobileNavMenu');
     var btn = document.getElementById('menuBtn');
@@ -1048,23 +1443,58 @@ body {
     nav.classList.add('hidden');
   });
 
-  window.openAuditModal = function () { var m = document.getElementById('auditModal'); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
-  window.closeAuditModal = function () { var m = document.getElementById('auditModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
-  window.openBrochureModal = function () { var m = document.getElementById('brochureModal'); if (m) { m.classList.remove('hidden'); m.classList.add('flex'); } };
-  window.closeBrochureModal = function () { var m = document.getElementById('brochureModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
-  window.openBrochureEmailModal = function () {
-    var bm = document.getElementById('brochureModal');
-    if (bm && !bm.classList.contains('hidden')) window.closeBrochureModal();
-    var m = document.getElementById('brochureEmailModal');
-    if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+  /* ============================================================
+     CONTACT DRAWER
+     ============================================================ */
+  window.openContactDrawer = function () {
+    var d = document.getElementById('contactDrawer');
+    if (!d) return;
+    d.classList.add('open');
+    document.body.style.overflow = 'hidden';
   };
-  window.closeBrochureEmailModal = function () { var m = document.getElementById('brochureEmailModal'); if (m) { m.classList.add('hidden'); m.classList.remove('flex'); } };
+  window.closeContactDrawer = function () {
+    var d = document.getElementById('contactDrawer');
+    if (!d) return;
+    d.classList.remove('open');
+    document.body.style.overflow = '';
+  };
 
+  /* Modales génériques */
+  function openModal(id) {
+    var m = document.getElementById(id);
+    if (!m) return;
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    var firstInput = m.querySelector('input, select, textarea');
+    if (firstInput) setTimeout(function () { firstInput.focus(); }, 100);
+  }
+  function closeModal(id) {
+    var m = document.getElementById(id);
+    if (!m) return;
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  window.openAuditModal = function () { openModal('auditModal'); };
+  window.closeAuditModal = function () { closeModal('auditModal'); };
+  window.openBrochureModal = function () { openModal('brochureModal'); };
+  window.closeBrochureModal = function () { closeModal('brochureModal'); };
+  window.openBrochureEmailModal = function () {
+    closeModal('brochureModal');
+    setTimeout(function () { openModal('brochureEmailModal'); }, 150);
+  };
+  window.closeBrochureEmailModal = function () { closeModal('brochureEmailModal'); };
+
+  /* Escape + backdrop */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     var bem = document.getElementById('brochureEmailModal');
     var bm = document.getElementById('brochureModal');
     var am = document.getElementById('auditModal');
+    var cd = document.getElementById('contactDrawer');
+    if (cd && cd.classList.contains('open')) return window.closeContactDrawer();
     if (bem && !bem.classList.contains('hidden')) return window.closeBrochureEmailModal();
     if (bm && !bm.classList.contains('hidden')) return window.closeBrochureModal();
     if (am && !am.classList.contains('hidden')) return window.closeAuditModal();
@@ -1075,6 +1505,7 @@ body {
     if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
   });
 
+  /* Simulateur ESG */
   window.calcEsgSim = function (rooms) {
     var r = parseInt(rooms, 10) || 10;
     var valEl = document.getElementById('simRoomsVal');
@@ -1091,6 +1522,7 @@ body {
   };
   (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
 
+  /* Form : Market Study */
   window.handleMarketStudySubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1098,7 +1530,6 @@ body {
     var original = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Transmission en cours…';
-
     var fd = new FormData(form);
     var payload = {
       full_name: String(fd.get('full_name') || '').trim(),
@@ -1107,7 +1538,6 @@ body {
       email: String(fd.get('email') || '').toLowerCase().trim(),
       phone: String(fd.get('phone') || '').trim() || null
     };
-
     if (!payload.full_name || !payload.organization || !payload.email) {
       btn.disabled = false; btn.textContent = original;
       return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
@@ -1116,14 +1546,12 @@ body {
       btn.disabled = false; btn.textContent = original;
       return toast('Adresse email invalide.', 'warn');
     }
-
     if (window.ensureInit) window.ensureInit();
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
       btn.disabled = false; btn.textContent = original;
-      return toast('Service temporairement indisponible. Réessayez dans un instant.', 'err');
+      return toast('Service temporairement indisponible. Réessayez.', 'err');
     }
-
     try {
       var ok = false;
       try { var r1 = await sb.from('market_study_leads').insert([payload]); if (!r1.error) ok = true; } catch (x) {}
@@ -1145,7 +1573,7 @@ body {
         setTimeout(function () { btn.textContent = original; btn.disabled = false; }, 3000);
       } else {
         btn.disabled = false; btn.textContent = original;
-        toast('Envoi impossible. Réessayez dans un instant.', 'err');
+        toast('Envoi impossible. Réessayez.', 'err');
       }
     } catch (err) {
       btn.disabled = false; btn.textContent = original;
@@ -1153,6 +1581,7 @@ body {
     }
   };
 
+  /* Form : Audit */
   window.handleAuditSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1177,7 +1606,7 @@ body {
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
       btn.disabled = false; btn.textContent = original;
-      return toast('Service temporairement indisponible. Réessayez dans un instant.', 'err');
+      return toast('Service temporairement indisponible. Réessayez.', 'err');
     }
     try {
       var r = await sb.from('clients').insert([payload]);
@@ -1201,6 +1630,7 @@ body {
     }
   };
 
+  /* Form : Brochure Email */
   window.handleBrochureEmailSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1240,7 +1670,7 @@ body {
   };
 
   /* ============================================================
-     CANVAS — NUCLEUS CYBER-HORUS FIDÈLE AU LOGO (PATH2D)
+     CANVAS NUCLEUS CYBER-HORUS
      ============================================================ */
   (function () {
     var canvas = document.getElementById('heroCyberCanvas');
@@ -1252,21 +1682,18 @@ body {
     var W = 0, H = 0;
     var heroRect = null;
 
-    /* Pointer : liberté augmentée + vitesse réactive */
     var state = {
       pointerX: 0.5, pointerY: 0.5,
       smoothedX: 0.5, smoothedY: 0.5,
       hasPointer: false
     };
 
-    /* LIBERTÉ DU MOUVEMENT — valeurs augmentées */
-    var LERP_SPEED = 0.16;      /* était 0.08 → réponse plus vive */
-    var MAX_TRAVEL_X = 60;       /* était 26 → plus d'amplitude horizontale */
-    var MAX_TRAVEL_Y = 45;       /* était 16 → plus d'amplitude verticale */
-    var EYE_DRIFT_X = 28;        /* dérive globale de l'œil entier */
+    var LERP_SPEED = 0.16;
+    var MAX_TRAVEL_X = 60;
+    var MAX_TRAVEL_Y = 45;
+    var EYE_DRIFT_X = 28;
     var EYE_DRIFT_Y = 20;
 
-    /* Path2D géométries sacrées de l'Œil d'Horus (viewBox local -100..+100) */
     var pathSclera, pathBrow, pathTear, pathSpiral, pathCross;
     function buildPaths() {
       pathSclera = new Path2D("M -90 0 Q 0 -60 90 0 Q 0 60 -90 0 Z");
@@ -1277,11 +1704,7 @@ body {
     }
     buildPaths();
 
-    /* PCB traces : réseau radial + coudé */
-    var pcbTraces = [];
-    var pcbNodes = [];
-    var cubes = [];
-    var pulses = [];
+    var pcbTraces = [], pcbNodes = [], cubes = [], pulses = [];
 
     function resize() {
       heroRect = heroSection.getBoundingClientRect();
@@ -1306,11 +1729,7 @@ body {
     function buildScene() {
       pcbTraces = [];
       var anchor = getAnchor();
-      var angles = [
-        0, Math.PI / 4, Math.PI / 2, 3 * Math.PI / 4,
-        Math.PI, 5 * Math.PI / 4, 3 * Math.PI / 2, 7 * Math.PI / 4
-      ];
-
+      var angles = [0, Math.PI/4, Math.PI/2, 3*Math.PI/4, Math.PI, 5*Math.PI/4, 3*Math.PI/2, 7*Math.PI/4];
       angles.forEach(function (baseAngle, ai) {
         for (var j = -1; j <= 1; j++) {
           var angle = baseAngle + j * 0.14;
@@ -1321,11 +1740,8 @@ body {
           var endR = maxRadius * 1.15;
           var ex = anchor.x + Math.cos(angle) * endR;
           var ey = anchor.y + Math.sin(angle) * endR;
-
           pcbTraces.push({
-            x1: anchor.x, y1: anchor.y,
-            xm: mx, ym: my,
-            x2: ex, y2: ey,
+            x1: anchor.x, y1: anchor.y, xm: mx, ym: my, x2: ex, y2: ey,
             progress: Math.random(),
             speed: 0.0016 + Math.random() * 0.0025,
             color: (ai % 2 === 0) ? '#00FFA3' : '#C5A059'
@@ -1391,10 +1807,9 @@ body {
       ctx.fillRect(0, 0, W, H);
 
       var anchor = getAnchor();
-      var centerX = anchor.x;
-      var centerY = anchor.y;
+      var centerX = anchor.x, centerY = anchor.y;
 
-      /* 1. TRACES PCB */
+      /* PCB */
       ctx.lineWidth = 1.2;
       ctx.lineCap = 'round';
       for (var i = 0; i < pcbTraces.length; i++) {
@@ -1433,7 +1848,7 @@ body {
         }
       }
 
-      /* 2. NŒUDS DE SOUDURE */
+      /* Nodes */
       for (var n = 0; n < pcbNodes.length; n++) {
         var nd = pcbNodes[n];
         ctx.fillStyle = '#C5A059';
@@ -1445,7 +1860,7 @@ body {
         ctx.shadowBlur = 0;
       }
 
-      /* 3. IMPULSIONS */
+      /* Pulses */
       for (var pu = 0; pu < pulses.length; pu++) {
         var pulse = pulses[pu];
         pulse.t += pulse.speed;
@@ -1465,7 +1880,7 @@ body {
         ctx.shadowBlur = 0;
       }
 
-      /* 4. CUBES BLOCKCHAIN ISOMÉTRIQUES */
+      /* Cubes */
       for (var c = 0; c < cubes.length; c++) {
         var cb = cubes[c];
         cb.phase += cb.speed * dt * 60;
@@ -1488,15 +1903,9 @@ body {
         ctx.restore();
       }
 
-      /* ============================================================
-         5. ŒIL D'HORUS PATH2D — FIDÈLE AU LOGO + TRACKING LIBRE
-         ============================================================ */
-      var maxTravelX = MAX_TRAVEL_X;
-      var maxTravelY = MAX_TRAVEL_Y;
-      var lookX = (state.smoothedX - 0.5) * 2 * maxTravelX;
-      var lookY = (state.smoothedY - 0.5) * 2 * maxTravelY;
-
-      /* Dérive globale de l'œil entier (mouvement organique) */
+      /* Œil Horus Path2D */
+      var lookX = (state.smoothedX - 0.5) * 2 * MAX_TRAVEL_X;
+      var lookY = (state.smoothedY - 0.5) * 2 * MAX_TRAVEL_Y;
       var driftX = (state.smoothedX - 0.5) * EYE_DRIFT_X;
       var driftY = (state.smoothedY - 0.5) * EYE_DRIFT_Y;
 
@@ -1508,7 +1917,6 @@ body {
       ctx.translate(centerX + driftX, centerY + driftY);
       ctx.scale(eyeScale, eyeScale);
 
-      /* --- LAYER 2 : IRIS + PUPILLE (clip dans la mandorle) --- */
       ctx.save();
       ctx.clip(pathSclera);
 
@@ -1547,7 +1955,6 @@ body {
 
       ctx.restore();
 
-      /* --- LAYER 3 : CASTONE OR + GEOMÉTRIES SACRÉES --- */
       ctx.strokeStyle = '#C5A059';
       ctx.lineWidth = 3.5;
       ctx.shadowColor = '#E8C86A';
@@ -1568,7 +1975,6 @@ body {
       ctx.stroke(pathSpiral);
       ctx.shadowBlur = 0;
 
-      /* Réticule solaire avec parallaxe */
       ctx.save();
       ctx.translate(lookX * 0.4, lookY * 0.4);
       ctx.strokeStyle = 'rgba(0, 255, 163, 0.65)';
@@ -1576,10 +1982,7 @@ body {
       ctx.stroke(pathCross);
       ctx.restore();
 
-      /* 4 points d'ancrage dorés */
-      var anchorNodes = [
-        { x: -90, y: 0 }, { x: 90, y: 0 }, { x: 0, y: -65 }, { x: 0, y: 75 }
-      ];
+      var anchorNodes = [{ x: -90, y: 0 }, { x: 90, y: 0 }, { x: 0, y: -65 }, { x: 0, y: 75 }];
       ctx.fillStyle = '#E8C86A';
       ctx.shadowColor = '#00FFA3';
       ctx.shadowBlur = 8;
@@ -1589,10 +1992,9 @@ body {
         ctx.fill();
       }
       ctx.shadowBlur = 0;
-
       ctx.restore();
 
-      /* 6. LIGNE DE SCAN */
+      /* Scan line */
       var scanY = ((now / 1000) * 45) % H;
       ctx.strokeStyle = 'rgba(0, 255, 163, 0.55)';
       ctx.lineWidth = 1.5;
@@ -1614,9 +2016,16 @@ body {
   })();
 
   /* ============================================================
-     SYNCHRONISATION KPI (Hero + Section 1)
+     SYNCHRONISATION KPI
      ============================================================ */
   (function () {
+    function flipCounter(el) {
+      if (!el) return;
+      el.classList.remove('updating');
+      void el.offsetWidth;
+      el.classList.add('updating');
+      setTimeout(function () { el.classList.remove('updating'); }, 700);
+    }
     async function syncCounters() {
       if (window.ensureInit) window.ensureInit();
       var sb = window.Maat && window.Maat.sb;
@@ -1632,10 +2041,17 @@ body {
         var kgStr = Math.round(kg).toLocaleString('fr-FR');
         var co2Str = Math.round(co2).toLocaleString('fr-FR');
 
-        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) { el.textContent = kgStr; });
-        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) { el.textContent = co2Str; });
+        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) {
+          if (el.textContent !== kgStr) { el.textContent = kgStr; flipCounter(el); }
+        });
+        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) {
+          if (el.textContent !== co2Str) { el.textContent = co2Str; flipCounter(el); }
+        });
         var clEl = document.getElementById('liveClientsDisplay');
-        if (clEl) clEl.textContent = String(clients);
+        if (clEl && clEl.textContent !== String(clients)) {
+          clEl.textContent = String(clients);
+          flipCounter(clEl);
+        }
       } catch (e) { /* silent */ }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncCounters);
@@ -1644,7 +2060,7 @@ body {
   })();
 
   /* ============================================================
-     TERMINAL TÉLÉMÉTRIQUE LIVE
+     TERMINAL DATA LAKE
      ============================================================ */
   (function () {
     var track = document.getElementById('streamTrack');
@@ -1681,6 +2097,7 @@ body {
     }, 2500);
   })();
 
+  /* SW */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('[SW]', err); });
