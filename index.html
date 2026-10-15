@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Industrial Illusion SARL | Sovereign DeepTech & Industrial Infrastructure</title>
-  <meta name="description" content="Holding industrielle DeepTech basée à Marrakech : ingénierie bionique K-MEH-20, logistique d'urgence PurKemet B2B et traçabilité notariale Maat OS.">
+  <title>Industrial Illusion SARL | Ingénierie DeepTech & Infrastructure Industrielle</title>
+  <meta name="description" content="Entreprise d'ingénierie DeepTech basée à Marrakech : valorisation sélective PurKemet B2B, usine bionique K-MEH-20 et système d'exploitation certifié Maat OS.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
 
@@ -15,9 +15,9 @@
   <!-- Google Fonts: Cinzel, JetBrains Mono, Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS & Maat OS Design System -->
+  <!-- Frameworks & Design System Kemet -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="assets/tw-config.js"></script>
   <script src="assets/config.js"></script>
@@ -30,94 +30,102 @@
       color: #F1F5F9 !important;
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-image: 
-        radial-gradient(at 0% 0%, rgba(0, 255, 163, 0.08) 0px, transparent 50%),
+        radial-gradient(at 0% 0%, rgba(0, 255, 163, 0.08) 0px, transparent 55%),
         radial-gradient(at 100% 0%, rgba(197, 160, 89, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(9, 13, 16, 0.95) 0px, transparent 50%),
-        url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z' fill='none' stroke='%23C5A059' stroke-opacity='0.04' stroke-width='1'/%3E%3Cpath d='M40 10L70 40L40 70L10 40Z' fill='none' stroke='%2300FFA3' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E");
+        radial-gradient(at 50% 100%, rgba(9, 13, 16, 0.98) 0px, transparent 60%),
+        url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0L120 60L60 120L0 60Z' fill='none' stroke='%23C5A059' stroke-opacity='0.035' stroke-width='1'/%3E%3Ccircle cx='60' cy='60' r='30' fill='none' stroke='%2300FFA3' stroke-opacity='0.025' stroke-width='1'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z' fill='none' stroke='%23C5A059' stroke-opacity='0.025' stroke-width='0.75'/%3E%3C/svg%3E");
       background-attachment: fixed;
       margin: 0;
       overflow-x: hidden;
     }
 
-    .glass-card {
-      background: linear-gradient(170deg, #11161C, #090D10) !important;
+    .glass-panel {
+      background: linear-gradient(165deg, rgba(19, 25, 32, 0.85), rgba(9, 13, 16, 0.95)) !important;
       border: 1px solid rgba(197, 160, 89, 0.35) !important;
       border-radius: 1.5rem !important;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7) !important;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    .glass-card.g {
+    .glass-panel.g {
       border-color: rgba(0, 255, 163, 0.45) !important;
-      box-shadow: 0 0 30px -8px rgba(0, 255, 163, 0.2) !important;
+      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important;
+    }
+    .glass-panel:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 255, 163, 0.6) !important;
+      box-shadow: 0 25px 50px -10px rgba(0, 255, 163, 0.25) !important;
     }
 
     .inp {
       width: 100%;
-      background: rgba(0,0,0,.6) !important;
-      border: 1px solid rgba(255,255,255,.14) !important;
-      border-radius: .75rem !important;
-      padding: .75rem !important;
-      font-size: .8rem !important;
+      background: rgba(0, 0, 0, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 0.75rem !important;
+      padding: 0.75rem !important;
+      font-size: 0.8rem !important;
       color: #fff !important;
       outline: none;
     }
     .inp:focus { border-color: #00FFA3 !important; }
 
     .btn {
-      padding: .85rem;
-      border-radius: .8rem;
-      font: 800 .72rem 'JetBrains Mono', monospace;
-      letter-spacing: .06em;
+      padding: 0.85rem;
+      border-radius: 0.8rem;
+      font: 800 0.72rem 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      transition: all .2s;
+      transition: all 0.2s;
       display: inline-block;
       text-align: center;
     }
     .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
-    .btn-g:hover { filter: brightness(1.1); }
+    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
     .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
-    .btn-o { background: rgba(0,0,0,.8) !important; border: 1px solid rgba(0,255,163,.5) !important; color: #00FFA3 !important; }
+    .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+    .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
 
-    @keyframes scanLine {
-      0% { top: 0%; opacity: 0.8; }
-      50% { opacity: 1; }
-      100% { top: 100%; opacity: 0.2; }
-    }
-    .scanner-beam {
-      position: absolute;
-      left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, #00FFA3, transparent);
-      box-shadow: 0 0 12px #00FFA3;
-      animation: scanLine 3.5s ease-in-out infinite;
-    }
+    /* Animation Cyber-Horus */
+    @keyframes orbitRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes pulseGlow { 0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 6px rgba(0,255,163,0.4)); } 50% { opacity: 0.95; filter: drop-shadow(0 0 16px rgba(0,255,163,0.8)); } }
+    .anim-orbit { animation: orbitRotate 18s linear infinite; }
+    .anim-pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
 
-    @keyframes floatEffect {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
-    }
-    .float-anim { animation: floatEffect 5s ease-in-out infinite; }
+    @keyframes scanLine { 0% { top: 0%; opacity: 0.8; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0.2; } }
+    .scanner-beam { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FFA3, transparent); box-shadow: 0 0 14px #00FFA3; animation: scanLine 3.8s ease-in-out infinite; }
+    @keyframes floatEffect { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+    .float-anim { animation: floatEffect 5.5s ease-in-out infinite; }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER INSTITUTIONNEL : RESPONSIVE & SANS DÉBORDEMENT -->
-  <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur fixed top-0 w-full z-50">
+  <!-- HEADER INSTITUTIONNEL -->
+  <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       
-      <!-- LOGO OFFICIEL DE LA SOCIÉTÉ -->
-      <a href="index.html" class="flex items-center space-x-2.5 sm:space-x-3.5 shrink min-w-0 group">
-        <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-black/60 rounded-xl p-1 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300 shrink-0 overflow-hidden">
-          <img 
-            src="icons/icon-192.png" 
-            onerror="this.onerror=null; this.src='assets/icon-192.png';"
-            alt="Logo Industrial Illusion" 
-            class="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,255,163,0.5)]"
-          >
+      <!-- LOGO OFFICIEL DOTE DE L'ORBITE CYBER-HORUS -->
+      <a href="index.html" class="flex items-center space-x-3 shrink min-w-0 group">
+        <div class="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center shrink-0">
+          <svg class="absolute inset-0 w-full h-full anim-orbit" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" stroke="#C5A059" stroke-width="1.5" stroke-dasharray="8 6" opacity="0.6"/>
+            <circle cx="50" cy="50" r="41" stroke="#00FFA3" stroke-width="1" stroke-dasharray="4 8" opacity="0.8"/>
+            <circle cx="50" cy="4" r="2.5" fill="#00FFA3"/>
+            <circle cx="96" cy="50" r="2.5" fill="#C5A059"/>
+          </svg>
+          
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg overflow-hidden bg-black/80 flex items-center justify-center border border-cyberGreen/40 z-10 group-hover:border-cyberGreen transition-all">
+            <img 
+              src="icons/icon-192.png" 
+              onerror="this.onerror=null; this.src='assets/icon-192.png';" 
+              alt="Industrial Illusion" 
+              class="w-full h-full object-contain anim-pulse-glow"
+            >
+          </div>
         </div>
+
         <div class="min-w-0">
           <h1 class="font-kemetTitle text-xs sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
-          <p class="text-[7.5px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">SOVEREIGN DEEPTECH</p>
+          <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.22em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">INGÉNIERIE &amp; DEEPTECH SOUVERAINE</p>
         </div>
       </a>
       
@@ -125,33 +133,36 @@
       <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300">
         <a href="index.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">Accueil</a>
         <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
-        <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
+        <a href="#etude-marche" class="hover:text-cyberGreen transition-colors">Étude HoReCa</a>
+        <a href="#brochure" class="hover:text-cyberGreen transition-colors">Brochure B2B</a>
+        <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">Usine K-MEH-20</a>
         <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
-        <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
         <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
       </nav>
 
-      <!-- BOUTON CONNEXION : TOUJOURS ACCESSIBLE ET PARFAITEMENT PROPORTIONNÉ -->
+      <!-- BOUTONS D'ACCÈS UNIQUES (VISIBLE ET FONCTIONNEL SUR TOUT ÉCRAN) -->
       <div class="flex items-center space-x-2 shrink-0">
-        <button type="button" onclick="window.openUniversalLogin && window.openUniversalLogin()" class="btn btn-g !py-2 !px-3.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+        <button type="button" id="loginBtn" class="btn btn-g !py-2 !px-3.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
           Connexion 🔒
         </button>
 
-        <button type="button" onclick="window.toggleMobileNav()" class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-base shrink-0" aria-label="Menu">
+        <button type="button" onclick="window.toggleMobileNav()" class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0" aria-label="Menu Mobile">
           ☰
         </button>
       </div>
 
     </div>
 
-    <!-- TIROIR MENU MOBILE (SMARTPHONE) -->
+    <!-- TIROIR MOBILE NAVIGATION -->
     <div id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider">
       <a href="index.html" class="block text-cyberGreen font-bold py-1">Accueil</a>
-      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B</a>
-      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">K-MEH-20</a>
-      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Data Lake</a>
-      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
-      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
+      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B (Hôtels &amp; Riads)</a>
+      <a href="#etude-marche" onclick="window.toggleMobileNav()" class="block text-slate-300 hover:text-cyberGreen py-1">📊 Étude de Marché HoReCa</a>
+      <a href="#brochure" onclick="window.toggleMobileNav()" class="block text-slate-300 hover:text-cyberGreen py-1">📑 Brochure Officielle</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Usine Bionique K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake (Blockchain)</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières &amp; Mikhala</a>
+      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos de l'Entreprise</a>
       <hr class="border-white/10 my-2">
       <a href="pwa.html" class="block text-cyberGreen py-1 font-bold">📱 Workstation Opérateur (PWA)</a>
       <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
@@ -159,20 +170,20 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <!-- CONTENU PRINCIPAL -->
+  <main class="mt-24 sm:mt-28 space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6 flex-1">
 
-    <!-- HERO SECTION SOUVERAINE & INDUSTRIELLE -->
+    <!-- 1. HERO SECTION & MONOLITHE DE TÉLÉMÉTRIE -->
     <section class="pt-4">
       <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         
         <div class="lg:col-span-7 space-y-5 sm:space-y-6">
-          <div class="inline-flex items-center px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[11px] font-mono font-bold tracking-wider uppercase">
+          <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[11px] font-mono font-bold tracking-wider uppercase">
             🇲🇦 Souveraineté Industrielle du Royaume du Maroc • Loi n° 28-00
           </div>
           
           <h2 class="font-kemetTitle text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-            L'Alliance de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Sagesse de Maat</span> &amp; de la DeepTech
+            L'Alliance de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Sagesse de Maat</span> &amp; de la DeepTech Industrielle
           </h2>
           
           <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans font-normal">
@@ -180,11 +191,11 @@
           </p>
           
           <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono">
-            <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6">
+            <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6 shadow-xl">
               Demander un Audit Gratuit (0 MAD) →
             </button>
-            <a href="purkemet.html" class="btn btn-o text-xs !py-3.5 px-6">
-              Découvrir la Filière PurKemet B2B →
+            <a href="#brochure" class="btn btn-au text-xs !py-3.5 px-6">
+              Consulter la Brochure B2B 📄
             </a>
           </div>
 
@@ -197,11 +208,13 @@
           </div>
         </div>
 
-        <!-- MONOLITHE DATA ROOM CYBER KEMET -->
-        <div class="lg:col-span-5 glass-card g p-6 sm:p-8 space-y-6 relative overflow-hidden float-anim">
+        <!-- HUD MONOLITHE DE CONTRÔLE -->
+        <div class="lg:col-span-5 glass-panel g p-6 sm:p-8 space-y-6 relative overflow-hidden float-anim">
           <div class="scanner-beam"></div>
           <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono">
-            <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold">Genesis Data Room</span>
+            <span class="text-xs text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
+              <span class="dot"></span> Télémétrie Active
+            </span>
             <span class="text-xs text-kemetGoldBright">Marrakech • Kénitra</span>
           </div>
 
@@ -214,11 +227,11 @@
 
           <div class="p-4 bg-black/80 rounded-2xl border border-white/10 space-y-2 text-xs font-mono">
             <div class="flex justify-between font-bold text-cyberGreen">
-              <span>Direction Générale:</span>
+              <span>Direction Générale :</span>
               <span class="text-white">Roberto Passarella</span>
             </div>
             <div class="flex justify-between font-bold text-slate-400">
-              <span>Contact Officiel:</span>
+              <span>Contact Institutionnel :</span>
               <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline">r.passarella@industrialillusion.ma</a>
             </div>
           </div>
@@ -227,21 +240,21 @@
       </div>
     </section>
 
-    <!-- COMPTEURS D'IMPACT EN DIRECT DU DATA LAKE -->
+    <!-- 2. COMPTEURS D'IMPACT DATA LAKE EN DIRECT -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-center">
-      <div class="glass-card p-6 border-l-4 border-l-cyberGreen">
+      <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
         <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée (Cumul Hub)</span>
         <div class="text-3xl font-black text-cyberGreen">
           <span id="liveKg">0</span> <span class="text-xs font-normal">kg</span>
         </div>
       </div>
-      <div class="glass-card p-6 border-l-4 border-l-kemetGold">
+      <div class="glass-panel p-6 border-l-4 border-l-kemetGold">
         <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité (Scope 3 ADEME)</span>
         <div class="text-3xl font-black text-kemetGoldBright">
           <span id="liveCo2">0</span> <span class="text-xs font-normal">kg eq.</span>
         </div>
       </div>
-      <div class="glass-card p-6 border-l-4 border-l-white sm:col-span-2 lg:col-span-1">
+      <div class="glass-panel p-6 border-l-4 border-l-white sm:col-span-2 lg:col-span-1">
         <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Traçabilité Notariée</span>
         <div class="text-3xl font-black text-white">
           <span>100%</span> <span class="text-xs font-normal text-slate-400">Certifié</span>
@@ -249,15 +262,187 @@
       </div>
     </section>
 
-    <!-- ARCHITECTURE DES 4 PILIERS DE L'ÉCOSYSTÈME -->
+    <!-- 3. SECTION NOUVELLE : ÉTUDE DE MARCHÉ HORECA MARRAKECH 2026 -->
+    <section id="etude-marche" class="glass-panel p-8 sm:p-12 space-y-8 border-l-4 border-l-kemetGold">
+      <div class="grid lg:grid-cols-12 gap-10 items-start">
+        
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-xs font-mono font-bold uppercase">
+            <span>📊</span> <span>Rapport Institutionnel de Référence • Septembre 2026</span>
+          </div>
+
+          <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">
+            Le Marché de la Gestion des Déchets HoReCa à Marrakech
+          </h3>
+
+          <p class="text-sm text-slate-300 leading-relaxed font-sans">
+            Données fondées sur la première étude empirique menée par <strong>A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong>Université Cadi Ayyad de Marrakech</strong> (publiée dans <em>Cleaner and Responsible Consumption</em>, 2026).
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 font-mono text-xs pt-2">
+            <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+              <span class="text-kemetGoldBright font-bold block text-sm">451 à 505 kg/jour</span>
+              <p class="text-[11px] text-slate-400 font-sans">Volume moyen de déchets solides généré par un hôtel 5 étoiles à Marrakech.</p>
+            </div>
+            <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+              <span class="text-cyberGreen font-bold block text-sm">65% à 77% en Cuisine</span>
+              <p class="text-[11px] text-slate-400 font-sans">Concentration des gisements dans les zones de préparation et de stockage.</p>
+            </div>
+            <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+              <span class="text-white font-bold block text-sm">Circulaire D13015</span>
+              <p class="text-[11px] text-slate-400 font-sans">Taxe municipale « Grands Producteurs » évaluant un surcoût annuel de ~10 M MAD.</p>
+            </div>
+            <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+              <span class="text-kemetGold font-bold block text-sm">Seulement 28,8% Structurés</span>
+              <p class="text-[11px] text-slate-400 font-sans">Moins d'un tiers des hôtels disposent d'un plan formel de tri et valorisation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORMULAIRE DE DEMANDE DE L'ÉTUDE COMPLÈTE -->
+        <div class="lg:col-span-5 bg-black/80 p-6 sm:p-8 rounded-3xl border border-kemetGold/40 space-y-4 font-mono text-xs">
+          <div class="border-b border-white/10 pb-3">
+            <h4 class="font-kemetTitle text-base font-bold text-white">Recevoir l'Étude de Marché Intégrale</h4>
+            <p class="text-[10px] text-slate-400 font-sans mt-0.5">Dossier analytique réservé aux Directions Générales, Responsables ESG et Investisseurs.</p>
+          </div>
+
+          <form id="marketStudyForm" onsubmit="window.handleMarketStudySubmit(event)" class="space-y-3">
+            <div>
+              <label class="lbl text-[10px]">Nom &amp; Prénom *</label>
+              <input type="text" name="full_name" required placeholder="ex: Mehdi Benjelloun" class="inp mt-1">
+            </div>
+
+            <div>
+              <label class="lbl text-[10px]">Établissement / Organisation *</label>
+              <input type="text" name="organization" required placeholder="ex: Palais Ronsard / Riad" class="inp mt-1">
+            </div>
+
+            <div>
+              <label class="lbl text-[10px]">Fonction / Département *</label>
+              <select name="role_title" class="inp mt-1">
+                <option value="Directeur Général">Directeur Général / Propriétaire</option>
+                <option value="Responsable RSE / Qualité">Responsable RSE / Développement Durable</option>
+                <option value="Chef Économe / Stewarding">Chef Économe / Directeur des Achats</option>
+                <option value="Investisseur / Conseil">Investisseur / Analyste ESG</option>
+                <option value="Autre">Autre cadre dirigeant</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="lbl text-[10px]">Email Professionnel *</label>
+              <input type="email" name="email" required placeholder="m.benjelloun@etablissement.ma" class="inp mt-1">
+            </div>
+
+            <div>
+              <label class="lbl text-[10px]">Téléphone / WhatsApp</label>
+              <input type="tel" name="phone" placeholder="+212 6..." class="inp mt-1">
+            </div>
+
+            <button type="submit" id="btnMarketStudy" class="btn btn-au w-full !py-3 font-bold mt-2">
+              Demander l'Accès au Rapport (PDF) →
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. SECTION NOUVELLE : BROCHURE COMMERCIALE PURKEMET & PARCOURS EN 5 ÉTAPES -->
+    <section id="brochure" class="glass-panel g p-8 sm:p-12 space-y-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
+        <div class="space-y-2 max-w-2xl">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Documentation Officielle Partenaires</span>
+          <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Brochure PurKemet B2B : La Renaissance Cyber-Écologique</h3>
+          <p class="text-sm text-slate-300 font-sans leading-relaxed">
+            Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, resorts et restaurants de Marrakech.
+          </p>
+        </div>
+
+        <button type="button" onclick="window.openBrochureModal()" class="btn btn-g !py-3 !px-6 text-xs font-mono font-bold shrink-0 shadow-lg">
+          📄 Feilleter la Brochure &amp; Télécharger
+        </button>
+      </div>
+
+      <!-- LE PARCOURS DE LA MATIÈRE EN 5 ÉTAPES -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 font-mono text-xs">
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">1</div>
+          <span class="font-bold text-white block">Tri à la Source</span>
+          <p class="text-[11px] text-slate-400 font-sans">Séparation des fractions sèches (PET, PE-HD, Aluminium, Carton, Verre) dans les bacs dédiés.</p>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">2</div>
+          <span class="font-bold text-white block">Collecte &lt; 12h</span>
+          <p class="text-[11px] text-slate-400 font-sans">Demande d'enlèvement via l'App PurKemet avec intervention garantie à l'horaire choisi.</p>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold">3</div>
+          <span class="font-bold text-white block">Pesée IoT Bluetooth</span>
+          <p class="text-[11px] text-slate-400 font-sans">Mesure automatique directe sur site, bloquant physiquement toute saisie manuelle erronée.</p>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold">4</div>
+          <span class="font-bold text-white block">Notarisation Maat OS</span>
+          <p class="text-[11px] text-slate-400 font-sans">Double pesée au Hub (Δ ≤ 3%) scellée par empreinte cryptographique dans le Maat Data Lake.</p>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">5</div>
+          <span class="font-bold text-white block">Certificat ESG</span>
+          <p class="text-[11px] text-slate-400 font-sans">Attestation officielle délivrée mensuellement par la Direction Générale pour vos audits Clef Verte.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MANIFESTE INDUSTRIEL : "POURQUOI NOUS EXISTONS" -->
+    <section class="glass-panel p-8 sm:p-12 space-y-8">
+      <div class="max-w-3xl space-y-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique &amp; Enjeux Territoriaux</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
+        <p class="text-sm text-slate-300 leading-relaxed font-sans">
+          Chaque jour, la ville de Marrakech génère plus de 1 000 tonnes de déchets, dont près de 40% de matières sèches à haute valeur industrielle finissent enfouies ou brûlées. Industrial Illusion a été fondée pour briser cette hémorragie économique et environnementale.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
+        <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">01</div>
+          <h4 class="font-bold text-white text-base">Saturation des Centres d'Enfouissement</h4>
+          <p class="text-slate-400 leading-relaxed font-sans">
+            L'augmentation des volumes touristiques pèse lourdement sur la décharge contrôlée de M'Nabha. Capter les matières recyclables à la source libère la logistique municipale et préserve le sol marocain.
+          </p>
+        </div>
+
+        <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="w-10 h-10 bg-kemetGold/10 text-kemetGoldBright rounded-xl flex items-center justify-center font-bold text-sm border border-kemetGold/30">02</div>
+          <h4 class="font-bold text-white text-base">Risques Réglementaires B2B (Loi 28-00)</h4>
+          <p class="text-slate-400 leading-relaxed font-sans">
+            La réglementation marocaine impose la responsabilité du producteur. Les hôtels ne peuvent plus dépendre de collecteurs informels sans traçabilité. Nous fournissons des attestations inattaquables pour les audits Clef Verte et ISO 14001.
+          </p>
+        </div>
+
+        <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">03</div>
+          <h4 class="font-bold text-white text-base">Dignité Sociale des Chiffonniers (Mikhala)</h4>
+          <p class="text-slate-400 leading-relaxed font-sans">
+            Transformer le travail informel en carrières rémunérées en CDI, avec équipements de sécurité certifiés, droits sociaux et participation aux bénéfices via le modèle des Actions de Classe B.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. LES 4 PILIERS DU PROJET INDUSTRIEL -->
     <section class="space-y-8">
       <div class="text-center max-w-3xl mx-auto space-y-3">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
-        <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Piliers Industriels de la Holding</h3>
+        <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Piliers de l'Écosystème Industriel</h3>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono text-xs">
-        <div class="glass-card g p-6 rounded-3xl space-y-5 flex flex-col justify-between">
+        <div class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between">
           <div class="space-y-3">
             <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">PurKemet B2B</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Collecte B2B 0 MAD</h4>
@@ -270,7 +455,7 @@
           </a>
         </div>
 
-        <div class="glass-card au p-6 rounded-3xl space-y-5 flex flex-col justify-between">
+        <div class="glass-panel au p-6 rounded-3xl space-y-5 flex flex-col justify-between">
           <div class="space-y-3">
             <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">K-MEH-20</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Usine Bionique</h4>
@@ -283,7 +468,7 @@
           </a>
         </div>
 
-        <div class="glass-card g p-6 rounded-3xl space-y-5 flex flex-col justify-between">
+        <div class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between">
           <div class="space-y-3">
             <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">Maat Data Lake</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Traçabilité Immuable</h4>
@@ -296,7 +481,7 @@
           </a>
         </div>
 
-        <div class="glass-card au p-6 rounded-3xl space-y-5 flex flex-col justify-between">
+        <div class="glass-panel au p-6 rounded-3xl space-y-5 flex flex-col justify-between">
           <div class="space-y-3">
             <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">Modèle Social</span>
             <h4 class="font-kemetTitle text-lg font-bold text-white">Actions Classe B</h4>
@@ -311,8 +496,108 @@
       </div>
     </section>
 
-    <!-- SECTION LOGISTIQUE TERRAIN & ACCÈS WORKSTATION PWA -->
-    <section class="glass-card p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6">
+    <!-- 7. SPÉCIFICATIONS TECHNIQUES DES MATIÈRES SECONDAIRES -->
+    <section class="space-y-6">
+      <div class="border-b border-white/10 pb-4">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Ingénierie &amp; Chimie des Matériaux</span>
+        <h3 class="font-kemetTitle text-2xl font-black text-white mt-1">Caractérisation des Gisements de Seconde Génération</h3>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <span class="text-cyberGreen font-bold block text-sm">🟢 PET Transparent</span>
+          <p class="text-[11px] text-slate-400 font-sans">Polyéthylène téréphtalate pur (bouteilles eau minérale &amp; sodas).</p>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+            <div>Fusion : ~260°C</div>
+            <div>CO₂ évité : 1.82 kg/kg</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <span class="text-kemetGoldBright font-bold block text-sm">🟡 PE-HD Rigide</span>
+          <p class="text-[11px] text-slate-400 font-sans">Polyéthylène haute densité (flacons détergents, bidons).</p>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+            <div>Densité : 0.95 g/cm³</div>
+            <div>CO₂ évité : 1.54 kg/kg</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <span class="text-kemetGold font-bold block text-sm">🥫 Aluminium</span>
+          <p class="text-[11px] text-slate-400 font-sans">Alliages 3004 / 6061 recyclables à l'infini sans perte mécanique.</p>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+            <div>Énergie épargnée : 95%</div>
+            <div>CO₂ évité : 9.13 kg/kg</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+          <span class="text-amber-600 font-bold block text-sm">📦 Carton Ondulé</span>
+          <p class="text-[11px] text-slate-400 font-sans">Fibres cellulosiques d'emballage et cartons de déballage logistique.</p>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+            <div>Humidité tolérée : &lt; 14%</div>
+            <div>CO₂ évité : 0.95 kg/kg</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 sm:col-span-2 lg:col-span-1">
+          <span class="text-sky-400 font-bold block text-sm">🍾 Verre Blanc</span>
+          <p class="text-[11px] text-slate-400 font-sans">Bouteilles et récipients silico-calciques pour verreries partenaires.</p>
+          <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+            <div>Cullet recyclable à 100%</div>
+            <div>CO₂ évité : 0.67 kg/kg</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. SIMULATEUR INTERACTIF ESG POUR LES ÉTABLISSEMENTS HÔTELIERS -->
+    <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
+        <div>
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Simulateur d'Impact RSE</span>
+          <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Calculez le Potentiel Écologique de Votre Établissement</h3>
+          <p class="text-xs text-slate-300 font-sans mt-1">Ajustez la capacité de votre hôtel pour modéliser vos économies de gaz à effet de serre.</p>
+        </div>
+        <button type="button" onclick="window.openAuditModal()" class="btn btn-g !py-2.5 !px-5 text-xs font-mono font-bold whitespace-nowrap shrink-0">
+          Demander Notre Audit 0 MAD
+        </button>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-8 items-center font-mono">
+        <div class="md:col-span-5 space-y-4">
+          <label class="lbl text-xs">Capacité d'accueil de l'établissement :</label>
+          <div class="flex items-center gap-3">
+            <input type="range" id="simRooms" min="10" max="600" step="10" value="120" class="w-full accent-cyberGreen cursor-pointer" oninput="window.calcEsgSim(this.value)">
+            <span id="simRoomsVal" class="text-lg font-black text-white bg-black/60 px-3 py-1 rounded-xl border border-white/10 min-w-[5rem] text-center">120 ch.</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">
+            Basé sur les ratios constatés dans les Riads et Resorts de la région de Marrakech (taux d'occupation moyen de 70%).
+          </p>
+        </div>
+
+        <div class="md:col-span-7 grid grid-cols-3 gap-3 text-center">
+          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+            <span class="text-[9px] uppercase text-slate-400 block">Tonnage Estimé / Mois</span>
+            <span id="simKg" class="text-xl sm:text-2xl font-black text-kemetGoldBright">1 850</span>
+            <span class="text-[10px] text-slate-500 block">kg valorisés</span>
+          </div>
+          <div class="p-4 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-1">
+            <span class="text-[9px] uppercase text-slate-400 block">CO₂ Évité / Mois</span>
+            <span id="simCo2" class="text-xl sm:text-2xl font-black text-cyberGreen">3 367</span>
+            <span class="text-[10px] text-slate-500 block">kg CO₂ eq.</span>
+          </div>
+          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
+            <span class="text-[9px] uppercase text-slate-400 block">Économie Décharge</span>
+            <span id="simDiv" class="text-xl sm:text-2xl font-black text-white">88%</span>
+            <span class="text-[10px] text-slate-500 block">taux déviation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. SECTION LOGISTIQUE TERRAIN & WORKSTATION OPÉRATEURS -->
+    <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
         <div>
           <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Logistique Terrain &amp; Déploiement</span>
@@ -342,21 +627,61 @@
 
   </main>
 
-  <!-- FOOTER INSTITUTIONNEL -->
+  <!-- FOOTER INSTITUTIONNEL SOUVERAIN -->
   <footer class="border-t border-white/10 py-8 bg-black">
     <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
       <p>© 2026 Industrial Illusion SARL — Sovereign DeepTech Systems. Tous droits réservés.</p>
-      <p class="text-[10px]">Siège Social &amp; Représentation Opérationnelle: Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc • Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+      <p class="text-[10px]">Siège Social: Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc • Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
     </div>
   </footer>
 
+  <!-- MODAL BROCHURE COMMERCIALE B2B (FEUILLETABLE) -->
+  <div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="glass-panel g max-w-3xl w-full p-6 sm:p-8 space-y-6 text-left font-mono text-xs relative my-8">
+      <button type="button" onclick="window.closeBrochureModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+
+      <div class="border-b border-kemetGold/30 pb-4 text-center space-y-1">
+        <span class="lbl au">PURKEMET B2B • DOCUMENT COMMERCIAL OFFICIEL</span>
+        <h3 class="font-kemetTitle text-xl font-black text-white">La Renaissance Cyber-Écologique</h3>
+        <p class="text-[10px] text-slate-400">Présentation synthétique pour Hôtels de Luxe, Riads, Restaurants et Établissements Commerciaux.</p>
+      </div>
+
+      <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-slate-300 font-sans text-xs leading-relaxed">
+        <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
+          <h4 class="font-bold text-cyberGreen text-sm font-mono">1. NOTRE ENGAGEMENT EXCLUSIF : RIGUEUR &amp; TRANSPARENCE</h4>
+          <p>Service 100% gratuit : aucun coût logistique, de main d'œuvre, d'assurance ou de traitement. Vos déchets secs triés deviennent vos actifs de réputation et de conformité.</p>
+        </div>
+
+        <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
+          <h4 class="font-bold text-kemetGoldBright text-sm font-mono">2. CARACTÉRISTIQUES TECHNIQUES ET SÉCURITÉ JURIDIQUE</h4>
+          <ul class="list-disc pl-5 space-y-1 text-slate-400">
+            <li><strong>Pureté Grade-A (&gt;98%) :</strong> Tri à la source sec garantissant une valorisation optimale sans odeurs.</li>
+            <li><strong>Planification sous 12h :</strong> Enlèvement flexible s'adaptant à vos contraintes (Quiet Window).</li>
+            <li><strong>Couverture Civile :</strong> Assurance RC complète avec décharge totale de responsabilité juridique.</li>
+            <li><strong>Conformité :</strong> Alignement strict avec la Loi n° 28-00 relative à la gestion des déchets.</li>
+          </ul>
+        </div>
+
+        <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
+          <h4 class="font-bold text-white text-sm font-mono">3. SIMPLIFICATION DES AUDITS ESG (CLEF VERTE &amp; TRAVELIFE)</h4>
+          <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
+        <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
+        <button type="button" onclick="window.print()" class="btn btn-g !py-2.5 px-6 font-bold">🖨️ Imprimer / Sauvegarder la Brochure (PDF)</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL DEMANDE AUDIT GRATUIT (0 MAD) -->
   <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative">
+    <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative">
       <button type="button" onclick="window.closeAuditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
 
       <div class="border-b border-white/10 pb-2">
-        <span class="lbl">Audit Gratuit de Gisement (0 MAD)</span>
+        <span class="lbl">Audit de Gisement (0 MAD)</span>
         <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Établissements B2B Marrakech</h3>
       </div>
 
@@ -369,11 +694,11 @@
         <div>
           <label class="lbl">Catégorie HoReCa *</label>
           <select name="cat" class="inp mt-1">
-            <option value="HOTEL_5S">Hôtel / Resort / Palace</option>
-            <option value="RIAD">Riad / Maison d'Hôtes</option>
-            <option value="RESTAURANT">Restaurant / Rooftop</option>
-            <option value="CLINIQUE">Clinique / Établissement de Santé</option>
-            <option value="COMMERCE">Commerce / Artisan</option>
+            <option value="HOTEL_RESORT">Hôtel / Resort / Palace</option>
+            <option value="RIAD">Riad / Maison d'Hôtes (Médina)</option>
+            <option value="RESTAURANT">Restaurant / Rooftop / Traiteur</option>
+            <option value="CLINIQUE">Clinique / Établissement Médical</option>
+            <option value="COMMERCE">Commerce / Supermarché / Artisan</option>
           </select>
         </div>
 
@@ -383,16 +708,16 @@
         </div>
 
         <div>
-          <label class="lbl">Téléphone Référent *</label>
+          <label class="lbl">Téléphone Référent WhatsApp *</label>
           <input type="tel" name="phone" required placeholder="+212 6..." class="inp mt-1">
         </div>
 
         <div>
-          <label class="lbl">Volume estimé ou remarques</label>
-          <textarea name="notes" placeholder="Volumes hebdomadaires, contraintes d'accès..." class="inp mt-1 h-16"></textarea>
+          <label class="lbl">Remarques ou contraintes logistiques</label>
+          <textarea name="notes" placeholder="Accès Médina, horaires spécifiques, volume de carton..." class="inp mt-1 h-16"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-g w-full !py-3">Transmettre au Siège</button>
+        <button type="submit" class="btn btn-g w-full !py-3 font-bold">Transmettre au Siège</button>
       </form>
     </div>
   </div>
@@ -404,6 +729,15 @@
   <script src="assets/site.js"></script>
 
   <script>
+    // Inscription Service Worker silencieuse
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (err) {
+          console.warn('[SW Home] Enregistrement silencieux:', err);
+        });
+      });
+    }
+
     window.openAuditModal = function () {
       var m = document.getElementById('auditModal');
       if (m) m.classList.remove('hidden');
@@ -412,9 +746,71 @@
       var m = document.getElementById('auditModal');
       if (m) m.classList.add('hidden');
     };
+
+    window.openBrochureModal = function () {
+      var m = document.getElementById('brochureModal');
+      if (m) m.classList.remove('hidden');
+    };
+    window.closeBrochureModal = function () {
+      var m = document.getElementById('brochureModal');
+      if (m) m.classList.add('hidden');
+    };
+
     window.toggleMobileNav = function () {
       var nav = document.getElementById('mobileNavMenu');
       if (nav) nav.classList.toggle('hidden');
+    };
+
+    // Simulateur ESG Interattivo
+    window.calcEsgSim = function (rooms) {
+      var r = parseInt(rooms, 10) || 10;
+      document.getElementById('simRoomsVal').textContent = r + ' ch.';
+      var kg = Math.round(r * 15.4);
+      var co2 = Math.round(kg * 1.82);
+      document.getElementById('simKg').textContent = kg.toLocaleString('fr-FR');
+      document.getElementById('simCo2').textContent = co2.toLocaleString('fr-FR');
+    };
+
+    // Handler form Étude de Marché HoReCa -> Supabase
+    window.handleMarketStudySubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnMarketStudy');
+      btn.disabled = true;
+      btn.textContent = 'Transmission en cours…';
+
+      var fd = new FormData(form);
+      var payload = {
+        full_name: fd.get('full_name'),
+        organization: fd.get('organization'),
+        role_title: fd.get('role_title'),
+        email: (fd.get('email') || '').toLowerCase().trim(),
+        phone: fd.get('phone') || null
+      };
+
+      if (window.ensureInit) window.ensureInit();
+
+      var res = await window.Maat.sb.from('market_study_leads').insert([payload]);
+
+      btn.disabled = false;
+      btn.textContent = 'Demander l\'Accès au Rapport (PDF) →';
+
+      if (res.error) {
+        // Fallback su field_notes se la tabella non è ancora stata creata nello SQL editor
+        await window.Maat.sb.from('field_notes').insert([{
+          operator_email: payload.email,
+          note_type: 'GENERAL',
+          content: 'DEMANDE ÉTUDE HORECA 2026 : ' + payload.full_name + ' (' + payload.role_title + ' @ ' + payload.organization + ') - Tél: ' + payload.phone
+        }]);
+      }
+
+      if (window.Maat && window.Maat.toast) {
+        window.Maat.toast('Demande enregistrée. Notre équipe vous transmettra l\'étude officielle.');
+      } else {
+        alert('Votre demande a bien été transmise à la Direction.');
+      }
+
+      form.reset();
     };
   </script>
 </body>
