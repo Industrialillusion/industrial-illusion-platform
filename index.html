@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Industrial Illusion SARL | Société DeepTech Logicielle & Traçabilité Industrielle Souveraine</title>
+<title>Industrial Illusion SARL | Deep Tech Systems · Éditeur de Logiciels Industriels Souverains</title>
 <meta name="description" content="Éditeur de logiciels industriels souverains basé à Marrakech : système Maat OS, plateforme PurKemet B2B 0 MAD, architecture cyber-physique K-MEH-20 et Maat Data Lake notarié. Conforme Loi n° 28-00 & CNDP n° 09-08.">
 <meta name="theme-color" content="#090D10">
 <meta name="color-scheme" content="dark">
@@ -30,7 +30,7 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · INDEX.HTML — Design System Local
+   INDUSTRIAL ILLUSION · INDEX.HTML — Design System Local v5
    ============================================================ */
 
 html, body { overflow-x: hidden; }
@@ -161,6 +161,82 @@ body {
 }
 .stream-track:hover { animation-play-state: paused; }
 
+/* ============================================================
+   HERO SECTION PLEIN ÉCRAN AVEC CANVAS IMMERSIF
+   ============================================================ */
+#heroSection {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-top: 4rem;
+}
+
+#heroCyberCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+#heroCyberVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.hero-text-panel {
+  background: linear-gradient(135deg, rgba(9,13,16,.88) 0%, rgba(9,13,16,.72) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 1.75rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -15px rgba(0,0,0,.85);
+}
+
+.hero-hud-panel {
+  background: linear-gradient(160deg, rgba(19,25,32,.88) 0%, rgba(9,13,16,.95) 100%);
+  border: 1px solid rgba(0, 255, 163, 0.45);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 40px -10px rgba(0,255,163,.25), 0 25px 55px -12px rgba(0,0,0,.85);
+}
+
+@keyframes heroFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-fade { animation: heroFade 1.2s cubic-bezier(.2,.8,.2,1) both; }
+.hero-fade-d1 { animation-delay: .1s; }
+.hero-fade-d2 { animation-delay: .25s; }
+.hero-fade-d3 { animation-delay: .4s; }
+.hero-fade-d4 { animation-delay: .55s; }
+
+/* Scroll indicator */
+@keyframes bounceY {
+  0%, 100% { transform: translateY(0); opacity: .4; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+.scroll-hint { animation: bounceY 2.4s ease-in-out infinite; }
+
 /* Print brochure isolée */
 @media print {
   body > *:not(#brochureModal) { display: none !important; }
@@ -188,8 +264,14 @@ body {
 /* Safe-area iOS */
 .safe-top { padding-top: env(safe-area-inset-top); }
 
-/* Évite le débordement horizontal sur mobile */
-.break-word { word-break: break-word; overflow-wrap: anywhere; }
+/* Réduit les animations si l'utilisateur le demande */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
 </style>
 </head>
 
@@ -201,7 +283,7 @@ body {
 <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
 
-    <!-- LOGO : EMBLÈME HORUS DOUBLE ORBITE -->
+    <!-- LOGO : EMBLÈME HORUS DOUBLE ORBITE + DEEP TECH SYSTEMS -->
     <a href="index.html" class="flex items-center space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
       <div class="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
         <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
@@ -231,7 +313,7 @@ body {
 
       <div class="min-w-0">
         <h1 class="font-kemetTitle text-xs sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
-        <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.22em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEPTECH LOGICIELLE SOUVERAINE</p>
+        <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.22em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
       </div>
     </a>
 
@@ -239,10 +321,9 @@ body {
     <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
       <a href="index.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5" aria-current="page">Accueil</a>
       <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
-      <a href="#etude-marche" class="hover:text-cyberGreen transition-colors">Étude HoReCa</a>
-      <a href="#brochure" class="hover:text-cyberGreen transition-colors">Brochure B2B</a>
-      <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">Architecture K-MEH-20</a>
-      <a href="#datalake" class="hover:text-cyberGreen transition-colors">Data Lake</a>
+      <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
+      <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
+      <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
       <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
     </nav>
 
@@ -251,7 +332,7 @@ body {
       <button type="button" id="loginBtn"
               onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();"
               aria-label="Connexion à l'espace membre"
-              class="btn btn-g !py-2 !px-3.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+              class="btn btn-g !py-2 !px-3 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
         Connexion 🔒
       </button>
       <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
@@ -265,13 +346,15 @@ body {
   <!-- MENU MOBILE -->
   <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
     <a href="index.html" class="block text-cyberGreen font-bold py-1">Accueil</a>
-    <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B (Hôtels &amp; Riads)</a>
-    <a href="#etude-marche" class="block text-slate-300 hover:text-cyberGreen py-1">📊 Étude de Marché HoReCa</a>
-    <a href="#brochure" class="block text-slate-300 hover:text-cyberGreen py-1">📑 Brochure Officielle</a>
+    <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B</a>
     <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Architecture K-MEH-20</a>
-    <a href="#datalake" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake (Blockchain)</a>
-    <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières &amp; Mikhala</a>
-    <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos de la Société</a>
+    <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake</a>
+    <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
+    <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
+    <hr class="border-white/10 my-2">
+    <a href="#etude-marche" class="block text-slate-300 hover:text-cyberGreen py-1">📊 Étude HoReCa</a>
+    <a href="#brochure" class="block text-slate-300 hover:text-cyberGreen py-1">📑 Brochure B2B</a>
+    <a href="#datalake" class="block text-slate-300 hover:text-cyberGreen py-1">🔗 Terminal Data Lake</a>
     <hr class="border-white/10 my-2">
     <a href="pwa.html" class="block text-cyberGreen py-1 font-bold">📱 Workstation Opérateur (PWA)</a>
     <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
@@ -280,31 +363,37 @@ body {
 </header>
 
 <!-- ============================================================
-     MAIN
+     HERO SECTION PLEIN ÉCRAN AVEC CANVAS IMMERSIF
      ============================================================ -->
-<main class="mt-24 sm:mt-28 space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6 flex-1">
+<section id="heroSection" class="pt-20 sm:pt-0">
+  <!-- Video de fond (fallback silencieux si absent) -->
+  <video id="heroCyberVideo" autoplay loop muted playsinline onerror="this.style.display='none'">
+    <source src="assets/eye-core.mp4" type="video/mp4">
+  </video>
 
-  <!-- ============================================================
-       SECTION 1 — HERO & MONOLITHE CYBER-HORUS INTERACTIF
-       ============================================================ -->
-  <section class="pt-4" aria-labelledby="hero-title">
-    <div class="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+  <!-- Canvas plein écran : œil cyber-Horus + pistes PCB + cubes blockchain -->
+  <canvas id="heroCyberCanvas" aria-label="Noyau Cyber-Horus interactif"></canvas>
 
-      <div class="lg:col-span-7 space-y-5 sm:space-y-6">
-        <div class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[11px] font-mono font-bold tracking-wider uppercase">
-          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse mr-2" aria-hidden="true"></span>
+  <!-- Overlay de contenu -->
+  <div class="hero-overlay max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+      <!-- Colonne texte gauche -->
+      <div class="lg:col-span-7 space-y-6 hero-fade hero-fade-d1">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span>
           🇲🇦 Souveraineté Numérique du Royaume du Maroc · Loi n° 28-00
         </div>
 
-        <h2 id="hero-title" class="font-kemetTitle text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
-          L'Alliance de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Sagesse de Maat</span> &amp; de la DeepTech Industrielle
+        <h2 class="font-kemetTitle text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] hero-fade hero-fade-d2">
+          L'Alliance de la Sagesse de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Maat</span> &amp; de la DeepTech Industrielle
         </h2>
 
-        <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans font-normal">
-          Industrial Illusion SARL est une société DeepTech logicielle basée à Marrakech. Elle déploie la plateforme unifiée de logistique cyber-physique, de valorisation sélective et de traçabilité notariale. Un modèle souverain dédié aux Grands Producteurs B2B (HoReCa, Cliniques, Écoles &amp; Commerces).
+        <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl hero-fade hero-fade-d3">
+          <strong class="text-white">Industrial Illusion SARL</strong> est un éditeur de logiciels industriels souverains basé à Marrakech. Elle déploie le système d'exploitation <strong class="text-cyberGreen">Maat OS</strong>, la plateforme logistique <strong class="text-cyberGreen">PurKemet B2B</strong> et l'architecture cyber-physique <strong class="text-kemetGoldBright">K-MEH-20</strong> pour les Grands Producteurs du Royaume : hôtels, resorts, riads, cliniques, écoles et commerces.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono">
+        <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono hero-fade hero-fade-d3">
           <button type="button" onclick="window.openAuditModal()" class="btn btn-g text-xs !py-3.5 px-6 shadow-xl">
             Demander un Audit Gratuit (0 MAD) →
           </button>
@@ -313,82 +402,101 @@ body {
           </a>
         </div>
 
-        <div class="pt-4 flex flex-wrap items-center gap-3 sm:gap-6 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
+        <div class="pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10 hero-fade hero-fade-d4">
           <span>Conforme Loi n° 28-00</span>
           <span aria-hidden="true">•</span>
-          <span>Loi CNDP n° 09-08</span>
+          <span>CNDP n° 09-08</span>
           <span aria-hidden="true">•</span>
           <span>Double Pesée IoT Scellée</span>
+          <span aria-hidden="true">•</span>
+          <span>Blockchain Hybride</span>
         </div>
       </div>
 
-      <!-- MONOLITHE HUD : NUCLEUS CYBER-HORUS INTERACTIF (VIDEO + CANVAS) -->
-      <div class="lg:col-span-5 glass-panel g p-6 sm:p-8 space-y-6 relative overflow-hidden" id="horusMonolith">
-        <div class="scanner-beam" aria-hidden="true"></div>
+      <!-- Colonne HUD droite : telemetry + KPI live -->
+      <div class="lg:col-span-5 space-y-4 hero-fade hero-fade-d4">
+        <!-- Monolithe HUD -->
+        <div class="hero-hud-panel p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
+            <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span>
+              HUB-MARRAKECH-01
+            </span>
+            <span class="text-kemetGoldBright">LIVE</span>
+          </div>
 
-        <div class="flex items-center justify-between border-b border-white/10 pb-4 font-mono text-xs">
-          <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span> Télémétrie Active
-          </span>
-          <span class="text-kemetGoldBright">Marrakech · Data Lake</span>
+          <div class="grid grid-cols-2 gap-3 font-mono">
+            <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 text-center">
+              <span class="text-[9px] text-slate-400 uppercase block tracking-wider">Matière valorisée</span>
+              <div class="text-xl font-black text-cyberGreen mt-1">
+                <span id="liveKg">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
+              </div>
+            </div>
+            <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 text-center">
+              <span class="text-[9px] text-slate-400 uppercase block tracking-wider">CO₂ évité</span>
+              <div class="text-xl font-black text-kemetGoldBright mt-1">
+                <span id="liveCo2">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-1.5 font-mono text-[10px]">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Registre Maat Data Lake</span>
+              <span class="font-bold text-cyberGreen">OPÉRATIONNEL</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Ancrage blockchain</span>
+              <span class="font-bold text-cyberGreen">Bitcoin OpenTimestamps</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Coordonnées géospatiales</span>
+              <span class="font-bold text-white">31.6295° N, 7.9811° W</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Blockchain hybride</span>
+              <span class="font-bold text-kemetGoldBright">Fabric + Bitcoin</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-xs flex justify-between items-center gap-3">
+            <div>
+              <span class="text-[9px] text-slate-400 uppercase block">Direction Générale</span>
+              <span class="text-white font-bold">Roberto Passarella</span>
+            </div>
+            <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline text-[10px]" aria-label="Contacter la Direction">Contact ↗</a>
+          </div>
         </div>
 
-        <!-- Conteneur Vidéo + Canvas Overlay -->
-        <div id="neuralEyeWrapper" class="relative w-full h-56 sm:h-64 flex items-center justify-center bg-black rounded-2xl border border-white/10 overflow-hidden">
-          <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-75"
-                 onerror="this.style.display='none'">
-            <source src="assets/eye-core.mp4" type="video/mp4">
-          </video>
-          <canvas id="neuralEyeCanvas" class="absolute inset-0 w-full h-full" aria-label="Noyau Cyber-Horus interactif"></canvas>
-
-          <div class="absolute bottom-2.5 right-3 font-mono text-[9px] text-cyberGreen font-bold bg-black/85 px-2.5 py-1 rounded-lg border border-cyberGreen/40 shadow-lg z-10">
-            MAAT NOTARISÉ SHA-256
-          </div>
-          <div class="absolute top-2.5 left-3 font-mono text-[9px] text-kemetGoldBright font-bold bg-black/85 px-2.5 py-1 rounded-lg border border-kemetGold/40 shadow-lg z-10">
-            BLOCK #957.909
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <h3 class="font-kemetTitle text-lg font-bold text-white">GENESIS DATA ROOM &amp; BLOCKCHAIN</h3>
-          <p class="text-xs text-slate-300 leading-relaxed font-sans">
-            Écosystème unifié opérant par la double voie : la logistique logicielle B2B <strong class="text-cyberGreen">PurKemet</strong> (Jour 0) et l'architecture cyber-physique <strong class="text-kemetGoldBright">K-MEH-20</strong> gouvernée par le système d'exploitation souverain <strong class="text-white">Maat OS</strong>.
-          </p>
-        </div>
-
-        <div class="p-3 bg-black/80 rounded-xl border border-white/10 space-y-1.5 text-xs font-mono">
-          <div class="flex justify-between font-bold text-cyberGreen">
-            <span>Direction Générale :</span>
-            <span class="text-white">Roberto Passarella</span>
-          </div>
-          <div class="flex justify-between font-bold text-slate-400">
-            <span>Contact Institutionnel :</span>
-            <a href="mailto:r.passarella@industrialillusion.ma" class="text-kemetGoldBright hover:underline">r.passarella@industrialillusion.ma</a>
-          </div>
-          <div class="flex justify-between font-bold text-slate-400">
-            <span>Coordonnées Géospatiales :</span>
-            <span class="text-white">31.6295° N, 7.9811° W</span>
-          </div>
+        <!-- Scroll hint -->
+        <div class="text-center text-[10px] font-mono text-slate-500 scroll-hint">
+          ↓ Faites défiler pour explorer l'écosystème
         </div>
       </div>
 
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- ============================================================
+     MAIN — SECTIONS
+     ============================================================ -->
+<main class="space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
 
   <!-- ============================================================
-       SECTION 2 — COMPTEURS D'IMPACT LIVE
+       SECTION 1 — COMPTEURS D'IMPACT (4 KPI)
        ============================================================ -->
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-center" aria-label="Compteurs d'impact">
     <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée</span>
       <div class="text-3xl font-black text-cyberGreen">
-        <span id="liveKg">0</span> <span class="text-xs font-normal">kg</span>
+        <span id="liveKg2">0</span> <span class="text-xs font-normal">kg</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-kemetGold">
       <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité</span>
       <div class="text-3xl font-black text-kemetGoldBright">
-        <span id="liveCo2">0</span> <span class="text-xs font-normal">kg eq.</span>
+        <span id="liveCo2b">0</span> <span class="text-xs font-normal">kg eq.</span>
       </div>
     </div>
     <div class="glass-panel p-6 border-l-4 border-l-white">
@@ -406,13 +514,13 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 3 — ÉTUDE DE MARCHÉ HORECA 2026
+       SECTION 2 — ÉTUDE DE MARCHÉ HORECA 2026
        ============================================================ -->
-  <section id="etude-marche" class="glass-panel p-8 sm:p-12 space-y-8 border-l-4 border-l-kemetGold" aria-labelledby="etude-title">
+  <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold" aria-labelledby="etude-title">
     <div class="grid lg:grid-cols-12 gap-10 items-start">
 
       <div class="lg:col-span-7 space-y-5">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-xs font-mono font-bold uppercase">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-[11px] font-mono font-bold uppercase">
           <span aria-hidden="true">📊</span>
           <span>Rapport Institutionnel de Référence · Septembre 2026</span>
         </div>
@@ -422,7 +530,7 @@ body {
         </h3>
 
         <p class="text-sm text-slate-300 leading-relaxed font-sans">
-          Données fondées sur la première étude empirique menée par <strong class="text-white">A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong class="text-white">Université Cadi Ayyad de Marrakech</strong>, publiée dans <em>Cleaner and Responsible Consumption</em> (Vol. 21, 2026). Cette recherche a enquêté sur 26 hôtels de la ville et identifie les stratégies de gestion adoptées.
+          Données issues de la première étude empirique sur la gestion des déchets solides hôteliers à Marrakech, menée par <strong class="text-white">A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong class="text-white">Université Cadi Ayyad</strong>, publiée dans <em>Cleaner and Responsible Consumption</em> (Volume 21, Mai 2026). L'étude a enquêté sur <strong class="text-white">26 hôtels de Marrakech</strong> et identifié les stratégies de gestion adoptées.
         </p>
 
         <div class="grid sm:grid-cols-2 gap-4 font-mono text-xs pt-2">
@@ -431,21 +539,25 @@ body {
             <p class="text-[11px] text-slate-400 font-sans">Volume moyen de déchets solides généré par un hôtel 5 étoiles à Marrakech.</p>
           </div>
           <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-cyberGreen font-bold block text-sm">65% à 77% en Cuisine</span>
+            <span class="text-cyberGreen font-bold block text-sm">65% à 77% en cuisine</span>
             <p class="text-[11px] text-slate-400 font-sans">Concentration des gisements dans les zones de préparation et de stockage.</p>
           </div>
           <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-white font-bold block text-sm">Circulaire D13015</span>
-            <p class="text-[11px] text-slate-400 font-sans">Taxe municipale « Grands Producteurs » évaluant un surcoût annuel de ~10 M MAD pour Marrakech.</p>
+            <span class="text-white font-bold block text-sm">~10 M MAD / an</span>
+            <p class="text-[11px] text-slate-400 font-sans">Pression de la redevance municipale « Grands Producteurs » (Art. 23 Loi 28-00, circulaire D13015).</p>
           </div>
           <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-kemetGold font-bold block text-sm">Seulement 28,8% Structurés</span>
+            <span class="text-kemetGold font-bold block text-sm">28,8% structurés</span>
             <p class="text-[11px] text-slate-400 font-sans">Moins d'un tiers des hôtels disposent d'un plan formel de tri et de valorisation.</p>
           </div>
         </div>
+
+        <div class="p-4 bg-black/40 rounded-2xl border border-white/10 space-y-2 font-sans text-xs text-slate-400 leading-relaxed">
+          <p><strong class="text-white">Contexte complémentaire</strong> · Seulement 34,62% des hôtels pratiquent le tri sélectif. 60% utilisent des sociétés privées payantes, 40% dépendent encore du secteur informel. Le coût de dégradation environnementale lié aux déchets au Maroc est évalué à <strong class="text-white">3,7 milliards de DH</strong>, soit 0,4% du PIB.</p>
+        </div>
       </div>
 
-      <!-- FORMULAIRE DEMANDE ÉTUDE -->
+      <!-- FORMULAIRE ÉTUDE -->
       <div class="lg:col-span-5 bg-black/80 p-6 sm:p-8 rounded-3xl border border-kemetGold/40 space-y-4 font-mono text-xs">
         <div class="border-b border-white/10 pb-3">
           <h4 class="font-kemetTitle text-base font-bold text-white">Recevoir l'Étude Intégrale</h4>
@@ -482,6 +594,9 @@ body {
           <button type="submit" id="btnMarketStudy" class="btn btn-au w-full !py-3 font-bold mt-2">
             Demander l'Accès au Rapport (PDF) →
           </button>
+          <p class="text-[10px] text-slate-500 leading-relaxed">
+            Données traitées conformément à la Loi CNDP n° 09-08. Hébergement 100 % Maroc. Aucun transfert transfrontalier.
+          </p>
         </form>
       </div>
 
@@ -489,20 +604,25 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 4 — BROCHURE COMMERCIALE B2B
+       SECTION 3 — BROCHURE COMMERCIALE B2B
        ============================================================ -->
-  <section id="brochure" class="glass-panel g p-8 sm:p-12 space-y-8" aria-labelledby="brochure-title">
+  <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8" aria-labelledby="brochure-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
       <div class="space-y-2 max-w-2xl">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Documentation Officielle Partenaires</span>
         <h3 id="brochure-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Brochure PurKemet B2B : La Renaissance Cyber-Écologique</h3>
         <p class="text-sm text-slate-300 font-sans leading-relaxed">
-          Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, resorts et restaurants de Marrakech.
+          Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, riads, restaurants de prestige et établissements commerciaux de Marrakech.
         </p>
       </div>
-      <button type="button" onclick="window.openBrochureModal()" class="btn btn-g !py-3 !px-6 text-xs font-mono font-bold shrink-0 shadow-lg">
-        📄 Feuilleter la Brochure &amp; Télécharger
-      </button>
+      <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+        <button type="button" onclick="window.openBrochureModal()" class="btn btn-g !py-3 !px-6 text-xs font-mono font-bold shadow-lg">
+          📄 Feuilleter la Brochure
+        </button>
+        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au !py-3 !px-6 text-xs font-mono font-bold shadow-lg">
+          ✉️ Recevoir par Email
+        </button>
+      </div>
     </div>
 
     <!-- 3 AVANTAGES CLÉS -->
@@ -510,7 +630,7 @@ body {
       <div class="glass-panel g p-5 space-y-2">
         <div class="font-mono text-3xl font-black text-cyberGreen">0 MAD</div>
         <div class="font-bold text-white text-sm">Coût pour l'établissement</div>
-        <p class="text-xs text-slate-400 leading-relaxed font-sans">Aucun frais opérationnel. La matière sèche est cédée gratuitement en échange du service de traçabilité.</p>
+        <p class="text-xs text-slate-400 leading-relaxed font-sans">Aucun frais opérationnel. La matière sèche est cédée gratuitement en échange du service de traçabilité et du Certificat ESG.</p>
       </div>
       <div class="glass-panel g p-5 space-y-2">
         <div class="font-mono text-3xl font-black text-cyberGreen">&gt;98<span class="text-lg">%</span></div>
@@ -558,14 +678,14 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 5 — MANIFESTE INDUSTRIEL
+       SECTION 4 — MANIFESTE INDUSTRIEL
        ============================================================ -->
-  <section class="glass-panel p-8 sm:p-12 space-y-8" aria-labelledby="manifesto-title">
+  <section class="glass-panel p-6 sm:p-12 space-y-8" aria-labelledby="manifesto-title">
     <div class="max-w-3xl space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique &amp; Enjeux Territoriaux</span>
       <h3 id="manifesto-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
       <p class="text-sm text-slate-300 leading-relaxed font-sans">
-        Chaque jour, la ville de Marrakech génère plus de 1 000 tonnes de déchets, dont près de 40% de matières sèches à haute valeur industrielle finissent enfouies ou brûlées. Industrial Illusion a été fondée pour briser cette hémorragie économique et environnementale.
+        Chaque jour, la ville de Marrakech génère plus de 1 000 tonnes de déchets, dont une part importante de matières sèches à haute valeur industrielle finit enfouie ou brûlée. Industrial Illusion a été fondée pour briser cette hémorragie économique et environnementale.
       </p>
     </div>
 
@@ -588,14 +708,14 @@ body {
         <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">03</div>
         <h4 class="font-bold text-white text-base">Dignité Sociale des Mikhala</h4>
         <p class="text-slate-400 leading-relaxed font-sans">
-          Transformer le travail informel en carrières rémunérées en CDI, avec équipements de sécurité certifiés (EPI complets), droits sociaux et participation aux bénéfices via le modèle des Actions de Classe B.
+          Transformation du travail informel en carrières rémunérées en CDI, avec équipements de sécurité certifiés (EPI complets), droits sociaux et participation aux bénéfices via le modèle des Actions de Classe B.
         </p>
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       SECTION 6 — LES 4 PILIERS
+       SECTION 5 — LES 4 PILIERS
        ============================================================ -->
   <section class="space-y-8" aria-labelledby="piliers-title">
     <div class="text-center max-w-3xl mx-auto space-y-3">
@@ -609,7 +729,7 @@ body {
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">PurKemet B2B</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Collecte B2B 0 MAD</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
-            Enlèvement gratuit de la fraction sèche et gestion sous contrat conforme à la Loi 28-00.
+            Enlèvement gratuit de la fraction sèche et gestion sous contrat conforme à la Loi 28-00. Traçabilité blockchain et Certificat ESG mensuel.
           </p>
         </div>
         <span class="text-[10px] font-mono text-cyberGreen font-bold">Portail PurKemet →</span>
@@ -620,13 +740,13 @@ body {
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">K-MEH-20</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Usine Logicielle</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
-            Architecture modulaire cyber-physique brevetée OMPIC (56m × 56m), biométhanisation et valorisation centralisée.
+            Architecture logicielle cyber-physique brevetée OMPIC (56m × 56m), biométhanisation et valorisation centralisée.
           </p>
         </div>
         <span class="text-[10px] font-mono text-kemetGoldBright font-bold">Fiche K-MEH-20 →</span>
       </a>
 
-      <a href="#datalake" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+      <a href="datalake.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform">
         <div class="space-y-3">
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">Maat Data Lake</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Traçabilité Immuable</h4>
@@ -642,7 +762,7 @@ body {
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">Modèle Social</span>
           <h4 class="font-kemetTitle text-lg font-bold text-white">Actions Classe B</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
-            Intégration des Mikhala, statut salarié CDI et copropriété de l'infrastructure logicielle.
+            Intégration des Mikhala, statut salarié CDI, couverture EPI et copropriété de l'infrastructure logicielle.
           </p>
         </div>
         <span class="text-[10px] font-mono text-kemetGoldBright font-bold">Recrutement →</span>
@@ -651,12 +771,13 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 7 — CARACTÉRISATION CHIMICO-PHYSIQUE DES MATIÈRES
+       SECTION 6 — CARACTÉRISATION CHIMICO-PHYSIQUE DES MATIÈRES
        ============================================================ -->
   <section class="space-y-6" aria-labelledby="materiaux-title">
     <div class="border-b border-white/10 pb-4">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriétés &amp; Chimie des Matériaux</span>
       <h3 id="materiaux-title" class="font-kemetTitle text-2xl font-black text-white mt-1">Caractérisation des Gisements de Seconde Génération</h3>
+      <p class="text-sm text-slate-400 font-sans mt-2 max-w-3xl">Chaque flux intercepté par PurKemet est caractérisé selon les référentiels internationaux (UNEP / ADEME / GIZ). Les facteurs d'émission sont utilisés par le moteur de calcul CO₂ du Maat Data Lake, aligné sur la méthodologie Verra VCS et UNFCCC AMS-III.BA.</p>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
@@ -704,7 +825,7 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 8 — SIMULATEUR ESG
+       SECTION 7 — SIMULATEUR ESG INTERACTIF
        ============================================================ -->
   <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="sim-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
@@ -751,7 +872,7 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 9 — WORKSTATION OPÉRATEURS
+       SECTION 8 — WORKSTATION OPÉRATEURS
        ============================================================ -->
   <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6" aria-labelledby="pwa-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
@@ -768,11 +889,11 @@ body {
     <div class="grid sm:grid-cols-3 gap-4 font-mono text-xs text-slate-300">
       <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
         <span class="text-cyberGreen font-bold block">01 · Double Pesée IoT</span>
-        <p class="text-[11px] text-slate-400 font-sans">Acquisition certifiée sur site client et scellement d'écart au pont-bascule du Hub.</p>
+        <p class="text-[11px] text-slate-400 font-sans">Acquisition certifiée sur site client et scellement d'écart au pont-bascule du Hub (Δ ≤ 3%).</p>
       </div>
       <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
         <span class="text-kemetGoldBright font-bold block">02 · Mode Hors-Ligne</span>
-        <p class="text-[11px] text-slate-400 font-sans">Fonctionnement complet dans les ruelles de la Médina sans réseau avec synchronisation automatique.</p>
+        <p class="text-[11px] text-slate-400 font-sans">Fonctionnement complet dans les ruelles de la Médina sans réseau avec synchronisation automatique IndexedDB.</p>
       </div>
       <div class="p-4 bg-black/50 rounded-2xl border border-white/5 space-y-1">
         <span class="text-white font-bold block">03 · Kemet Wallet</span>
@@ -782,14 +903,14 @@ body {
   </section>
 
   <!-- ============================================================
-       SECTION 10 — TERMINAL TÉLÉMÉTRIQUE LIVE DU DATA LAKE
+       SECTION 9 — TERMINAL TÉLÉMÉTRIQUE LIVE DU DATA LAKE
        ============================================================ -->
   <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6" aria-labelledby="datalake-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Terminal Télémétrique</span>
         <h3 id="datalake-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Maat Data Lake · Flux Notarisés en Temps Réel</h3>
-        <p class="text-xs text-slate-300 font-sans mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride.</p>
+        <p class="text-xs text-slate-300 font-sans mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride (Fabric + Bitcoin OpenTimestamps).</p>
       </div>
       <span class="font-mono text-[10px] text-cyberGreen font-bold bg-black/60 px-3 py-1 rounded-lg border border-cyberGreen/40 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span> LIVE
@@ -809,11 +930,11 @@ body {
     <div class="grid sm:grid-cols-3 gap-3 font-mono text-[10px] text-slate-400">
       <div class="p-3 bg-black/50 rounded-xl border border-white/5">
         <div class="text-cyberGreen font-bold">HYPERLEDGER FABRIC</div>
-        <div>Registre privé · &gt; 2 000 TPS</div>
+        <div>Registre privé · &gt; 2 000 TPS · Consensus Raft</div>
       </div>
       <div class="p-3 bg-black/50 rounded-xl border border-white/5">
         <div class="text-kemetGoldBright font-bold">BITCOIN OPENTIMESTAMPS</div>
-        <div>Ancrage horaire public · Merkle Root</div>
+        <div>Ancrage horaire public · Merkle Root · OP_RETURN</div>
       </div>
       <div class="p-3 bg-black/50 rounded-xl border border-white/5">
         <div class="text-white font-bold">HÉBERGEMENT SOUVERAIN</div>
@@ -825,12 +946,13 @@ body {
 </main>
 
 <!-- ============================================================
-     FOOTER INSTITUTIONNEL
+     FOOTER INSTITUTIONNEL SOUVERAIN
      ============================================================ -->
 <footer class="border-t border-white/10 py-8 bg-black">
   <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
-    <p>© <span id="year">2026</span> Industrial Illusion SARL — Sovereign DeepTech Systems. Tous droits réservés.</p>
-    <p class="text-[10px]">Siège Social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+    <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
+    <p class="text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+    <p class="text-[10px] text-slate-600">Maat OS · PurKemet · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
   </div>
 </footer>
 
@@ -856,31 +978,31 @@ body {
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
         <h4 class="font-bold text-kemetGoldBright text-sm font-mono">2. CARACTÉRISTIQUES TECHNIQUES ET SÉCURITÉ JURIDIQUE</h4>
         <ul class="list-disc pl-5 space-y-1 text-slate-400">
-          <li><strong>Pureté Grade-A (&gt;98%) :</strong> Tri à la source sec garantissant une valorisation optimale sans odeurs.</li>
-          <li><strong>Planification sous 12h :</strong> Enlèvement flexible s'adaptant à vos contraintes opérationnelles.</li>
-          <li><strong>Couverture Civile :</strong> Assurance RC complète avec décharge totale de responsabilité juridique.</li>
-          <li><strong>Conformité :</strong> Alignement strict avec la Loi n° 28-00 relative à la gestion des déchets.</li>
+          <li><strong class="text-slate-300">Pureté Grade-A (&gt;98%) :</strong> Tri à la source sec garantissant une valorisation optimale sans odeurs.</li>
+          <li><strong class="text-slate-300">Planification sous 12h :</strong> Enlèvement flexible s'adaptant à vos contraintes opérationnelles.</li>
+          <li><strong class="text-slate-300">Couverture Civile :</strong> Assurance RC complète avec décharge totale de responsabilité juridique.</li>
+          <li><strong class="text-slate-300">Conformité :</strong> Alignement strict avec la Loi n° 28-00 relative à la gestion des déchets.</li>
         </ul>
       </div>
 
       <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
         <h4 class="font-bold text-white text-sm font-mono">3. SIMPLIFICATION DES AUDITS ESG (CLEF VERTE &amp; TRAVELIFE)</h4>
-        <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité.</p>
+        <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité. Un QR Code public de vérification instantanée permet aux organismes certificateurs (Green Key, Travelife, ISO 14001) de valider la chaîne de garde complète.</p>
       </div>
 
       <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 space-y-2">
         <h4 class="font-bold text-kemetGoldBright text-sm font-mono">4. IMPACT SOCIAL &amp; CITOYENNETÉ : LE SOCIALISME PRIVÉ</h4>
-        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI). Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des Actions de Classe B — copropriété des travailleurs sur les moyens de production.</p>
+        <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong> — copropriété des travailleurs sur les moyens de production. C'est une histoire RSE concrète et authentique que votre établissement peut partager avec ses clients et actionnaires.</p>
       </div>
 
       <div class="p-4 bg-black/50 rounded-xl border border-cyberGreen/30 space-y-2">
         <h4 class="font-bold text-cyberGreen text-sm font-mono">5. UN PARCOURS EN 5 ÉTAPES SANS EFFORT</h4>
         <ol class="list-decimal pl-5 space-y-1 text-slate-400">
-          <li><strong>Tri Initial :</strong> Dépôt des matières sèches (plastiques, cartons, aluminium, verre) au sec.</li>
-          <li><strong>Demande de Retrait :</strong> Alerte de collecte sous 12h via simple appel ou application.</li>
-          <li><strong>Pesée IoT :</strong> Pesée transparente sur site par balance Bluetooth (saisie manuelle bloquée).</li>
-          <li><strong>Enregistrement :</strong> Sauvegarde et double pesée certifiée sur le registre Maat OS.</li>
-          <li><strong>Certification :</strong> Émission mensuelle de votre Rapport et Certificat d'Impact ESG.</li>
+          <li><strong class="text-slate-300">Tri Initial :</strong> Dépôt des matières sèches (plastiques, cartons, aluminium, verre) au sec.</li>
+          <li><strong class="text-slate-300">Demande de Retrait :</strong> Alerte de collecte sous 12h via simple appel ou application.</li>
+          <li><strong class="text-slate-300">Pesée IoT :</strong> Pesée transparente sur site par balance Bluetooth (saisie manuelle bloquée).</li>
+          <li><strong class="text-slate-300">Enregistrement :</strong> Sauvegarde et double pesée certifiée sur le registre Maat OS.</li>
+          <li><strong class="text-slate-300">Certification :</strong> Émission mensuelle de votre Rapport et Certificat d'Impact ESG.</li>
         </ol>
       </div>
 
@@ -893,8 +1015,37 @@ body {
 
     <div class="no-print flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
       <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
-      <button type="button" onclick="window.print()" class="btn btn-g !py-2.5 px-6 font-bold">🖨️ Imprimer / Sauvegarder la Brochure (PDF)</button>
+      <div class="flex gap-2">
+        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au !py-2.5 px-5 font-bold text-[11px]">✉️ Recevoir par Email</button>
+        <button type="button" onclick="window.print()" class="btn btn-g !py-2.5 px-6 font-bold">🖨️ Imprimer / PDF</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL EMAIL BROCHURE
+     ============================================================ -->
+<div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
+  <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
+    <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+
+    <div class="border-b border-white/10 pb-2">
+      <span class="lbl">Recevoir la brochure B2B</span>
+      <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Version PDF par email</h3>
+    </div>
+
+    <form id="brochureEmailForm" onsubmit="window.handleBrochureEmailSubmit(event)" class="space-y-3" novalidate>
+      <div>
+        <label class="lbl block mb-1" for="be_email">Email Professionnel *</label>
+        <input id="be_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
+      </div>
+      <div>
+        <label class="lbl block mb-1" for="be_company">Établissement</label>
+        <input id="be_company" type="text" name="company_name" placeholder="Hôtel / Riad / Restaurant" class="inp">
+      </div>
+      <button type="submit" id="btnBrochureEmail" class="btn btn-g w-full !py-3 font-bold">Envoyer la brochure PDF</button>
+    </form>
   </div>
 </div>
 
@@ -952,7 +1103,7 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML Local Scripts
+   INDUSTRIAL ILLUSION — INDEX.HTML Local Scripts v5
    ============================================================ */
 (function () {
   'use strict';
@@ -963,7 +1114,7 @@ body {
     if (y) y.textContent = String(new Date().getFullYear());
   })();
 
-  /* ---------- ensureInit — instance Supabase à la demande ---------- */
+  /* ---------- ensureInit ---------- */
   window.ensureInit = function () {
     try {
       if (!window.Maat) return;
@@ -1001,7 +1152,7 @@ body {
     btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
   };
 
-  /* Auto-close menu mobile au clic sur lien */
+  /* Auto-close menu mobile */
   document.addEventListener('click', function (e) {
     var nav = document.getElementById('mobileNavMenu');
     var btn = document.getElementById('menuBtn');
@@ -1031,21 +1182,34 @@ body {
     var m = document.getElementById('brochureModal');
     if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
   };
+  window.openBrochureEmailModal = function () {
+    var bm = document.getElementById('brochureModal');
+    if (bm && !bm.classList.contains('hidden')) window.closeBrochureModal();
+    var m = document.getElementById('brochureEmailModal');
+    if (m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+  };
+  window.closeBrochureEmailModal = function () {
+    var m = document.getElementById('brochureEmailModal');
+    if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+  };
 
   /* Escape + click backdrop */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     var bm = document.getElementById('brochureModal');
+    var bem = document.getElementById('brochureEmailModal');
     var am = document.getElementById('auditModal');
-    if (bm && !bm.classList.contains('hidden')) window.closeBrochureModal();
-    if (am && !am.classList.contains('hidden')) window.closeAuditModal();
+    if (bem && !bem.classList.contains('hidden')) return window.closeBrochureEmailModal();
+    if (bm && !bm.classList.contains('hidden')) return window.closeBrochureModal();
+    if (am && !am.classList.contains('hidden')) return window.closeAuditModal();
   });
   document.addEventListener('click', function (e) {
     if (e.target && e.target.id === 'brochureModal') window.closeBrochureModal();
+    if (e.target && e.target.id === 'brochureEmailModal') window.closeBrochureEmailModal();
     if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
   });
 
-  /* ---------- Simulateur ESG — formules Loukili et al. (2026) ---------- */
+  /* ---------- Simulateur ESG ---------- */
   window.calcEsgSim = function (rooms) {
     var r = parseInt(rooms, 10) || 10;
     var valEl = document.getElementById('simRoomsVal');
@@ -1091,21 +1255,18 @@ body {
     };
 
     if (!payload.full_name || !payload.organization || !payload.email) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       return toast('Adresse email invalide.', 'warn');
     }
 
     if (window.ensureInit) window.ensureInit();
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       return toast('Service temporairement indisponible. Réessayez dans un instant.', 'err');
     }
 
@@ -1114,7 +1275,7 @@ body {
       try {
         var r1 = await sb.from('market_study_leads').insert([payload]);
         if (!r1.error) ok = true;
-      } catch (x) { /* table absente */ }
+      } catch (x) { /* silent */ }
 
       if (!ok) {
         try {
@@ -1141,13 +1302,11 @@ body {
           btn.disabled = false;
         }, 3000);
       } else {
-        btn.disabled = false;
-        btn.textContent = original;
+        btn.disabled = false; btn.textContent = original;
         toast('Envoi impossible. Réessayez dans un instant.', 'err');
       }
     } catch (err) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
     }
   };
@@ -1172,16 +1331,14 @@ body {
     };
 
     if (!payload.company_name || !payload.email) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       return toast('Nom et email requis.', 'warn');
     }
 
     if (window.ensureInit) window.ensureInit();
     var sb = window.Maat && window.Maat.sb;
     if (!sb) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
       return toast('Service temporairement indisponible. Réessayez dans un instant.', 'err');
     }
 
@@ -1212,41 +1369,88 @@ body {
         btn.disabled = false;
       }, 2000);
     } catch (err) {
-      btn.disabled = false;
-      btn.textContent = original;
+      btn.disabled = false; btn.textContent = original;
+      toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
+    }
+  };
+
+  /* ---------- Formulaire Email Brochure ---------- */
+  window.handleBrochureEmailSubmit = async function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var btn = document.getElementById('btnBrochureEmail');
+    var original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    var fd = new FormData(form);
+    var payload = {
+      email: String(fd.get('email') || '').toLowerCase().trim(),
+      company_name: String(fd.get('company_name') || '').trim() || null
+    };
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Adresse email invalide.', 'warn');
+    }
+
+    if (window.ensureInit) window.ensureInit();
+    var sb = window.Maat && window.Maat.sb;
+    if (!sb) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Service temporairement indisponible.', 'err');
+    }
+
+    try {
+      await sb.from('field_notes').insert([{
+        note_type: 'GENERAL',
+        content: 'DEMANDE BROCHURE PDF : ' + payload.email + (payload.company_name ? ' @ ' + payload.company_name : ''),
+        operator_email: payload.email,
+        gps_location: null
+      }]);
+      toast('Brochure envoyée par email sous 5 minutes.');
+      form.reset();
+      btn.textContent = '✓ Envoyé';
+      setTimeout(function () {
+        window.closeBrochureEmailModal();
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 2000);
+    } catch (err) {
+      btn.disabled = false; btn.textContent = original;
       toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
     }
   };
 
   /* ============================================================
-     CANVAS INTERACTIF — NUCLEUS CYBER-HORUS (60 FPS)
+     CANVAS PLEIN ÉCRAN — NUCLEUS CYBER-HORUS
      ============================================================ */
   (function () {
-    var canvas = document.getElementById('neuralEyeCanvas');
-    var wrapper = document.getElementById('neuralEyeWrapper');
-    if (!canvas || !wrapper) return;
+    var canvas = document.getElementById('heroCyberCanvas');
+    var heroSection = document.getElementById('heroSection');
+    if (!canvas || !heroSection) return;
 
     var ctx = canvas.getContext('2d');
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0;
+    var heroRect = null;
 
-    /* État cible / état lissé (lerp) */
     var state = {
       pointerX: 0.5, pointerY: 0.5,
       smoothedX: 0.5, smoothedY: 0.5,
-      hasPointer: false
+      hasPointer: false,
+      targetX: 0.5, targetY: 0.5
     };
 
-    /* Génération des pistes PCB */
     var pcbTraces = [];
     var pcbNodes = [];
     var cubes = [];
     var pulses = [];
 
     function resize() {
-      var r = wrapper.getBoundingClientRect();
-      W = r.width;
-      H = r.height;
+      heroRect = heroSection.getBoundingClientRect();
+      W = heroRect.width;
+      H = heroRect.height;
       canvas.width = W * DPR;
       canvas.height = H * DPR;
       canvas.style.width = W + 'px';
@@ -1256,78 +1460,95 @@ body {
     }
 
     function buildScene() {
-      /* Traces PCB ramifiées depuis les 4 côtés vers le centre */
       pcbTraces = [];
       var centerX = W / 2, centerY = H / 2;
-      var sides = [
-        { x1: 0, y1: 0, x2: W * 0.4, y2: H * 0.4 },
-        { x1: W, y1: 0, x2: W * 0.6, y2: H * 0.4 },
-        { x1: 0, y1: H, x2: W * 0.4, y2: H * 0.6 },
-        { x1: W, y1: H, x2: W * 0.6, y2: H * 0.6 }
+
+      /* 8 sources radiales depuis le centre vers les bords */
+      var angles = [
+        0, Math.PI / 4, Math.PI / 2, 3 * Math.PI / 4,
+        Math.PI, 5 * Math.PI / 4, 3 * Math.PI / 2, 7 * Math.PI / 4
       ];
-      for (var s = 0; s < sides.length; s++) {
-        var base = sides[s];
-        for (var i = 0; i < 4; i++) {
-          var t = 0.2 + i * 0.2;
-          var mx = base.x1 + (base.x2 - base.x1) * t;
-          var my = base.y1 + (base.y2 - base.y1) * t;
+
+      angles.forEach(function (baseAngle, ai) {
+        /* 3 sous-branches par angle */
+        for (var j = -1; j <= 1; j++) {
+          var angle = baseAngle + j * 0.12;
+          var maxRadius = Math.min(W, H) * 0.55 + Math.max(W, H) * 0.35;
+          /* Point intermédiaire (coudé) */
+          var midR = maxRadius * 0.55;
+          var mx = centerX + Math.cos(angle) * midR;
+          var my = centerY + Math.sin(angle) * midR;
+          /* Point final (bord écran) */
+          var endR = maxRadius * 1.1;
+          var ex = centerX + Math.cos(angle) * endR;
+          var ey = centerY + Math.sin(angle) * endR;
+
           pcbTraces.push({
-            x1: base.x1, y1: base.y1,
+            x1: centerX, y1: centerY,
             xm: mx, ym: my,
-            x2: centerX + (mx - centerX) * 0.4,
-            y2: centerY + (my - centerY) * 0.4,
+            x2: ex, y2: ey,
             progress: Math.random(),
-            speed: 0.002 + Math.random() * 0.003
+            speed: 0.0018 + Math.random() * 0.0025,
+            color: (ai % 2 === 0) ? '#00FFA3' : '#C5A059'
           });
         }
+      });
+
+      /* Nœuds dorés aux extrémités visibles */
+      pcbNodes = [];
+      angles.forEach(function (angle) {
+        var r = Math.min(W, H) * 0.42;
+        pcbNodes.push({
+          x: centerX + Math.cos(angle) * r,
+          y: centerY + Math.sin(angle) * r
+        });
+      });
+      /* Nœuds additionnels aléatoires */
+      for (var k = 0; k < 12; k++) {
+        pcbNodes.push({
+          x: Math.random() * W,
+          y: Math.random() * H
+        });
       }
 
-      /* Nœuds de soudure dorés aux extrémités */
-      pcbNodes = [
-        { x: 0, y: H / 2 }, { x: W, y: H / 2 },
-        { x: W / 2, y: 0 }, { x: W / 2, y: H },
-        { x: W * 0.15, y: H * 0.15 }, { x: W * 0.85, y: H * 0.15 },
-        { x: W * 0.15, y: H * 0.85 }, { x: W * 0.85, y: H * 0.85 }
-      ];
-
-      /* Cubes blockchain isométriques flottants */
+      /* Cubes blockchain isométriques */
       cubes = [];
-      for (var j = 0; j < 6; j++) {
+      for (var c = 0; c < 10; c++) {
         cubes.push({
           x: Math.random() * W,
           y: Math.random() * H,
-          size: 6 + Math.random() * 6,
+          size: 5 + Math.random() * 7,
           phase: Math.random() * Math.PI * 2,
-          speed: 0.0006 + Math.random() * 0.0009,
+          speed: 0.0005 + Math.random() * 0.0009,
           hex: '0x' + Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0')
         });
       }
 
-      /* Impulsions de lumière sur les traces */
+      /* Impulsions lumineuses */
       pulses = [];
-      for (var k = 0; k < 8; k++) {
+      for (var p = 0; p < 14; p++) {
         pulses.push({
           trace: Math.floor(Math.random() * Math.max(1, pcbTraces.length)),
           t: Math.random(),
-          speed: 0.004 + Math.random() * 0.006
+          speed: 0.0035 + Math.random() * 0.005
         });
       }
     }
 
-    /* Pointer tracking */
+    /* Pointer tracking (sur toute la hero section) */
     function setPointerFromEvent(clientX, clientY) {
-      var r = wrapper.getBoundingClientRect();
-      state.pointerX = (clientX - r.left) / r.width;
-      state.pointerY = (clientY - r.top) / r.height;
+      if (!heroRect) heroRect = heroSection.getBoundingClientRect();
+      state.pointerX = (clientX - heroRect.left) / heroRect.width;
+      state.pointerY = (clientY - heroRect.top) / heroRect.height;
       state.hasPointer = true;
     }
 
-    wrapper.addEventListener('mousemove', function (e) { setPointerFromEvent(e.clientX, e.clientY); });
-    wrapper.addEventListener('mouseleave', function () { state.hasPointer = false; });
-    wrapper.addEventListener('touchstart', function (e) {
+    heroSection.addEventListener('mousemove', function (e) { setPointerFromEvent(e.clientX, e.clientY); });
+    heroSection.addEventListener('mouseleave', function () { state.hasPointer = false; });
+    heroSection.addEventListener('touchstart', function (e) {
       if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
-    wrapper.addEventListener('touchmove', function (e) {
+    heroSection.addEventListener('touchmove', function (e) {
       if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
@@ -1337,7 +1558,6 @@ body {
       var dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      /* Lerp pointer */
       var targetX = state.hasPointer ? state.pointerX : 0.5;
       var targetY = state.hasPointer ? state.pointerY : 0.5;
       state.smoothedX += (targetX - state.smoothedX) * 0.08;
@@ -1345,12 +1565,15 @@ body {
 
       ctx.clearRect(0, 0, W, H);
 
-      /* Fond noir semi-transparent */
-      ctx.fillStyle = 'rgba(9, 13, 16, 0.35)';
+      /* Fond léger */
+      ctx.fillStyle = 'rgba(9, 13, 16, 0.15)';
       ctx.fillRect(0, 0, W, H);
 
-      /* ---------- 1. TRACES PCB ---------- */
-      ctx.lineWidth = 1.4;
+      var centerX = W / 2;
+      var centerY = H / 2;
+
+      /* 1. TRACES PCB */
+      ctx.lineWidth = 1.2;
       ctx.lineCap = 'round';
       for (var i = 0; i < pcbTraces.length; i++) {
         var tr = pcbTraces[i];
@@ -1358,7 +1581,7 @@ body {
         if (tr.progress > 1) tr.progress = 0;
 
         /* Ligne fond */
-        ctx.strokeStyle = 'rgba(0, 255, 163, 0.22)';
+        ctx.strokeStyle = tr.color === '#00FFA3' ? 'rgba(0, 255, 163, 0.14)' : 'rgba(197, 160, 89, 0.12)';
         ctx.beginPath();
         ctx.moveTo(tr.x1, tr.y1);
         ctx.lineTo(tr.xm, tr.ym);
@@ -1366,50 +1589,44 @@ body {
         ctx.stroke();
 
         /* Segment lumineux animé */
-        var seg = tr.progress;
-        var segStart = Math.max(0, seg - 0.15);
-        var segEnd = Math.min(1, seg + 0.05);
-        var pathPoints = [];
-        var totalLen = 2;
-        for (var p = segStart; p <= segEnd; p += 0.01) {
-          var t1 = p < 1 ? p : 1;
-          var xA, yA;
-          if (p < 0.5) {
-            xA = tr.x1 + (tr.xm - tr.x1) * (p * 2);
-            yA = tr.y1 + (tr.ym - tr.y1) * (p * 2);
-          } else {
-            xA = tr.xm + (tr.x2 - tr.xm) * ((p - 0.5) * 2);
-            yA = tr.ym + (tr.y2 - tr.ym) * ((p - 0.5) * 2);
-          }
-          pathPoints.push({ x: xA, y: yA });
-        }
-        if (pathPoints.length > 1) {
-          ctx.strokeStyle = 'rgba(0, 255, 163, 0.95)';
-          ctx.shadowColor = '#00FFA3';
-          ctx.shadowBlur = 8;
+        var segStart = Math.max(0, tr.progress - 0.15);
+        var segEnd = Math.min(1, tr.progress + 0.05);
+        if (segEnd > segStart) {
+          ctx.strokeStyle = tr.color === '#00FFA3' ? 'rgba(0, 255, 163, 0.95)' : 'rgba(232, 200, 106, 0.9)';
+          ctx.shadowColor = tr.color;
+          ctx.shadowBlur = 6;
           ctx.beginPath();
-          ctx.moveTo(pathPoints[0].x, pathPoints[0].y);
-          for (var q = 1; q < pathPoints.length; q++) {
-            ctx.lineTo(pathPoints[q].x, pathPoints[q].y);
+          var first = true;
+          for (var p = segStart; p <= segEnd; p += 0.015) {
+            var px, py;
+            if (p < 0.5) {
+              px = tr.x1 + (tr.xm - tr.x1) * (p * 2);
+              py = tr.y1 + (tr.ym - tr.y1) * (p * 2);
+            } else {
+              px = tr.xm + (tr.x2 - tr.xm) * ((p - 0.5) * 2);
+              py = tr.ym + (tr.y2 - tr.ym) * ((p - 0.5) * 2);
+            }
+            if (first) { ctx.moveTo(px, py); first = false; }
+            else ctx.lineTo(px, py);
           }
           ctx.stroke();
           ctx.shadowBlur = 0;
         }
       }
 
-      /* ---------- 2. NODES DE SOUDURE DORÉS ---------- */
+      /* 2. NŒUDS DE SOUDURE */
       for (var n = 0; n < pcbNodes.length; n++) {
         var nd = pcbNodes[n];
         ctx.fillStyle = '#C5A059';
         ctx.shadowColor = '#E8C86A';
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = 5;
         ctx.beginPath();
-        ctx.arc(nd.x, nd.y, 2.5, 0, Math.PI * 2);
+        ctx.arc(nd.x, nd.y, 2.2, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       }
 
-      /* ---------- 3. IMPULSIONS LUMINEUSES ---------- */
+      /* 3. IMPULSIONS */
       for (var pu = 0; pu < pulses.length; pu++) {
         var pulse = pulses[pu];
         pulse.t += pulse.speed;
@@ -1417,28 +1634,28 @@ body {
         var pTrace = pcbTraces[pulse.trace];
         if (!pTrace) continue;
         var pt = pulse.t;
-        var px, py;
+        var ppx, ppy;
         if (pt < 0.5) {
-          px = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2);
-          py = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2);
+          ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2);
+          ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2);
         } else {
-          px = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2);
-          py = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2);
+          ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2);
+          ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2);
         }
         ctx.fillStyle = '#FFFFFF';
         ctx.shadowColor = '#00FFA3';
         ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+        ctx.arc(ppx, ppy, 1.8, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
       }
 
-      /* ---------- 4. CUBES BLOCKCHAIN FLOTTANTS ---------- */
+      /* 4. CUBES BLOCKCHAIN ISOMÉTRIQUES */
       for (var c = 0; c < cubes.length; c++) {
         var cb = cubes[c];
         cb.phase += cb.speed * dt * 60;
-        var offsetY = Math.sin(cb.phase) * 6;
+        var offsetY = Math.sin(cb.phase) * 8;
         var cx = cb.x;
         var cy = cb.y + offsetY;
         var s = cb.size;
@@ -1446,18 +1663,16 @@ body {
         ctx.save();
         ctx.translate(cx, cy);
 
-        /* Cube isométrique : 3 faces */
-        ctx.strokeStyle = 'rgba(0, 255, 163, 0.55)';
+        ctx.strokeStyle = 'rgba(0, 255, 163, 0.5)';
         ctx.lineWidth = 1;
-        ctx.beginPath();
         /* Top face */
+        ctx.beginPath();
         ctx.moveTo(0, -s);
         ctx.lineTo(s * 0.87, -s * 0.5);
         ctx.lineTo(0, 0);
         ctx.lineTo(-s * 0.87, -s * 0.5);
         ctx.closePath();
         ctx.stroke();
-
         /* Left face */
         ctx.beginPath();
         ctx.moveTo(-s * 0.87, -s * 0.5);
@@ -1466,7 +1681,6 @@ body {
         ctx.lineTo(-s * 0.87, s * 0.5);
         ctx.closePath();
         ctx.stroke();
-
         /* Right face */
         ctx.beginPath();
         ctx.moveTo(s * 0.87, -s * 0.5);
@@ -1477,85 +1691,86 @@ body {
         ctx.stroke();
 
         /* Hex label */
-        ctx.fillStyle = 'rgba(232, 200, 106, 0.75)';
-        ctx.font = '6px "JetBrains Mono", monospace';
+        ctx.fillStyle = 'rgba(232, 200, 106, 0.7)';
+        ctx.font = '7px "JetBrains Mono", monospace';
         ctx.textAlign = 'center';
-        ctx.fillText(cb.hex, 0, s + 8);
+        ctx.fillText(cb.hex, 0, s + 9);
 
         ctx.restore();
       }
 
-      /* ---------- 5. IRIS CYBER-HORUS (suit le pointeur) ---------- */
-      var cxEye = W / 2 + (state.smoothedX - 0.5) * 14;
-      var cyEye = H / 2 + (state.smoothedY - 0.5) * 14;
-      var irisR = Math.min(W, H) * 0.14;
+      /* 5. IRIS CYBER-HORUS (suit le pointeur) */
+      var irisX = centerX + (state.smoothedX - 0.5) * 26;
+      var irisY = centerY + (state.smoothedY - 0.5) * 26;
+      var baseSize = Math.min(W, H);
+      var irisR = baseSize * 0.15;
       var pupilR = irisR * 0.52;
       var innerR = irisR * 0.26;
 
-      /* Halo extérieur */
-      var grd = ctx.createRadialGradient(cxEye, cyEye, irisR * 0.3, cxEye, cyEye, irisR * 1.6);
-      grd.addColorStop(0, 'rgba(0, 255, 163, 0.35)');
-      grd.addColorStop(0.5, 'rgba(0, 255, 163, 0.08)');
+      /* Halo */
+      var grd = ctx.createRadialGradient(irisX, irisY, irisR * 0.4, irisX, irisY, irisR * 2.4);
+      grd.addColorStop(0, 'rgba(0, 255, 163, 0.32)');
+      grd.addColorStop(0.5, 'rgba(0, 255, 163, 0.06)');
       grd.addColorStop(1, 'rgba(0, 255, 163, 0)');
       ctx.fillStyle = grd;
       ctx.beginPath();
-      ctx.arc(cxEye, cyEye, irisR * 1.6, 0, Math.PI * 2);
+      ctx.arc(irisX, irisY, irisR * 2.4, 0, Math.PI * 2);
       ctx.fill();
 
       /* Anneau extérieur */
       ctx.strokeStyle = '#00FFA3';
       ctx.lineWidth = 2.5;
       ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 22;
       ctx.beginPath();
-      ctx.arc(cxEye, cyEye, irisR, 0, Math.PI * 2);
+      ctx.arc(irisX, irisY, irisR, 0, Math.PI * 2);
       ctx.stroke();
 
-      /* Anneau intermédiaire doré */
+      /* Anneau doré */
       ctx.strokeStyle = '#C5A059';
       ctx.lineWidth = 1.5;
       ctx.shadowColor = '#E8C86A';
       ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.arc(cxEye, cyEye, irisR * 0.75, 0, Math.PI * 2);
+      ctx.arc(irisX, irisY, irisR * 0.75, 0, Math.PI * 2);
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      /* Disque d'iris */
+      /* Disque iris */
       ctx.fillStyle = '#00FFA3';
       ctx.beginPath();
-      ctx.arc(cxEye, cyEye, pupilR, 0, Math.PI * 2);
+      ctx.arc(irisX, irisY, pupilR, 0, Math.PI * 2);
       ctx.fill();
 
-      /* Pupille noire */
-      ctx.fillStyle = '#090D10';
-      ctx.beginPath();
-      ctx.arc(cxEye, cyEye, innerR, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* Reflet optique */
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.beginPath();
-      ctx.arc(cxEye - innerR * 0.35, cyEye - innerR * 0.35, innerR * 0.28, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* Rayons d'iris fins */
-      ctx.strokeStyle = 'rgba(0, 255, 163, 0.7)';
-      ctx.lineWidth = 0.8;
-      for (var rr = 0; rr < 12; rr++) {
-        var ang = (rr / 12) * Math.PI * 2 + state.smoothedX * 0.5;
+      /* Rayons internes */
+      ctx.strokeStyle = 'rgba(0, 255, 163, 0.6)';
+      ctx.lineWidth = 0.9;
+      for (var rr = 0; rr < 16; rr++) {
+        var ang = (rr / 16) * Math.PI * 2 + state.smoothedX * 0.8;
         ctx.beginPath();
-        ctx.moveTo(cxEye + Math.cos(ang) * pupilR * 0.6, cyEye + Math.sin(ang) * pupilR * 0.6);
-        ctx.lineTo(cxEye + Math.cos(ang) * pupilR * 0.95, cyEye + Math.sin(ang) * pupilR * 0.95);
+        ctx.moveTo(irisX + Math.cos(ang) * pupilR * 0.55, irisY + Math.sin(ang) * pupilR * 0.55);
+        ctx.lineTo(irisX + Math.cos(ang) * pupilR * 0.98, irisY + Math.sin(ang) * pupilR * 0.98);
         ctx.stroke();
       }
 
-      /* ---------- 6. LIGNE DE SCAN ---------- */
-      var scanY = ((now / 1000) * 40) % H;
-      ctx.strokeStyle = 'rgba(0, 255, 163, 0.6)';
+      /* Pupille */
+      ctx.fillStyle = '#090D10';
+      ctx.beginPath();
+      ctx.arc(irisX, irisY, innerR, 0, Math.PI * 2);
+      ctx.fill();
+
+      /* Reflet */
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.beginPath();
+      ctx.arc(irisX - innerR * 0.35, irisY - innerR * 0.35, innerR * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      /* 6. LIGNE DE SCAN */
+      var scanY = ((now / 1000) * 45) % H;
+      ctx.strokeStyle = 'rgba(0, 255, 163, 0.55)';
       ctx.lineWidth = 1.5;
       ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 14;
       ctx.beginPath();
       ctx.moveTo(0, scanY);
       ctx.lineTo(W, scanY);
@@ -1568,6 +1783,9 @@ body {
     /* Init */
     resize();
     window.addEventListener('resize', resize);
+    window.addEventListener('scroll', function () {
+      heroRect = heroSection.getBoundingClientRect();
+    }, { passive: true });
     requestAnimationFrame(loop);
   })();
 
@@ -1604,26 +1822,22 @@ body {
         '<span class="text-slate-500 shrink-0">' + ts + '</span>' +
         '<span class="text-cyberGreen shrink-0">' + mat + '</span>' +
         '<span class="text-white shrink-0">' + kg + ' kg</span>' +
-        '<span class="text-slate-400 truncate break-all">' + hash + '</span>' +
+        '<span class="text-slate-400 truncate" style="max-width:14rem">' + hash + '</span>' +
         '<span style="color:' + color + '" class="font-bold shrink-0">' + status + '</span>' +
         '</div>';
     }
 
-    /* Génère 40 lignes, duplique pour boucle infinie */
     var initial = '';
     for (var i = 0; i < 40; i++) initial += randomLine();
     track.innerHTML = initial + initial;
 
-    /* Compteur incrémental */
     setInterval(function () {
       if (counter) counter.textContent = txCount.toLocaleString('fr-FR') + ' tx';
     }, 1500);
 
-    /* Ajout dynamique de nouvelles lignes */
     setInterval(function () {
       var newLine = randomLine();
       track.innerHTML = newLine + track.innerHTML;
-      /* Coupe si trop long */
       var lines = track.children.length;
       if (lines > 100) {
         for (var k = 0; k < 20; k++) {
