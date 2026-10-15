@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Industrial Illusion SARL | DeepTech Logicielle & Souveraineté Industrielle</title>
-  <meta name="description" content="Société DeepTech logicielle basée à Marrakech : logistique PurKemet B2B 0 MAD, architecture logicielle K-MEH-20 et système d'exploitation certifié Maat OS. Conforme Loi 28-00 & CNDP 09-08.">
+  <meta name="description" content="Société DeepTech logicielle basée à Marrakech : valorisation sélective PurKemet B2B 0 MAD, architecture logicielle K-MEH-20 et système d'exploitation certifié Maat OS. Conforme Loi 28-00 & CNDP 09-08.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
   <meta name="mobile-web-app-capable" content="yes">
@@ -16,12 +16,12 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <!-- Polices Haute Précision -->
+  <!-- Polices de Caractères -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Frameworks & Design System Kemet -->
+  <!-- Frameworks & Design System Maat OS -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="assets/tw-config.js"></script>
   <script src="assets/config.js"></script>
@@ -88,7 +88,7 @@
     .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
     .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
 
-    /* ANIMAZIONI HORUS E ORBITE */
+    /* Animations Horus Header */
     @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
     @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.5; opacity: 0.85; } }
@@ -96,6 +96,7 @@
     .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
     .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
 
+    /* Scan Laser Monolithe */
     @keyframes scanLine {
       0% { top: 0%; opacity: 0.8; }
       50% { opacity: 1; }
@@ -138,13 +139,13 @@
       #brochureModal .no-print { display: none !important; }
       #brochureModal * { color: #000 !important; text-shadow: none !important; }
       #brochureModal .text-cyberGreen, #brochureModal .text-kemetGoldBright, #brochureModal .lbl { color: #15803d !important; }
-      #brochureModal .bg-black\\/50, #brochureModal .bg-black\\/60 { background: #f8fafc !important; border-color: #cbd5e1 !important; }
+      #brochureModal .bg-black\/50, #brochureModal .bg-black\/60 { background: #f8fafc !important; border-color: #cbd5e1 !important; }
     }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER INSTITUTIONNEL -->
+  <!-- HEADER INSTITUTIONNEL UNIFIÉ -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       
@@ -214,7 +215,7 @@
       <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-1">PurKemet B2B (Hôtels &amp; Riads)</a>
       <a href="#etude-marche" onclick="window.toggleMobileNav()" class="block text-slate-300 hover:text-cyberGreen py-1">📊 Étude de Marché HoReCa</a>
       <a href="#brochure" onclick="window.toggleMobileNav()" class="block text-slate-300 hover:text-cyberGreen py-1">📑 Brochure Officielle</a>
-      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Architecture K-MEH-20</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Plateforme K-MEH-20</a>
       <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake (Blockchain)</a>
       <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières &amp; Mikhala</a>
       <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos de l'Entreprise</a>
@@ -434,13 +435,13 @@
             <button type="button" onclick="window.openBrochureModal()" class="btn btn-g !py-3 !px-6 text-xs font-mono font-bold shadow-lg">
               📄 Feuilleter l'Aperçu Officiel
             </button>
-            <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B_2026.pdf" target="_blank" class="btn btn-o !py-3 !px-6 text-xs font-mono font-bold">
-              ⬇️ Télécharger le PDF Direct
-            </a>
+            <button type="button" onclick="window.openBrochureRequestModal()" class="btn btn-au !py-3 !px-6 text-xs font-mono font-bold">
+              📩 Recevoir la Brochure par Email
+            </button>
           </div>
         </div>
 
-        <!-- MOCKUP VISUALE DELLA BROCHURE (ELIMINA LO SPAZIO NERO VUOTO) -->
+        <!-- MOCKUP VISUALE DELLA BROCHURE (CON INFORMAZIONI VERE) -->
         <div class="lg:col-span-5 flex justify-center">
           <div class="w-full max-w-sm bg-black/85 p-6 rounded-2xl border-2 border-kemetGold/40 shadow-2xl space-y-4 font-mono text-xs relative group hover:border-cyberGreen transition-all">
             <div class="flex justify-between items-start border-b border-white/10 pb-3">
@@ -877,7 +878,6 @@
       window.addEventListener('resize', resize);
       resize();
 
-      // Tracking Puntatore Mouse & Touch
       function updatePointer(e) {
         var rect = box.getBoundingClientRect();
         var clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -897,7 +897,6 @@
         ctx.clearRect(0, 0, width, height);
         angle += 0.015;
 
-        // Movimento fluido pupilla (Linear Interpolation)
         curX += (targetX - curX) * 0.08;
         curY += (targetY - curY) * 0.08;
 
@@ -906,7 +905,7 @@
         var offsetX = (curX - cx) * 0.25;
         var offsetY = (curY - cy) * 0.25;
 
-        // Disegno Piste Circuitali PCB (Traccianti verso il centro)
+        // Traces de circuits imprimés
         ctx.lineWidth = 1.2;
         ctx.strokeStyle = 'rgba(0, 255, 163, 0.25)';
         for (var i = 0; i < 8; i++) {
@@ -920,14 +919,13 @@
           ctx.lineTo(x2, y2);
           ctx.stroke();
 
-          // Punti di connessione dorati
           ctx.fillStyle = '#C5A059';
           ctx.beginPath();
           ctx.arc(x2, y2, 2.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // Anello Esterno Tecnologico Rotante
+        // Anneau orbital
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(angle);
@@ -939,7 +937,7 @@
         ctx.stroke();
         ctx.restore();
 
-        // Contorno Sagoma Oeil d'Horus (In oro nobiliare)
+        // Oeil d'Horus Métallique
         ctx.strokeStyle = '#C5A059';
         ctx.lineWidth = 3.5;
         ctx.beginPath();
@@ -948,7 +946,7 @@
         ctx.quadraticCurveTo(cx, cy + 45, cx - 70, cy);
         ctx.stroke();
 
-        // Iride Cibernetica Smeraldo che Insegue lo Sguardo
+        // Iris & Pupille réactive
         var eyeX = cx + offsetX;
         var eyeY = cy + offsetY;
 
@@ -965,7 +963,6 @@
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Pupilla Nera & Riflesso Ottico
         ctx.fillStyle = '#090D10';
         ctx.beginPath();
         ctx.arc(eyeX, eyeY, 11, 0, Math.PI * 2);
@@ -1004,7 +1001,7 @@
       if (nav) nav.classList.toggle('hidden');
     };
 
-    // SIMULATORE ESG CALIBRATO
+    // SIMULATEUR ESG CALIBRÉ
     window.calcEsgSim = function (rooms) {
       var r = parseInt(rooms, 10) || 10;
       document.getElementById('simRoomsVal').textContent = r + ' ch.';
@@ -1024,7 +1021,7 @@
       if (divEl) divEl.textContent = '28%';
     };
 
-    // GESTIONE FORM STUDIO DI MERCATO
+    // FORMULAIRE ÉTUDE DE MARCHÉ
     window.handleMarketStudySubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
