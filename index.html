@@ -27,7 +27,7 @@
 
 <style>
 /* ============================================================
-   INDUSTRIAL ILLUSION · v6.5 — Design System Local
+   INDUSTRIAL ILLUSION · v6.7 — Design System Local
    ============================================================ */
 html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
@@ -330,9 +330,14 @@ body {
   max-width: 28rem;
   background: linear-gradient(165deg, #12171C, #090D10);
   border-left: 1px solid rgba(0, 255, 163, .45);
-  padding: 1.5rem sm:p-8;
+  padding: 1.5rem;
   overflow-y: auto;
   animation: slideInRight .35s cubic-bezier(.2,.8,.2,1);
+}
+@media (min-width: 640px) {
+  #contactDrawer .panel {
+    padding: 2rem;
+  }
 }
 @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -347,24 +352,11 @@ body {
   }
 }
 
-/* ============================================================
-   OPTIMISATIONS MOBILE DÉDIÉES (360px - 640px)
-   ============================================================ */
 @media (max-width: 640px) {
-  .cta-inline {
-    width: 100% !important;
-    white-space: normal !important;
-    text-align: center;
-  }
   .typewriter {
     white-space: normal !important;
     border-right: none !important;
     animation: none !important;
-  }
-  #heroSection {
-    padding-top: 5rem;
-    min-height: auto;
-    padding-bottom: 2.5rem;
   }
   #streamTrack > div > span:nth-child(4),
   #streamTrack > div > span:nth-child(5) {
@@ -484,10 +476,10 @@ body {
         </p>
 
         <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1 sm:pt-2 font-mono hero-fade hero-fade-d3">
-          <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
+          <button type="button" onclick="window.openAuditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
             Demander un Audit Gratuit (0 MAD) →
           </button>
-          <a href="#brochure" class="btn btn-au cta-inline text-xs !py-3 sm:!py-3.5 px-6">
+          <a href="#brochure" class="btn btn-au w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6">
             Consulter la Brochure B2B 📄
           </a>
         </div>
@@ -552,7 +544,7 @@ body {
               <span class="text-[8px] sm:text-[9px] text-slate-400 uppercase block">Direction Générale</span>
               <span class="text-white font-bold text-[11px] sm:text-xs truncate block">Roberto Passarella</span>
             </div>
-            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring cta-inline px-2.5 sm:px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors shrink-0" aria-label="Ouvrir le panneau de contact">
+            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring px-2.5 sm:px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors shrink-0" aria-label="Ouvrir le panneau de contact">
               Contact ↗
             </button>
           </div>
@@ -680,7 +672,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- BROCHURE PURKEMET B2B -->
+  <!-- BROCHURE PURKEMET B2B (MODAL LEAD CAPTURE INTELLIGENTE) -->
   <section id="brochure" class="glass-panel g p-4 sm:p-8 lg:p-12 space-y-6 sm:space-y-8 reveal" aria-labelledby="brochure-title">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6 border-b border-white/10 pb-5 sm:pb-6">
       <div class="space-y-2 max-w-2xl">
@@ -694,12 +686,9 @@ body {
         <button type="button" onclick="window.openBrochureModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
           📄 Feuilleter
         </button>
-        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
-          ✉️ Par Email
+        <button type="button" onclick="window.openBrochureDownloadModal()" class="btn btn-au cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
+          ⬇️ Télécharger la Brochure (PDF)
         </button>
-        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
-          ⬇️ Télécharger PDF
-        </a>
       </div>
     </div>
 
@@ -982,7 +971,7 @@ body {
           <span class="text-white font-bold block text-[11px]">03 · Kemet Wallet</span>
           <span class="micro-badge rwa">WALLET RWA</span>
         </div>
-        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans break-words leading-relaxed">Paiement des courses, primes d'apport d'affaires B2B et versement des dividendes d'actions.</p>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans break-words leading-relaxed">Paiement des courses, primes B2B et versement des dividendes d'actions.</p>
       </div>
     </div>
   </section>
@@ -1101,7 +1090,7 @@ body {
   </div>
 </div>
 
-<!-- MODAL BROCHURE B2B -->
+<!-- MODAL BROCHURE B2B (FEUILLETER SEULEMENT — AUCUN TÉLÉCHARGEMENT DIRECT SANS FORMULAIRE) -->
 <div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
   <div class="glass-panel g max-w-3xl w-full p-4 sm:p-8 space-y-4 sm:space-y-6 text-left font-mono text-xs relative my-6 sm:my-8">
     <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
@@ -1151,32 +1140,45 @@ body {
     <div class="no-print flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 pt-3 border-t border-white/10 font-mono text-xs">
       <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
       <div class="flex flex-col sm:flex-row gap-2">
-        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2 px-4 font-bold text-[10px] sm:text-[11px]">⬇️ Télécharger PDF</a>
-        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2 px-4 font-bold text-[10px] sm:text-[11px]">✉️ Recevoir par Email</button>
+        <button type="button" onclick="window.closeBrochureModal(); window.openBrochureDownloadModal();" class="btn btn-au cta-inline !py-2 px-4 font-bold text-[10px] sm:text-[11px]">⬇️ Télécharger le PDF (via Formulaire)</button>
         <button type="button" onclick="window.print()" class="btn btn-g cta-inline !py-2 px-5 font-bold text-[10px] sm:text-[11px]">🖨️ Imprimer / PDF</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL EMAIL BROCHURE -->
-<div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
+<!-- MODAL TÉLÉCHARGEMENT BROCHURE (LEAD CAPTURE OBLIGATOIRE) -->
+<div id="brochureDownloadModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Télécharger la brochure B2B">
   <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
-    <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+    <button type="button" onclick="window.closeBrochureDownloadModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
     <div class="border-b border-white/10 pb-2">
-      <span class="lbl">Recevoir la brochure B2B</span>
-      <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-0.5">Version PDF par email</h3>
+      <span class="lbl au">Téléchargement Officiel B2B</span>
+      <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Brochure PurKemet (PDF)</h3>
+      <p class="text-[10px] text-slate-400 font-sans mt-0.5">Renseignez vos coordonnées pour débloquer le téléchargement immédiat.</p>
     </div>
-    <form id="brochureEmailForm" onsubmit="window.handleBrochureEmailSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+    <form id="brochureDownloadForm" onsubmit="window.handleBrochureDownloadSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
       <div>
-        <label class="lbl block mb-1" for="be_email">Email Professionnel *</label>
-        <input id="be_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
+        <label class="lbl block mb-1" for="bd_name">Nom &amp; Prénom *</label>
+        <input id="bd_name" type="text" name="full_name" required autocomplete="name" placeholder="ex: Mehdi Benjelloun" class="inp">
       </div>
       <div>
-        <label class="lbl block mb-1" for="be_company">Établissement</label>
-        <input id="be_company" type="text" name="company_name" placeholder="Hôtel / Riad / Restaurant" class="inp">
+        <label class="lbl block mb-1" for="bd_org">Établissement / Organisation *</label>
+        <input id="bd_org" type="text" name="organization" required autocomplete="organization" placeholder="ex: Palais Ronsard / Riad" class="inp">
       </div>
-      <button type="submit" id="btnBrochureEmail" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold">Envoyer la brochure PDF</button>
+      <div>
+        <label class="lbl block mb-1" for="bd_email">Email Professionnel *</label>
+        <input id="bd_email" type="email" name="email" required autocomplete="email" placeholder="direction@etablissement.ma" class="inp">
+      </div>
+      <div>
+        <label class="lbl block mb-1" for="bd_phone">Téléphone WhatsApp</label>
+        <input id="bd_phone" type="tel" name="phone" autocomplete="tel" placeholder="+212 6..." class="inp">
+      </div>
+      <button type="submit" id="btnBrochureDownload" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+        Valider &amp; Télécharger la Brochure (PDF) ⬇️
+      </button>
+      <p class="text-[9px] text-slate-500 leading-relaxed text-center">
+        Données traitées conformément à la Loi CNDP n° 09-08. Aucun transfert tiers.
+      </p>
     </form>
   </div>
 </div>
@@ -1228,7 +1230,7 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML v6.5 (Mobile-First)
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.7 (Production Release)
    ============================================================ */
 (function () {
   'use strict';
@@ -1236,6 +1238,123 @@ body {
   (function () {
     var y = document.getElementById('year');
     if (y) y.textContent = String(new Date().getFullYear());
+  })();
+
+  /* ============================================================
+     CORRECTION UNIVERSELLE : BOUTON CONNEXION MULTI-CLIC
+     ============================================================ */
+  (function () {
+    var _origRemove = Element.prototype.remove;
+    Element.prototype.remove = function () {
+      if (this && (this.id === 'universalLoginModal' || this.id === 'loginModal' || this.classList.contains('universal-login-modal'))) {
+        this.classList.add('hidden');
+        this.classList.remove('flex');
+        this.style.display = 'none';
+        document.body.style.overflow = '';
+        window.__loginModalOpen = false;
+        window.__isLoginOpen = false;
+        var b = document.getElementById('loginBtn');
+        if (b) { b.disabled = false; b.style.pointerEvents = 'auto'; }
+        return;
+      }
+      return _origRemove.apply(this, arguments);
+    };
+
+    var _origOpenLogin = window.openUniversalLogin;
+
+    window.openUniversalLogin = function () {
+      var btn = document.getElementById('loginBtn');
+      if (btn) {
+        btn.disabled = false;
+        btn.style.pointerEvents = 'auto';
+      }
+
+      window.__loginModalOpen = false;
+      window.__isLoginOpen = false;
+      window.__loginOpening = false;
+      document.body.style.overflow = '';
+
+      var modal = document.getElementById('universalLoginModal') ||
+                  document.getElementById('loginModal') ||
+                  document.querySelector('.universal-login-modal') ||
+                  document.querySelector('[data-login-modal]');
+
+      if (modal) {
+        if (!document.body.contains(modal)) {
+          document.body.appendChild(modal);
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.display = 'flex';
+        modal.style.opacity = '1';
+        modal.style.visibility = 'visible';
+        modal.style.pointerEvents = 'auto';
+        document.body.style.overflow = 'hidden';
+
+        var firstInp = modal.querySelector('input:not([type="hidden"])');
+        if (firstInp) setTimeout(function () { firstInp.focus(); }, 100);
+        setupLoginCloseHandlers(modal);
+        return;
+      }
+
+      if (typeof _origOpenLogin === 'function') {
+        try {
+          _origOpenLogin();
+        } catch (err) {
+          console.warn('[Login Unblocker] Relance openUniversalLogin:', err);
+        }
+      }
+
+      setTimeout(function () {
+        var m = document.getElementById('universalLoginModal') ||
+                document.getElementById('loginModal') ||
+                document.querySelector('.universal-login-modal') ||
+                document.querySelector('[data-login-modal]');
+        if (m) {
+          m.classList.remove('hidden');
+          m.classList.add('flex');
+          m.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          setupLoginCloseHandlers(m);
+        }
+      }, 50);
+    };
+
+    function setupLoginCloseHandlers(m) {
+      if (m._hasCleanClose) return;
+      m._hasCleanClose = true;
+
+      function resetLoginState() {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+        m.style.display = 'none';
+        document.body.style.overflow = '';
+        window.__loginModalOpen = false;
+        window.__isLoginOpen = false;
+        var b = document.getElementById('loginBtn');
+        if (b) {
+          b.disabled = false;
+          b.style.pointerEvents = 'auto';
+        }
+      }
+
+      var closeTriggers = m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close');
+      closeTriggers.forEach(function (b) {
+        b.addEventListener('click', resetLoginState);
+      });
+
+      m.addEventListener('click', function (e) {
+        if (e.target === m || e.target.classList.contains('backdrop')) {
+          resetLoginState();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !m.classList.contains('hidden') && m.style.display !== 'none') {
+          resetLoginState();
+        }
+      });
+    }
   })();
 
   /* ANIMATION SCROLL PROGRESS */
@@ -1349,7 +1468,7 @@ body {
     nav.classList.add('hidden');
   });
 
-  /* CONTACT DRAWER */
+  /* GESTION MODALES & TIROIRS */
   window.openContactDrawer = function () {
     var d = document.getElementById('contactDrawer');
     if (!d) return;
@@ -1384,29 +1503,27 @@ body {
   window.closeAuditModal = function () { closeModal('auditModal'); };
   window.openBrochureModal = function () { openModal('brochureModal'); };
   window.closeBrochureModal = function () { closeModal('brochureModal'); };
-  window.openBrochureEmailModal = function () {
-    closeModal('brochureModal');
-    setTimeout(function () { openModal('brochureEmailModal'); }, 150);
-  };
-  window.closeBrochureEmailModal = function () { closeModal('brochureEmailModal'); };
+  window.openBrochureDownloadModal = function () { openModal('brochureDownloadModal'); };
+  window.closeBrochureDownloadModal = function () { closeModal('brochureDownloadModal'); };
 
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    var bem = document.getElementById('brochureEmailModal');
+    var bdm = document.getElementById('brochureDownloadModal');
     var bm = document.getElementById('brochureModal');
     var am = document.getElementById('auditModal');
     var cd = document.getElementById('contactDrawer');
     if (cd && cd.classList.contains('open')) return window.closeContactDrawer();
-    if (bem && !bem.classList.contains('hidden')) return window.closeBrochureEmailModal();
+    if (bdm && !bdm.classList.contains('hidden')) return window.closeBrochureDownloadModal();
     if (bm && !bm.classList.contains('hidden')) return window.closeBrochureModal();
     if (am && !am.classList.contains('hidden')) return window.closeAuditModal();
   });
   document.addEventListener('click', function (e) {
     if (e.target && e.target.id === 'brochureModal') window.closeBrochureModal();
-    if (e.target && e.target.id === 'brochureEmailModal') window.closeBrochureEmailModal();
+    if (e.target && e.target.id === 'brochureDownloadModal') window.closeBrochureDownloadModal();
     if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
   });
 
+  /* SIMULATEUR ESG */
   window.calcEsgSim = function (rooms) {
     var r = parseInt(rooms, 10) || 10;
     var valEl = document.getElementById('simRoomsVal');
@@ -1422,6 +1539,70 @@ body {
     if (divEl) divEl.textContent = '28%';
   };
   (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
+
+  /* FORM : TÉLÉCHARGEMENT BROCHURE (LEAD CAPTURE GATED) */
+  window.handleBrochureDownloadSubmit = async function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var btn = document.getElementById('btnBrochureDownload');
+    var original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Validation en cours…';
+
+    var fd = new FormData(form);
+    var payload = {
+      full_name: String(fd.get('full_name') || '').trim(),
+      organization: String(fd.get('organization') || '').trim(),
+      role_title: 'Téléchargement Brochure B2B',
+      email: String(fd.get('email') || '').toLowerCase().trim(),
+      phone: String(fd.get('phone') || '').trim() || null
+    };
+
+    if (!payload.full_name || !payload.organization || !payload.email) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+      btn.disabled = false; btn.textContent = original;
+      return toast('Adresse email invalide.', 'warn');
+    }
+
+    if (window.ensureInit) window.ensureInit();
+    var sb = window.Maat && window.Maat.sb;
+
+    if (sb) {
+      try {
+        var r1 = await sb.from('market_study_leads').insert([payload]);
+        if (r1.error) throw r1.error;
+      } catch (err) {
+        try {
+          await sb.from('field_notes').insert([{
+            note_type: 'GENERAL',
+            content: 'LEAD BROCHURE B2B : ' + payload.full_name + ' (' + payload.organization + ') - Email: ' + payload.email + (payload.phone ? ' - Tél: ' + payload.phone : ''),
+            operator_email: payload.email,
+            gps_location: null
+          }]);
+        } catch (x) {}
+      }
+    }
+
+    var dl = document.createElement('a');
+    dl.href = 'assets/brochure-purkemet-b2b.pdf';
+    dl.download = 'Brochure_PurKemet_B2B_2026.pdf';
+    document.body.appendChild(dl);
+    dl.click();
+    dl.remove();
+
+    toast('Brochure téléchargée avec succès. Notre Direction vous contactera.');
+    if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+    form.reset();
+    btn.textContent = '✓ Téléchargé';
+    setTimeout(function () {
+      window.closeBrochureDownloadModal();
+      btn.textContent = original;
+      btn.disabled = false;
+    }, 1800);
+  };
 
   /* FORM : MARKET STUDY */
   window.handleMarketStudySubmit = async function (e) {
@@ -1531,46 +1712,7 @@ body {
     }
   };
 
-  /* FORM : BROCHURE EMAIL */
-  window.handleBrochureEmailSubmit = async function (e) {
-    e.preventDefault();
-    var form = e.target;
-    var btn = document.getElementById('btnBrochureEmail');
-    var original = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Envoi en cours…';
-    var fd = new FormData(form);
-    var payload = {
-      email: String(fd.get('email') || '').toLowerCase().trim(),
-      company_name: String(fd.get('company_name') || '').trim() || null
-    };
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-      btn.disabled = false; btn.textContent = original;
-      return toast('Adresse email invalide.', 'warn');
-    }
-    if (window.ensureInit) window.ensureInit();
-    var sb = window.Maat && window.Maat.sb;
-    if (!sb) {
-      btn.disabled = false; btn.textContent = original;
-      return toast('Service temporairement indisponible.', 'err');
-    }
-    try {
-      await sb.from('field_notes').insert([{
-        note_type: 'GENERAL',
-        content: 'DEMANDE BROCHURE PDF : ' + payload.email + (payload.company_name ? ' @ ' + payload.company_name : ''),
-        operator_email: payload.email, gps_location: null
-      }]);
-      toast('Brochure envoyée par email sous 5 minutes.');
-      form.reset();
-      btn.textContent = '✓ Envoyé';
-      setTimeout(function () { window.closeBrochureEmailModal(); btn.textContent = original; btn.disabled = false; }, 2000);
-    } catch (err) {
-      btn.disabled = false; btn.textContent = original;
-      toast('Erreur : ' + (err.message || 'réessayez.'), 'err');
-    }
-  };
-
-  /* FORM : CONTACT DRAWER (SUPABASE) */
+  /* FORM : CONTACT DRAWER */
   window.handleContactSubmit = async function (e) {
     e.preventDefault();
     var form = e.target;
@@ -1631,7 +1773,7 @@ body {
   };
 
   /* ============================================================
-     CANVAS NUCLEUS CYBER-HORUS PATH2D (Optimisé Mobile)
+     CANVAS NUCLEUS CYBER-HORUS PATH2D
      ============================================================ */
   (function () {
     var canvas = document.getElementById('heroCyberCanvas');
@@ -1732,373 +1874,4 @@ body {
           size: 5 + Math.random() * 7,
           phase: Math.random() * Math.PI * 2,
           speed: 0.0005 + Math.random() * 0.0009,
-          hex: '0x' + Math.floor(Math.random() * 0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0')
-        });
-      }
-
-      pulses = [];
-      var pulseCount = W < 640 ? 7 : 14;
-      for (var p = 0; p < pulseCount; p++) {
-        pulses.push({
-          trace: Math.floor(Math.random() * Math.max(1, pcbTraces.length)),
-          t: Math.random(),
-          speed: 0.0035 + Math.random() * 0.005
-        });
-      }
-    }
-
-    function setPointerFromEvent(clientX, clientY) {
-      if (!heroRect) heroRect = heroSection.getBoundingClientRect();
-      state.pointerX = (clientX - heroRect.left) / heroRect.width;
-      state.pointerY = (clientY - heroRect.top) / heroRect.height;
-      state.hasPointer = true;
-    }
-
-    heroSection.addEventListener('mousemove', function (e) { setPointerFromEvent(e.clientX, e.clientY); });
-    heroSection.addEventListener('mouseleave', function () { state.hasPointer = false; });
-    heroSection.addEventListener('touchstart', function (e) { if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    heroSection.addEventListener('touchmove', function (e) { if (e.touches[0]) setPointerFromEvent(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-
-    var lastTime = 0;
-    function loop(now) {
-      var dt = Math.min((now - lastTime) / 1000, 0.05);
-      lastTime = now;
-
-      var targetX = state.hasPointer ? state.pointerX : 0.5;
-      var targetY = state.hasPointer ? state.pointerY : 0.5;
-      state.smoothedX += (targetX - state.smoothedX) * LERP_SPEED;
-      state.smoothedY += (targetY - state.smoothedY) * LERP_SPEED;
-
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = 'rgba(9, 13, 16, 0.15)';
-      ctx.fillRect(0, 0, W, H);
-
-      var anchor = getAnchor();
-      var centerX = anchor.x, centerY = anchor.y;
-
-      /* PCB Traces */
-      ctx.lineWidth = 1.2;
-      ctx.lineCap = 'round';
-      for (var i = 0; i < pcbTraces.length; i++) {
-        var tr = pcbTraces[i];
-        tr.progress += tr.speed;
-        if (tr.progress > 1) tr.progress = 0;
-
-        ctx.strokeStyle = tr.color === '#00FFA3' ? 'rgba(0, 255, 163, 0.14)' : 'rgba(197, 160, 89, 0.12)';
-        ctx.beginPath();
-        ctx.moveTo(tr.x1, tr.y1);
-        ctx.lineTo(tr.xm, tr.ym);
-        ctx.lineTo(tr.x2, tr.y2);
-        ctx.stroke();
-
-        var segStart = Math.max(0, tr.progress - 0.15);
-        var segEnd = Math.min(1, tr.progress + 0.05);
-        if (segEnd > segStart) {
-          ctx.strokeStyle = tr.color === '#00FFA3' ? 'rgba(0, 255, 163, 0.95)' : 'rgba(232, 200, 106, 0.9)';
-          ctx.shadowColor = tr.color;
-          ctx.shadowBlur = 6;
-          ctx.beginPath();
-          var first = true;
-          for (var p = segStart; p <= segEnd; p += 0.015) {
-            var px, py;
-            if (p < 0.5) {
-              px = tr.x1 + (tr.xm - tr.x1) * (p * 2);
-              py = tr.y1 + (tr.ym - tr.y1) * (p * 2);
-            } else {
-              px = tr.xm + (tr.x2 - tr.xm) * ((p - 0.5) * 2);
-              py = tr.ym + (tr.y2 - tr.ym) * ((p - 0.5) * 2);
-            }
-            if (first) { ctx.moveTo(px, py); first = false; } else ctx.lineTo(px, py);
-          }
-          ctx.stroke();
-          ctx.shadowBlur = 0;
-        }
-      }
-
-      /* Nodes */
-      for (var n = 0; n < pcbNodes.length; n++) {
-        var nd = pcbNodes[n];
-        ctx.fillStyle = '#C5A059';
-        ctx.shadowColor = '#E8C86A';
-        ctx.shadowBlur = 5;
-        ctx.beginPath();
-        ctx.arc(nd.x, nd.y, 2.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      /* Pulses */
-      for (var pu = 0; pu < pulses.length; pu++) {
-        var pulse = pulses[pu];
-        pulse.t += pulse.speed;
-        if (pulse.t > 1) { pulse.t = 0; pulse.trace = Math.floor(Math.random() * pcbTraces.length); }
-        var pTrace = pcbTraces[pulse.trace];
-        if (!pTrace) continue;
-        var pt = pulse.t;
-        var ppx, ppy;
-        if (pt < 0.5) {
-          ppx = pTrace.x1 + (pTrace.xm - pTrace.x1) * (pt * 2);
-          ppy = pTrace.y1 + (pTrace.ym - pTrace.y1) * (pt * 2);
-        } else {
-          ppx = pTrace.xm + (pTrace.x2 - pTrace.xm) * ((pt - 0.5) * 2);
-          ppy = pTrace.ym + (pTrace.y2 - pTrace.ym) * ((pt - 0.5) * 2);
-        }
-        ctx.fillStyle = '#FFFFFF';
-        ctx.shadowColor = '#00FFA3';
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.arc(ppx, ppy, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      /* Cubes */
-      for (var c = 0; c < cubes.length; c++) {
-        var cb = cubes[c];
-        cb.phase += cb.speed * dt * 60;
-        var offsetY = Math.sin(cb.phase) * 8;
-        var cx = cb.x, cy = cb.y + offsetY, s = cb.size;
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.strokeStyle = 'rgba(0, 255, 163, 0.5)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(0, -s); ctx.lineTo(s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(-s * 0.87, -s * 0.5); ctx.closePath(); ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(0, s); ctx.lineTo(-s * 0.87, s * 0.5); ctx.closePath(); ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(s * 0.87, -s * 0.5); ctx.lineTo(0, 0); ctx.lineTo(0, s); ctx.lineTo(s * 0.87, s * 0.5); ctx.closePath(); ctx.stroke();
-        ctx.fillStyle = 'rgba(232, 200, 106, 0.7)';
-        ctx.font = '7px "JetBrains Mono", monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText(cb.hex, 0, s + 9);
-        ctx.restore();
-      }
-
-      /* Œil Horus Path2D */
-      var lookX = (state.smoothedX - 0.5) * 2 * MAX_TRAVEL_X;
-      var lookY = (state.smoothedY - 0.5) * 2 * MAX_TRAVEL_Y;
-      var driftX = (state.smoothedX - 0.5) * EYE_DRIFT_X;
-      var driftY = (state.smoothedY - 0.5) * EYE_DRIFT_Y;
-
-      var eyeScale = Math.min(W, H) / 520;
-      if (eyeScale < 0.60) eyeScale = 0.60;
-      if (eyeScale > 1.25) eyeScale = 1.25;
-
-      ctx.save();
-      ctx.translate(centerX + driftX, centerY + driftY);
-      ctx.scale(eyeScale, eyeScale);
-
-      ctx.save();
-      ctx.clip(pathSclera);
-
-      ctx.fillStyle = '#080C0E';
-      ctx.fillRect(-110, -80, 220, 160);
-
-      var irisGrd = ctx.createRadialGradient(lookX, lookY, 4, lookX, lookY, 38);
-      irisGrd.addColorStop(0, '#FFFFFF');
-      irisGrd.addColorStop(0.2, '#00FFA3');
-      irisGrd.addColorStop(0.65, '#00B871');
-      irisGrd.addColorStop(1, 'rgba(0, 184, 113, 0)');
-
-      ctx.fillStyle = irisGrd;
-      ctx.beginPath();
-      ctx.arc(lookX, lookY, 36, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.strokeStyle = '#00FFA3';
-      ctx.lineWidth = 1.8;
-      ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 14;
-      ctx.beginPath();
-      ctx.arc(lookX, lookY, 26, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      ctx.fillStyle = '#050709';
-      ctx.beginPath();
-      ctx.arc(lookX, lookY, 13, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.beginPath();
-      ctx.arc(lookX - 5, lookY - 5, 3.5, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-
-      ctx.strokeStyle = '#C5A059';
-      ctx.lineWidth = 3.5;
-      ctx.shadowColor = '#E8C86A';
-      ctx.shadowBlur = 10;
-      ctx.stroke(pathSclera);
-
-      ctx.fillStyle = 'rgba(197, 160, 89, 0.25)';
-      ctx.fill(pathBrow);
-      ctx.stroke(pathBrow);
-
-      ctx.fillStyle = '#00FFA3';
-      ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 12;
-      ctx.fill(pathTear);
-
-      ctx.strokeStyle = '#C5A059';
-      ctx.lineWidth = 2.8;
-      ctx.stroke(pathSpiral);
-      ctx.shadowBlur = 0;
-
-      ctx.save();
-      ctx.translate(lookX * 0.4, lookY * 0.4);
-      ctx.strokeStyle = 'rgba(0, 255, 163, 0.65)';
-      ctx.lineWidth = 1.6;
-      ctx.stroke(pathCross);
-      ctx.restore();
-
-      var anchorNodes = [{ x: -90, y: 0 }, { x: 90, y: 0 }, { x: 0, y: -65 }, { x: 0, y: 75 }];
-      ctx.fillStyle = '#E8C86A';
-      ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 8;
-      for (var a = 0; a < anchorNodes.length; a++) {
-        ctx.beginPath();
-        ctx.arc(anchorNodes[a].x, anchorNodes[a].y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.shadowBlur = 0;
-      ctx.restore();
-
-      /* Scan line */
-      var scanY = ((now / 1000) * 45) % H;
-      ctx.strokeStyle = 'rgba(0, 255, 163, 0.55)';
-      ctx.lineWidth = 1.5;
-      ctx.shadowColor = '#00FFA3';
-      ctx.shadowBlur = 14;
-      ctx.beginPath();
-      ctx.moveTo(0, scanY);
-      ctx.lineTo(W, scanY);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      requestAnimationFrame(loop);
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-    window.addEventListener('scroll', function () { heroRect = heroSection.getBoundingClientRect(); }, { passive: true });
-    requestAnimationFrame(loop);
-  })();
-
-  /* ============================================================
-     SYNCHRONISATION KPI
-     ============================================================ */
-  (function () {
-    function flipCounter(el) {
-      if (!el) return;
-      el.classList.remove('updating');
-      void el.offsetWidth;
-      el.classList.add('updating');
-      setTimeout(function () { el.classList.remove('updating'); }, 700);
-    }
-    async function syncCounters() {
-      if (window.ensureInit) window.ensureInit();
-      var sb = window.Maat && window.Maat.sb;
-      if (!sb) return;
-      try {
-        var r = await sb.from('collections').select('weight_depot_kg').eq('status', 'ANCHORED');
-        var kg = 0;
-        (r.data || []).forEach(function (c) { kg += Number(c.weight_depot_kg || 0); });
-        var co2 = kg * 1.82;
-        var rc = await sb.from('clients').select('id', { count: 'exact', head: true }).eq('status', 'ACTIVE');
-        var clients = (rc && rc.count) || 0;
-
-        var kgStr = Math.round(kg).toLocaleString('fr-FR');
-        var co2Str = Math.round(co2).toLocaleString('fr-FR');
-
-        document.querySelectorAll('#liveKg, #liveKgDisplay, .live-kg').forEach(function (el) {
-          if (el.textContent !== kgStr) { el.textContent = kgStr; flipCounter(el); }
-        });
-        document.querySelectorAll('#liveCo2, #liveCo2Display, .live-co2').forEach(function (el) {
-          if (el.textContent !== co2Str) { el.textContent = co2Str; flipCounter(el); }
-        });
-        var clEl = document.getElementById('liveClientsDisplay');
-        if (clEl && clEl.textContent !== String(clients)) {
-          clEl.textContent = String(clients);
-          flipCounter(clEl);
-        }
-      } catch (e) { /* silent */ }
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncCounters);
-    else syncCounters();
-    setInterval(syncCounters, 30000);
-  })();
-
-  /* ============================================================
-     DATA LAKE TERMINAL — DONNÉES RÉELLES SUPABASE (0 FAKE DATA)
-     ============================================================ */
-  (function () {
-    var track = document.getElementById('streamTrack');
-    var counter = document.getElementById('streamCounter');
-    if (!track) return;
-
-    async function renderRealDataLake() {
-      if (window.ensureInit) window.ensureInit();
-      var sb = window.Maat && window.Maat.sb;
-      if (!sb) {
-        track.innerHTML = '<div class="text-slate-500 py-6 text-center">&gt; INITIALISATION DU NOEUD SOUVERAIN EN COURS... <span class="cursor-blink">_</span></div>';
-        return;
-      }
-
-      try {
-        var r = await sb.from('collections')
-          .select('created_at, bag_qr_id, material_type, weight_depot_kg, blockchain_hash, status')
-          .eq('status', 'ANCHORED')
-          .order('created_at', { ascending: false })
-          .limit(25);
-
-        var rows = r.data || [];
-        if (counter) counter.textContent = rows.length + ' tx notarisées';
-
-        if (!rows.length) {
-          track.innerHTML =
-            '<div class="py-8 px-4 text-center">' +
-              '<div class="text-cyberGreen font-bold text-[11px] leading-relaxed tracking-wide break-words">' +
-                '&gt; NODE HUB-MARRAKECH-01 [STATUS: ONLINE] — EN ATTENTE DES NOTARISATIONS D\'ENLÈVEMENT… [BTC/FABRIC STANDBY<span class="cursor-blink">_</span>]' +
-              '</div>' +
-            '</div>';
-          return;
-        }
-
-        track.innerHTML = rows.map(function (row) {
-          var ts = (row.created_at || '').replace('T', ' ').slice(0, 19);
-          var kg = Number(row.weight_depot_kg || 0).toFixed(2);
-          var hash = row.blockchain_hash ? (row.blockchain_hash.slice(0, 16) + '…') : '0xPending';
-          return '<div class="flex justify-between items-center gap-2 sm:gap-3 border-b border-white/5 py-1.5 hover:bg-white/[0.02] transition-colors">' +
-            '<span class="text-slate-500 shrink-0 text-[9px] sm:text-[10px]">' + ts + '</span>' +
-            '<span class="text-white font-bold shrink-0">' + (row.bag_qr_id || 'LOT') + '</span>' +
-            '<span class="text-cyberGreen shrink-0">' + (row.material_type || 'MIX') + '</span>' +
-            '<span class="text-kemetGoldBright font-bold shrink-0">' + kg + ' kg</span>' +
-            '<span class="text-slate-400 truncate text-[9px] sm:text-[10px]" style="max-width:14rem">' + hash + '</span>' +
-            '<span class="bd bd-g shrink-0 !text-[8px] sm:!text-[9px]">ANCHORED</span>' +
-          '</div>';
-        }).join('');
-      } catch (err) {
-        track.innerHTML = '<div class="text-red-400/80 py-4 text-center">&gt; ERREUR DE CONNEXION AU DATA LAKE. NOUVELLE TENTATIVE... <span class="cursor-blink">_</span></div>';
-      }
-    }
-
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderRealDataLake);
-    else renderRealDataLake();
-    setInterval(renderRealDataLake, 25000);
-  })();
-
-  /* SERVICE WORKER */
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function (err) { console.warn('[SW]', err); });
-    });
-  }
-
-})();
-</script>
-
-</body>
-</html>
+          hex: '0x' + Math.floor
