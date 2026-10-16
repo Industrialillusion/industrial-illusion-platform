@@ -160,7 +160,7 @@ body {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
   animation: dividerPulse 3s ease-in-out infinite;
-  margin: 3rem auto;
+  margin: 2.5rem auto;
   max-width: 60%;
 }
 @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
@@ -192,11 +192,14 @@ body {
 .glass-panel {
   background: linear-gradient(165deg, rgba(19, 25, 32, 0.85), rgba(9, 13, 16, 0.95)) !important;
   border: 1px solid rgba(197, 160, 89, 0.35) !important;
-  border-radius: 1.5rem !important;
+  border-radius: 1.25rem !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (min-width: 640px) {
+  .glass-panel { border-radius: 1.5rem !important; }
 }
 .glass-panel.g {
   border-color: rgba(0, 255, 163, 0.45) !important;
@@ -263,7 +266,7 @@ body {
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding-top: 4rem;
+  padding-top: 4.5rem;
 }
 #heroCyberCanvas {
   position: absolute;
@@ -287,9 +290,12 @@ body {
 .hero-hud-panel {
   background: linear-gradient(160deg, rgba(19,25,32,.88) 0%, rgba(9,13,16,.95) 100%);
   border: 1px solid rgba(0, 255, 163, 0.45);
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
   backdrop-filter: blur(14px);
   box-shadow: 0 0 40px -10px rgba(0,255,163,.25), 0 25px 55px -12px rgba(0,0,0,.85);
+}
+@media (min-width: 640px) {
+  .hero-hud-panel { border-radius: 1.5rem; }
 }
 
 @keyframes heroFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -324,7 +330,7 @@ body {
   max-width: 28rem;
   background: linear-gradient(165deg, #12171C, #090D10);
   border-left: 1px solid rgba(0, 255, 163, .45);
-  padding: 2rem;
+  padding: 1.5rem sm:p-8;
   overflow-y: auto;
   animation: slideInRight .35s cubic-bezier(.2,.8,.2,1);
 }
@@ -342,10 +348,24 @@ body {
 }
 
 /* ============================================================
-   v6.5 — Responsive Data Lake Terminal : masque 2 colonnes
-   sur mobile pour éviter le tassement des 6 colonnes.
+   OPTIMISATIONS MOBILE DÉDIÉES (360px - 640px)
    ============================================================ */
 @media (max-width: 640px) {
+  .cta-inline {
+    width: 100% !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+  .typewriter {
+    white-space: normal !important;
+    border-right: none !important;
+    animation: none !important;
+  }
+  #heroSection {
+    padding-top: 5rem;
+    min-height: auto;
+    padding-bottom: 2.5rem;
+  }
   #streamTrack > div > span:nth-child(4),
   #streamTrack > div > span:nth-child(5) {
     display: none;
@@ -364,9 +384,9 @@ body {
 
 <!-- HEADER -->
 <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-    <a href="index.html" class="flex items-center space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
-      <div class="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+  <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+    <a href="index.html" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
+      <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
         <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
           <g class="anim-orbit">
             <ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/>
@@ -392,8 +412,8 @@ body {
         </svg>
       </div>
       <div class="min-w-0">
-        <h1 class="font-kemetTitle text-xs sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
-        <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.22em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
+        <h1 class="font-kemetTitle text-[11px] sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
+        <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
       </div>
     </a>
 
@@ -406,15 +426,15 @@ body {
       <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
     </nav>
 
-    <div class="flex items-center space-x-2 shrink-0">
+    <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
       <button type="button" id="loginBtn"
               onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();"
               aria-label="Connexion à l'espace membre"
-              class="btn btn-g cta-inline !py-2 !px-3 sm:!px-4 text-[10px] sm:text-xs font-bold shadow-lg">
+              class="btn btn-g cta-inline !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold shadow-lg">
         Connexion 🔒
       </button>
       <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
-              class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
+              class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
               aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">
         ☰
       </button>
@@ -440,39 +460,39 @@ body {
 </header>
 
 <!-- HERO SECTION -->
-<section id="heroSection" class="pt-20 sm:pt-0">
+<section id="heroSection">
   <video id="heroCyberVideo" autoplay loop muted playsinline onerror="this.style.display='none'">
     <source src="assets/eye-core.mp4" type="video/mp4">
   </video>
   <canvas id="heroCyberCanvas" aria-label="Noyau Cyber-Horus interactif"></canvas>
 
-  <div class="hero-overlay max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+  <div class="hero-overlay max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-16 lg:py-20">
+    <div class="grid lg:grid-cols-12 gap-6 lg:gap-12 items-center">
 
-      <div class="lg:col-span-7 space-y-6 hero-fade hero-fade-d1">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
+      <div class="lg:col-span-7 space-y-4 sm:space-y-6 hero-fade hero-fade-d1">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
           <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
           <span class="typewriter">🇲🇦 Souveraineté Industrielle &amp; Numérique du Royaume · Conforme Loi n° 28-00 &amp; CNDP n° 09-08</span>
         </div>
 
-        <h2 class="font-kemetTitle text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] hero-fade hero-fade-d2">
+        <h2 class="font-kemetTitle text-2xl sm:text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] sm:leading-[1.05] hero-fade hero-fade-d2">
           Donner une Valeur <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright glitch-hover">Inaltérable</span> à la Matière : La Plateforme Cyber-Physique de Valorisation B2B
         </h2>
 
-        <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl hero-fade hero-fade-d3">
+        <p class="text-xs sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl hero-fade hero-fade-d3">
           <strong class="text-white">Industrial Illusion SARL</strong> est un éditeur de logiciels industriels souverains basé à Marrakech. Elle déploie le système d'exploitation <strong class="text-cyberGreen">Maat OS</strong>, la plateforme logistique <strong class="text-cyberGreen">PurKemet B2B</strong> et l'architecture cyber-physique <strong class="text-kemetGoldBright">K-MEH-20</strong> pour convertir les gisements de déchets secs des grands producteurs (Hôtels, Resorts, Riads, Cliniques, Écoles &amp; Commerces) en actifs de réputation et de conformité notarisée, à coût zéro d'enlèvement (0 MAD).
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-2 font-mono hero-fade hero-fade-d3">
-          <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline text-xs !py-3.5 px-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1 sm:pt-2 font-mono hero-fade hero-fade-d3">
+          <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
             Demander un Audit Gratuit (0 MAD) →
           </button>
-          <a href="#brochure" class="btn btn-au cta-inline text-xs !py-3.5 px-6">
+          <a href="#brochure" class="btn btn-au cta-inline text-xs !py-3 sm:!py-3.5 px-6">
             Consulter la Brochure B2B 📄
           </a>
         </div>
 
-        <div class="pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10 hero-fade hero-fade-d4">
+        <div class="pt-3 sm:pt-4 flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10 hero-fade hero-fade-d4">
           <span>Conforme Loi n° 28-00</span>
           <span aria-hidden="true">•</span>
           <span>CNDP n° 09-08</span>
@@ -484,8 +504,8 @@ body {
       </div>
 
       <div class="lg:col-span-5 space-y-4 hero-fade hero-fade-d4">
-        <div class="hero-hud-panel p-5 sm:p-6 space-y-4">
-          <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
+        <div class="hero-hud-panel p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5 sm:pb-3 font-mono text-xs">
             <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span>
               HUB-MARRAKECH-01
@@ -493,46 +513,46 @@ body {
             <span class="text-kemetGoldBright">LIVE</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 font-mono">
-            <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 text-center">
+          <div class="grid grid-cols-2 gap-2.5 sm:gap-3 font-mono">
+            <div class="p-2.5 sm:p-3 bg-black/60 rounded-xl border border-cyberGreen/30 text-center">
               <span class="text-[9px] text-slate-400 uppercase block tracking-wider">Matière valorisée</span>
-              <div class="text-xl font-black text-cyberGreen mt-1">
+              <div class="text-lg sm:text-xl font-black text-cyberGreen mt-1">
                 <span id="liveKg" class="kpi-counter">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
               </div>
             </div>
-            <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 text-center">
+            <div class="p-2.5 sm:p-3 bg-black/60 rounded-xl border border-kemetGold/40 text-center">
               <span class="text-[9px] text-slate-400 uppercase block tracking-wider">CO₂ évité</span>
-              <div class="text-xl font-black text-kemetGoldBright mt-1">
+              <div class="text-lg sm:text-xl font-black text-kemetGoldBright mt-1">
                 <span id="liveCo2" class="kpi-counter">0</span><span class="text-[10px] font-normal ml-0.5">kg</span>
               </div>
             </div>
           </div>
 
-          <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-1.5 font-mono text-[10px]">
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Registre Maat Data Lake</span>
-              <span class="font-bold text-cyberGreen">OPÉRATIONNEL</span>
+          <div class="p-2.5 sm:p-3 bg-black/60 rounded-xl border border-white/10 space-y-1.5 font-mono text-[10px]">
+            <div class="flex justify-between items-center gap-2">
+              <span class="text-slate-400 truncate">Registre Maat Data Lake</span>
+              <span class="font-bold text-cyberGreen shrink-0">OPÉRATIONNEL</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Ancrage blockchain</span>
-              <span class="font-bold text-cyberGreen">Bitcoin OpenTimestamps</span>
+            <div class="flex justify-between items-center gap-2">
+              <span class="text-slate-400 truncate">Ancrage blockchain</span>
+              <span class="font-bold text-cyberGreen shrink-0">Bitcoin OpenTimestamps</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Coordonnées géospatiales</span>
-              <span class="font-bold text-white">31.6295° N, 7.9811° W</span>
+            <div class="flex justify-between items-center gap-2">
+              <span class="text-slate-400 truncate">Coordonnées géospatiales</span>
+              <span class="font-bold text-white shrink-0">31.6295° N, 7.9811° W</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-400">Blockchain hybride</span>
-              <span class="font-bold text-kemetGoldBright">Fabric + Bitcoin</span>
+            <div class="flex justify-between items-center gap-2">
+              <span class="text-slate-400 truncate">Blockchain hybride</span>
+              <span class="font-bold text-kemetGoldBright shrink-0">Fabric + Bitcoin</span>
             </div>
           </div>
 
-          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-xs flex justify-between items-center gap-3">
+          <div class="p-2.5 sm:p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-xs flex justify-between items-center gap-2 sm:gap-3">
             <div class="min-w-0">
-              <span class="text-[9px] text-slate-400 uppercase block">Direction Générale</span>
-              <span class="text-white font-bold">Roberto Passarella</span>
+              <span class="text-[8px] sm:text-[9px] text-slate-400 uppercase block">Direction Générale</span>
+              <span class="text-white font-bold text-[11px] sm:text-xs truncate block">Roberto Passarella</span>
             </div>
-            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring cta-inline px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors shrink-0" aria-label="Ouvrir le panneau de contact">
+            <button type="button" onclick="window.openContactDrawer()" class="pulse-ring cta-inline px-2.5 sm:px-3 py-1.5 bg-cyberGreen/15 border border-cyberGreen/50 rounded-lg text-cyberGreen text-[10px] font-mono font-bold hover:bg-cyberGreen/25 transition-colors shrink-0" aria-label="Ouvrir le panneau de contact">
               Contact ↗
             </button>
           </div>
@@ -548,31 +568,31 @@ body {
 </section>
 
 <!-- MAIN SECTIONS -->
-<main class="space-y-20 sm:space-y-28 mb-20 max-w-7xl mx-auto px-4 sm:px-6">
+<main class="space-y-16 sm:space-y-24 lg:space-y-28 mb-16 sm:mb-20 max-w-7xl mx-auto px-3.5 sm:px-6">
 
-  <!-- KPI STRIP -->
-  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-center reveal" aria-label="Compteurs d'impact">
-    <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
-      <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Matière Valorisée</span>
-      <div class="text-3xl font-black text-cyberGreen">
+  <!-- KPI STRIP (2x2 sur mobile / 4 colonnes desktop) -->
+  <section class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 font-mono text-center reveal" aria-label="Compteurs d'impact">
+    <div class="glass-panel p-3.5 sm:p-6 border-l-4 border-l-cyberGreen">
+      <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest block mb-0.5 sm:mb-1">Matière Valorisée</span>
+      <div class="text-2xl sm:text-3xl font-black text-cyberGreen">
         <span id="liveKgDisplay" class="live-kg kpi-counter">0</span> <span class="text-xs font-normal">kg</span>
       </div>
     </div>
-    <div class="glass-panel p-6 border-l-4 border-l-kemetGold">
-      <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">CO₂ Net Évité</span>
-      <div class="text-3xl font-black text-kemetGoldBright">
+    <div class="glass-panel p-3.5 sm:p-6 border-l-4 border-l-kemetGold">
+      <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest block mb-0.5 sm:mb-1">CO₂ Net Évité</span>
+      <div class="text-2xl sm:text-3xl font-black text-kemetGoldBright">
         <span id="liveCo2Display" class="live-co2 kpi-counter">0</span> <span class="text-xs font-normal">kg eq.</span>
       </div>
     </div>
-    <div class="glass-panel p-6 border-l-4 border-l-white">
-      <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Traçabilité Notariée</span>
-      <div class="text-3xl font-black text-white">
+    <div class="glass-panel p-3.5 sm:p-6 border-l-4 border-l-white">
+      <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest block mb-0.5 sm:mb-1">Traçabilité Notariée</span>
+      <div class="text-2xl sm:text-3xl font-black text-white">
         <span>100%</span> <span class="text-xs font-normal text-slate-400">Certifié</span>
       </div>
     </div>
-    <div class="glass-panel p-6 border-l-4 border-l-cyberGreen">
-      <span class="text-[10px] text-slate-400 uppercase tracking-widest block mb-1">Structures B2B Actives</span>
-      <div class="text-3xl font-black text-cyberGreen">
+    <div class="glass-panel p-3.5 sm:p-6 border-l-4 border-l-cyberGreen">
+      <span class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-widest block mb-0.5 sm:mb-1">Structures B2B Actives</span>
+      <div class="text-2xl sm:text-3xl font-black text-cyberGreen">
         <span id="liveClientsDisplay" class="kpi-counter">0</span> <span class="text-xs font-normal">clients</span>
       </div>
     </div>
@@ -581,56 +601,56 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- ÉTUDE DE MARCHÉ HORECA 2026 -->
-  <section id="etude-marche" class="glass-panel p-6 sm:p-12 space-y-8 border-l-4 border-l-kemetGold reveal" aria-labelledby="etude-title">
-    <div class="grid lg:grid-cols-12 gap-10 items-start">
-      <div class="lg:col-span-7 space-y-5">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-[11px] font-mono font-bold uppercase">
+  <section id="etude-marche" class="glass-panel p-4 sm:p-8 lg:p-12 space-y-6 sm:space-y-8 border-l-4 border-l-kemetGold reveal" aria-labelledby="etude-title">
+    <div class="grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+      <div class="lg:col-span-7 space-y-4 sm:space-y-5">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-kemetGold/15 border border-kemetGold/40 text-kemetGoldBright text-[10px] sm:text-[11px] font-mono font-bold uppercase">
           <span aria-hidden="true">📊</span>
           <span>Rapport Institutionnel de Référence · Septembre 2026</span>
         </div>
-        <h3 id="etude-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight section-title-sweep">Pression Réglementaire &amp; Gisement Économique : L'Audit HoReCa de Marrakech</h3>
-        <p class="text-sm text-slate-300 leading-relaxed font-sans">
+        <h3 id="etude-title" class="font-kemetTitle text-xl sm:text-3xl lg:text-4xl font-black text-white leading-tight section-title-sweep">Pression Réglementaire &amp; Gisement Économique : L'Audit HoReCa de Marrakech</h3>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
           Données issues de la première étude empirique sur la gestion des déchets solides hôteliers à Marrakech, menée par <strong class="text-white">A. Loukili, E.H. El Mouden et L. El Fels</strong> de l'<strong class="text-white">Université Cadi Ayyad</strong>, publiée dans <em>Cleaner and Responsible Consumption</em> (Volume 21, Mai 2026). L'étude a enquêté sur <strong class="text-white">26 hôtels de Marrakech</strong> et identifié les stratégies de gestion adoptées.
         </p>
-        <div class="grid sm:grid-cols-2 gap-4 font-mono text-xs pt-2">
-          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-kemetGoldBright font-bold block text-sm">451 à 505 kg/jour</span>
-            <p class="text-[11px] text-slate-400 font-sans">Volume moyen de déchets solides généré par un hôtel 5 étoiles à Marrakech.</p>
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-4 font-mono text-xs pt-1 sm:pt-2">
+          <div class="p-3 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1">
+            <span class="text-kemetGoldBright font-bold block text-xs sm:text-sm">451 à 505 kg/jour</span>
+            <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Volume moyen déchets solides hôtel 5*.</p>
           </div>
-          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-cyberGreen font-bold block text-sm">65% à 77% en cuisine</span>
-            <p class="text-[11px] text-slate-400 font-sans">Concentration des gisements dans les zones de préparation et de stockage.</p>
+          <div class="p-3 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1">
+            <span class="text-cyberGreen font-bold block text-xs sm:text-sm">65% à 77% en cuisine</span>
+            <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Concentration des flux en zones de préparation.</p>
           </div>
-          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-white font-bold block text-sm">~10 M MAD / an</span>
-            <p class="text-[11px] text-slate-400 font-sans">Pression de la redevance municipale « Grands Producteurs » (Art. 23 Loi 28-00, circulaire D13015).</p>
+          <div class="p-3 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1">
+            <span class="text-white font-bold block text-xs sm:text-sm">~10 M MAD / an</span>
+            <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Redevance municipale (Art. 23 Loi 28-00).</p>
           </div>
-          <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-            <span class="text-kemetGold font-bold block text-sm">28,8% structurés</span>
-            <p class="text-[11px] text-slate-400 font-sans">Moins d'un tiers des hôtels disposent d'un plan formel de tri et de valorisation.</p>
+          <div class="p-3 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1">
+            <span class="text-kemetGold font-bold block text-xs sm:text-sm">28,8% structurés</span>
+            <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Moins d'un tiers avec plan formel.</p>
           </div>
         </div>
-        <div class="p-4 bg-black/40 rounded-2xl border border-white/10 space-y-2 font-sans text-xs text-slate-400 leading-relaxed">
+        <div class="p-3.5 sm:p-4 bg-black/40 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 font-sans text-xs text-slate-400 leading-relaxed">
           <p><strong class="text-white">Contexte complémentaire</strong> · Seulement 34,62% des hôtels pratiquent le tri sélectif. 60% utilisent des sociétés privées payantes, 40% dépendent encore du secteur informel. Le coût de dégradation environnementale lié aux déchets au Maroc est évalué à <strong class="text-white">3,7 milliards de DH</strong>, soit 0,4% du PIB.</p>
         </div>
       </div>
 
-      <div class="lg:col-span-5 bg-black/80 p-6 sm:p-8 rounded-3xl border border-kemetGold/40 space-y-4 font-mono text-xs">
-        <div class="border-b border-white/10 pb-3">
-          <h4 class="font-kemetTitle text-base font-bold text-white">Recevoir l'Étude Intégrale</h4>
-          <p class="text-[10px] text-slate-400 font-sans mt-0.5">Dossier analytique réservé aux Directions Générales, Responsables ESG et Investisseurs.</p>
+      <div class="lg:col-span-5 bg-black/80 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-kemetGold/40 space-y-3.5 font-mono text-xs">
+        <div class="border-b border-white/10 pb-2.5">
+          <h4 class="font-kemetTitle text-sm sm:text-base font-bold text-white">Recevoir l'Étude Intégrale</h4>
+          <p class="text-[9px] sm:text-[10px] text-slate-400 font-sans mt-0.5">Dossier analytique réservé aux Directions Générales, Responsables ESG et Investisseurs.</p>
         </div>
-        <form id="marketStudyForm" onsubmit="window.handleMarketStudySubmit(event)" class="space-y-3" novalidate>
+        <form id="marketStudyForm" onsubmit="window.handleMarketStudySubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
           <div>
-            <label class="lbl text-[10px] block mb-1" for="ms_name">Nom &amp; Prénom *</label>
+            <label class="lbl text-[9px] sm:text-[10px] block mb-1" for="ms_name">Nom &amp; Prénom *</label>
             <input id="ms_name" type="text" name="full_name" required autocomplete="name" placeholder="ex: Mehdi Benjelloun" class="inp">
           </div>
           <div>
-            <label class="lbl text-[10px] block mb-1" for="ms_org">Établissement / Organisation *</label>
+            <label class="lbl text-[9px] sm:text-[10px] block mb-1" for="ms_org">Établissement / Organisation *</label>
             <input id="ms_org" type="text" name="organization" required autocomplete="organization" placeholder="ex: Palais Ronsard / Riad" class="inp">
           </div>
           <div>
-            <label class="lbl text-[10px] block mb-1" for="ms_role">Fonction / Département *</label>
+            <label class="lbl text-[9px] sm:text-[10px] block mb-1" for="ms_role">Fonction / Département *</label>
             <select id="ms_role" name="role_title" class="inp">
               <option value="Directeur Général">Directeur Général / Propriétaire</option>
               <option value="Responsable RSE / Qualité">Responsable RSE / Développement Durable</option>
@@ -640,17 +660,17 @@ body {
             </select>
           </div>
           <div>
-            <label class="lbl text-[10px] block mb-1" for="ms_email">Email Professionnel *</label>
+            <label class="lbl text-[9px] sm:text-[10px] block mb-1" for="ms_email">Email Professionnel *</label>
             <input id="ms_email" type="email" name="email" required autocomplete="email" placeholder="m.benjelloun@etablissement.ma" class="inp">
           </div>
           <div>
-            <label class="lbl text-[10px] block mb-1" for="ms_phone">Téléphone / WhatsApp</label>
+            <label class="lbl text-[9px] sm:text-[10px] block mb-1" for="ms_phone">Téléphone / WhatsApp</label>
             <input id="ms_phone" type="tel" name="phone" autocomplete="tel" placeholder="+212 6..." class="inp">
           </div>
-          <button type="submit" id="btnMarketStudy" class="btn btn-au w-full !py-3 font-bold mt-2">
+          <button type="submit" id="btnMarketStudy" class="btn btn-au w-full !py-2.5 sm:!py-3 font-bold mt-2">
             Demander l'Accès au Rapport (PDF) →
           </button>
-          <p class="text-[10px] text-slate-500 leading-relaxed">
+          <p class="text-[9px] sm:text-[10px] text-slate-500 leading-relaxed">
             Données traitées conformément à la Loi CNDP n° 09-08. Hébergement 100 % Maroc. Aucun transfert transfrontalier.
           </p>
         </form>
@@ -661,16 +681,16 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- BROCHURE PURKEMET B2B -->
-  <section id="brochure" class="glass-panel g p-6 sm:p-12 space-y-8 reveal" aria-labelledby="brochure-title">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-6">
+  <section id="brochure" class="glass-panel g p-4 sm:p-8 lg:p-12 space-y-6 sm:space-y-8 reveal" aria-labelledby="brochure-title">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6 border-b border-white/10 pb-5 sm:pb-6">
       <div class="space-y-2 max-w-2xl">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Documentation Officielle Partenaires · Service Clé en Main 0 MAD</span>
-        <h3 id="brochure-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white section-title-sweep">PurKemet B2B : La Renaissance Cyber-Écologique pour l'Hôtellerie d'Excellence</h3>
-        <p class="text-sm text-slate-300 font-sans leading-relaxed">
+        <h3 id="brochure-title" class="font-kemetTitle text-xl sm:text-3xl lg:text-4xl font-black text-white section-title-sweep">PurKemet B2B : La Renaissance Cyber-Écologique pour l'Hôtellerie d'Excellence</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
           Service d'excellence clé en main exempt de frais opérationnels, spécialement conçu pour les hôtels de prestige, riads, restaurants de prestige et établissements commerciaux de Marrakech.
         </p>
       </div>
-      <div class="flex flex-col sm:flex-row flex-wrap gap-2 shrink-0">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto shrink-0">
         <button type="button" onclick="window.openBrochureModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shadow-lg">
           📄 Feuilleter
         </button>
@@ -683,51 +703,51 @@ body {
       </div>
     </div>
 
-    <div class="grid sm:grid-cols-3 gap-4">
-      <div class="glass-panel g p-5 space-y-2">
-        <div class="font-mono text-3xl font-black text-cyberGreen">0 MAD</div>
-        <div class="font-bold text-white text-sm">Coût pour l'établissement</div>
-        <p class="text-xs text-slate-400 leading-relaxed font-sans">Aucun frais opérationnel. La matière sèche est cédée gratuitement en échange du service de traçabilité et du Certificat ESG.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      <div class="glass-panel g p-4 sm:p-5 space-y-1.5 sm:space-y-2">
+        <div class="font-mono text-2xl sm:text-3xl font-black text-cyberGreen">0 MAD</div>
+        <div class="font-bold text-white text-xs sm:text-sm">Coût pour l'établissement</div>
+        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-sans">Aucun frais opérationnel. La matière sèche est cédée gratuitement en échange du service de traçabilité et du Certificat ESG.</p>
       </div>
-      <div class="glass-panel g p-5 space-y-2">
-        <div class="font-mono text-3xl font-black text-cyberGreen">&gt;98<span class="text-lg">%</span></div>
-        <div class="font-bold text-white text-sm">Pureté Grade-A</div>
-        <p class="text-xs text-slate-400 leading-relaxed font-sans">Tri à la source sec garantissant une qualité constante, sans odeur ni contamination croisée.</p>
+      <div class="glass-panel g p-4 sm:p-5 space-y-1.5 sm:space-y-2">
+        <div class="font-mono text-2xl sm:text-3xl font-black text-cyberGreen">&gt;98<span class="text-lg">%</span></div>
+        <div class="font-bold text-white text-xs sm:text-sm">Pureté Grade-A</div>
+        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-sans">Tri à la source sec garantissant une qualité constante, sans odeur ni contamination croisée.</p>
       </div>
-      <div class="glass-panel p-5 space-y-2" style="border-color:rgba(197,160,89,.5) !important">
-        <div class="font-mono text-3xl font-black text-kemetGoldBright">100<span class="text-lg">%</span></div>
-        <div class="font-bold text-white text-sm">Décharge civile</div>
-        <p class="text-xs text-slate-400 leading-relaxed font-sans">Assurance RC complète avec décharge totale de responsabilité juridique pour la Direction de l'établissement.</p>
+      <div class="glass-panel p-4 sm:p-5 space-y-1.5 sm:space-y-2" style="border-color:rgba(197,160,89,.5) !important">
+        <div class="font-mono text-2xl sm:text-3xl font-black text-kemetGoldBright">100<span class="text-lg">%</span></div>
+        <div class="font-bold text-white text-xs sm:text-sm">Décharge civile</div>
+        <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-sans">Assurance RC complète avec décharge totale de responsabilité juridique pour la Direction de l'établissement.</p>
       </div>
     </div>
 
     <div class="pt-2">
-      <h4 class="font-kemetTitle text-lg font-bold text-white mb-5">Le Parcours en 5 Étapes</h4>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 font-mono text-xs">
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">01</div>
-          <span class="font-bold text-white block">Tri à la Source</span>
-          <p class="text-[11px] text-slate-400 font-sans">Séparation des fractions sèches (PET, PE-HD, Aluminium, Carton, Verre) dans les bacs dédiés.</p>
+      <h4 class="font-kemetTitle text-base sm:text-lg font-bold text-white mb-3.5 sm:mb-5">Le Parcours en 5 Étapes</h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 font-mono text-xs">
+        <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold text-xs sm:text-sm">01</div>
+          <span class="font-bold text-white block text-xs sm:text-sm">Tri à la Source</span>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Séparation des fractions sèches (PET, PE-HD, Aluminium, Carton, Verre) dans les bacs dédiés.</p>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">02</div>
-          <span class="font-bold text-white block">Collecte &lt; 12h</span>
-          <p class="text-[11px] text-slate-400 font-sans">Demande d'enlèvement via l'App PurKemet avec intervention garantie à l'horaire choisi.</p>
+        <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold text-xs sm:text-sm">02</div>
+          <span class="font-bold text-white block text-xs sm:text-sm">Collecte &lt; 12h</span>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Demande d'enlèvement via l'App PurKemet avec intervention garantie à l'horaire choisi.</p>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold">03</div>
-          <span class="font-bold text-white block">Pesée IoT Bluetooth</span>
-          <p class="text-[11px] text-slate-400 font-sans">Mesure automatique directe sur site, bloquant physiquement toute saisie manuelle erronée.</p>
+        <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold text-xs sm:text-sm">03</div>
+          <span class="font-bold text-white block text-xs sm:text-sm">Pesée IoT Bluetooth</span>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Mesure automatique directe sur site, bloquant physiquement toute saisie manuelle erronée.</p>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold">04</div>
-          <span class="font-bold text-white block">Notarisation Maat OS</span>
-          <p class="text-[11px] text-slate-400 font-sans">Double pesée au Hub (Δ ≤ 3%) scellée par empreinte cryptographique dans le Maat Data Lake.</p>
+        <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-kemetGold/15 text-kemetGoldBright flex items-center justify-center font-bold text-xs sm:text-sm">04</div>
+          <span class="font-bold text-white block text-xs sm:text-sm">Notarisation Maat OS</span>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Double pesée au Hub (Δ ≤ 3%) scellée par empreinte cryptographique dans le Maat Data Lake.</p>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold">05</div>
-          <span class="font-bold text-white block">Certificat ESG</span>
-          <p class="text-[11px] text-slate-400 font-sans">Attestation officielle délivrée mensuellement par la Direction Générale pour vos audits Clef Verte.</p>
+        <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 sm:col-span-2 lg:col-span-1">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-cyberGreen/15 text-cyberGreen flex items-center justify-center font-bold text-xs sm:text-sm">05</div>
+          <span class="font-bold text-white block text-xs sm:text-sm">Certificat ESG</span>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans">Attestation officielle délivrée mensuellement par la Direction Générale pour vos audits Clef Verte.</p>
         </div>
       </div>
     </div>
@@ -736,34 +756,34 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- MANIFESTE INDUSTRIEL -->
-  <section class="glass-panel p-6 sm:p-12 space-y-8 reveal" aria-labelledby="manifesto-title">
-    <div class="max-w-3xl space-y-3">
+  <section class="glass-panel p-4 sm:p-8 lg:p-12 space-y-6 sm:space-y-8 reveal" aria-labelledby="manifesto-title">
+    <div class="max-w-3xl space-y-2 sm:space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Manifeste Industriel &amp; Souveraineté Territoriale</span>
-      <h3 id="manifesto-title" class="font-kemetTitle text-2xl sm:text-4xl font-black text-white section-title-sweep">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
-      <p class="text-sm text-slate-300 leading-relaxed font-sans">
+      <h3 id="manifesto-title" class="font-kemetTitle text-xl sm:text-3xl lg:text-4xl font-black text-white section-title-sweep">Pourquoi Nous Existons : La Fin de l'Enfouissement Linéaire</h3>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
         Chaque jour, la ville de Marrakech génère plus de 1 000 tonnes de déchets, dont une part importante de matières sèches à haute valeur industrielle finit enfouie ou brûlée. Industrial Illusion a été fondée pour briser cette hémorragie économique et environnementale.
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-        <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">01</div>
-        <h4 class="font-bold text-white text-base">Saturation des Centres d'Enfouissement</h4>
-        <p class="text-slate-400 leading-relaxed font-sans">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 font-mono text-xs">
+      <div class="p-4 sm:p-6 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-2.5 sm:space-y-3 tilt-card">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">01</div>
+        <h4 class="font-bold text-white text-sm sm:text-base">Saturation des Centres d'Enfouissement</h4>
+        <p class="text-slate-400 leading-relaxed font-sans text-[11px] sm:text-xs">
           Protection et prolongation de la décharge contrôlée de M'Nabha par captation à la source des matières recyclables. Chaque tonne détournée allonge la durée de vie des infrastructures publiques et préserve le sol marocain.
         </p>
       </div>
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-        <div class="w-10 h-10 bg-kemetGold/10 text-kemetGoldBright rounded-xl flex items-center justify-center font-bold text-sm border border-kemetGold/30">02</div>
-        <h4 class="font-bold text-white text-base">Bouclier Réglementaire B2B</h4>
-        <p class="text-slate-400 leading-relaxed font-sans">
+      <div class="p-4 sm:p-6 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-2.5 sm:space-y-3 tilt-card">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-kemetGold/10 text-kemetGoldBright rounded-xl flex items-center justify-center font-bold text-sm border border-kemetGold/30">02</div>
+        <h4 class="font-bold text-white text-sm sm:text-base">Bouclier Réglementaire B2B</h4>
+        <p class="text-slate-400 leading-relaxed font-sans text-[11px] sm:text-xs">
           Sécurisation absolue de la responsabilité légale du producteur (Loi n° 28-00). Nous éliminons les risques de sanctions environnementales et fournissons des attestations inattaquables pour les audits Clef Verte, Travelife et ISO 14001.
         </p>
       </div>
-      <div class="p-6 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-        <div class="w-10 h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">03</div>
-        <h4 class="font-bold text-white text-base">Dignité Sociale &amp; Actions de Classe B</h4>
-        <p class="text-slate-400 leading-relaxed font-sans">
+      <div class="p-4 sm:p-6 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-2.5 sm:space-y-3 tilt-card">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-cyberGreen/10 text-cyberGreen rounded-xl flex items-center justify-center font-bold text-sm border border-cyberGreen/30">03</div>
+        <h4 class="font-bold text-white text-sm sm:text-base">Dignité Sociale &amp; Actions de Classe B</h4>
+        <p class="text-slate-400 leading-relaxed font-sans text-[11px] sm:text-xs">
           Formalisation du secteur informel (<em>Mikhala</em>), salariat CDI digne, équipements de sécurité certifiés (EPI, SIL-3) et redistribution de 30% des dividendes nets d'infrastructure via les Actions de Classe B.
         </p>
       </div>
@@ -773,17 +793,17 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- LES 4 PILIERS DE L'ÉCOSYSTÈME -->
-  <section class="space-y-8 reveal" aria-labelledby="piliers-title">
-    <div class="text-center max-w-3xl mx-auto space-y-3">
+  <section class="space-y-6 sm:space-y-8 reveal" aria-labelledby="piliers-title">
+    <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Cyber-Physique</span>
-      <h3 id="piliers-title" class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Les Quatre Piliers de l'Écosystème Industriel</h3>
+      <h3 id="piliers-title" class="font-kemetTitle text-xl sm:text-3xl font-black text-white">Les Quatre Piliers de l'Écosystème Industriel</h3>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono text-xs">
-      <a href="purkemet.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
-        <div class="space-y-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 font-mono text-xs">
+      <a href="purkemet.html" class="glass-panel g p-5 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4 sm:space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
+        <div class="space-y-2.5 sm:space-y-3">
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">PurKemet B2B</span>
-          <h4 class="font-kemetTitle text-lg font-bold text-white">Flux Logistique à Coût Zéro</h4>
+          <h4 class="font-kemetTitle text-base sm:text-lg font-bold text-white">Flux Logistique à Coût Zéro</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
             Enlèvement gratuit de la fraction sèche et gestion sous contrat conforme à la Loi 28-00. Traçabilité blockchain et Certificat ESG mensuel.
           </p>
@@ -791,10 +811,10 @@ body {
         <span class="text-[10px] font-mono text-cyberGreen font-bold">Portail PurKemet →</span>
       </a>
 
-      <a href="kmeh20.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
-        <div class="space-y-3">
+      <a href="kmeh20.html" class="glass-panel p-5 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4 sm:space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
+        <div class="space-y-2.5 sm:space-y-3">
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">K-MEH-20</span>
-          <h4 class="font-kemetTitle text-lg font-bold text-white">Usine Logicielle Cyber-Physique</h4>
+          <h4 class="font-kemetTitle text-base sm:text-lg font-bold text-white">Usine Logicielle Cyber-Physique</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
             Architecture logicielle cyber-physique brevetée OMPIC (56m × 56m), biométhanisation et valorisation centralisée.
           </p>
@@ -802,10 +822,10 @@ body {
         <span class="text-[10px] font-mono text-kemetGoldBright font-bold">Fiche K-MEH-20 →</span>
       </a>
 
-      <a href="datalake.html" class="glass-panel g p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
-        <div class="space-y-3">
+      <a href="datalake.html" class="glass-panel g p-5 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4 sm:space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card">
+        <div class="space-y-2.5 sm:space-y-3">
           <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen font-mono text-[10px] font-bold rounded-lg uppercase border border-cyberGreen/30">Maat Data Lake</span>
-          <h4 class="font-kemetTitle text-lg font-bold text-white">Notarisation Hybride Blockchain</h4>
+          <h4 class="font-kemetTitle text-base sm:text-lg font-bold text-white">Notarisation Hybride Blockchain</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
             Registre public décentralisé, bilans CO₂ certifiés et transparence conforme Loi CNDP 09-08.
           </p>
@@ -813,10 +833,10 @@ body {
         <span class="text-[10px] font-mono text-cyberGreen font-bold">Consulter le registre →</span>
       </a>
 
-      <a href="carrieres.html" class="glass-panel p-6 rounded-3xl space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
-        <div class="space-y-3">
+      <a href="carrieres.html" class="glass-panel p-5 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4 sm:space-y-5 flex flex-col justify-between hover:scale-[1.02] transition-transform tilt-card" style="border-color:rgba(197,160,89,.5) !important">
+        <div class="space-y-2.5 sm:space-y-3">
           <span class="px-2.5 py-1 bg-kemetGold/10 text-kemetGoldBright font-mono text-[10px] font-bold rounded-lg uppercase border border-kemetGold/30">Modèle Social</span>
-          <h4 class="font-kemetTitle text-lg font-bold text-white">Copropriété &amp; Actions de Classe B</h4>
+          <h4 class="font-kemetTitle text-base sm:text-lg font-bold text-white">Copropriété &amp; Actions de Classe B</h4>
           <p class="text-slate-400 font-sans text-xs leading-relaxed">
             Intégration des Mikhala, statut salarié CDI, couverture EPI et copropriété de l'infrastructure logicielle.
           </p>
@@ -829,15 +849,15 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- MATIÈRES -->
-  <section class="space-y-6 reveal" aria-labelledby="materiaux-title">
-    <div class="border-b border-white/10 pb-4">
+  <section class="space-y-5 sm:space-y-6 reveal" aria-labelledby="materiaux-title">
+    <div class="border-b border-white/10 pb-3.5 sm:pb-4">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriétés &amp; Chimie des Matériaux</span>
-      <h3 id="materiaux-title" class="font-kemetTitle text-2xl font-black text-white mt-1">Caractérisation des Gisements de Seconde Génération (Normes ADEME / Verra VCS)</h3>
-      <p class="text-sm text-slate-400 font-sans mt-2 max-w-3xl">Chaque flux intercepté par PurKemet est caractérisé selon les référentiels internationaux (UNEP / ADEME / GIZ). Les facteurs d'émission sont utilisés par le moteur de calcul CO₂ du Maat Data Lake, aligné sur la méthodologie Verra VCS et UNFCCC AMS-III.BA.</p>
+      <h3 id="materiaux-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Caractérisation des Gisements de Seconde Génération (Normes ADEME / Verra VCS)</h3>
+      <p class="text-xs sm:text-sm text-slate-400 font-sans mt-1.5 sm:mt-2 max-w-3xl">Chaque flux intercepté par PurKemet est caractérisé selon les référentiels internationaux (UNEP / ADEME / GIZ). Les facteurs d'émission sont utilisés par le moteur de calcul CO₂ du Maat Data Lake, aligné sur la méthodologie Verra VCS et UNFCCC AMS-III.BA.</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-cyberGreen font-bold block text-sm">🟢 PET Transparent</span>
         <p class="text-[11px] text-slate-400 font-sans">Polyéthylène téréphtalate pur (bouteilles eau minérale &amp; sodas).</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -845,7 +865,7 @@ body {
           <div>CO₂ évité : 1.82 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-kemetGoldBright font-bold block text-sm">🟡 PE-HD Rigide</span>
         <p class="text-[11px] text-slate-400 font-sans">Polyéthylène haute densité (flacons détergents, bidons).</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -853,7 +873,7 @@ body {
           <div>CO₂ évité : 1.54 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-kemetGold font-bold block text-sm">🥫 Aluminium</span>
         <p class="text-[11px] text-slate-400 font-sans">Alliages 3004 / 6061 recyclables à l'infini sans perte mécanique.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -861,7 +881,7 @@ body {
           <div>CO₂ évité : 9.13 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 tilt-card">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-amber-600 font-bold block text-sm">📦 Carton Ondulé</span>
         <p class="text-[11px] text-slate-400 font-sans">Fibres cellulosiques d'emballage et cartons de déballage logistique.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -869,7 +889,7 @@ body {
           <div>CO₂ évité : 0.95 kg/kg</div>
         </div>
       </div>
-      <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-2 sm:col-span-2 lg:col-span-1 tilt-card">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 sm:col-span-2 lg:col-span-1 tilt-card">
         <span class="text-sky-400 font-bold block text-sm">🍾 Verre Blanc</span>
         <p class="text-[11px] text-slate-400 font-sans">Bouteilles et récipients silico-calciques pour verreries partenaires.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
@@ -883,45 +903,45 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- SIMULATEUR ESG -->
-  <section class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="sim-title">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
+  <section class="glass-panel g p-4 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl space-y-5 sm:space-y-6 reveal" aria-labelledby="sim-title">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 border-b border-white/10 pb-4 sm:pb-5">
       <div>
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Modélisation Prédictive Scope 3</span>
-        <h3 id="sim-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Audit ESG Prédictif : Modélisation des Tonnages et de la Décarbonation Hôtelière</h3>
-        <p class="text-xs text-slate-300 font-sans mt-1">Ajustez la capacité de votre hôtel pour modéliser vos économies de gaz à effet de serre.</p>
+        <h3 id="sim-title" class="font-kemetTitle text-lg sm:text-2xl font-black text-white mt-1">Audit ESG Prédictif : Modélisation des Tonnages et de la Décarbonation Hôtelière</h3>
+        <p class="text-xs text-slate-300 font-sans mt-0.5 sm:mt-1">Ajustez la capacité de votre hôtel pour modéliser vos économies de gaz à effet de serre.</p>
       </div>
       <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
         Demander Notre Audit 0 MAD
       </button>
     </div>
 
-    <div class="grid md:grid-cols-12 gap-8 items-center font-mono">
-      <div class="md:col-span-5 space-y-4">
+    <div class="grid md:grid-cols-12 gap-6 sm:gap-8 items-center font-mono">
+      <div class="md:col-span-5 space-y-3 sm:space-y-4">
         <label class="lbl text-xs block" for="simRooms">Capacité d'accueil de l'établissement :</label>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5 sm:gap-3">
           <input type="range" id="simRooms" min="10" max="600" step="10" value="120" class="slider-esg" oninput="window.calcEsgSim(this.value)" aria-label="Nombre de chambres">
-          <span id="simRoomsVal" class="text-base sm:text-lg font-black text-white bg-black/60 px-3 py-1 rounded-xl border border-white/10 min-w-[7rem] text-center">120 chambres</span>
+          <span id="simRoomsVal" class="text-sm sm:text-base lg:text-lg font-black text-white bg-black/60 px-2.5 sm:px-3 py-1 rounded-xl border border-white/10 min-w-[6.5rem] sm:min-w-[7rem] text-center">120 chambres</span>
         </div>
-        <p class="text-[11px] text-slate-400 font-sans leading-relaxed">
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans leading-relaxed">
           Basé sur les ratios constatés dans les hôtels de Marrakech (Loukili et al., 2026) : 1,6 kg/chambre/jour, 28% fraction sèche recyclable, 3,5 kg CO₂e/kg en mix pondéré.
         </p>
       </div>
 
-      <div class="md:col-span-7 grid grid-cols-3 gap-3 text-center">
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-          <span class="text-[9px] uppercase text-slate-400 block">kg valorisés / mois</span>
-          <span id="simKg" class="text-xl sm:text-2xl font-black text-kemetGoldBright">1 613</span>
-          <span class="text-[10px] text-slate-500 block">fraction sèche</span>
+      <div class="md:col-span-7 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+        <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-0.5 sm:space-y-1">
+          <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">kg valorisés / mois</span>
+          <span id="simKg" class="text-base sm:text-xl font-black text-kemetGoldBright">1 613</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">fraction sèche</span>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-1">
-          <span class="text-[9px] uppercase text-slate-400 block">CO₂ Évité / mois</span>
-          <span id="simCo2" class="text-xl sm:text-2xl font-black text-cyberGreen">5 645</span>
-          <span class="text-[10px] text-slate-500 block">kg CO₂ eq.</span>
+        <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-cyberGreen/30 space-y-0.5 sm:space-y-1">
+          <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">CO₂ Évité / mois</span>
+          <span id="simCo2" class="text-base sm:text-xl font-black text-cyberGreen">5 645</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">kg CO₂ eq.</span>
         </div>
-        <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-          <span class="text-[9px] uppercase text-slate-400 block">Déviation Décharge</span>
-          <span id="simDiv" class="text-xl sm:text-2xl font-black text-white">28%</span>
-          <span class="text-[10px] text-slate-500 block">taux de détournement</span>
+        <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-0.5 sm:space-y-1">
+          <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">Déviation Décharge</span>
+          <span id="simDiv" class="text-base sm:text-xl font-black text-white">28%</span>
+          <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">taux de détournement</span>
         </div>
       </div>
     </div>
@@ -930,80 +950,80 @@ body {
   <div class="animated-divider" aria-hidden="true"></div>
 
   <!-- WORKSTATION PWA -->
-  <section class="glass-panel p-6 sm:p-10 rounded-3xl border border-white/15 space-y-6 reveal" aria-labelledby="pwa-title">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
+  <section class="glass-panel p-4 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-white/15 space-y-5 sm:space-y-6 reveal" aria-labelledby="pwa-title">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 border-b border-white/10 pb-4 sm:pb-5">
       <div class="min-w-0">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Logistique Terrain &amp; Déploiement</span>
-        <h3 id="pwa-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1 break-words">Workstation Opérateur Maat OS · Exosquelette Numérique Terrain</h3>
-        <p class="text-xs text-slate-300 font-sans mt-1">Application mobile de pesée certifiée Bluetooth, tournée logistique et Kemet Wallet.</p>
+        <h3 id="pwa-title" class="font-kemetTitle text-lg sm:text-2xl font-black text-white mt-1 break-words">Workstation Opérateur Maat OS · Exosquelette Numérique Terrain</h3>
+        <p class="text-xs text-slate-300 font-sans mt-0.5 sm:mt-1">Application mobile de pesée certifiée Bluetooth, tournée logistique et Kemet Wallet.</p>
       </div>
       <a href="pwa.html" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
         📱 Lancer la Workstation →
       </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 font-mono text-xs text-slate-300">
-      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-3.5 font-mono text-xs text-slate-300">
+      <div class="pwa-box p-3.5 sm:p-4 bg-black/50 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 overflow-hidden">
         <div class="flex items-center justify-between gap-2">
           <span class="text-cyberGreen font-bold block text-[11px]">01 · Double Pesée IoT</span>
           <span class="micro-badge iot">IoT GATT</span>
         </div>
-        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Pesée certifiée sur site + scellement d'écart au pont-bascule du Hub (Δ ≤ 3%).</p>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans break-words leading-relaxed">Pesée certifiée sur site + scellement d'écart au pont-bascule du Hub (Δ ≤ 3%).</p>
       </div>
-      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+      <div class="pwa-box p-3.5 sm:p-4 bg-black/50 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 overflow-hidden">
         <div class="flex items-center justify-between gap-2">
           <span class="text-kemetGoldBright font-bold block text-[11px]">02 · Mode Hors-Ligne</span>
           <span class="micro-badge idb">IDB SYNC</span>
         </div>
-        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Fonctionnement complet en Médina sans réseau + synchronisation automatique.</p>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans break-words leading-relaxed">Fonctionnement complet en Médina sans réseau + synchronisation automatique IndexedDB.</p>
       </div>
-      <div class="pwa-box p-4 bg-black/50 rounded-2xl border border-white/10 space-y-2 overflow-hidden">
+      <div class="pwa-box p-3.5 sm:p-4 bg-black/50 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 overflow-hidden">
         <div class="flex items-center justify-between gap-2">
           <span class="text-white font-bold block text-[11px]">03 · Kemet Wallet</span>
           <span class="micro-badge rwa">WALLET RWA</span>
         </div>
-        <p class="text-[11px] text-slate-400 font-sans break-words leading-relaxed">Paiement des courses, primes B2B et versement des dividendes d'actions.</p>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans break-words leading-relaxed">Paiement des courses, primes d'apport d'affaires B2B et versement des dividendes d'actions.</p>
       </div>
     </div>
   </section>
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- DATA LAKE TERMINAL — DONNÉES RÉELLES SUPABASE (0 FAKE DATA) -->
-  <section id="datalake" class="glass-panel g p-6 sm:p-10 rounded-3xl space-y-6 reveal" aria-labelledby="datalake-title">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-5">
+  <!-- DATA LAKE TERMINAL — DONNÉES RÉELLES SUPABASE -->
+  <section id="datalake" class="glass-panel g p-4 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl space-y-5 sm:space-y-6 reveal" aria-labelledby="datalake-title">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 border-b border-white/10 pb-4 sm:pb-5">
       <div class="min-w-0">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Terminal Télémétrique</span>
-        <h3 id="datalake-title" class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1 break-words">Maat Data Lake · Flux Notarisés en Temps Réel</h3>
-        <p class="text-xs text-slate-300 font-sans mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride (Fabric + Bitcoin OpenTimestamps).</p>
+        <h3 id="datalake-title" class="font-kemetTitle text-lg sm:text-2xl font-black text-white mt-1 break-words">Maat Data Lake · Flux Notarisés en Temps Réel</h3>
+        <p class="text-xs text-slate-300 font-sans mt-0.5 sm:mt-1">Stream continu des transactions ancrées sur le registre blockchain hybride (Fabric + Bitcoin OpenTimestamps).</p>
       </div>
       <span class="font-mono text-[10px] text-cyberGreen font-bold bg-black/60 px-3 py-1 rounded-lg border border-cyberGreen/40 flex items-center gap-2 shrink-0">
         <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse" aria-hidden="true"></span> LIVE
       </span>
     </div>
 
-    <div class="bg-black/90 rounded-2xl border border-cyberGreen/20 overflow-hidden">
-      <div class="px-4 py-2 bg-obsidianCard/60 border-b border-white/5 font-mono text-[10px] text-slate-400 uppercase tracking-widest flex justify-between gap-2">
+    <div class="bg-black/90 rounded-xl sm:rounded-2xl border border-cyberGreen/20 overflow-hidden">
+      <div class="px-3.5 sm:px-4 py-2 bg-obsidianCard/60 border-b border-white/5 font-mono text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-widest flex justify-between gap-2">
         <span class="truncate">HASH SHA-256 · NODE HUB-MARRAKECH-01</span>
         <span id="streamCounter" class="text-cyberGreen font-bold shrink-0">0 tx</span>
       </div>
-      <div class="overflow-hidden h-52 sm:h-60 relative">
-        <div id="streamTrack" class="font-mono text-[10px] sm:text-[11px] leading-relaxed p-4 space-y-1"></div>
+      <div class="overflow-hidden h-48 sm:h-56 lg:h-60 relative">
+        <div id="streamTrack" class="font-mono text-[10px] sm:text-[11px] leading-relaxed p-3 sm:p-4 space-y-1"></div>
       </div>
     </div>
 
-    <div class="grid sm:grid-cols-3 gap-3 font-mono text-[10px] text-slate-400">
-      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
-        <div class="text-cyberGreen font-bold text-[11px]">HYPERLEDGER FABRIC</div>
-        <div class="leading-tight">Registre privé · &gt; 2 000 TPS · Consensus Raft</div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 font-mono text-[10px] text-slate-400">
+      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
+        <div class="text-cyberGreen font-bold">HYPERLEDGER FABRIC</div>
+        <div>Registre privé · &gt; 2 000 TPS · Consensus Raft</div>
       </div>
-      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
-        <div class="text-kemetGoldBright font-bold text-[11px]">BITCOIN OPENTIMESTAMPS</div>
-        <div class="leading-tight">Ancrage horaire public · Merkle Root · OP_RETURN</div>
+      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
+        <div class="text-kemetGoldBright font-bold">BITCOIN OPENTIMESTAMPS</div>
+        <div>Ancrage horaire public · Merkle Root · OP_RETURN</div>
       </div>
-      <div class="h-full flex flex-col justify-center p-3.5 bg-black/50 rounded-xl border border-white/5 space-y-1">
-        <div class="text-white font-bold text-[11px]">HÉBERGEMENT SOUVERAIN</div>
-        <div class="leading-tight">Datacenters Tier-3/4 au Maroc · CNDP 09-08</div>
+      <div class="p-3 bg-black/50 rounded-xl border border-white/5">
+        <div class="text-white font-bold">HÉBERGEMENT SOUVERAIN</div>
+        <div>Datacenters Tier-3/4 au Maroc · CNDP 09-08</div>
       </div>
     </div>
   </section>
@@ -1011,11 +1031,11 @@ body {
 </main>
 
 <!-- FOOTER -->
-<footer class="border-t border-white/10 py-8 bg-black">
-  <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
+<footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
     <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
-    <p class="text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
-    <p class="text-[10px] text-slate-600">Maat OS · PurKemet · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
+    <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+    <p class="text-[9px] sm:text-[10px] text-slate-600">Maat OS · PurKemet · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
   </div>
 </footer>
 
@@ -1023,21 +1043,21 @@ body {
 <div id="contactDrawer" role="dialog" aria-modal="true" aria-label="Contact institutionnel">
   <div class="backdrop" onclick="window.closeContactDrawer()"></div>
   <div class="panel">
-    <div class="flex justify-between items-start border-b border-white/10 pb-3 mb-6">
+    <div class="flex justify-between items-start border-b border-white/10 pb-3 mb-5 sm:mb-6">
       <div>
         <span class="lbl">Contact Institutionnel</span>
-        <h3 class="font-kemetTitle text-xl font-black text-white mt-1">Direction Générale · Bureau de Liaison</h3>
+        <h3 class="font-kemetTitle text-lg sm:text-xl font-black text-white mt-1">Direction Générale · Bureau de Liaison</h3>
       </div>
       <button type="button" onclick="window.closeContactDrawer()" class="text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
     </div>
 
-    <div class="space-y-5 text-slate-300">
-      <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1 font-mono text-xs">
-        <span class="text-[10px] text-slate-400 uppercase block tracking-wider">Directeur Général</span>
-        <span class="text-white font-bold text-sm">Roberto Passarella</span>
+    <div class="space-y-4 sm:space-y-5 text-slate-300">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1 font-mono text-xs">
+        <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block tracking-wider">Directeur Général</span>
+        <span class="text-white font-bold text-xs sm:text-sm">Roberto Passarella</span>
       </div>
 
-      <form id="contactDrawerForm" onsubmit="window.handleContactSubmit(event)" class="space-y-3 font-mono text-xs" novalidate>
+      <form id="contactDrawerForm" onsubmit="window.handleContactSubmit(event)" class="space-y-2.5 sm:space-y-3 font-mono text-xs" novalidate>
         <div>
           <label class="lbl block mb-1" for="cd_name">Nom complet *</label>
           <input id="cd_name" type="text" name="full_name" required autocomplete="name" placeholder="Votre nom" class="inp">
@@ -1062,19 +1082,19 @@ body {
         </div>
         <div>
           <label class="lbl block mb-1" for="cd_message">Message / Précisions *</label>
-          <textarea id="cd_message" name="message" required rows="4" class="inp h-20" placeholder="Votre message..."></textarea>
+          <textarea id="cd_message" name="message" required rows="3" class="inp h-20" placeholder="Votre message..."></textarea>
         </div>
-        <button type="submit" id="btnContactSubmit" class="btn btn-g w-full !py-3 font-bold">Envoyer le Message à la Direction ✉️</button>
+        <button type="submit" id="btnContactSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold">Envoyer le Message à la Direction ✉️</button>
       </form>
 
-      <div class="pt-5 border-t border-white/10 space-y-2 font-mono text-[11px] text-slate-400">
+      <div class="pt-4 border-t border-white/10 space-y-1.5 font-mono text-[10px] sm:text-[11px] text-slate-400">
         <div><span class="text-slate-500">Siège :</span> <span class="text-white">Préfecture de Marrakech</span></div>
         <div><span class="text-slate-500">Région :</span> <span class="text-white">Marrakech-Safi, Royaume du Maroc</span></div>
         <div><span class="text-slate-500">Coordonnées :</span> <span class="text-white">31.6295° N, 7.9811° W</span></div>
       </div>
 
-      <div class="p-3 bg-cyberGreen/5 rounded-xl border border-cyberGreen/30 text-[10px] font-mono text-slate-400 leading-relaxed">
-        <strong class="text-cyberGreen block mb-1">Conformité</strong>
+      <div class="p-3 bg-cyberGreen/5 rounded-xl border border-cyberGreen/30 text-[9px] sm:text-[10px] font-mono text-slate-400 leading-relaxed">
+        <strong class="text-cyberGreen block mb-0.5">Conformité</strong>
         Loi n° 28-00 · CNDP n° 09-08 · Hébergement souverain Maroc · Ancrage blockchain Bitcoin OpenTimestamps
       </div>
     </div>
@@ -1082,39 +1102,39 @@ body {
 </div>
 
 <!-- MODAL BROCHURE B2B -->
-<div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
-  <div class="glass-panel g max-w-3xl w-full p-6 sm:p-8 space-y-6 text-left font-mono text-xs relative my-8">
-    <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-4 right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
-    <div class="border-b border-kemetGold/30 pb-4 text-center space-y-1">
+<div id="brochureModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Brochure PurKemet B2B">
+  <div class="glass-panel g max-w-3xl w-full p-4 sm:p-8 space-y-4 sm:space-y-6 text-left font-mono text-xs relative my-6 sm:my-8">
+    <button type="button" onclick="window.closeBrochureModal()" class="no-print absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-white text-2xl font-bold" aria-label="Fermer">×</button>
+    <div class="border-b border-kemetGold/30 pb-3 text-center space-y-1">
       <span class="lbl au">PURKEMET B2B · DOCUMENT COMMERCIAL OFFICIEL</span>
-      <h3 class="font-kemetTitle text-xl font-black text-white">La Renaissance Cyber-Écologique</h3>
-      <p class="text-[10px] text-slate-400">Présentation synthétique pour Hôtels de Luxe, Riads, Restaurants et Établissements Commerciaux.</p>
+      <h3 class="font-kemetTitle text-lg sm:text-xl font-black text-white">La Renaissance Cyber-Écologique</h3>
+      <p class="text-[9px] sm:text-[10px] text-slate-400">Présentation synthétique pour Hôtels de Luxe, Riads, Restaurants et Établissements Commerciaux.</p>
     </div>
-    <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-slate-300 font-sans text-xs leading-relaxed">
-      <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
-        <h4 class="font-bold text-cyberGreen text-sm font-mono">1. NOTRE ENGAGEMENT EXCLUSIF : RIGUEUR &amp; TRANSPARENCE</h4>
+    <div class="space-y-3 sm:space-y-4 max-h-[60vh] overflow-y-auto pr-1.5 sm:pr-2 text-slate-300 font-sans text-xs leading-relaxed">
+      <div class="p-3 sm:p-4 bg-black/50 rounded-xl border border-white/10 space-y-1.5 sm:space-y-2">
+        <h4 class="font-bold text-cyberGreen text-xs sm:text-sm font-mono">1. NOTRE ENGAGEMENT EXCLUSIF : RIGUEUR &amp; TRANSPARENCE</h4>
         <p>Service 100% gratuit : aucun coût logistique, de main d'œuvre, d'assurance ou de traitement. Vos déchets secs triés deviennent vos actifs de réputation et de conformité.</p>
       </div>
-      <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
-        <h4 class="font-bold text-kemetGoldBright text-sm font-mono">2. CARACTÉRISTIQUES TECHNIQUES ET SÉCURITÉ JURIDIQUE</h4>
-        <ul class="list-disc pl-5 space-y-1 text-slate-400">
+      <div class="p-3 sm:p-4 bg-black/50 rounded-xl border border-white/10 space-y-1.5 sm:space-y-2">
+        <h4 class="font-bold text-kemetGoldBright text-xs sm:text-sm font-mono">2. CARACTÉRISTIQUES TECHNIQUES ET SÉCURITÉ JURIDIQUE</h4>
+        <ul class="list-disc pl-4 sm:pl-5 space-y-1 text-slate-400">
           <li><strong class="text-slate-300">Pureté Grade-A (&gt;98%) :</strong> Tri à la source sec garantissant une valorisation optimale sans odeurs.</li>
           <li><strong class="text-slate-300">Planification sous 12h :</strong> Enlèvement flexible s'adaptant à vos contraintes opérationnelles.</li>
           <li><strong class="text-slate-300">Couverture Civile :</strong> Assurance RC complète avec décharge totale de responsabilité juridique.</li>
           <li><strong class="text-slate-300">Conformité :</strong> Alignement strict avec la Loi n° 28-00 relative à la gestion des déchets.</li>
         </ul>
       </div>
-      <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2">
-        <h4 class="font-bold text-white text-sm font-mono">3. SIMPLIFICATION DES AUDITS ESG (CLEF VERTE &amp; TRAVELIFE)</h4>
+      <div class="p-3 sm:p-4 bg-black/50 rounded-xl border border-white/10 space-y-1.5 sm:space-y-2">
+        <h4 class="font-bold text-white text-xs sm:text-sm font-mono">3. SIMPLIFICATION DES AUDITS ESG (CLEF VERTE &amp; TRAVELIFE)</h4>
         <p>Émission mensuelle de votre Certificat ESG notarié sur le Maat Data Lake. Présenté lors de vos audits de labellisation, il atteste des volumes exacts de matières détournées et de CO₂ évité.</p>
       </div>
-      <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 space-y-2">
-        <h4 class="font-bold text-kemetGoldBright text-sm font-mono">4. IMPACT SOCIAL &amp; CITOYENNETÉ : LE SOCIALISME PRIVÉ</h4>
+      <div class="p-3 sm:p-4 bg-black/50 rounded-xl border border-kemetGold/30 space-y-1.5 sm:space-y-2">
+        <h4 class="font-bold text-kemetGoldBright text-xs sm:text-sm font-mono">4. IMPACT SOCIAL &amp; CITOYENNETÉ : LE SOCIALISME PRIVÉ</h4>
         <p>Notre modèle réintègre légalement les collecteurs informels (<em>Mikhala</em>) de Marrakech dans un cadre de dignité sociale. Tous nos trieurs sont formalisés avec des contrats à durée indéterminée (CDI), formés à la sécurité et équipés de kits complets d'Équipement de Protection Individuelle (EPI) : bottes, gants anti-coupures, masques FFP2. Nos vecteurs logistiques sont associés à l'infrastructure via le modèle des <strong>Actions de Classe B</strong> — copropriété des travailleurs sur les moyens de production.</p>
       </div>
-      <div class="p-4 bg-black/50 rounded-xl border border-cyberGreen/30 space-y-2">
-        <h4 class="font-bold text-cyberGreen text-sm font-mono">5. UN PARCOURS EN 5 ÉTAPES SANS EFFORT</h4>
-        <ol class="list-decimal pl-5 space-y-1 text-slate-400">
+      <div class="p-3 sm:p-4 bg-black/50 rounded-xl border border-cyberGreen/30 space-y-1.5 sm:space-y-2">
+        <h4 class="font-bold text-cyberGreen text-xs sm:text-sm font-mono">5. UN PARCOURS EN 5 ÉTAPES SANS EFFORT</h4>
+        <ol class="list-decimal pl-4 sm:pl-5 space-y-1 text-slate-400">
           <li><strong class="text-slate-300">Tri Initial :</strong> Dépôt des matières sèches (plastiques, cartons, aluminium, verre) au sec.</li>
           <li><strong class="text-slate-300">Demande de Retrait :</strong> Alerte de collecte sous 12h via simple appel ou application.</li>
           <li><strong class="text-slate-300">Pesée IoT :</strong> Pesée transparente sur site par balance Bluetooth (saisie manuelle bloquée).</li>
@@ -1122,32 +1142,32 @@ body {
           <li><strong class="text-slate-300">Certification :</strong> Émission mensuelle de votre Rapport et Certificat d'Impact ESG.</li>
         </ol>
       </div>
-      <div class="p-4 bg-black/50 rounded-xl border border-white/10 space-y-2 text-center">
-        <p class="text-slate-400 text-[10px]">
+      <div class="p-3 bg-black/50 rounded-xl border border-white/10 space-y-1 text-center">
+        <p class="text-slate-400 text-[9px] sm:text-[10px]">
           <strong class="text-white">Contact Institutionnel :</strong> Roberto Passarella, Directeur Général — <a href="mailto:r.passarella@industrialillusion.ma" class="text-cyberGreen hover:underline">r.passarella@industrialillusion.ma</a>
         </p>
       </div>
     </div>
-    <div class="no-print flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
+    <div class="no-print flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 pt-3 border-t border-white/10 font-mono text-xs">
       <button type="button" onclick="window.closeBrochureModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
-      <div class="flex flex-wrap gap-2">
-        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2.5 px-5 font-bold text-[11px]">⬇️ Télécharger le PDF</a>
-        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2.5 px-5 font-bold text-[11px]">✉️ Recevoir par Email</button>
-        <button type="button" onclick="window.print()" class="btn btn-g cta-inline !py-2.5 px-6 font-bold">🖨️ Imprimer / PDF</button>
+      <div class="flex flex-col sm:flex-row gap-2">
+        <a href="assets/brochure-purkemet-b2b.pdf" download="Brochure_PurKemet_B2B.pdf" class="btn btn-o cta-inline !py-2 px-4 font-bold text-[10px] sm:text-[11px]">⬇️ Télécharger PDF</a>
+        <button type="button" onclick="window.openBrochureEmailModal()" class="btn btn-au cta-inline !py-2 px-4 font-bold text-[10px] sm:text-[11px]">✉️ Recevoir par Email</button>
+        <button type="button" onclick="window.print()" class="btn btn-g cta-inline !py-2 px-5 font-bold text-[10px] sm:text-[11px]">🖨️ Imprimer / PDF</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL EMAIL BROCHURE -->
-<div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
-  <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
-    <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+<div id="brochureEmailModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Recevoir la brochure par email">
+  <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+    <button type="button" onclick="window.closeBrochureEmailModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
     <div class="border-b border-white/10 pb-2">
       <span class="lbl">Recevoir la brochure B2B</span>
-      <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Version PDF par email</h3>
+      <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-0.5">Version PDF par email</h3>
     </div>
-    <form id="brochureEmailForm" onsubmit="window.handleBrochureEmailSubmit(event)" class="space-y-3" novalidate>
+    <form id="brochureEmailForm" onsubmit="window.handleBrochureEmailSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
       <div>
         <label class="lbl block mb-1" for="be_email">Email Professionnel *</label>
         <input id="be_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
@@ -1156,26 +1176,26 @@ body {
         <label class="lbl block mb-1" for="be_company">Établissement</label>
         <input id="be_company" type="text" name="company_name" placeholder="Hôtel / Riad / Restaurant" class="inp">
       </div>
-      <button type="submit" id="btnBrochureEmail" class="btn btn-g w-full !py-3 font-bold">Envoyer la brochure PDF</button>
+      <button type="submit" id="btnBrochureEmail" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold">Envoyer la brochure PDF</button>
     </form>
   </div>
 </div>
 
 <!-- MODAL AUDIT GRATUIT -->
-<div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
-  <div class="glass-panel g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative my-8">
-    <button type="button" onclick="window.closeAuditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+<div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
+  <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3 text-left font-mono text-xs relative my-6 sm:my-8">
+    <button type="button" onclick="window.closeAuditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
     <div class="border-b border-white/10 pb-2">
       <span class="lbl">Audit de Gisement (0 MAD)</span>
-      <h3 class="font-kemetTitle text-base font-bold text-white mt-1">Établissements B2B Marrakech</h3>
+      <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-0.5">Établissements B2B Marrakech</h3>
     </div>
-    <form id="auditForm" onsubmit="window.handleAuditSubmit(event)" class="space-y-3" novalidate>
+    <form id="auditForm" onsubmit="window.handleAuditSubmit(event)" class="space-y-2.5" novalidate>
       <div>
-        <label class="lbl block mb-1" for="audit_company">Nom de l'Établissement *</label>
+        <label class="lbl block mb-0.5" for="audit_company">Nom de l'Établissement *</label>
         <input id="audit_company" type="text" name="company_name" required placeholder="Hôtel / Riad / Restaurant" class="inp">
       </div>
       <div>
-        <label class="lbl block mb-1" for="audit_cat">Catégorie HoReCa *</label>
+        <label class="lbl block mb-0.5" for="audit_cat">Catégorie HoReCa *</label>
         <select id="audit_cat" name="horeca_category" class="inp">
           <option value="HOTEL_RESORT">Hôtel / Resort / Palace</option>
           <option value="RIAD">Riad / Maison d'Hôtes (Médina)</option>
@@ -1185,18 +1205,18 @@ body {
         </select>
       </div>
       <div>
-        <label class="lbl block mb-1" for="audit_email">Email Professionnel *</label>
+        <label class="lbl block mb-0.5" for="audit_email">Email Professionnel *</label>
         <input id="audit_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
       </div>
       <div>
-        <label class="lbl block mb-1" for="audit_phone">Téléphone Référent WhatsApp *</label>
+        <label class="lbl block mb-0.5" for="audit_phone">Téléphone Référent WhatsApp *</label>
         <input id="audit_phone" type="tel" name="phone" required placeholder="+212 6..." class="inp">
       </div>
       <div>
-        <label class="lbl block mb-1" for="audit_notes">Remarques ou contraintes logistiques</label>
-        <textarea id="audit_notes" name="message" placeholder="Accès Médina, horaires spécifiques, volume de carton..." class="inp h-16"></textarea>
+        <label class="lbl block mb-0.5" for="audit_notes">Remarques ou contraintes logistiques</label>
+        <textarea id="audit_notes" name="message" placeholder="Accès Médina, horaires spécifiques, volume de carton..." class="inp h-14"></textarea>
       </div>
-      <button type="submit" id="btnAudit" class="btn btn-g w-full !py-3 font-bold">Transmettre au Siège</button>
+      <button type="submit" id="btnAudit" class="btn btn-g w-full !py-2.5 font-bold">Transmettre au Siège</button>
     </form>
   </div>
 </div>
@@ -1208,7 +1228,7 @@ body {
 
 <script>
 /* ============================================================
-   INDUSTRIAL ILLUSION — INDEX.HTML v6.5
+   INDUSTRIAL ILLUSION — INDEX.HTML v6.5 (Mobile-First)
    ============================================================ */
 (function () {
   'use strict';
@@ -1237,7 +1257,7 @@ body {
     var field = document.getElementById('particleField');
     if (!field) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var count = window.innerWidth < 640 ? 12 : 24;
+    var count = window.innerWidth < 640 ? 10 : 22;
     for (var i = 0; i < count; i++) {
       var p = document.createElement('div');
       p.className = 'particle';
@@ -1611,7 +1631,7 @@ body {
   };
 
   /* ============================================================
-     CANVAS NUCLEUS CYBER-HORUS PATH2D
+     CANVAS NUCLEUS CYBER-HORUS PATH2D (Optimisé Mobile)
      ============================================================ */
   (function () {
     var canvas = document.getElementById('heroCyberCanvas');
@@ -1681,8 +1701,11 @@ body {
           var endR = maxRadius * 1.15;
           var ex = anchor.x + Math.cos(angle) * endR;
           var ey = anchor.y + Math.sin(angle) * endR;
+
           pcbTraces.push({
-            x1: anchor.x, y1: anchor.y, xm: mx, ym: my, x2: ex, y2: ey,
+            x1: anchor.x, y1: anchor.y,
+            xm: mx, ym: my,
+            x2: ex, y2: ey,
             progress: Math.random(),
             speed: 0.0016 + Math.random() * 0.0025,
             color: (ai % 2 === 0) ? '#00FFA3' : '#C5A059'
@@ -1698,10 +1721,12 @@ body {
           y: anchor.y + Math.sin(angle) * r
         });
       });
-      for (var k = 0; k < 12; k++) pcbNodes.push({ x: Math.random() * W, y: Math.random() * H });
+      var nodeCount = W < 640 ? 6 : 12;
+      for (var k = 0; k < nodeCount; k++) pcbNodes.push({ x: Math.random() * W, y: Math.random() * H });
 
       cubes = [];
-      for (var c = 0; c < 10; c++) {
+      var cubeCount = W < 640 ? 5 : 10;
+      for (var c = 0; c < cubeCount; c++) {
         cubes.push({
           x: Math.random() * W, y: Math.random() * H,
           size: 5 + Math.random() * 7,
@@ -1712,7 +1737,8 @@ body {
       }
 
       pulses = [];
-      for (var p = 0; p < 14; p++) {
+      var pulseCount = W < 640 ? 7 : 14;
+      for (var p = 0; p < pulseCount; p++) {
         pulses.push({
           trace: Math.floor(Math.random() * Math.max(1, pcbTraces.length)),
           t: Math.random(),
@@ -1856,7 +1882,7 @@ body {
       var driftY = (state.smoothedY - 0.5) * EYE_DRIFT_Y;
 
       var eyeScale = Math.min(W, H) / 520;
-      if (eyeScale < 0.65) eyeScale = 0.65;
+      if (eyeScale < 0.60) eyeScale = 0.60;
       if (eyeScale > 1.25) eyeScale = 1.25;
 
       ctx.save();
@@ -2045,13 +2071,13 @@ body {
           var ts = (row.created_at || '').replace('T', ' ').slice(0, 19);
           var kg = Number(row.weight_depot_kg || 0).toFixed(2);
           var hash = row.blockchain_hash ? (row.blockchain_hash.slice(0, 16) + '…') : '0xPending';
-          return '<div class="flex justify-between items-center gap-3 border-b border-white/5 py-1.5 hover:bg-white/[0.02] transition-colors">' +
-            '<span class="text-slate-500 shrink-0 text-[10px]">' + ts + '</span>' +
+          return '<div class="flex justify-between items-center gap-2 sm:gap-3 border-b border-white/5 py-1.5 hover:bg-white/[0.02] transition-colors">' +
+            '<span class="text-slate-500 shrink-0 text-[9px] sm:text-[10px]">' + ts + '</span>' +
             '<span class="text-white font-bold shrink-0">' + (row.bag_qr_id || 'LOT') + '</span>' +
             '<span class="text-cyberGreen shrink-0">' + (row.material_type || 'MIX') + '</span>' +
             '<span class="text-kemetGoldBright font-bold shrink-0">' + kg + ' kg</span>' +
-            '<span class="text-slate-400 truncate text-[10px]" style="max-width:14rem">' + hash + '</span>' +
-            '<span class="bd bd-g shrink-0 !text-[9px]">ANCHORED</span>' +
+            '<span class="text-slate-400 truncate text-[9px] sm:text-[10px]" style="max-width:14rem">' + hash + '</span>' +
+            '<span class="bd bd-g shrink-0 !text-[8px] sm:!text-[9px]">ANCHORED</span>' +
           '</div>';
         }).join('');
       } catch (err) {
