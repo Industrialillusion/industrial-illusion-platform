@@ -29,33 +29,77 @@
 
   <style>
     /* ============================================================
-       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.1
-       Fix : body trasparente → canvas spazio visibile
+       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.2
+       FIX MOBILE : canvas visible sur tous browsers (z-index 0)
+       + optimisations mobile-first (tap, font, backdrop-filter)
        ============================================================ */
     html {
       background-color: #060A0D !important;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    html, body { overflow-x: hidden; scroll-behavior: smooth; }
+    html, body {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    /* FIX CANVAS #1 : body trasparente per mostrare lo sfondo spaziale */
+    /* Body trasparente → canvas visibile */
     body {
       background-color: transparent !important;
       background-image: none !important;
       color: #F1F5F9 !important;
       font-family: 'Plus Jakarta Sans', sans-serif;
       margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: contain;
+      touch-action: manipulation;
     }
 
-    /* FIX CANVAS #2 : canvas dietro al contenuto, sopra il colore html */
+    /* FIX MOBILE #1 : canvas con z-index 0 (robusto su Safari iOS) */
     #spaceCanvas {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: 0;
       pointer-events: none;
       display: block;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    /* FIX MOBILE #2 : contenuto sopra il canvas con z-index 10 */
+    main,
+    footer {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* FIX MOBILE #3 : input ≥ 16px per evitare zoom automatico su iOS */
+    input,
+    select,
+    textarea,
+    .inp {
+      font-size: 16px !important;
+    }
+    @media (min-width: 640px) {
+      input,
+      select,
+      textarea,
+      .inp {
+        font-size: 0.8rem !important;
+      }
+    }
+
+    /* FIX MOBILE #4 : tap target minimo 44x44px */
+    .btn,
+    button,
+    .step-tab {
+      min-height: 44px;
+      min-width: 44px;
     }
 
     .cta-inline {
@@ -66,6 +110,7 @@
       justify-content: center;
       gap: 0.4rem;
       white-space: nowrap;
+      min-height: 44px;
     }
     .cta-inline:hover {
       transform: translateY(-1px);
@@ -134,7 +179,6 @@
       border: 1px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 0.75rem !important;
       padding: 0.75rem !important;
-      font-size: 0.8rem !important;
       color: #fff !important;
       outline: none;
       transition: border-color .2s;
@@ -148,7 +192,9 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       transition: all 0.2s;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       cursor: pointer;
       border: none;
@@ -186,12 +232,14 @@
       background: linear-gradient(90deg, #C5A059 0%, #00FFA3 100%);
       outline: none;
       cursor: pointer;
+      min-height: 44px;
+      padding: 19px 0;
     }
     .slider-esg::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: #090D10;
       border: 2px solid #00FFA3;
@@ -200,6 +248,15 @@
       transition: transform .15s;
     }
     .slider-esg::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-esg::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #090D10;
+      border: 2px solid #00FFA3;
+      box-shadow: 0 0 12px #00FFA3;
+      cursor: pointer;
+    }
 
     .step-tab {
       transition: all 0.25s ease-out;
@@ -212,9 +269,51 @@
 
     .safe-top { padding-top: env(safe-area-inset-top); }
 
+    /* ============================================================
+       FIX MOBILE #5 : riduzione performance-heavy su mobile
+       ============================================================ */
     @media (max-width: 640px) {
       .cta-inline {
         white-space: normal !important;
+      }
+
+      /* Riduzione backdrop-filter per performance mobile */
+      .glass-panel {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      /* Disattiva hover effects su touch device */
+      .tilt-card:hover,
+      .glass-panel:hover {
+        transform: none;
+        box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
+      }
+
+      /* Riduce padding header su phone */
+      header > div:first-child {
+        padding-left: 0.875rem;
+        padding-right: 0.875rem;
+      }
+
+      /* Migliora leggibilità testo su schermi piccoli */
+      body {
+        font-size: 15px;
+      }
+
+      /* Più spazio per safe-area su notch */
+      footer {
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+      }
+    }
+
+    /* Disattiva animazioni per chi ha reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
@@ -227,7 +326,7 @@
   <!-- PROGRESS BAR -->
   <div id="scrollProgress" aria-hidden="true"></div>
 
-  <!-- HEADER INSTITUTIONNEL -->
+  <!-- HEADER -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
     <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
       <a href="index.html" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
@@ -287,16 +386,16 @@
     </div>
 
     <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
-      <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-1">Accueil</a>
-      <a href="purkemet.html" class="block text-cyberGreen font-bold py-1">PurKemet B2B (Hôtels)</a>
-      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Architecture K-MEH-20</a>
-      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake</a>
-      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
-      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
+      <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-2">Accueil</a>
+      <a href="purkemet.html" class="block text-cyberGreen font-bold py-2">PurKemet B2B (Hôtels)</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-2">Architecture K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-2">Maat Data Lake</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-2">Carrières</a>
+      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-2">À Propos</a>
       <hr class="border-white/10 my-2">
-      <a href="pwa.html" class="block text-cyberGreen py-1 font-bold">📱 Workstation Opérateur (PWA)</a>
-      <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
-      <a href="admin.html" class="block text-slate-400 hover:text-white py-1">👑 Control Tower DG</a>
+      <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
+      <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
     </nav>
   </header>
 
@@ -389,8 +488,8 @@
         <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Comparatif des Filières de Déchets Secs à Marrakech</h3>
         <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">Pourquoi le modèle PurKemet B2B surpasse les schémas traditionnels payants et informels.</p>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left font-mono text-xs">
+      <div class="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+        <table class="w-full text-left font-mono text-xs min-w-[640px]">
           <thead>
             <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
               <th class="py-3 px-3">Critère Clé</th>
@@ -467,7 +566,7 @@
         </button>
       </div>
       <div id="stepContentPanel" class="p-5 sm:p-7 bg-black/70 rounded-2xl border border-cyberGreen/30 space-y-3 font-mono text-xs" aria-live="polite">
-        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
           <span id="stepTitle" class="text-sm font-bold text-cyberGreen uppercase">Étape 01 : Tri Sélectif à la Source</span>
           <span id="stepBadge" class="px-2 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-[9px] text-cyberGreen font-bold">QUALITÉ GRADE-A</span>
         </div>
@@ -492,9 +591,9 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
             <span class="text-cyberGreen font-bold text-sm block">1. Cluster Médina & Riads</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">QUIET WINDOW</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 shrink-0">QUIET WINDOW</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
             Collecte opérée par triporteurs électriques compacts adaptés aux ruelles et derbs étroits. Respect absolu des créneaux de repos des hôtes (interdiction stricte de passage nocturne ou à l'heure du petit-déjeuner).
@@ -505,9 +604,9 @@
           </div>
         </div>
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
             <span class="text-kemetGoldBright font-bold text-sm block">2. Cluster Guéliz & Hivernage</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30">EARLY BIRD</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 shrink-0">EARLY BIRD</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
             Dédié aux restaurants gastronomiques, rooftops, bars et hôtels urbains. Enlèvement rapide à l'aube (avant 7h30) pour libérer les locaux poubelles avant les livraisons de marchandises du matin.
@@ -518,9 +617,9 @@
           </div>
         </div>
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
-          <div class="flex justify-between items-center">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
             <span class="text-white font-bold text-sm block">3. Cluster Palmeraie & Resorts</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20">HEAVY FLOW</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 shrink-0">HEAVY FLOW</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
             Prise en charge des flux massifs issus des parcs hôteliers de plus de 100 chambres, banquets et séminaires. Évacuation par camion pick-up à ridelles pour les palettes entières de carton et conteneurs de verre.
@@ -554,19 +653,19 @@
           <span class="text-kemetGoldBright font-bold block uppercase text-[11px]">Garanties Contractuelles PurKemet</span>
           <ul class="space-y-2 text-[11px] text-slate-300">
             <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold">✓</span>
+              <span class="text-cyberGreen font-bold shrink-0">✓</span>
               <span>Contrat de valorisation conforme aux normes de la Wilaya de Marrakech-Safi.</span>
             </li>
             <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold">✓</span>
+              <span class="text-cyberGreen font-bold shrink-0">✓</span>
               <span>Décharge totale de responsabilité civile dès le scellement de la pesée P1 sur site.</span>
             </li>
             <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold">✓</span>
+              <span class="text-cyberGreen font-bold shrink-0">✓</span>
               <span>Attestation mensuelle d'évitement de mise en décharge (M'Nabha).</span>
             </li>
             <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold">✓</span>
+              <span class="text-cyberGreen font-bold shrink-0">✓</span>
               <span>Alignement sur les grilles d'audit Clef Verte, Travelife et ISO 14001.</span>
             </li>
           </ul>
@@ -584,7 +683,7 @@
           <h3 class="font-kemetTitle text-lg sm:text-2xl font-black text-white mt-1">Calculez le Potentiel de Votre Établissement</h3>
           <p class="text-xs text-slate-300 font-sans mt-0.5">Modélisation mathématique conforme aux audits de l'Université Cadi Ayyad de Marrakech.</p>
         </div>
-        <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
+        <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0 w-full sm:w-auto">
           Réserver l'Audit Pilote 0 MAD
         </button>
       </div>
@@ -681,7 +780,7 @@
     </section>
 
   </main>
-
+  
   <!-- FOOTER -->
   <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
@@ -690,11 +789,11 @@
       <p class="text-[9px] sm:text-[10px] text-slate-600">PurKemet B2B · Maat OS · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
     </div>
   </footer>
-  
+
   <!-- MODAL TÉLÉCHARGEMENT BROCHURE -->
   <div id="brochureDownloadModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Télécharger la brochure B2B">
     <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
-      <button type="button" onclick="window.closeBrochureDownloadModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+      <button type="button" onclick="window.closeBrochureDownloadModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
       <div class="border-b border-white/10 pb-2">
         <span class="lbl au">Téléchargement Officiel B2B</span>
         <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Brochure PurKemet (PDF)</h3>
@@ -730,7 +829,7 @@
   <!-- MODAL AUDIT GRATUIT -->
   <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
     <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3 text-left font-mono text-xs relative my-6 sm:my-8">
-      <button type="button" onclick="window.closeAuditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+      <button type="button" onclick="window.closeAuditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
       <div class="border-b border-white/10 pb-2">
         <span class="lbl">Audit de Gisement (0 MAD)</span>
         <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-0.5">Établissements B2B Marrakech</h3>
@@ -783,7 +882,9 @@
       if (y) y.textContent = String(new Date().getFullYear());
     })();
 
-    /* LOGIN MULTI-CLIC */
+    /* ============================================================
+       LOGIN MULTI-CLIC
+       ============================================================ */
     (function () {
       var _origOpenLogin = window.openUniversalLogin;
 
@@ -855,7 +956,9 @@
       };
     })();
 
-    /* SCROLL PROGRESS */
+    /* ============================================================
+       SCROLL PROGRESS
+       ============================================================ */
     window.addEventListener('scroll', function () {
       var bar = document.getElementById('scrollProgress');
       if (!bar) return;
@@ -863,7 +966,9 @@
       bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
     }, { passive: true });
 
-    /* REVEAL */
+    /* ============================================================
+       REVEAL ON SCROLL
+       ============================================================ */
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -873,7 +978,9 @@
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
     }
 
-    /* TILT */
+    /* ============================================================
+       TILT 3D (désactivé sur touch)
+       ============================================================ */
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
       document.querySelectorAll('.tilt-card').forEach(function (card) {
         card.addEventListener('mousemove', function (e) {
@@ -893,7 +1000,9 @@
       } catch (e) {}
     };
 
-    /* TOAST */
+    /* ============================================================
+       TOAST ROBUSTE
+       ============================================================ */
     function toast(text, kind) {
       if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
       var d = document.createElement('div');
@@ -909,7 +1018,9 @@
       setTimeout(function () { d.remove(); }, 4000);
     }
 
-    /* MENU MOBILE */
+    /* ============================================================
+       MENU MOBILE
+       ============================================================ */
     window.toggleMobileNav = function () {
       var nav = document.getElementById('mobileNavMenu');
       var btn = document.getElementById('menuBtn');
@@ -931,7 +1042,9 @@
       nav.classList.add('hidden');
     });
 
-    /* MODALI */
+    /* ============================================================
+       MODALES
+       ============================================================ */
     function openModal(id) {
       var m = document.getElementById(id);
       if (!m) return;
@@ -962,7 +1075,9 @@
       if (e.target && e.target.id === 'brochureDownloadModal') window.closeBrochureDownloadModal();
     });
 
-    /* STEPPER */
+    /* ============================================================
+       STEPPER SOP-01
+       ============================================================ */
     var stepsData = [
       {
         title: "Étape 01 : Tri Sélectif à la Source",
@@ -1021,7 +1136,9 @@
         '<div><strong class="text-white">' + data.k2 + ' : </strong>' + data.v2 + '</div>';
     };
 
-    /* SIMULATEUR ESG */
+    /* ============================================================
+       SIMULATEUR ESG
+       ============================================================ */
     window.calcEsgSim = function (rooms) {
       var r = parseInt(rooms, 10) || 10;
       var valEl = document.getElementById('simRoomsVal');
@@ -1034,7 +1151,9 @@
     };
     (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
 
-    /* FORM : BROCHURE DOWNLOAD */
+    /* ============================================================
+       FORM : BROCHURE DOWNLOAD (GATED)
+       ============================================================ */
     window.handleBrochureDownloadSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -1105,7 +1224,9 @@
       }
     };
 
-    /* FORM : ONBOARDING */
+    /* ============================================================
+       FORM : ONBOARDING
+       ============================================================ */
     window.handleOnboardingSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -1172,7 +1293,9 @@
       }
     };
 
-    /* FORM : AUDIT MODAL */
+    /* ============================================================
+       FORM : AUDIT MODAL
+       ============================================================ */
     window.handleAuditModalSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -1237,7 +1360,9 @@
       }
     };
 
-    /* SERVICE WORKER */
+    /* ============================================================
+       SERVICE WORKER
+       ============================================================ */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js').catch(function () {});
