@@ -1,157 +1,1381 @@
 <!DOCTYPE html>
 <html lang="fr" class="dark font-sans scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>PurKemet B2B | Industrial Illusion SARL — Collecte 0 MAD &amp; Certification ESG</title>
-    <meta name="description" content="Solution de collecte B2B gratuite à 0 MAD pour la fraction sèche des hôtels, resorts, riads et restaurants à Marrakech. Certification ESG notariée.">
-    <meta name="theme-color" content="#00FFA3">
-    
-    <!-- Google Fonts & Tailwind CSS CDN -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PurKemet B2B | Industrial Illusion SARL — Valorisation Sélective 0 MAD & Certification ESG</title>
+  <meta name="description" content="Plateforme logicielle de valorisation sélective 0 MAD pour la fraction sèche des hôtels, resorts, riads et restaurants à Marrakech. Traçabilité IoT Bluetooth et notarisation blockchain Maat OS. Conforme Loi n° 28-00 & CNDP n° 09-08.">
+  <meta name="theme-color" content="#090D10">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PurKemet B2B">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        kemetTitle: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    },
-                    colors: {
-                        cyberDark: '#0B0F12',
-                        cyberCard: '#131920',
-                        cyberGreen: '#00FFA3',
-                        cyberGreenDark: '#00B871',
-                        kemetGold: '#C5A059',
-                        kemetGoldBright: '#E8C86A'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #0B0F12 !important; color: #F1F5F9 !important; }
-        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12) !important; border: 1px solid rgba(197, 160, 89, 0.35) !important; border-radius: 1.25rem !important; }
-        .glass-card.g { border-color: rgba(0, 255, 163, 0.45) !important; box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15) !important; }
-        .inp { width: 100%; background: rgba(0,0,0,.6) !important; border: 1px solid rgba(255,255,255,.14) !important; border-radius: .75rem !important; padding: .75rem !important; font-size: .8rem !important; color: #fff !important; outline: none; }
-        .inp:focus { border-color: #00FFA3 !important; }
-        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; display: inline-block; text-align: center; }
-        .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
-        .btn-g:hover { filter: brightness(1.1); }
-        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
-        .btn-o { background: rgba(0,0,0,.8) !important; border: 1px solid rgba(0,255,163,.5) !important; color: #00FFA3 !important; }
-    </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="assets/tw-config.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <link rel="stylesheet" href="assets/maat.css">
+
+  <style>
+    /* ============================================================
+       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v6.9
+       ============================================================ */
+    html, body { overflow-x: hidden; scroll-behavior: smooth; }
+
+    body {
+      background-color: #090D10 !important;
+      color: #F1F5F9 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 255, 163, 0.08) 0px, transparent 55%),
+        radial-gradient(at 100% 0%, rgba(197, 160, 89, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(9, 13, 16, 0.98) 0px, transparent 60%),
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23C5A059' stroke-opacity='0.03' stroke-width='0.8'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%2300FFA3' stroke-opacity='0.02' stroke-width='0.8'/%3E%3C/svg%3E");
+      background-attachment: fixed;
+      margin: 0;
+    }
+
+    .cta-inline {
+      width: auto !important;
+      max-width: 100%;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .cta-inline:hover {
+      transform: translateY(-1px);
+    }
+
+    #scrollProgress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
+      z-index: 9999;
+      box-shadow: 0 0 12px rgba(0, 255, 163, .6);
+      transition: width .1s ease-out;
+    }
+
+    #particleField {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: .35;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: #00FFA3;
+      box-shadow: 0 0 6px #00FFA3;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      to { transform: translateY(-100vh) scale(.3); opacity: 0; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform .3s ease-out, box-shadow .3s;
+      will-change: transform;
+    }
+    .tilt-card:hover {
+      box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3);
+    }
+
+    .animated-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
+      animation: dividerPulse 3s ease-in-out infinite;
+      margin: 2.5rem auto;
+      max-width: 60%;
+    }
+    @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
+
+    .glass-panel {
+      background: linear-gradient(165deg, rgba(19, 25, 32, 0.88), rgba(9, 13, 16, 0.96)) !important;
+      border: 1px solid rgba(197, 160, 89, 0.35) !important;
+      border-radius: 1.25rem !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 640px) {
+      .glass-panel { border-radius: 1.5rem !important; }
+    }
+    .glass-panel.g {
+      border-color: rgba(0, 255, 163, 0.45) !important;
+      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important;
+    }
+    .glass-panel:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 255, 163, 0.6) !important;
+    }
+
+    .inp {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 0.75rem !important;
+      padding: 0.75rem !important;
+      font-size: 0.8rem !important;
+      color: #fff !important;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
+
+    .btn {
+      padding: 0.85rem;
+      border-radius: 0.8rem;
+      font: 800 0.72rem 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
+    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
+    .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
+    .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+    .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
+    .btn-o:hover { border-color: #00FFA3 !important; }
+
+    @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
+    .anim-orbit { animation: orbitSpin 16s linear infinite; transform-origin: 60px 60px; }
+    .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
+    .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
+
+    .scanner-beam {
+      position: absolute;
+      left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #00FFA3, transparent);
+      box-shadow: 0 0 14px #00FFA3;
+      animation: scanLine 3.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
+
+    .slider-esg {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #C5A059 0%, #00FFA3 100%);
+      outline: none;
+      cursor: pointer;
+    }
+    .slider-esg::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #090D10;
+      border: 2px solid #00FFA3;
+      box-shadow: 0 0 12px #00FFA3;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .slider-esg::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    .step-tab {
+      transition: all 0.25s ease-out;
+    }
+    .step-tab.active {
+      border-color: #00FFA3 !important;
+      background: rgba(0, 255, 163, 0.12) !important;
+      box-shadow: 0 0 20px -5px rgba(0, 255, 163, 0.3);
+    }
+
+    /* FIX PADDING CONTACT DRAWER */
+    #contactDrawer {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: stretch;
+      justify-content: flex-end;
+    }
+    #contactDrawer.open { display: flex; }
+    #contactDrawer .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      backdrop-filter: blur(6px);
+      animation: fadeIn .3s ease;
+    }
+    #contactDrawer .panel {
+      position: relative;
+      width: 100%;
+      max-width: 28rem;
+      background: linear-gradient(165deg, #12171C, #090D10);
+      border-left: 1px solid rgba(0, 255, 163, .45);
+      padding: 1.5rem;
+      overflow-y: auto;
+      animation: slideInRight .35s cubic-bezier(.2,.8,.2,1);
+    }
+    @media (min-width: 640px) {
+      #contactDrawer .panel { padding: 2rem; }
+    }
+    @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .safe-top { padding-top: env(safe-area-inset-top); }
+
+    @media print {
+      body > *:not(#brochureModal) { display: none !important; }
+      #brochureModal { position: static !important; display: block !important; background: #fff !important; padding: 0 !important; }
+      #brochureModal .glass-panel { border: 1px solid #000 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; max-width: 100% !important; margin: 0 !important; }
+      #brochureModal .no-print { display: none !important; }
+      #brochureModal * { color: #000 !important; text-shadow: none !important; }
+    }
+
+    /* FIX BUG #1 : NON FORZARE width: 100% SU .cta-inline GLOBALMENTE */
+    @media (max-width: 640px) {
+      .cta-inline {
+        white-space: normal !important;
+      }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
 
-    <!-- HEADER INSTITUTIONNEL -->
-    <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
-                </div>
-                <div>
-                    <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">PURKEMET B2B</h1>
-                    <p class="text-[9px] font-mono text-cyberGreen uppercase">Collecte Gratutite &amp; Certification ESG</p>
-                </div>
-            </a>
+  <!-- PROGRESS BAR -->
+  <div id="scrollProgress" aria-hidden="true"></div>
 
-            <nav class="hidden md:flex items-center space-x-5 text-xs font-mono font-bold uppercase text-slate-300">
-                <a href="index.html" class="hover:text-cyberGreen">Accueil</a>
-                <a href="purkemet.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">PurKemet B2B</a>
-                <a href="kmeh20.html" class="hover:text-cyberGreen">K-MEH-20</a>
-                <a href="datalake.html" class="hover:text-cyberGreen">Data Lake</a>
-                <a href="carrieres.html" class="hover:text-cyberGreen">Carrières</a>
-            </nav>
+  <!-- PARTICLES -->
+  <div id="particleField" aria-hidden="true"></div>
 
-            <a href="dashboard.html" class="btn btn-g !py-2 !px-3 text-[10px]">
-                Espace ESG B2B 🏨
-            </a>
+  <!-- HEADER INSTITUTIONNEL -->
+  <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
+    <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+      <a href="index.html" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
+        <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+          <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+            <g class="anim-orbit">
+              <ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/>
+              <circle cx="60" cy="6" r="2.2" fill="#00FFA3"/>
+              <circle cx="114" cy="60" r="2.2" fill="#00FFA3"/>
+              <circle cx="60" cy="114" r="2.2" fill="#00FFA3"/>
+              <circle cx="6" cy="60" r="2.2" fill="#00FFA3"/>
+            </g>
+            <g class="anim-counter-orbit">
+              <ellipse cx="60" cy="60" rx="45" ry="45" stroke="#00FFA3" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.45"/>
+              <circle cx="60" cy="15" r="1.6" fill="#E8C86A"/>
+              <circle cx="105" cy="60" r="1.6" fill="#E8C86A"/>
+              <circle cx="60" cy="105" r="1.6" fill="#E8C86A"/>
+              <circle cx="15" cy="60" r="1.6" fill="#E8C86A"/>
+            </g>
+            <path d="M20 54 Q32 44 46 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M100 54 Q88 44 74 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M22 60 Q60 38 98 60 Q60 82 22 60 Z" stroke="#00FFA3" stroke-width="2.2" fill="#0A0D10"/>
+            <circle cx="60" cy="60" r="14" stroke="#C5A059" stroke-width="1.8" fill="#11161C"/>
+            <circle cx="60" cy="60" r="7" fill="#00FFA3" class="anim-pupil"/>
+            <path d="M60 74 L58 90" stroke="#00FFA3" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M60 78 L64 92" stroke="#C5A059" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
         </div>
-    </header>
+        <div class="min-w-0">
+          <h1 class="font-kemetTitle text-[11px] sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
+          <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
+        </div>
+      </a>
 
-    <!-- MAIN CONTAINER -->
-    <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-12 w-full">
+      <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
+        <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
+        <a href="purkemet.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5" aria-current="page">PurKemet B2B</a>
+        <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
+        <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
+        <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
+        <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
+      </nav>
 
-        <!-- HERO PURKEMET -->
-        <section class="glass-card g p-6 sm:p-10 space-y-6">
-            <div class="max-w-3xl space-y-3">
-                <span class="px-3 py-1 rounded-full bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen font-mono text-xs font-bold uppercase">
-                    💎 Solution Logistique Intégrée à 0 MAD
-                </span>
-                <h2 class="font-kemetTitle text-3xl sm:text-5xl font-black text-white leading-tight">
-                    Collecte de Déchets Secs Recyclables <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">100% Gratuite</span>
-                </h2>
-                <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-                    PurKemet révolutionne la gestion environnementale des établissements de Marrakech. Nous fournissons gratuitement les sacs renforcés, formons votre personnel, assurons l'enlèvement sous SLA &lt; 12h et délivrons votre Certificat ESG notarié sur blockchain.
-                </p>
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button type="button" id="loginBtn"
+                onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();"
+                aria-label="Connexion à l'espace membre"
+                class="btn btn-g !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          Connexion 🔒
+        </button>
+        <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
+                class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
+                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
+      <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-1">Accueil</a>
+      <a href="purkemet.html" class="block text-cyberGreen font-bold py-1">PurKemet B2B (Hôtels)</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-1">Architecture K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-1">Maat Data Lake</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-1">Carrières</a>
+      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-1">À Propos</a>
+      <hr class="border-white/10 my-2">
+      <a href="pwa.html" class="block text-cyberGreen py-1 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="dashboard.html" class="block text-kemetGoldBright py-1">🏨 Espace Client ESG</a>
+      <a href="admin.html" class="block text-slate-400 hover:text-white py-1">👑 Control Tower DG</a>
+    </nav>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
+
+    <!-- ============================================================
+         SECTION 1 : HERO PURKEMET B2B (L'OFFRE MAÎTRESSE 0 MAD)
+         ============================================================ -->
+    <section class="pt-4">
+      <div class="grid lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+        
+        <div class="lg:col-span-7 space-y-5 sm:space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
+            <span>💎 Filière B2B Dédiée · Service Opérationnel Clé en Main</span>
+          </div>
+
+          <h2 class="font-kemetTitle text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1]">
+            PurKemet B2B : La Logistique de Valorisation <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">100% Gratuite (0 MAD)</span>
+          </h2>
+
+          <p class="text-xs sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl">
+            Conçue exclusivement pour les palaces, resorts 5 étoiles, riads et restaurants de prestige de Marrakech, PurKemet prend en charge l'intégralité de vos matières sèches recyclables (PET, PE-HD, Aluminium, Carton ondulé, Verre). Zéro coût d'abonnement, enlèvement garanti sous 12h, scellement par pesée Bluetooth et émission de votre Certificat ESG mensuel opposable aux audits de labellisation.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-2 font-mono">
+            <button type="button" onclick="window.openAuditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
+              Demander un Audit Pilote (0 MAD) →
+            </button>
+            <button type="button" onclick="window.openBrochureDownloadModal()" class="btn btn-au w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6">
+              Télécharger la Brochure Officielle 📄
+            </button>
+          </div>
+
+          <div class="pt-3 sm:pt-4 flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
+            <span>0 MAD OPEX</span>
+            <span aria-hidden="true">•</span>
+            <span>SLA &lt; 12h Garanti</span>
+            <span aria-hidden="true">•</span>
+            <span>Pureté Grade-A (&gt;98%)</span>
+            <span aria-hidden="true">•</span>
+            <span>Loi n° 28-00 Conforme</span>
+          </div>
+        </div>
+
+        <!-- CARTE HERO METRIQUES & STATUT -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="glass-panel g p-5 sm:p-7 space-y-4 relative overflow-hidden">
+            <div class="scanner-beam" aria-hidden="true"></div>
+
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
+              <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse"></span>
+                SOP-01 HOMOLOGUÉ
+              </span>
+              <span class="text-kemetGoldBright font-bold">MARRAKECH HUB</span>
             </div>
 
-            <div class="grid sm:grid-cols-3 gap-4 font-mono text-xs pt-2">
-                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-                    <span class="text-[10px] text-slate-400 block uppercase">Coût pour l'Établissement</span>
-                    <span class="text-2xl font-black text-cyberGreen">0 MAD</span>
-                    <span class="text-[9px] text-slate-400 block">Abonnement &amp; Enlèvements 100% Gratuits</span>
-                </div>
-                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-                    <span class="text-[10px] text-slate-400 block uppercase">Engagement de Service (SLA)</span>
-                    <span class="text-lg font-bold text-kemetGoldBright">&lt; 12 Heures</span>
-                    <span class="text-[9px] text-slate-400 block">Collecte sur appel ou programmée</span>
-                </div>
-                <div class="p-4 bg-black/60 rounded-2xl border border-white/10 space-y-1">
-                    <span class="text-[10px] text-slate-400 uppercase font-bold block">Conformité Légale</span>
-                    <span class="text-lg font-bold text-white">Loi 28-00 &amp; CNDP</span>
-                    <span class="text-[9px] text-cyberGreen block">Bilan carbone certifié ADEME</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- CARTOGRAPHIE DES CLUSTERS B2B -->
-        <section class="glass-card p-6 sm:p-8 space-y-6">
-            <div class="border-b border-white/10 pb-3 font-mono">
-                <h3 class="font-kemetTitle text-xl font-bold text-white">🗺️ Solutions par Catégories B2B à Marrakech</h3>
-                <p class="text-xs text-slate-400">Adaptation logistique stricte selon les contraintes de chaque établissement</p>
+            <div class="grid grid-cols-2 gap-3 font-mono">
+              <div class="p-3.5 bg-black/60 rounded-xl border border-cyberGreen/30 text-center">
+                <span class="text-[9px] text-slate-400 uppercase block tracking-wider">Coût Opérationnel</span>
+                <div class="text-2xl font-black text-cyberGreen mt-0.5">0 MAD</div>
+                <span class="text-[9px] text-slate-400 block">Zéro frais d'enlèvement</span>
+              </div>
+              <div class="p-3.5 bg-black/60 rounded-xl border border-kemetGold/40 text-center">
+                <span class="text-[9px] text-slate-400 uppercase block tracking-wider">Réactivité SLA</span>
+                <div class="text-2xl font-black text-kemetGoldBright mt-0.5">&lt; 12 h</div>
+                <span class="text-[9px] text-slate-400 block">Sur simple notification</span>
+              </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 font-mono text-xs">
-                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-                    <span class="text-cyberGreen font-bold text-sm block">1. Riads &amp; Médina (Cluster A)</span>
-                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-                        Collecte par triporteurs motorisés silencieux. Respect strict des Quiet Windows pour éviter tout bruit lors du passage dans les ruelles.
-                    </p>
-                </div>
-
-                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-                    <span class="text-kemetGoldBright font-bold text-sm block">2. Guéliz &amp; Hivernage (Cluster B)</span>
-                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-                        Gestion des restaurants, cafés et établissements nocturnes. Enlèvement rapide tôt le matin avant l'ouverture du service.
-                    </p>
-                </div>
-
-                <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-                    <span class="text-white font-bold text-sm block">3. Palmeraie &amp; Resorts 5* (Cluster C)</span>
-                    <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-                        Collecte fort débit par pick-up à ridelles. Séparation complète du verre, carton ondulé, PET et bidons d'huile usagée.
-                    </p>
-                </div>
+            <div class="p-3.5 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-[11px]">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Pureté Matière Sèche :</span>
+                <span class="font-bold text-cyberGreen">Grade-A (&gt;98%)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Décharge Civile & Pénale :</span>
+                <span class="font-bold text-white">100% Déchargeable</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Émission Certificat ESG :</span>
+                <span class="font-bold text-kemetGoldBright">Mensuelle Notariée</span>
+              </div>
             </div>
-        </section>
 
-    </main>
+            <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 text-center font-mono text-[10px] text-slate-400">
+              Filière d'excellence réservée aux hôtels classés, riads de charme et restaurants de prestige.
+            </div>
+          </div>
+        </div>
 
-    <!-- FOOTER INSTITUTIONNEL -->
-    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
-        © 2026 Industrial Illusion SARL — PurKemet B2B. Tous droits réservés.
-    </footer>
+      </div>
+    </section>
 
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 2 : MATRICE COMPARATIVE (ARBITRAGE ÉCONOMIQUE)
+         ============================================================ -->
+    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+      <div class="border-b border-white/10 pb-4">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Arbitrage Économique & Juridique</span>
+        <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Comparatif des Filières de Déchets Secs à Marrakech</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">Pourquoi le modèle PurKemet B2B surpasse les schémas traditionnels payants et informels.</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left font-mono text-xs">
+          <thead>
+            <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
+              <th class="py-3 px-3">Critère Clé</th>
+              <th class="py-3 px-3 text-cyberGreen font-bold bg-cyberGreen/5 rounded-t-lg">Filière PurKemet B2B</th>
+              <th class="py-3 px-3 text-slate-400">Collecteurs Privés Payants</th>
+              <th class="py-3 px-3 text-slate-500">Secteur Informel (Sauvage)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 text-slate-300">
+            <tr>
+              <td class="py-3.5 px-3 font-bold text-white">Coût de la Collecte</td>
+              <td class="py-3.5 px-3 font-black text-cyberGreen text-sm bg-cyberGreen/5">0 MAD (100% Gratuit)</td>
+              <td class="py-3.5 px-3 text-red-400">Facturation par passage / mois</td>
+              <td class="py-3.5 px-3 text-slate-400">Gratuit mais irrégulier</td>
+            </tr>
+            <tr>
+              <td class="py-3.5 px-3 font-bold text-white">Traçabilité de la Pesée</td>
+              <td class="py-3.5 px-3 text-cyberGreen font-bold bg-cyberGreen/5">IoT Bluetooth (saisie manuelle bloquée)</td>
+              <td class="py-3.5 px-3 text-slate-400">Bordereau papier approximatif</td>
+              <td class="py-3.5 px-3 text-red-400">Aucune mesure ni reçu</td>
+            </tr>
+            <tr>
+              <td class="py-3.5 px-3 font-bold text-white">Certificat ESG Opposable</td>
+              <td class="py-3.5 px-3 text-cyberGreen font-bold bg-cyberGreen/5">Mensuel notarié (Clef Verte, Travelife)</td>
+              <td class="py-3.5 px-3 text-slate-400">Non standardisé / RSE non opposable</td>
+              <td class="py-3.5 px-3 text-red-400">Inexistant</td>
+            </tr>
+            <tr>
+              <td class="py-3.5 px-3 font-bold text-white">Conformité Loi n° 28-00</td>
+              <td class="py-3.5 px-3 text-cyberGreen font-bold bg-cyberGreen/5">Décharge totale de responsabilité civile</td>
+              <td class="py-3.5 px-3 text-slate-400">Responsabilité conjointe du producteur</td>
+              <td class="py-3.5 px-3 text-red-400">Infraction pénale directe</td>
+            </tr>
+            <tr>
+              <td class="py-3.5 px-3 font-bold text-white">Impact Social & RSE</td>
+              <td class="py-3.5 px-3 text-kemetGoldBright font-bold bg-cyberGreen/5">Opérateurs CDI, EPI SIL-3, Actions B</td>
+              <td class="py-3.5 px-3 text-slate-400">Sous-traitance transport classique</td>
+              <td class="py-3.5 px-3 text-red-400">Précarité et insalubrité publique</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 3 : STEPPER INTERACTIF DU PROTOCOLE (SOP-01)
+         ============================================================ -->
+    <section class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+      <div class="border-b border-white/10 pb-4">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Protocole Industriel Inviolable</span>
+        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Le Parcours de la Matière en 5 Étapes (SOP-01)</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">Cliquez sur chaque étape pour visualiser le protocole rigoureux appliqué à votre établissement.</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono text-xs" role="tablist" aria-label="Étapes du protocole PurKemet">
+        <button type="button" role="tab" id="tab-0" aria-selected="true" aria-controls="stepContentPanel" onclick="window.selectStep(0)" class="step-tab active p-3 rounded-xl border border-white/10 bg-black/60 text-left space-y-1">
+          <span class="text-cyberGreen font-bold text-xs block">01 · Tri Source</span>
+          <span class="text-[10px] text-slate-300 block font-sans">Fraction sèche</span>
+        </button>
+        <button type="button" role="tab" id="tab-1" aria-selected="false" aria-controls="stepContentPanel" onclick="window.selectStep(1)" class="step-tab p-3 rounded-xl border border-white/10 bg-black/60 text-left space-y-1">
+          <span class="text-cyberGreen font-bold text-xs block">02 · Collecte</span>
+          <span class="text-[10px] text-slate-300 block font-sans">SLA &lt; 12h</span>
+        </button>
+        <button type="button" role="tab" id="tab-2" aria-selected="false" aria-controls="stepContentPanel" onclick="window.selectStep(2)" class="step-tab p-3 rounded-xl border border-white/10 bg-black/60 text-left space-y-1">
+          <span class="text-kemetGoldBright font-bold text-xs block">03 · Pesée IoT</span>
+          <span class="text-[10px] text-slate-300 block font-sans">Bluetooth P1</span>
+        </button>
+        <button type="button" role="tab" id="tab-3" aria-selected="false" aria-controls="stepContentPanel" onclick="window.selectStep(3)" class="step-tab p-3 rounded-xl border border-white/10 bg-black/60 text-left space-y-1">
+          <span class="text-kemetGoldBright font-bold text-xs block">04 · Double Pesée</span>
+          <span class="text-[10px] text-slate-300 block font-sans">Scellement Hub P2</span>
+        </button>
+        <button type="button" role="tab" id="tab-4" aria-selected="false" aria-controls="stepContentPanel" onclick="window.selectStep(4)" class="step-tab p-3 rounded-xl border border-white/10 bg-black/60 text-left space-y-1 col-span-2 sm:col-span-1">
+          <span class="text-cyberGreen font-bold text-xs block">05 · Certificat</span>
+          <span class="text-[10px] text-slate-300 block font-sans">Bilan Notarié</span>
+        </button>
+      </div>
+
+      <div id="stepContentPanel" class="p-5 sm:p-7 bg-black/70 rounded-2xl border border-cyberGreen/30 space-y-3 font-mono text-xs" aria-live="polite">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <span id="stepTitle" class="text-sm font-bold text-cyberGreen uppercase">Étape 01 : Tri Sélectif à la Source</span>
+          <span id="stepBadge" class="px-2 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-[9px] text-cyberGreen font-bold">QUALITÉ GRADE-A</span>
+        </div>
+        <p id="stepDescription" class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+          Vos équipes en stewarding et gouvernance déposent les matières sèches (plastiques, cartons propres, canettes, bouteilles de verre) dans nos sacs renforcés en polypropylène tissé. Zéro tri complexe requis : la séparation se fait au sec, sans odeur ni putrescibilité.
+        </p>
+        <div id="stepTechnical" class="p-3 bg-obsidianCard/60 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1">
+          <div><strong class="text-white">Conditionnement :</strong> Sacs navettes PP 120L réutilisables fournis gratuitement.</div>
+          <div><strong class="text-white">Exigence pureté :</strong> &gt; 98% de fraction sèche (absence d'organique et de liquides résiduels).</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 4 : LOGISTIQUE TERRITORIALE (LES 3 CLUSTERS)
+         ============================================================ -->
+    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+      <div class="border-b border-white/10 pb-4">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Déploiement Opérationnel</span>
+        <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Adaptation Logistique aux 3 Typologies de Marrakech</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">Chaque zone géographique dispose d'un matériel roulant et d'horaires d'intervention spécifiques.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-cyberGreen font-bold text-sm block">1. Cluster Médina & Riads</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">QUIET WINDOW</span>
+          </div>
+          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+            Collecte opérée par triporteurs électriques compacts adaptés aux ruelles et derbs étroits. Respect absolu des créneaux de repos des hôtes (interdiction stricte de passage nocturne ou à l'heure du petit-déjeuner).
+          </p>
+          <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5 space-y-0.5">
+            <div>Vecteur : Triporteur électrique silencieux</div>
+            <div>Capacité utile : 250 kg / tournée</div>
+          </div>
+        </div>
+
+        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-kemetGoldBright font-bold text-sm block">2. Cluster Guéliz & Hivernage</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30">EARLY BIRD</span>
+          </div>
+          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+            Dédié aux restaurants gastronomiques, rooftops, bars et hôtels urbains. Enlèvement rapide à l'aube (avant 7h30) pour libérer les locaux poubelles avant les livraisons de marchandises du matin.
+          </p>
+          <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5 space-y-0.5">
+            <div>Vecteur : Fourgonnette légère fermée</div>
+            <div>Capacité utile : 800 kg / tournée</div>
+          </div>
+        </div>
+
+        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-white font-bold text-sm block">3. Cluster Palmeraie & Resorts</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20">HEAVY FLOW</span>
+          </div>
+          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
+            Prise en charge des flux massifs issus des parcs hôteliers de plus de 100 chambres, banquets et séminaires. Évacuation par camion pick-up à ridelles pour les palettes entières de carton et conteneurs de verre.
+          </p>
+          <div class="text-[10px] text-slate-400 pt-2 border-t border-white/5 space-y-0.5">
+            <div>Vecteur : Pick-up gros cubage / quai</div>
+            <div>Capacité utile : 1 500 kg / rotation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 5 : BOUCLIER JURIDIQUE (LOI 28-00 & REDEVANCE)
+         ============================================================ -->
+    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+      <div class="grid lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+        
+        <div class="lg:col-span-7 space-y-4">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Sécurité Juridique & Conformité Fiscale</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white leading-tight">
+            Protégez Votre Établissement de la Taxe « Grands Producteurs »
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+            En vertu de l'article 23 de la Loi n° 28-00 et de la circulaire ministérielle D13015, les établissements touristiques générant d'importants volumes de déchets sont assujettis à une redevance municipale spéciale, représentant un surcoût estimé à environ 10 millions de MAD par an pour le secteur hôtelier de Marrakech.
+          </p>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+            PurKemet fournit le <strong>Bordereau de Suivi de Déchets (BSD)</strong> scellé par double pesée. En prouvant que vos fractions recyclables sont intégralement détournées du réseau municipal, vous disposez d'un dossier opposable pour solliciter l'exonération ou l'abattement maximal de la taxe.
+          </p>
+        </div>
+
+        <div class="lg:col-span-5 p-5 bg-black/70 rounded-2xl border border-kemetGold/30 space-y-3 font-mono text-xs">
+          <span class="text-kemetGoldBright font-bold block uppercase text-[11px]">Garanties Contractuelles PurKemet</span>
+          <ul class="space-y-2 text-[11px] text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-cyberGreen font-bold">✓</span>
+              <span>Contrat de valorisation conforme aux normes de la Wilaya de Marrakech-Safi.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cyberGreen font-bold">✓</span>
+              <span>Décharge totale de responsabilité civile dès le scellement de la pesée P1 sur site.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cyberGreen font-bold">✓</span>
+              <span>Attestation mensuelle d'évitement de mise en décharge (M'Nabha).</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cyberGreen font-bold">✓</span>
+              <span>Alignement sur les grilles d'audit Clef Verte, Travelife et ISO 14001.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 6 : SIMULATEUR ESG DYNAMIQUE (LOUKILI ET AL. 2026)
+         ============================================================ -->
+    <section class="glass-panel g p-5 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl space-y-6 reveal">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4 border-b border-white/10 pb-4">
+        <div>
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Simulateur d'Économie Circulaire</span>
+          <h3 class="font-kemetTitle text-lg sm:text-2xl font-black text-white mt-1">Calculez le Potentiel de Votre Établissement</h3>
+          <p class="text-xs text-slate-300 font-sans mt-0.5">Modélisation mathématique conforme aux audits de l'Université Cadi Ayyad de Marrakech.</p>
+        </div>
+        <button type="button" onclick="window.openAuditModal()" class="btn btn-g cta-inline !py-2.5 !px-5 text-[11px] font-mono font-bold shrink-0">
+          Réserver l'Audit Pilote 0 MAD
+        </button>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-6 sm:gap-8 items-center font-mono">
+        <div class="md:col-span-5 space-y-3 sm:space-y-4">
+          <label class="lbl text-xs block" for="simRooms">Capacité d'hébergement :</label>
+          <div class="flex items-center gap-2.5 sm:gap-3">
+            <input type="range" id="simRooms" min="10" max="600" step="10" value="120" class="slider-esg" oninput="window.calcEsgSim(this.value)" aria-label="Nombre de chambres">
+            <span id="simRoomsVal" class="text-sm sm:text-base lg:text-lg font-black text-white bg-black/60 px-2.5 sm:px-3 py-1 rounded-xl border border-white/10 min-w-[6.5rem] sm:min-w-[7rem] text-center">120 chambres</span>
+          </div>
+          <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans leading-relaxed">
+            Paramètres officiels : 1,6 kg/chambre/jour · Fraction recyclable sèche : 28% · Facteur d'abattement CO₂e : 3,5 kg/kg valorisé.
+          </p>
+        </div>
+
+        <div class="md:col-span-7 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+          <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-0.5 sm:space-y-1">
+            <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">Matière Captée</span>
+            <span id="simKg" class="text-base sm:text-xl font-black text-kemetGoldBright">1 613</span>
+            <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">kg / mois</span>
+          </div>
+          <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-cyberGreen/30 space-y-0.5 sm:space-y-1">
+            <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">CO₂ Évité</span>
+            <span id="simCo2" class="text-base sm:text-xl font-black text-cyberGreen">5 645</span>
+            <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">kg CO₂ eq.</span>
+          </div>
+          <div class="p-2.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-0.5 sm:space-y-1">
+            <span class="text-[8px] sm:text-[9px] uppercase text-slate-400 block truncate">Économie Décharge</span>
+            <span class="text-base sm:text-xl font-black text-white">28%</span>
+            <span class="text-[9px] sm:text-[10px] text-slate-500 block truncate">du volume total</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         SECTION 7 : FORMULAIRE D'ONBOARDING / AUDIT DIRECT
+         ============================================================ -->
+    <section id="onboarding" class="glass-panel p-5 sm:p-8 lg:p-12 space-y-6 reveal">
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Déploiement Pilote 0 MAD</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Rejoignez le Réseau Pilote PurKemet Marrakech</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans">
+          Remplissez ce formulaire pour planifier le passage gracieux d'un responsable logistique et recevoir vos premiers sacs de tri.
+        </p>
+      </div>
+
+      <form id="onboardingForm" onsubmit="window.handleOnboardingSubmit(event)" class="max-w-xl mx-auto space-y-3 font-mono text-xs" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="lbl block mb-1" for="ob_company">Établissement *</label>
+            <input id="ob_company" type="text" name="company_name" required placeholder="Nom de l'hôtel / riad" class="inp">
+          </div>
+          <div>
+            <label class="lbl block mb-1" for="ob_cat">Catégorie *</label>
+            <select id="ob_cat" name="horeca_category" class="inp">
+              <option value="HOTEL_RESORT">Hôtel / Palace / Resort 5*</option>
+              <option value="RIAD">Riad / Maison d'Hôtes (Médina)</option>
+              <option value="RESTAURANT">Restaurant / Rooftop / Traiteur</option>
+              <option value="CLINIQUE">Clinique / Établissement Médical</option>
+              <option value="COMMERCE">Commerce / Supermarché / Autre</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="lbl block mb-1" for="ob_contact">Interlocuteur Référent *</label>
+            <input id="ob_contact" type="text" name="contact_name" required placeholder="ex: Mehdi Benjelloun (Directeur RSE)" class="inp">
+          </div>
+          <div>
+            <label class="lbl block mb-1" for="ob_rooms">Capacité (Chambres / Couverts)</label>
+            <input id="ob_rooms" type="number" name="capacity" placeholder="ex: 120" class="inp">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="lbl block mb-1" for="ob_email">Email Professionnel *</label>
+            <input id="ob_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
+          </div>
+          <div>
+            <label class="lbl block mb-1" for="ob_phone">Téléphone / WhatsApp *</label>
+            <input id="ob_phone" type="tel" name="phone" required placeholder="+212 6..." class="inp">
+          </div>
+        </div>
+
+        <div>
+          <label class="lbl block mb-1" for="ob_notes">Contraintes logistiques particulières</label>
+          <textarea id="ob_notes" name="message" placeholder="Accès Médina, horaires de service, stockage existant..." class="inp h-20"></textarea>
+        </div>
+
+        <button type="submit" id="btnOnboardingSubmit" class="btn btn-g w-full !py-3 font-bold text-xs shadow-xl">
+          Valider la Demande d'Audit Gratuit (0 MAD) →
+        </button>
+
+        <p class="text-[9px] text-slate-500 text-center leading-relaxed font-sans">
+          Conformité Loi CNDP n° 09-08. Aucun frais caché, aucun engagement contractuel contraignant en phase pilote.
+        </p>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- FOOTER INSTITUTIONNEL SOUVERAIN -->
+  <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
+      <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
+      <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+      <p class="text-[9px] sm:text-[10px] text-slate-600">PurKemet B2B · Maat OS · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       MODALES (BROCHURE LEAD CAPTURE & AUDIT)
+       ============================================================ -->
+
+  <!-- MODAL TÉLÉCHARGEMENT BROCHURE (GATED) -->
+  <div id="brochureDownloadModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Télécharger la brochure B2B">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeBrochureDownloadModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+      <div class="border-b border-white/10 pb-2">
+        <span class="lbl au">Téléchargement Officiel B2B</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Brochure PurKemet (PDF)</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Renseignez vos coordonnées pour débloquer le téléchargement immédiat.</p>
+      </div>
+      <form id="brochureDownloadForm" onsubmit="window.handleBrochureDownloadSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+        <div>
+          <label class="lbl block mb-1" for="bd_name">Nom &amp; Prénom *</label>
+          <input id="bd_name" type="text" name="full_name" required autocomplete="name" placeholder="ex: Mehdi Benjelloun" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="bd_org">Établissement / Organisation *</label>
+          <input id="bd_org" type="text" name="organization" required autocomplete="organization" placeholder="ex: Palais Ronsard / Riad" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="bd_email">Email Professionnel *</label>
+          <input id="bd_email" type="email" name="email" required autocomplete="email" placeholder="direction@etablissement.ma" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="bd_phone">Téléphone WhatsApp</label>
+          <input id="bd_phone" type="tel" name="phone" autocomplete="tel" placeholder="+212 6..." class="inp">
+        </div>
+        <button type="submit" id="btnBrochureDownload" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+          Valider &amp; Télécharger la Brochure (PDF) ⬇️
+        </button>
+        <p class="text-[9px] text-slate-500 leading-relaxed text-center font-sans">
+          Données traitées conformément à la Loi CNDP n° 09-08. Aucun transfert tiers.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL AUDIT GRATUIT RAPIDE -->
+  <div id="auditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[60] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Audit gratuit">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeAuditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
+      <div class="border-b border-white/10 pb-2">
+        <span class="lbl">Audit de Gisement (0 MAD)</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-0.5">Établissements B2B Marrakech</h3>
+      </div>
+      <form id="auditForm" onsubmit="window.handleAuditModalSubmit(event)" class="space-y-2.5" novalidate>
+        <div>
+          <label class="lbl block mb-0.5" for="audit_company">Nom de l'Établissement *</label>
+          <input id="audit_company" type="text" name="company_name" required placeholder="Hôtel / Riad / Restaurant" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-0.5" for="audit_cat">Catégorie HoReCa *</label>
+          <select id="audit_cat" name="horeca_category" class="inp">
+            <option value="HOTEL_RESORT">Hôtel / Resort / Palace 5*</option>
+            <option value="RIAD">Riad / Maison d'Hôtes (Médina)</option>
+            <option value="RESTAURANT">Restaurant / Rooftop / Traiteur</option>
+            <option value="CLINIQUE">Clinique / Établissement Médical</option>
+            <option value="COMMERCE">Commerce / Supermarché / Artisan</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl block mb-0.5" for="audit_email">Email Professionnel *</label>
+          <input id="audit_email" type="email" name="email" required placeholder="direction@etablissement.ma" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-0.5" for="audit_phone">Téléphone WhatsApp *</label>
+          <input id="audit_phone" type="tel" name="phone" required placeholder="+212 6..." class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-0.5" for="audit_notes">Remarques ou contraintes logistiques</label>
+          <textarea id="audit_notes" name="message" placeholder="Accès Médina, horaires spécifiques..." class="inp h-14"></textarea>
+        </div>
+        <button type="submit" id="btnAuditModal" class="btn btn-g w-full !py-2.5 font-bold">Transmettre au Siège</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <!-- SCRIPTS DU KERNEL MAAT OS -->
+  <script src="assets/core.js"></script>
+  <script src="assets/site.js"></script>
+
+  <script>
+  /* ============================================================
+     LOGIQUE CLIENT PURKEMET B2B (MAAT OS v6.9)
+     ============================================================ */
+  (function () {
+    'use strict';
+
+    (function () {
+      var y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+
+    /* ============================================================
+       GESTIONNAIRE MULTI-CLIC CONNEXION UNIVERSELLE
+       ============================================================ */
+    (function () {
+      var _origOpenLogin = window.openUniversalLogin;
+
+      function resetLoginFlags() {
+        window.__loginModalOpen = false;
+        window.__isLoginOpen = false;
+        window.__loginOpening = false;
+        if (window.Maat) {
+          window.Maat.__loginModalOpen = false;
+          window.Maat.isLoginOpen = false;
+        }
+        document.body.style.overflow = '';
+        var b = document.getElementById('loginBtn');
+        if (b) { b.disabled = false; b.style.pointerEvents = 'auto'; }
+      }
+
+      function findLoginModal() {
+        return document.getElementById('universalLoginModal') ||
+               document.getElementById('loginModal') ||
+               document.querySelector('.universal-login-modal') ||
+               document.querySelector('[data-login-modal]');
+      }
+
+      function bindCloseHandlers(m) {
+        if (!m || m._hasCleanClose) return;
+        m._hasCleanClose = true;
+
+        function closeCleanly() {
+          m.classList.add('hidden');
+          m.classList.remove('flex');
+          m.style.display = 'none';
+          resetLoginFlags();
+          try { if (m.parentNode) m.parentNode.removeChild(m); } catch (e) {}
+        }
+
+        var triggers = m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close');
+        triggers.forEach(function (btn) { btn.addEventListener('click', closeCleanly); });
+
+        m.addEventListener('click', function (e) {
+          if (e.target === m || e.target.classList.contains('backdrop')) closeCleanly();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && document.body.contains(m) && m.style.display !== 'none' && !m.classList.contains('hidden')) {
+            closeCleanly();
+          }
+        });
+      }
+
+      window.openUniversalLogin = function () {
+        resetLoginFlags();
+        var stale = findLoginModal();
+        if (stale && stale.parentNode) {
+          try { stale.parentNode.removeChild(stale); } catch (e) {}
+        }
+
+        if (typeof _origOpenLogin === 'function') {
+          try { _origOpenLogin(); } catch (err) {}
+        }
+
+        setTimeout(function () {
+          var m = findLoginModal();
+          if (m) {
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            m.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            bindCloseHandlers(m);
+          }
+        }, 30);
+      };
+    })();
+
+    /* Scroll Progress */
+    window.addEventListener('scroll', function () {
+      var bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
+    }, { passive: true });
+
+    /* Particules */
+    (function () {
+      var field = document.getElementById('particleField');
+      if (!field) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var count = window.innerWidth < 640 ? 10 : 22;
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.bottom = '-10px';
+        p.style.animationDuration = (12 + Math.random() * 18) + 's';
+        p.style.animationDelay = (Math.random() * 15) + 's';
+        p.style.opacity = (0.3 + Math.random() * 0.6);
+        if (Math.random() > 0.7) p.style.background = '#C5A059';
+        field.appendChild(p);
+      }
+    })();
+
+    /* Reveal on Scroll */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    }
+
+    /* 3D Tilt */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
+      document.querySelectorAll('.tilt-card').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width;
+          var y = (e.clientY - r.top) / r.height;
+          card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * 6) + 'deg) rotateY(' + ((x - 0.5) * -6) + 'deg) translateZ(6px)';
+        });
+        card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+      });
+    }
+
+    window.ensureInit = function () {
+      try {
+        if (!window.Maat) return;
+        if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
+      } catch (e) {}
+    };
+
+    /* FIX #4 : TOAST ROBUSTE AVEC CRÉATION DOM SANS ALERT */
+    function toast(text, kind) {
+      if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
+      var d = document.createElement('div');
+      d.setAttribute('role', 'status');
+      d.style.cssText =
+        'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);' +
+        'background:#0A0D10;color:' +
+        (kind === 'err' ? '#f87171' : kind === 'warn' ? '#E6CA86' : '#00FFA3') +
+        ';padding:.7rem 1.2rem;border:1px solid currentColor;border-radius:.6rem;' +
+        'font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
+      d.textContent = text;
+      document.body.appendChild(d);
+      setTimeout(function () { d.remove(); }, 4000);
+    }
+
+    /* Menu Mobile */
+    window.toggleMobileNav = function () {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || !btn) return;
+      var opening = nav.classList.contains('hidden');
+      nav.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    };
+
+    document.addEventListener('click', function (e) {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || nav.classList.contains('hidden')) return;
+      if (btn && btn.contains(e.target)) return;
+      if (nav.contains(e.target)) {
+        if (e.target.tagName === 'A') nav.classList.add('hidden');
+        return;
+      }
+      nav.classList.add('hidden');
+    });
+
+    /* Modales */
+    function openModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('hidden'); m.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      var firstInput = m.querySelector('input, select, textarea');
+      if (firstInput) setTimeout(function () { firstInput.focus(); }, 100);
+    }
+    function closeModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('hidden'); m.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    window.openAuditModal = function () { openModal('auditModal'); };
+    window.closeAuditModal = function () { closeModal('auditModal'); };
+    window.openBrochureDownloadModal = function () { openModal('brochureDownloadModal'); };
+    window.closeBrochureDownloadModal = function () { closeModal('brochureDownloadModal'); };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      window.closeAuditModal();
+      window.closeBrochureDownloadModal();
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.id === 'auditModal') window.closeAuditModal();
+      if (e.target && e.target.id === 'brochureDownloadModal') window.closeBrochureDownloadModal();
+    });
+
+    /* FIX FRAGILITÉ : STEPPER STRUCTURÉ SANS DÉLIMITATEUR FRAGILE */
+    var stepsData = [
+      {
+        title: "Étape 01 : Tri Sélectif à la Source",
+        badge: "QUALITÉ GRADE-A (>98%)",
+        description: "Vos équipes de stewarding et d'étage séparent les flux de matières sèches (plastiques, cartons propres, canettes, bouteilles de verre) dans nos bacs identifiés ou nos sacs en PP indéchirables. Aucun tri organique ou souillé : le flux reste propre, inodore et immédiatement manipulable.",
+        k1: "Conditionnement", v1: "Sacs navettes PP 120L réutilisables fournis gratuitement.",
+        k2: "Contrôle visuel", v2: "Absence d'organique et de résidus liquides."
+      },
+      {
+        title: "Étape 02 : Collecte Connectée Garantie < 12h",
+        badge: "SLA GARANTI & QUIET WINDOW",
+        description: "Dès que vos volumes sont prêts, une notification depuis votre Workstation ou un simple message déclenche la tournée logistique. Nos chauffeurs-collecteurs interviennent dans un créneau strict respectant le repos de vos clients et les heures de livraison hôtelières.",
+        k1: "Flotte", v1: "Triporteurs électriques (Médina), camionnettes (Guéliz), pick-up (Palmeraie).",
+        k2: "Ponctualité", v2: "Prise en charge horodatée sous engagement de service SLA < 12h."
+      },
+      {
+        title: "Étape 03 : Pesée IoT Bluetooth Incorruptible",
+        badge: "PESÉE P1 CERTIFIÉE SUR SITE",
+        description: "À l'enlèvement, chaque sac scellé est pesé sur une balance industrielle Bluetooth connectée à la Workstation Opérateur. Toute saisie manuelle au clavier est physiquement bloquée dans l'application : seul le signal certifié de la balance valide la transaction sur place.",
+        k1: "Technologie", v1: "Protocole GATT Bluetooth BLE direct vers la Workstation Maat OS.",
+        k2: "Décharge de responsabilité", v2: "Signature numérique et transfert légal de garde de la matière."
+      },
+      {
+        title: "Étape 04 : Double Pesée au Hub & Ancrage Blockchain",
+        badge: "RÉCONCILIATION ALGORITHMIQUE P2",
+        description: "À l'arrivée au Hub de Marrakech, le lot fait l'objet d'une seconde pesée de contrôle sur pont-bascule étalonné. L'algorithme Maat OS réconcilie P1 et P2 : l'écart toléré doit être inférieur ou égal à 3%. Dès validation, l'empreinte cryptographique SHA-256 est scellée dans le Data Lake.",
+        k1: "Vérification", v1: "Seuil de variance Δ ≤ 3% pour prévenir tout coulage de matière.",
+        k2: "Immuabilité", v2: "Empreinte horaire publique ancrée sur Bitcoin OpenTimestamps."
+      },
+      {
+        title: "Étape 05 : Bilan Carbone & Certificat ESG Mensuel",
+        badge: "AUDITS CLEF VERTE & ISO 14001",
+        description: "Chaque fin de mois, votre établissement reçoit son Certificat d'Impact Zéro-Déchet officiel, signé numériquement par la Direction Générale. Ce rapport certifie les tonnages détournés de la décharge municipale de M'Nabha et les émissions de CO₂ évitées (méthodologie ADEME / Verra VCS).",
+        k1: "Opposabilité", v1: "Document officiel reconnu pour les audits Clef Verte, Travelife et ISO 14001.",
+        k2: "Dossier fiscal", v2: "Justificatif probant pour l'abattement de la taxe municipale (Loi 28-00)."
+      }
+    ];
+
+    window.selectStep = function (idx) {
+      var tabs = document.querySelectorAll('.step-tab');
+      tabs.forEach(function (tab, i) {
+        if (i === idx) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      var data = stepsData[idx];
+      document.getElementById('stepTitle').textContent = data.title;
+      document.getElementById('stepBadge').textContent = data.badge;
+      document.getElementById('stepDescription').textContent = data.description;
+      document.getElementById('stepTechnical').innerHTML =
+        '<div><strong class="text-white">' + data.k1 + ' : </strong>' + data.v1 + '</div>' +
+        '<div><strong class="text-white">' + data.k2 + ' : </strong>' + data.v2 + '</div>';
+    };
+
+    /* SIMULATEUR ESG DYNAMIQUE */
+    window.calcEsgSim = function (rooms) {
+      var r = parseInt(rooms, 10) || 10;
+      var valEl = document.getElementById('simRoomsVal');
+      if (valEl) valEl.textContent = r + ' chambres';
+      var totalKg = Math.round(r * 1.6 * 30);
+      var secKg = Math.round(totalKg * 0.28);
+      var co2Kg = Math.round(secKg * 3.5);
+      document.getElementById('simKg').textContent = secKg.toLocaleString('fr-FR');
+      document.getElementById('simCo2').textContent = co2Kg.toLocaleString('fr-FR');
+    };
+    (function () { var s = document.getElementById('simRooms'); if (s) window.calcEsgSim(s.value); })();
+
+    /* FORMULAIRE TÉLÉCHARGEMENT BROCHURE (GATED + FIX VALIDATION & FALSO SUCCESSO) */
+    window.handleBrochureDownloadSubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnBrochureDownload');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Validation en cours…';
+
+      var fd = new FormData(form);
+      var payload = {
+        full_name: String(fd.get('full_name') || '').trim(),
+        organization: String(fd.get('organization') || '').trim(),
+        role_title: 'Téléchargement Brochure PurKemet B2B',
+        email: String(fd.get('email') || '').toLowerCase().trim(),
+        phone: String(fd.get('phone') || '').trim() || null
+      };
+
+      if (!payload.full_name || !payload.organization || !payload.email) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+      }
+
+      /* FIX #2 : VALIDATION EMAIL REGEX */
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Adresse email invalide.', 'warn');
+      }
+
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      var saved = false;
+
+      if (sb) {
+        try {
+          var r1 = await sb.from('market_study_leads').insert([payload]);
+          if (!r1.error) saved = true;
+        } catch (err) {
+          try {
+            var r2 = await sb.from('field_notes').insert([{
+              note_type: 'GENERAL',
+              content: 'LEAD BROCHURE PURKEMET : ' + payload.full_name + ' (' + payload.organization + ') - ' + payload.email,
+              operator_email: payload.email
+            }]);
+            if (!r2.error) saved = true;
+          } catch (x) {}
+        }
+      }
+
+      /* FIX #3 : VÉRIFICATION RÉELLE AVANT DÉCLENCHEMENT */
+      if (saved) {
+        var dl = document.createElement('a');
+        dl.href = 'assets/brochure-purkemet-b2b.pdf';
+        dl.download = 'Brochure_PurKemet_B2B_2026.pdf';
+        document.body.appendChild(dl);
+        dl.click();
+        dl.remove();
+
+        toast('Brochure téléchargée avec succès. Notre Direction vous contactera.');
+        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+        form.reset();
+        btn.textContent = '✓ Téléchargé';
+        setTimeout(function () {
+          window.closeBrochureDownloadModal();
+          btn.textContent = original;
+          btn.disabled = false;
+        }, 1800);
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        toast('Service temporairement indisponible. Réessayez.', 'err');
+      }
+    };
+
+    /* FORMULAIRE ONBOARDING / AUDIT DIRECT (FIX #2 & FIX #3 APPLIQUÉS) */
+    window.handleOnboardingSubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnOnboardingSubmit');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Transmission de votre dossier en cours…';
+
+      var fd = new FormData(form);
+      var payload = {
+        company_name: String(fd.get('company_name') || '').trim(),
+        horeca_category: String(fd.get('horeca_category') || '').trim(),
+        email: String(fd.get('email') || '').toLowerCase().trim(),
+        phone: String(fd.get('phone') || '').trim() || null,
+        message: 'CONTACT: ' + String(fd.get('contact_name') || '').trim() + 
+                 ' | CAPACITÉ: ' + String(fd.get('capacity') || '').trim() + 
+                 ' | REMARQUES: ' + String(fd.get('message') || '').trim(),
+        status: 'PROSPECT'
+      };
+
+      if (!payload.company_name || !payload.email || !payload.phone) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez renseigner l\'établissement, l\'email et le téléphone.', 'warn');
+      }
+
+      /* FIX #2 : VALIDATION EMAIL REGEX */
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Adresse email invalide.', 'warn');
+      }
+
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      var saved = false;
+
+      if (sb) {
+        try {
+          var r = await sb.from('clients').insert([payload]);
+          if (!r.error) saved = true;
+          else throw r.error;
+        } catch (err) {
+          try {
+            var r2 = await sb.from('field_notes').insert([{
+              note_type: 'GENERAL',
+              content: 'ONBOARDING PURKEMET : ' + payload.company_name + ' (' + payload.horeca_category + ') - Email: ' + payload.email + ' - Tél: ' + payload.phone + ' - ' + payload.message,
+              operator_email: payload.email
+            }]);
+            if (!r2.error) saved = true;
+          } catch (x) {}
+        }
+      }
+
+      /* FIX #3 : PAS DE FAUX SUCCÈS SI TOUT ÉCHOUE */
+      if (saved) {
+        toast('Votre demande de déploiement pilote 0 MAD a été transmise au Siège.');
+        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+        form.reset();
+        btn.textContent = '✓ Dossier Transmis avec Succès';
+        setTimeout(function () {
+          btn.textContent = original;
+          btn.disabled = false;
+        }, 3000);
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        toast('Service temporairement indisponible. Veuillez réessayer dans un instant.', 'err');
+      }
+    };
+
+    /* FORMULAIRE AUDIT MODAL RAPIDE */
+    window.handleAuditModalSubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnAuditModal');
+      var original = btn.textContent;
+      btn.disabled = true;
+
+      var fd = new FormData(form);
+      var payload = {
+        company_name: String(fd.get('company_name') || '').trim(),
+        horeca_category: String(fd.get('horeca_category') || '').trim(),
+        email: String(fd.get('email') || '').toLowerCase().trim(),
+        phone: String(fd.get('phone') || '').trim() || null,
+        message: String(fd.get('message') || '').trim() || null,
+        status: 'PROSPECT'
+      };
+
+      if (!payload.company_name || !payload.email) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Nom et email requis.', 'warn');
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Adresse email invalide.', 'warn');
+      }
+
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      var saved = false;
+
+      if (sb) {
+        try {
+          var r = await sb.from('clients').insert([payload]);
+          if (!r.error) saved = true;
+          else throw r.error;
+        } catch (err) {
+          try {
+            var r2 = await sb.from('field_notes').insert([{
+              note_type: 'GENERAL',
+              content: 'AUDIT MODAL PURKEMET : ' + payload.company_name + ' - ' + payload.email,
+              operator_email: payload.email
+            }]);
+            if (!r2.error) saved = true;
+          } catch (x) {}
+        }
+      }
+
+      if (saved) {
+        toast('Demande d\'audit transmise. Notre responsable vous contactera.');
+        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+        form.reset();
+        btn.textContent = '✓ Transmis';
+        setTimeout(function () {
+          window.closeAuditModal();
+          btn.textContent = original;
+          btn.disabled = false;
+        }, 1800);
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        toast('Service temporairement indisponible. Réessayez.', 'err');
+      }
+    };
+
+    /* SERVICE WORKER */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      });
+    }
+
+  })();
+  </script>
 </body>
 </html>
