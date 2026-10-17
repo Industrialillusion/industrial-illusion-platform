@@ -29,26 +29,25 @@
 
   <style>
     /* ============================================================
-       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.0
+       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.1
+       Fix : body trasparente → canvas spazio visibile
        ============================================================ */
+    html {
+      background-color: #060A0D !important;
+    }
+
     html, body { overflow-x: hidden; scroll-behavior: smooth; }
 
+    /* FIX CANVAS #1 : body trasparente per mostrare lo sfondo spaziale */
     body {
-      background-color: #090D10 !important;
+      background-color: transparent !important;
+      background-image: none !important;
       color: #F1F5F9 !important;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-image:
-        radial-gradient(at 0% 0%, rgba(0, 255, 163, 0.08) 0px, transparent 55%),
-        radial-gradient(at 100% 0%, rgba(197, 160, 89, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(9, 13, 16, 0.98) 0px, transparent 60%),
-        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0L100 50L50 100L0 50Z' fill='none' stroke='%23C5A059' stroke-opacity='0.03' stroke-width='0.8'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%2300FFA3' stroke-opacity='0.02' stroke-width='0.8'/%3E%3C/svg%3E");
-      background-attachment: fixed;
       margin: 0;
     }
 
-    /* ============================================================
-       SPACE CANVAS — Deep Space Background (layer -1)
-       ============================================================ */
+    /* FIX CANVAS #2 : canvas dietro al contenuto, sopra il colore html */
     #spaceCanvas {
       position: fixed;
       inset: 0;
@@ -213,14 +212,6 @@
 
     .safe-top { padding-top: env(safe-area-inset-top); }
 
-    @media print {
-      body > *:not(#brochureDownloadModal) { display: none !important; }
-      #brochureDownloadModal { position: static !important; display: block !important; background: #fff !important; padding: 0 !important; }
-      #brochureDownloadModal .glass-panel { border: 1px solid #000 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; max-width: 100% !important; margin: 0 !important; }
-      #brochureDownloadModal .no-print { display: none !important; }
-      #brochureDownloadModal * { color: #000 !important; text-shadow: none !important; }
-    }
-
     @media (max-width: 640px) {
       .cta-inline {
         white-space: normal !important;
@@ -312,7 +303,7 @@
   <!-- MAIN WRAPPER -->
   <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
-    <!-- SECTION 1 : HERO PURKEMET B2B -->
+    <!-- SECTION 1 : HERO -->
     <section class="pt-4">
       <div class="grid lg:grid-cols-12 gap-6 lg:gap-12 items-center">
         <div class="lg:col-span-7 space-y-5 sm:space-y-6">
@@ -698,8 +689,9 @@
       <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
       <p class="text-[9px] sm:text-[10px] text-slate-600">PurKemet B2B · Maat OS · K-MEH-20 · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
     </div>
-    
-  <!-- MODAL TÉLÉCHARGEMENT BROCHURE (GATED) -->
+  </footer>
+  
+  <!-- MODAL TÉLÉCHARGEMENT BROCHURE -->
   <div id="brochureDownloadModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Télécharger la brochure B2B">
     <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
       <button type="button" onclick="window.closeBrochureDownloadModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold" aria-label="Fermer">×</button>
@@ -1256,4 +1248,3 @@
   </script>
 </body>
 </html>
-  </footer>
