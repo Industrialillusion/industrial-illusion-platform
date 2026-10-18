@@ -17,7 +17,6 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <!-- SCROLL RESCUE GUARD v7.4 -->
   <script>
   (function () {
     'use strict';
@@ -199,9 +198,7 @@
     }
     @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
 
-    /* ============================================================
-       HERO K-MEH-20 · SVG ARCHITECTURAL BLUEPRINT v5.0
-       ============================================================ */
+    /* HERO K-MEH-20 v6.0 */
     .hero-kmeh {
       position: relative;
       display: grid;
@@ -281,29 +278,29 @@
       50%      { transform: translateY(-8px); }
     }
 
-    /* ============================================================
-       SVG LAYERS · Vue Modulaire Éclatée
-       ============================================================ */
+    /* SVG LAYERS v6.0 */
     .kmeh-layer {
-      transition: transform 0.9s cubic-bezier(0.34, 1.26, 0.64, 1), filter 0.35s ease-out;
+      transition: transform 0.95s cubic-bezier(0.34, 1.26, 0.64, 1), filter 0.35s ease-out;
       transform-origin: 400px 620px;
       cursor: pointer;
       will-change: transform;
     }
     .kmeh-layer:hover .face-left,
     .kmeh-layer:hover .face-right {
-      filter: brightness(1.2) saturate(1.15);
+      filter: brightness(1.18) saturate(1.15);
     }
     .kmeh-layer.is-active .face-left,
     .kmeh-layer.is-active .face-right {
-      filter: brightness(1.35) saturate(1.3) drop-shadow(0 0 18px rgba(0, 255, 163, 0.55));
+      filter: brightness(1.35) saturate(1.3) drop-shadow(0 0 20px rgba(0, 255, 163, 0.6));
+    }
+    .kmeh-layer.is-active .face-top {
+      filter: brightness(1.4) drop-shadow(0 0 24px rgba(232, 200, 106, 0.7));
     }
 
-    body.kmeh-exploded .kmeh-layer--2 { transform: translateY(-70px); }
-    body.kmeh-exploded .kmeh-layer--3 { transform: translateY(-145px); }
-    body.kmeh-exploded .kmeh-layer--4 { transform: translateY(-220px); }
+    body.kmeh-exploded .kmeh-layer--2 { transform: translateY(-72px); }
+    body.kmeh-exploded .kmeh-layer--3 { transform: translateY(-148px); }
+    body.kmeh-exploded .kmeh-layer--4 { transform: translateY(-225px); }
 
-    /* Lignes d'explosion entre niveaux */
     .kmeh-explosion-line {
       opacity: 0;
       transition: opacity 0.7s ease-out 0.15s;
@@ -311,10 +308,15 @@
     }
     body.kmeh-exploded .kmeh-explosion-line { opacity: 1; }
 
-    /* Kemet Loop core (visible in exploded mode) */
+    @keyframes busbarFlow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -60; }
+    }
+    .kmeh-busbar-flow { animation: busbarFlow 2.4s linear infinite; }
+
     .kmeh-core {
       opacity: 0;
-      transition: opacity 0.65s ease-out 0.3s;
+      transition: opacity 0.7s ease-out 0.3s;
       pointer-events: none;
     }
     body.kmeh-exploded .kmeh-core { opacity: 1; }
@@ -323,41 +325,96 @@
       animation: coreRise 3.6s ease-in infinite;
       transform-origin: center;
     }
-    .kmeh-core-particle--1 { animation-delay: 0s; }
-    .kmeh-core-particle--2 { animation-delay: 0.45s; }
-    .kmeh-core-particle--3 { animation-delay: 0.9s; }
-    .kmeh-core-particle--4 { animation-delay: 1.35s; }
-    .kmeh-core-particle--5 { animation-delay: 1.8s; }
-    .kmeh-core-particle--6 { animation-delay: 2.25s; }
-    .kmeh-core-particle--7 { animation-delay: 2.7s; }
-    .kmeh-core-particle--8 { animation-delay: 3.15s; }
+    .kmeh-core-particle--1  { animation-delay: 0s; }
+    .kmeh-core-particle--2  { animation-delay: 0.3s; }
+    .kmeh-core-particle--3  { animation-delay: 0.6s; }
+    .kmeh-core-particle--4  { animation-delay: 0.9s; }
+    .kmeh-core-particle--5  { animation-delay: 1.2s; }
+    .kmeh-core-particle--6  { animation-delay: 1.5s; }
+    .kmeh-core-particle--7  { animation-delay: 1.8s; }
+    .kmeh-core-particle--8  { animation-delay: 2.1s; }
+    .kmeh-core-particle--9  { animation-delay: 2.4s; }
+    .kmeh-core-particle--10 { animation-delay: 2.7s; }
+    .kmeh-core-particle--11 { animation-delay: 3.0s; }
+    .kmeh-core-particle--12 { animation-delay: 3.3s; }
 
     @keyframes coreRise {
       0%   { transform: translateY(0);       opacity: 0; }
-      12%  { opacity: 1; }
-      88%  { opacity: 1; }
-      100% { transform: translateY(-300px);  opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-330px);  opacity: 0; }
     }
 
-    /* Œil d'Horus */
+    @keyframes skidLedBlink {
+      0%, 42%, 58%, 100% { opacity: 0.95; }
+      46%, 54% { opacity: 0.15; }
+    }
+    .kmeh-skid-led { animation: skidLedBlink 2.4s ease-in-out infinite; }
+    .kmeh-skid-led--1 { animation-delay: 0s; }
+    .kmeh-skid-led--2 { animation-delay: 0.3s; }
+    .kmeh-skid-led--3 { animation-delay: 0.6s; }
+    .kmeh-skid-led--4 { animation-delay: 0.9s; }
+    .kmeh-skid-led--5 { animation-delay: 1.2s; }
+    .kmeh-skid-led--6 { animation-delay: 1.5s; }
+    .kmeh-skid-led--7 { animation-delay: 1.8s; }
+    .kmeh-skid-led--8 { animation-delay: 2.1s; }
+
+    @keyframes conveyorFlow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -80; }
+    }
+    .kmeh-conveyor-flow { animation: conveyorFlow 2.8s linear infinite; }
+    .kmeh-conveyor-flow--rev { animation: conveyorFlow 2.8s linear infinite reverse; }
+
+    @keyframes dataFlowDown {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 60; }
+    }
+    .kmeh-data-flow { animation: dataFlowDown 3.2s linear infinite; }
+
+    @keyframes reactorBubble {
+      0%, 100% { opacity: 0.25; transform: translateY(0); }
+      50% { opacity: 0.75; transform: translateY(-3px); }
+    }
+    .kmeh-reactor-bubble { animation: reactorBubble 4s ease-in-out infinite; }
+    .kmeh-reactor-bubble--2 { animation-delay: 1.3s; }
+    .kmeh-reactor-bubble--3 { animation-delay: 2.6s; }
+
+    @keyframes beaconPulse {
+      0%, 100% { opacity: 0.18; }
+      50% { opacity: 0.42; }
+    }
+    .kmeh-beacon-beam { animation: beaconPulse 3.5s ease-in-out infinite; }
+
     .kmeh-horus-eye {
-      animation: horusGlow 3s ease-in-out infinite;
-      transform-origin: 400px 260px;
+      animation: horusGlow 3.4s ease-in-out infinite;
     }
     @keyframes horusGlow {
-      0%, 100% { filter: drop-shadow(0 0 10px rgba(232, 200, 106, 0.7)); }
-      50%      { filter: drop-shadow(0 0 22px rgba(232, 200, 106, 1)); }
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(232, 200, 106, 0.75)); }
+      50%      { filter: drop-shadow(0 0 24px rgba(232, 200, 106, 1)); }
     }
     .kmeh-horus-orbit {
       animation: horusOrbitSpin 14s linear infinite;
-      transform-origin: 400px 260px;
+      transform-box: fill-box;
+      transform-origin: center;
     }
     .kmeh-horus-orbit-rev {
       animation: horusOrbitSpinRev 9s linear infinite;
-      transform-origin: 400px 260px;
+      transform-box: fill-box;
+      transform-origin: center;
     }
     @keyframes horusOrbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes horusOrbitSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+    @keyframes serverBlink {
+      0%, 40%, 60%, 100% { opacity: 0.85; }
+      45%, 55% { opacity: 0.2; }
+    }
+    .kmeh-server-led { animation: serverBlink 1.8s linear infinite; }
+    .kmeh-server-led--a { animation-delay: 0s; }
+    .kmeh-server-led--b { animation-delay: 0.4s; }
+    .kmeh-server-led--c { animation-delay: 0.8s; }
+    .kmeh-server-led--d { animation-delay: 1.2s; }
 
     /* Contrôles flottants */
     .pyramid-controls {
@@ -403,7 +460,6 @@
       50% { opacity: 0.95; }
     }
 
-    /* Level cards */
     .level-card {
       position: relative;
       cursor: pointer;
@@ -430,7 +486,6 @@
       transition: box-shadow 0.3s;
     }
 
-    /* Skid cards */
     .skid-card {
       position: relative;
       padding: 1rem;
@@ -462,7 +517,6 @@
       border-color: rgba(232, 200, 106, 0.4);
     }
 
-    /* Manifeste rows */
     .manifest-row {
       display: grid; grid-template-columns: 1fr;
       gap: 0.75rem; padding: 1rem; border-radius: 1rem;
@@ -505,7 +559,6 @@
       100% { transform: translate(100%, 100%) rotate(45deg); }
     }
 
-    /* Easter eggs */
     body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
     @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
@@ -587,7 +640,7 @@
   <div id="hieroglyphOverlay" aria-hidden="true"></div>
   <div id="scrollProgress" aria-hidden="true"></div>
 
-  <!-- HEADER — BRANDING INSTITUTIONNEL UNIFIÉ -->
+  <!-- HEADER -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
     <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
       <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
@@ -653,20 +706,19 @@
       <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-2">À Propos</a>
       <hr class="border-white/10 my-2">
       <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
-      
       <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
       <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
     </nav>
   </header>
+
   <!-- MAIN -->
   <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
     <!-- ═══════════════════════════════════════════════════════
-         HERO · SVG ARCHITECTURAL BLUEPRINT — K-MEH-20 v5.0
-         Modèle assonométrique industriel · châssis IPN/HEB
-         Skids ISO visibles · cage Faraday · réacteurs anaérobies
-         Racks serveurs · verrière 360° · plasma Kemet Loop
-         Œil d'Horus double orbite · cotes dimensionnelles
+         HERO · SVG ARCHITECTURAL BLUEPRINT v6.0
+         8 Skids · Conveyors animés · Réacteurs bubbling
+         Racks LED · Busbars · Verrière · Beacon pulsant
+         Plasma 12 particules · Horus eye · Cotes dimensionnelles
          ═══════════════════════════════════════════════════════ -->
     <section class="pt-2 sm:pt-4">
       <div class="hero-kmeh">
@@ -718,72 +770,88 @@
           </div>
         </div>
 
-        <!-- ═════════ PIRAMIDE SVG ARCHITECTURALE MONUMENTALE ═════════ -->
+        <!-- ═════════ PIRAMIDE SVG v6.0 — BLUEPRINT INDUSTRIEL ═════════ -->
         <div class="hero-pyramid" aria-label="Blueprint assonométrique interactif du hub K-MEH-20">
 
           <div class="pyramid-svg-wrap">
             <svg class="pyramid-svg" id="kmehPyramidSvg" viewBox="0 0 800 750" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Blueprint assonométrique K-MEH-20 — hub tronqué 56×56m, 45m, 4 niveaux fonctionnels">
 
               <defs>
-                <!-- ═══ GRADIENTS PAR NIVEAU ═══ -->
-                <linearGradient id="gradL1L" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#0E8C5F" stop-opacity="0.94"/>
-                  <stop offset="50%" stop-color="#00B871" stop-opacity="0.86"/>
-                  <stop offset="100%" stop-color="#00FFA3" stop-opacity="0.78"/>
+                <linearGradient id="gradL1L" x1="0" y1="0" x2="0.7" y2="1">
+                  <stop offset="0%" stop-color="#0E8C5F" stop-opacity="0.96"/>
+                  <stop offset="45%" stop-color="#00B871" stop-opacity="0.90"/>
+                  <stop offset="100%" stop-color="#00FFA3" stop-opacity="0.82"/>
                 </linearGradient>
-                <linearGradient id="gradL1R" x1="0.4" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#00B871" stop-opacity="0.88"/>
-                  <stop offset="100%" stop-color="#067A4F" stop-opacity="0.76"/>
+                <linearGradient id="gradL1R" x1="0.3" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#00B871" stop-opacity="0.90"/>
+                  <stop offset="100%" stop-color="#046A44" stop-opacity="0.78"/>
                 </linearGradient>
-                <linearGradient id="gradL2L" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#0A5B52" stop-opacity="0.96"/>
-                  <stop offset="100%" stop-color="#0D9E8E" stop-opacity="0.90"/>
+                <linearGradient id="gradL2L" x1="0" y1="0" x2="0.7" y2="1">
+                  <stop offset="0%" stop-color="#0A5B52" stop-opacity="0.97"/>
+                  <stop offset="100%" stop-color="#0D9E8E" stop-opacity="0.92"/>
                 </linearGradient>
-                <linearGradient id="gradL2R" x1="0.4" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#0D9E8E" stop-opacity="0.90"/>
-                  <stop offset="100%" stop-color="#076354" stop-opacity="0.82"/>
+                <linearGradient id="gradL2R" x1="0.3" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#0D9E8E" stop-opacity="0.92"/>
+                  <stop offset="100%" stop-color="#054D42" stop-opacity="0.84"/>
                 </linearGradient>
-                <linearGradient id="gradL3L" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#7A5E22" stop-opacity="0.96"/>
-                  <stop offset="100%" stop-color="#C5A059" stop-opacity="0.92"/>
+                <linearGradient id="gradL3L" x1="0" y1="0" x2="0.7" y2="1">
+                  <stop offset="0%" stop-color="#7A5E22" stop-opacity="0.97"/>
+                  <stop offset="100%" stop-color="#C5A059" stop-opacity="0.94"/>
                 </linearGradient>
-                <linearGradient id="gradL3R" x1="0.4" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#C5A059" stop-opacity="0.92"/>
-                  <stop offset="100%" stop-color="#8E7031" stop-opacity="0.86"/>
+                <linearGradient id="gradL3R" x1="0.3" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#C5A059" stop-opacity="0.94"/>
+                  <stop offset="100%" stop-color="#6A4F1B" stop-opacity="0.88"/>
                 </linearGradient>
-                <linearGradient id="gradL4L" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#B8952F" stop-opacity="0.98"/>
-                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.96"/>
+                <linearGradient id="gradL4L" x1="0" y1="0" x2="0.7" y2="1">
+                  <stop offset="0%" stop-color="#B8952F" stop-opacity="0.99"/>
+                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.97"/>
                 </linearGradient>
-                <linearGradient id="gradL4R" x1="0.4" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.96"/>
-                  <stop offset="100%" stop-color="#C29B3D" stop-opacity="0.94"/>
+                <linearGradient id="gradL4R" x1="0.3" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.97"/>
+                  <stop offset="100%" stop-color="#997A30" stop-opacity="0.95"/>
                 </linearGradient>
                 <linearGradient id="gradTop" x1="0" y1="0" x2="0.5" y2="1">
-                  <stop offset="0%" stop-color="#F6E4A0" stop-opacity="0.99"/>
-                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.94"/>
+                  <stop offset="0%" stop-color="#F8E8B0" stop-opacity="0.99"/>
+                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.95"/>
                 </linearGradient>
 
-                <!-- ═══ GRADIENTS PLASMA KEMET LOOP ═══ -->
+                <linearGradient id="gradSkid" x1="0" y1="0" x2="0.6" y2="1">
+                  <stop offset="0%" stop-color="#0F2219" stop-opacity="0.97"/>
+                  <stop offset="100%" stop-color="#071A12" stop-opacity="0.99"/>
+                </linearGradient>
+                <linearGradient id="gradSkidTop" x1="0" y1="0" x2="0.6" y2="1">
+                  <stop offset="0%" stop-color="#1A3A2A" stop-opacity="0.95"/>
+                  <stop offset="100%" stop-color="#0A2016" stop-opacity="0.98"/>
+                </linearGradient>
+                <linearGradient id="gradReactor" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#085346" stop-opacity="0.95"/>
+                  <stop offset="35%" stop-color="#0D9E8E" stop-opacity="0.92"/>
+                  <stop offset="55%" stop-color="#7FFFD4" stop-opacity="0.70"/>
+                  <stop offset="100%" stop-color="#043D33" stop-opacity="0.92"/>
+                </linearGradient>
+
                 <linearGradient id="gradPlasma" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%"   stop-color="#00FFA3" stop-opacity="0.05"/>
-                  <stop offset="25%"  stop-color="#00FFA3" stop-opacity="0.55"/>
-                  <stop offset="55%"  stop-color="#7FFFD4" stop-opacity="0.85"/>
-                  <stop offset="80%"  stop-color="#E8C86A" stop-opacity="0.75"/>
-                  <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0.30"/>
+                  <stop offset="0%"   stop-color="#00FFA3" stop-opacity="0.08"/>
+                  <stop offset="25%"  stop-color="#00FFA3" stop-opacity="0.60"/>
+                  <stop offset="55%"  stop-color="#7FFFD4" stop-opacity="0.88"/>
+                  <stop offset="80%"  stop-color="#E8C86A" stop-opacity="0.78"/>
+                  <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0.35"/>
                 </linearGradient>
                 <radialGradient id="gradCoreHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%"   stop-color="#E8C86A" stop-opacity="0.65"/>
-                  <stop offset="50%"  stop-color="#00FFA3" stop-opacity="0.25"/>
+                  <stop offset="0%"   stop-color="#E8C86A" stop-opacity="0.70"/>
+                  <stop offset="50%"  stop-color="#00FFA3" stop-opacity="0.28"/>
                   <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
                 </radialGradient>
                 <radialGradient id="gradHorusHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%"   stop-color="#F6E4A0" stop-opacity="0.75"/>
-                  <stop offset="45%"  stop-color="#E8C86A" stop-opacity="0.35"/>
+                  <stop offset="0%"   stop-color="#F6E4A0" stop-opacity="0.80"/>
+                  <stop offset="45%"  stop-color="#E8C86A" stop-opacity="0.40"/>
                   <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
                 </radialGradient>
+                <linearGradient id="gradBeacon" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%"   stop-color="#F6E4A0" stop-opacity="0.55"/>
+                  <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0"/>
+                </linearGradient>
 
-                <!-- ═══ FILTRES GLOW ═══ -->
                 <filter id="glowG" x="-80%" y="-80%" width="260%" height="260%">
                   <feGaussianBlur stdDeviation="3.5" result="b"/>
                   <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -797,20 +865,21 @@
                   <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
                 </filter>
 
-                <!-- ═══ PATTERNS · CHÂSSIS & GRILLES ═══ -->
-                <pattern id="patHeb" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
-                  <path d="M 22 0 L 0 0 0 22" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="0.6"/>
+                <pattern id="patHeb" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="0.65"/>
                 </pattern>
-                <pattern id="patFaraday" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-                  <path d="M 0 0 L 8 0 L 8 8 L 0 8 Z" fill="none" stroke="rgba(0,255,163,0.30)" stroke-width="0.5"/>
-                  <circle cx="4" cy="4" r="0.9" fill="rgba(0,255,163,0.55)"/>
+                <pattern id="patFaraday" x="0" y="0" width="7" height="7" patternUnits="userSpaceOnUse">
+                  <path d="M 0 0 L 7 0 L 7 7 L 0 7 Z" fill="none" stroke="rgba(0,255,163,0.32)" stroke-width="0.45"/>
+                  <circle cx="3.5" cy="3.5" r="0.85" fill="rgba(0,255,163,0.65)"/>
                 </pattern>
-                <pattern id="patServer" x="0" y="0" width="14" height="7" patternUnits="userSpaceOnUse">
-                  <rect x="0.5" y="0.5" width="13" height="6" fill="none" stroke="rgba(232,200,106,0.55)" stroke-width="0.4"/>
-                  <circle cx="2.5" cy="3.5" r="0.7" fill="#00FFA3"/>
+                <pattern id="patServer" x="0" y="0" width="15" height="8" patternUnits="userSpaceOnUse">
+                  <rect x="0.5" y="0.5" width="14" height="7" fill="none" stroke="rgba(232,200,106,0.60)" stroke-width="0.45"/>
+                  <circle cx="3" cy="4" r="0.8" fill="#00FFA3"/>
+                </pattern>
+                <pattern id="patGlass" x="0" y="0" width="28" height="14" patternUnits="userSpaceOnUse">
+                  <path d="M 0 7 L 28 7 M 14 0 L 14 14" fill="none" stroke="rgba(106,74,26,0.60)" stroke-width="0.55"/>
                 </pattern>
 
-                <!-- ═══ CLIP-PATHS PAR NIVEAU (détails internes) ═══ -->
                 <clipPath id="clipL1L"><polygon points="400,700 100,614 150,531 400,567"/></clipPath>
                 <clipPath id="clipL1R"><polygon points="400,700 700,614 650,531 400,567"/></clipPath>
                 <clipPath id="clipL1T"><polygon points="400,567 150,531 400,495 650,531"/></clipPath>
@@ -825,13 +894,10 @@
                 <clipPath id="clipL4T"><polygon points="400,300 250,278 400,256 550,278"/></clipPath>
               </defs>
 
-              <!-- ═══════════════════════════════════════════════════
-                   SOL · grille isométrique + cotes dimensionnelles
-                   ═══════════════════════════════════════════════════ -->
-              <ellipse cx="400" cy="700" rx="330" ry="96" fill="url(#gradCoreHalo)" opacity="0.30"/>
-              <polygon points="400,700 100,614 400,528 700,614" fill="none" stroke="#00FFA3" stroke-width="0.8" opacity="0.28" stroke-dasharray="5 7"/>
-              <!-- grille de sol -->
-              <g opacity="0.16">
+              <!-- ─── SOL · grille perspective ─── -->
+              <ellipse cx="400" cy="700" rx="340" ry="100" fill="url(#gradCoreHalo)" opacity="0.32"/>
+              <polygon points="400,700 100,614 400,528 700,614" fill="none" stroke="#00FFA3" stroke-width="0.9" opacity="0.32" stroke-dasharray="5 7"/>
+              <g opacity="0.20">
                 <line x1="160" y1="628" x2="640" y2="628" stroke="#00FFA3" stroke-width="0.5"/>
                 <line x1="220" y1="656" x2="580" y2="656" stroke="#00FFA3" stroke-width="0.5"/>
                 <line x1="220" y1="600" x2="580" y2="600" stroke="#00FFA3" stroke-width="0.5"/>
@@ -843,124 +909,187 @@
                 <line x1="650" y1="608" x2="550" y2="695" stroke="#00FFA3" stroke-width="0.5"/>
               </g>
 
-              <!-- ═══════════════════════════════════════════════════
-                   COTES DIMENSIONNELLES
-                   ═══════════════════════════════════════════════════ -->
-              <!-- Cote base 56 m -->
+              <!-- ─── COTES DIMENSIONNELLES ─── -->
               <g stroke="#94A3B8" stroke-width="0.8" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">
-                <line x1="70" y1="728" x2="730" y2="728" opacity="0.55"/>
-                <line x1="70" y1="724" x2="70" y2="732" opacity="0.75"/>
-                <line x1="730" y1="724" x2="730" y2="732" opacity="0.75"/>
-                <text x="400" y="744" text-anchor="middle" opacity="0.85">56 m</text>
+                <line x1="70" y1="728" x2="730" y2="728" opacity="0.6"/>
+                <polygon points="70,728 80,724 80,732" fill="#94A3B8"/>
+                <polygon points="730,728 720,724 720,732" fill="#94A3B8"/>
+                <rect x="384" y="720" width="32" height="16" fill="#0A0D10" opacity="0.85" rx="2"/>
+                <text x="400" y="732" text-anchor="middle" fill="#94A3B8" opacity="0.95">56 m</text>
               </g>
-              <!-- Cote hauteur 45 m -->
-              <g stroke="#94A3B8" stroke-width="0.8" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">
-                <line x1="748" y1="700" x2="748" y2="278" opacity="0.55"/>
-                <line x1="744" y1="700" x2="752" y2="700" opacity="0.75"/>
-                <line x1="744" y1="278" x2="752" y2="278" opacity="0.75"/>
-                <text x="762" y="494" text-anchor="middle" transform="rotate(-90 762 494)" opacity="0.85">45 m</text>
+              <g stroke="#94A3B8" stroke-width="0.8" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600">
+                <line x1="752" y1="700" x2="752" y2="256" opacity="0.6"/>
+                <polygon points="752,700 748,710 756,710" fill="#94A3B8"/>
+                <polygon points="752,256 748,266 756,266" fill="#94A3B8"/>
+                <line x1="744" y1="700" x2="760" y2="700" opacity="0.7"/>
+                <line x1="744" y1="567" x2="760" y2="567" opacity="0.7"/>
+                <line x1="744" y1="478" x2="760" y2="478" opacity="0.7"/>
+                <line x1="744" y1="389" x2="760" y2="389" opacity="0.7"/>
+                <line x1="744" y1="278" x2="760" y2="278" opacity="0.7"/>
+                <text x="770" y="490" text-anchor="middle" transform="rotate(-90 770 490)" fill="#94A3B8" opacity="0.95">45 m · 4 niveaux</text>
               </g>
 
-              <!-- ═══════════════════════════════════════════════════
-                   PLASMA KEMET LOOP · cœur énergétique central
-                   Visible uniquement en mode exploded
-                   ═══════════════════════════════════════════════════ -->
+              <!-- ─── BEACON DE MAAT ─── -->
+              <rect class="kmeh-beacon-beam" x="394" y="130" width="12" height="130" fill="url(#gradBeacon)" filter="url(#glowA)"/>
+
+              <!-- ─── KEMET LOOP CORE ─── -->
               <g class="kmeh-core">
-                <!-- Halo global -->
-                <ellipse cx="400" cy="490" rx="150" ry="230" fill="url(#gradCoreHalo)" opacity="0.55"/>
-                <!-- Faisceau plasma -->
-                <rect x="392" y="256" width="16" height="444" fill="url(#gradPlasma)" filter="url(#glowCore)"/>
-                <rect x="396" y="256" width="8" height="444" fill="#7FFFD4" opacity="0.35"/>
-                <line x1="400" y1="700" x2="400" y2="256" stroke="#F6E4A0" stroke-width="1.4" opacity="0.75" filter="url(#glowA)"/>
-                <!-- Particules ascendantes -->
-                <circle class="kmeh-core-particle kmeh-core-particle--1" cx="396" cy="690" r="3.5" fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--2" cx="404" cy="690" r="2.5" fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--3" cx="400" cy="690" r="3"   fill="#7FFFD4" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--4" cx="394" cy="690" r="2"   fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--5" cx="406" cy="690" r="2.8" fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--6" cx="400" cy="690" r="2.2" fill="#F6E4A0" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--7" cx="397" cy="690" r="3"   fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--8" cx="403" cy="690" r="2.5" fill="#E8C86A" filter="url(#glowA)"/>
+                <ellipse cx="400" cy="490" rx="170" ry="250" fill="url(#gradCoreHalo)" opacity="0.60"/>
+                <rect x="386" y="256" width="28" height="444" fill="url(#gradPlasma)" filter="url(#glowCore)"/>
+                <rect x="392" y="256" width="16" height="444" fill="#7FFFD4" opacity="0.40"/>
+                <line x1="400" y1="700" x2="400" y2="256" stroke="#F6E4A0" stroke-width="1.8" opacity="0.85" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--1"  cx="394" cy="690" r="4"   fill="#E8C86A" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--2"  cx="406" cy="690" r="2.5" fill="#00FFA3" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--3"  cx="400" cy="690" r="3.2" fill="#7FFFD4" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--4"  cx="396" cy="690" r="2.2" fill="#E8C86A" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--5"  cx="408" cy="690" r="3"   fill="#00FFA3" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--6"  cx="402" cy="690" r="2.8" fill="#F6E4A0" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--7"  cx="392" cy="690" r="2.5" fill="#00FFA3" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--8"  cx="404" cy="690" r="3"   fill="#E8C86A" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--9"  cx="398" cy="690" r="2.2" fill="#7FFFD4" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--10" cx="410" cy="690" r="2.8" fill="#E8C86A" filter="url(#glowA)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--11" cx="390" cy="690" r="3"   fill="#00FFA3" filter="url(#glowG)"/>
+                <circle class="kmeh-core-particle kmeh-core-particle--12" cx="400" cy="690" r="2.5" fill="#F6E4A0" filter="url(#glowA)"/>
               </g>
 
               <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 1 · BASE · 0–15 m · 3 136 m²
-                   HAL · Réception · Trémies · Convoyeurs · Skids
+                   NIVEAU 1 · BASE · HAL · 8 SKIDS + CONVEYORS
                    ═══════════════════════════════════════════════════ -->
               <g class="kmeh-layer kmeh-layer--1" data-layer="1" tabindex="0" role="button" aria-label="Niveau 1 — Base · Réception matière (HAL)">
-                <!-- Face gauche -->
                 <polygon class="face-left" points="400,700 100,614 150,531 400,567" fill="url(#gradL1L)" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
-                <!-- Face droite -->
                 <polygon class="face-right" points="400,700 700,614 650,531 400,567" fill="url(#gradL1R)" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
-                <!-- Face supérieure -->
-                <polygon points="400,567 150,531 400,495 650,531" fill="url(#gradTop)" stroke="#7FFFD4" stroke-width="1.4" opacity="0.55"/>
+                <polygon class="face-top" points="400,567 150,531 400,495 650,531" fill="url(#gradTop)" stroke="#7FFFD4" stroke-width="1.4" opacity="0.55"/>
 
-                <!-- Détails châssis HEB (grille sur face gauche) -->
+                <!-- Châssis HEB + arêtes IPN -->
                 <g clip-path="url(#clipL1L)">
-                  <rect x="100" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.55"/>
-                  <!-- Arêtes verticales IPN -->
-                  <line x1="175" y1="605" x2="175" y2="545" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <line x1="250" y1="595" x2="250" y2="540" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <line x1="325" y1="585" x2="325" y2="555" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <!-- Skid ISO (représentation 3D isométrique simplifiée) -->
-                  <polygon points="185,600 205,600 210,590 190,590" fill="#00FFA3" opacity="0.45" stroke="#7FFFD4" stroke-width="0.6"/>
-                  <polygon points="280,590 300,590 305,580 285,580" fill="#00FFA3" opacity="0.45" stroke="#7FFFD4" stroke-width="0.6"/>
-                  <!-- Trémie d'alimentation -->
-                  <polygon points="345,595 375,595 368,575 352,575" fill="#E8C86A" opacity="0.55" stroke="#F6E4A0" stroke-width="0.7"/>
+                  <rect x="100" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.45"/>
+                  <line x1="155" y1="611" x2="175" y2="539" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
+                  <line x1="225" y1="626" x2="230" y2="546" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
+                  <line x1="295" y1="641" x2="285" y2="554" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
                 </g>
-
-                <!-- Détails châssis HEB (grille sur face droite) -->
                 <g clip-path="url(#clipL1R)">
-                  <rect x="400" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.55"/>
-                  <line x1="475" y1="605" x2="475" y2="545" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <line x1="550" y1="595" x2="550" y2="540" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <line x1="625" y1="585" x2="625" y2="555" stroke="#00FFA3" stroke-width="0.7" opacity="0.55"/>
-                  <!-- Skids droits -->
-                  <polygon points="415,600 435,600 440,590 420,590" fill="#00FFA3" opacity="0.45" stroke="#7FFFD4" stroke-width="0.6"/>
-                  <polygon points="510,590 530,590 535,580 515,580" fill="#00FFA3" opacity="0.45" stroke="#7FFFD4" stroke-width="0.6"/>
+                  <rect x="400" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.45"/>
+                  <line x1="505" y1="641" x2="515" y2="554" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
+                  <line x1="575" y1="626" x2="570" y2="546" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
+                  <line x1="645" y1="611" x2="625" y2="539" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
                 </g>
 
-                <!-- Détails face supérieure (convoyeurs) -->
-                <g clip-path="url(#clipL1T)">
-                  <line x1="200" y1="531" x2="400" y2="510" stroke="#00FFA3" stroke-width="0.8" opacity="0.65"/>
-                  <line x1="600" y1="531" x2="400" y2="510" stroke="#00FFA3" stroke-width="0.8" opacity="0.65"/>
-                  <line x1="250" y1="527" x2="550" y2="527" stroke="#7FFFD4" stroke-width="0.6" opacity="0.55"/>
+                <!-- Conveyors animés -->
+                <line class="kmeh-conveyor-flow" x1="130" y1="565" x2="395" y2="622" stroke="#00FFA3" stroke-width="1.4" stroke-dasharray="8 12" opacity="0.85"/>
+                <line class="kmeh-conveyor-flow--rev" x1="115" y1="600" x2="395" y2="668" stroke="#7FFFD4" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.75"/>
+                <line class="kmeh-conveyor-flow--rev" x1="405" y1="622" x2="670" y2="565" stroke="#00FFA3" stroke-width="1.4" stroke-dasharray="8 12" opacity="0.85"/>
+                <line class="kmeh-conveyor-flow" x1="405" y1="668" x2="685" y2="600" stroke="#7FFFD4" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.75"/>
+
+                <!-- ── 8 SKIDS — Face gauche S1-S4 ── -->
+                <!-- S1 -->
+                <g>
+                  <polygon points="155,570 190,578 180,605 142,596" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="155,570 190,578 190,573 155,565" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="167" y1="574" x2="160" y2="602" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--1" cx="165" cy="587" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="165" y="593" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S1</text>
+                </g>
+                <!-- S2 -->
+                <g>
+                  <polygon points="210,582 245,590 236,620 198,610" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="210,582 245,590 245,585 210,577" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="222" y1="586" x2="216" y2="616" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--2" cx="220" cy="601" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="220" y="607" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S2</text>
+                </g>
+                <!-- S3 -->
+                <g>
+                  <polygon points="264,594 299,601 293,633 254,623" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="264,594 299,601 299,596 264,589" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="277" y1="598" x2="273" y2="629" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--3" cx="276" cy="614" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="276" y="620" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S3</text>
+                </g>
+                <!-- S4 -->
+                <g>
+                  <polygon points="318,605 353,613 349,647 311,637" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="318,605 353,613 353,608 318,600" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="331" y1="609" x2="330" y2="643" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--4" cx="331" cy="626" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="331" y="632" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S4</text>
+                </g>
+
+                <!-- ── 8 SKIDS — Face droite S5-S8 ── -->
+                <!-- S5 -->
+                <g>
+                  <polygon points="422,613 457,605 465,637 428,647" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="422,613 457,605 457,600 422,608" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="440" y1="608" x2="445" y2="640" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--5" cx="442" cy="626" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="442" y="632" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S5</text>
+                </g>
+                <!-- S6 -->
+                <g>
+                  <polygon points="476,601 511,593 519,622 482,632" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="476,601 511,593 511,588 476,596" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="494" y1="596" x2="499" y2="625" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--6" cx="496" cy="612" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="496" y="618" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S6</text>
+                </g>
+                <!-- S7 -->
+                <g>
+                  <polygon points="530,588 566,581 574,607 537,617" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="530,588 566,581 566,576 530,583" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="549" y1="583" x2="554" y2="611" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--7" cx="551" cy="597" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="551" y="603" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S7</text>
+                </g>
+                <!-- S8 -->
+                <g>
+                  <polygon points="585,575 620,568 628,591 592,601" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
+                  <polygon points="585,575 620,568 620,563 585,570" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
+                  <line x1="603" y1="570" x2="608" y2="595" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
+                  <circle class="kmeh-skid-led kmeh-skid-led--8" cx="605" cy="583" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
+                  <text x="605" y="589" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S8</text>
                 </g>
 
                 <!-- Labels -->
                 <text x="400" y="660" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="800" fill="#FFFFFF" opacity="0.9" letter-spacing="0.14em" pointer-events="none">NIVEAU 1 · 0-15 m</text>
-                <text x="400" y="678" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#00FFA3" letter-spacing="0.1em" pointer-events="none">HAL · RÉCEPTION · TRÉMIES · SKIDS</text>
+                <text x="400" y="678" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#00FFA3" letter-spacing="0.1em" pointer-events="none">HAL · RÉCEPTION · 8 SKIDS ISO</text>
               </g>
 
               <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 2 · CENTRE · 15–25 m · 1 400 m²
-                   Crypto Core · Cage Faraday · Réacteurs anaérobies · d-HVAC
+                   NIVEAU 2 · CENTRE · FARADAY + RÉACTEURS BUBBLING
                    ═══════════════════════════════════════════════════ -->
               <g class="kmeh-layer kmeh-layer--2" data-layer="2" tabindex="0" role="button" aria-label="Niveau 2 — Centre · Crypto Core (Cage Faraday)">
                 <polygon class="face-left" points="400,567 150,531 184,447 400,478" fill="url(#gradL2L)" stroke="#0D9E8E" stroke-width="1.8" stroke-linejoin="round"/>
                 <polygon class="face-right" points="400,567 650,531 616,447 400,478" fill="url(#gradL2R)" stroke="#0D9E8E" stroke-width="1.8" stroke-linejoin="round"/>
                 <polygon points="400,478 184,447 400,415 616,447" fill="#0D9E8E" fill-opacity="0.22" stroke="#7FFFD4" stroke-width="1.2" opacity="0.85"/>
 
-                <!-- Cage de Faraday sur faces -->
+                <!-- Cage Faraday -->
                 <g clip-path="url(#clipL2L)">
                   <rect x="150" y="447" width="250" height="120" fill="url(#patFaraday)" opacity="0.95"/>
                 </g>
                 <g clip-path="url(#clipL2R)">
                   <rect x="400" y="447" width="250" height="120" fill="url(#patFaraday)" opacity="0.95"/>
-                  <!-- Réacteurs anaérobies (cylindres isométriques) -->
-                  <ellipse cx="500" cy="490" rx="20" ry="7" fill="#0D9E8E" opacity="0.7" stroke="#7FFFD4" stroke-width="0.7"/>
-                  <rect x="480" y="490" width="40" height="22" fill="none" stroke="#7FFFD4" stroke-width="0.7" opacity="0.85"/>
-                  <ellipse cx="500" cy="512" rx="20" ry="7" fill="none" stroke="#7FFFD4" stroke-width="0.7" opacity="0.85"/>
-                  <ellipse cx="565" cy="490" rx="18" ry="6" fill="#0D9E8E" opacity="0.7" stroke="#7FFFD4" stroke-width="0.7"/>
-                  <rect x="547" y="490" width="36" height="20" fill="none" stroke="#7FFFD4" stroke-width="0.7" opacity="0.85"/>
-                  <ellipse cx="565" cy="510" rx="18" ry="6" fill="none" stroke="#7FFFD4" stroke-width="0.7" opacity="0.85"/>
+                  <!-- Réacteur 1 -->
+                  <ellipse cx="490" cy="485" rx="22" ry="7.5" fill="#0D9E8E" opacity="0.85" stroke="#7FFFD4" stroke-width="0.9"/>
+                  <rect x="468" y="485" width="44" height="26" fill="url(#gradReactor)" stroke="#7FFFD4" stroke-width="0.9" opacity="0.95"/>
+                  <ellipse cx="490" cy="511" rx="22" ry="7.5" fill="#065A4C" opacity="0.9" stroke="#7FFFD4" stroke-width="0.9"/>
+                  <!-- Bubbles réacteur 1 -->
+                  <circle class="kmeh-reactor-bubble" cx="484" cy="500" r="1.4" fill="#7FFFD4" opacity="0.6"/>
+                  <circle class="kmeh-reactor-bubble--2" cx="496" cy="496" r="1.1" fill="#7FFFD4" opacity="0.6"/>
+                  <circle class="kmeh-reactor-bubble--3" cx="490" cy="503" r="1.3" fill="#7FFFD4" opacity="0.6"/>
+                  <!-- Réacteur 2 -->
+                  <ellipse cx="558" cy="482" rx="20" ry="7" fill="#0D9E8E" opacity="0.85" stroke="#7FFFD4" stroke-width="0.9"/>
+                  <rect x="538" y="482" width="40" height="24" fill="url(#gradReactor)" stroke="#7FFFD4" stroke-width="0.9" opacity="0.95"/>
+                  <ellipse cx="558" cy="506" rx="20" ry="7" fill="#065A4C" opacity="0.9" stroke="#7FFFD4" stroke-width="0.9"/>
+                  <circle class="kmeh-reactor-bubble--2" cx="553" cy="496" r="1.2" fill="#7FFFD4" opacity="0.6"/>
+                  <circle class="kmeh-reactor-bubble" cx="562" cy="492" r="1.3" fill="#7FFFD4" opacity="0.6"/>
+                  <circle class="kmeh-reactor-bubble--3" cx="556" cy="499" r="1" fill="#7FFFD4" opacity="0.6"/>
                 </g>
 
-                <!-- Face supérieure : volets d-HVAC -->
+                <!-- Volets d-HVAC -->
                 <g clip-path="url(#clipL2T)">
-                  <rect x="250" y="447" width="60" height="10" fill="#7FFFD4" opacity="0.5" transform="rotate(-9 250 447)"/>
-                  <rect x="340" y="440" width="60" height="10" fill="#7FFFD4" opacity="0.5" transform="rotate(-9 340 440)"/>
-                  <rect x="430" y="433" width="60" height="10" fill="#7FFFD4" opacity="0.5" transform="rotate(-9 430 433)"/>
+                  <rect x="240" y="443" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 240 443)"/>
+                  <rect x="330" y="437" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 330 437)"/>
+                  <rect x="420" y="431" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 420 431)"/>
+                  <rect x="510" y="425" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 510 425)"/>
                 </g>
 
                 <text x="400" y="550" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="800" fill="#FFFFFF" opacity="0.92" letter-spacing="0.14em" pointer-events="none">NIVEAU 2 · 15-25 m</text>
@@ -968,62 +1097,74 @@
               </g>
 
               <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 3 · ÉLÉVATION · 25–35 m · 600 m²
-                   Governance Engine · Racks serveurs · busbars · fibre
+                   NIVEAU 3 · ÉLÉVATION · RACKS LED + BUSBARS + DATA FLOW
                    ═══════════════════════════════════════════════════ -->
               <g class="kmeh-layer kmeh-layer--3" data-layer="3" tabindex="0" role="button" aria-label="Niveau 3 — Élévation · Governance Engine (Maat OS)">
                 <polygon class="face-left" points="400,478 184,447 217,363 400,389" fill="url(#gradL3L)" stroke="#C5A059" stroke-width="1.8" stroke-linejoin="round"/>
                 <polygon class="face-right" points="400,478 616,447 583,363 400,389" fill="url(#gradL3R)" stroke="#C5A059" stroke-width="1.8" stroke-linejoin="round"/>
                 <polygon points="400,389 217,363 400,336 583,363" fill="#C5A059" fill-opacity="0.20" stroke="#E8C86A" stroke-width="1.2" opacity="0.85"/>
 
-                <!-- Racks serveurs sur face gauche -->
+                <!-- Racks serveurs — Face gauche -->
                 <g clip-path="url(#clipL3L)">
-                  <rect x="240" y="385" width="60" height="45" fill="url(#patServer)" opacity="0.9"/>
-                  <rect x="310" y="380" width="60" height="45" fill="url(#patServer)" opacity="0.9"/>
+                  <rect x="235" y="378" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <rect x="300" y="374" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <rect x="365" y="370" width="35" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <!-- LEDs rack 1 -->
+                  <circle class="kmeh-server-led kmeh-server-led--a" cx="242" cy="384" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
+                  <circle class="kmeh-server-led kmeh-server-led--b" cx="242" cy="392" r="1.2" fill="#E8C86A"/>
+                  <circle class="kmeh-server-led kmeh-server-led--c" cx="242" cy="400" r="1.2" fill="#00FFA3"/>
+                  <!-- LEDs rack 2 -->
+                  <circle class="kmeh-server-led kmeh-server-led--b" cx="307" cy="380" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
+                  <circle class="kmeh-server-led kmeh-server-led--c" cx="307" cy="388" r="1.2" fill="#E8C86A"/>
+                  <circle class="kmeh-server-led kmeh-server-led--d" cx="307" cy="396" r="1.2" fill="#00FFA3"/>
                 </g>
+                <!-- Racks serveurs — Face droite -->
                 <g clip-path="url(#clipL3R)">
-                  <rect x="440" y="385" width="60" height="45" fill="url(#patServer)" opacity="0.9"/>
-                  <rect x="510" y="380" width="60" height="45" fill="url(#patServer)" opacity="0.9"/>
+                  <rect x="400" y="370" width="35" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <rect x="445" y="374" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <rect x="510" y="378" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
+                  <circle class="kmeh-server-led kmeh-server-led--c" cx="452" cy="380" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
+                  <circle class="kmeh-server-led kmeh-server-led--d" cx="452" cy="388" r="1.2" fill="#E8C86A"/>
+                  <circle class="kmeh-server-led kmeh-server-led--a" cx="452" cy="396" r="1.2" fill="#00FFA3"/>
+                  <circle class="kmeh-server-led kmeh-server-led--b" cx="517" cy="384" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
+                  <circle class="kmeh-server-led kmeh-server-led--c" cx="517" cy="392" r="1.2" fill="#E8C86A"/>
+                  <circle class="kmeh-server-led kmeh-server-led--d" cx="517" cy="400" r="1.2" fill="#00FFA3"/>
                 </g>
 
-                <!-- Busbars horizontales -->
-                <line x1="230" y1="430" x2="570" y2="405" stroke="#E8C86A" stroke-width="0.8" opacity="0.65"/>
-                <line x1="230" y1="410" x2="570" y2="385" stroke="#E8C86A" stroke-width="0.8" opacity="0.55"/>
-                <!-- Conduits fibre optique -->
-                <line x1="400" y1="470" x2="400" y2="390" stroke="#00FFA3" stroke-width="0.9" opacity="0.75"/>
-                <line x1="350" y1="460" x2="360" y2="385" stroke="#00FFA3" stroke-width="0.6" opacity="0.55"/>
-                <line x1="450" y1="460" x2="440" y2="385" stroke="#00FFA3" stroke-width="0.6" opacity="0.55"/>
+                <!-- Busbars dorées -->
+                <line x1="230" y1="430" x2="570" y2="405" stroke="#E8C86A" stroke-width="0.9" opacity="0.70"/>
+                <line x1="230" y1="410" x2="570" y2="385" stroke="#E8C86A" stroke-width="0.9" opacity="0.60"/>
+
+                <!-- Data flow vertical -->
+                <line class="kmeh-data-flow" x1="400" y1="470" x2="400" y2="390" stroke="#00FFA3" stroke-width="1.1" stroke-dasharray="3 8" opacity="0.85"/>
+                <line class="kmeh-data-flow" x1="360" y1="462" x2="370" y2="385" stroke="#7FFFD4" stroke-width="0.7" stroke-dasharray="2 6" opacity="0.60"/>
+                <line class="kmeh-data-flow" x1="440" y1="462" x2="430" y2="385" stroke="#7FFFD4" stroke-width="0.7" stroke-dasharray="2 6" opacity="0.60"/>
 
                 <text x="400" y="462" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="800" fill="#FFFFFF" opacity="0.95" letter-spacing="0.14em" pointer-events="none">NIVEAU 3 · 25-35 m</text>
                 <text x="400" y="476" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#E8C86A" letter-spacing="0.1em" pointer-events="none">GOVERNANCE ENGINE · IA · MAAT DATA LAKE</text>
               </g>
 
               <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 4 · SOMMET · 35–45 m · 150 m²
-                   UI/UX · Control Room · Verrière 360° · Phare de Maat
+                   NIVEAU 4 · SOMMET · VERRIÈRE + SCADA
                    ═══════════════════════════════════════════════════ -->
               <g class="kmeh-layer kmeh-layer--4" data-layer="4" tabindex="0" role="button" aria-label="Niveau 4 — Sommet · UI/UX (Phare de Maat)">
                 <polygon class="face-left" points="400,389 217,363 250,278 400,300" fill="url(#gradL4L)" stroke="#E8C86A" stroke-width="2" stroke-linejoin="round"/>
                 <polygon class="face-right" points="400,389 583,363 550,278 400,300" fill="url(#gradL4R)" stroke="#E8C86A" stroke-width="2" stroke-linejoin="round"/>
 
-                <!-- Verrière inclinée (face top) -->
+                <!-- Verrière avec mullions -->
                 <polygon points="400,300 250,278 400,256 550,278" fill="url(#gradTop)" stroke="#F6E4A0" stroke-width="2" stroke-linejoin="round" filter="url(#glowA)"/>
-                <!-- Hachures verrière (montants structurels) -->
-                <line x1="290" y1="286" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
-                <line x1="330" y1="282" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
-                <line x1="370" y1="278" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
-                <line x1="510" y1="286" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
-                <line x1="470" y1="282" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
-                <line x1="430" y1="278" x2="400" y2="266" stroke="#8E7031" stroke-width="0.6" opacity="0.6"/>
+                <g clip-path="url(#clipL4T)">
+                  <rect x="250" y="256" width="300" height="50" fill="url(#patGlass)" opacity="0.65"/>
+                </g>
 
-                <!-- Pupitres SCADA / écrans sur faces -->
+                <!-- Fenêtres SCADA -->
                 <g clip-path="url(#clipL4L)">
-                  <rect x="280" y="340" width="30" height="14" fill="#F6E4A0" opacity="0.7" stroke="#8E7031" stroke-width="0.5"/>
-                  <rect x="320" y="335" width="30" height="14" fill="#00FFA3" opacity="0.7" stroke="#7FFFD4" stroke-width="0.5"/>
+                  <rect x="278" y="338" width="32" height="14" fill="#F6E4A0" opacity="0.72" stroke="#6A4F1B" stroke-width="0.5"/>
+                  <rect x="320" y="332" width="32" height="14" fill="#00FFA3" opacity="0.72" stroke="#7FFFD4" stroke-width="0.5"/>
                 </g>
                 <g clip-path="url(#clipL4R)">
-                  <rect x="450" y="335" width="30" height="14" fill="#00FFA3" opacity="0.7" stroke="#7FFFD4" stroke-width="0.5"/>
-                  <rect x="490" y="340" width="30" height="14" fill="#F6E4A0" opacity="0.7" stroke="#8E7031" stroke-width="0.5"/>
+                  <rect x="448" y="332" width="32" height="14" fill="#00FFA3" opacity="0.72" stroke="#7FFFD4" stroke-width="0.5"/>
+                  <rect x="490" y="338" width="32" height="14" fill="#F6E4A0" opacity="0.72" stroke="#6A4F1B" stroke-width="0.5"/>
                 </g>
 
                 <text x="400" y="372" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="800" fill="#FFFFFF" opacity="0.98" letter-spacing="0.14em" pointer-events="none">NIVEAU 4 · 35-45 m</text>
@@ -1031,9 +1172,9 @@
               </g>
 
               <!-- ═══════════════════════════════════════════════════
-                   LIGNES D'EXPLOSION (visibles en mode éclaté)
+                   LIGNES D'EXPLOSION + BUSBARS D'INTERCONNEXION
                    ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-explosion-line" stroke="#00FFA3" stroke-width="0.8" stroke-dasharray="3 4" opacity="0">
+              <g class="kmeh-explosion-line" stroke="#00FFA3" stroke-width="0.9" stroke-dasharray="3 4" opacity="0">
                 <line x1="400" y1="567" x2="400" y2="497"/>
                 <line x1="150" y1="531" x2="184" y2="447" opacity="0.55"/>
                 <line x1="650" y1="531" x2="616" y2="447" opacity="0.55"/>
@@ -1044,30 +1185,31 @@
                 <line x1="217" y1="363" x2="250" y2="278" opacity="0.55"/>
                 <line x1="583" y1="363" x2="550" y2="278" opacity="0.55"/>
               </g>
+              <g class="kmeh-explosion-line">
+                <line class="kmeh-busbar-flow" x1="220" y1="520" x2="220" y2="460" stroke="#E8C86A" stroke-width="1" stroke-dasharray="4 8" opacity="0.75"/>
+                <line class="kmeh-busbar-flow" x1="580" y1="520" x2="580" y2="460" stroke="#E8C86A" stroke-width="1" stroke-dasharray="4 8" opacity="0.75"/>
+                <line class="kmeh-busbar-flow" x1="260" y1="430" x2="260" y2="375" stroke="#7FFFD4" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.65"/>
+                <line class="kmeh-busbar-flow" x1="540" y1="430" x2="540" y2="375" stroke="#7FFFD4" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.65"/>
+              </g>
 
               <!-- ═══════════════════════════════════════════════════
                    ŒIL D'HORUS HOLOGRAPHIQUE · sommet
                    ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-horus-eye" transform="translate(400, 215)">
-                <!-- Halo -->
-                <circle cx="0" cy="0" r="52" fill="url(#gradHorusHalo)" opacity="0.55"/>
-                <!-- Orbites -->
-                <ellipse class="kmeh-horus-orbit" cx="0" cy="0" rx="56" ry="17" fill="none" stroke="#E8C86A" stroke-width="1.3" stroke-dasharray="3 5" opacity="0.85"/>
-                <ellipse class="kmeh-horus-orbit-rev" cx="0" cy="0" rx="42" ry="12" fill="none" stroke="#00FFA3" stroke-width="1" stroke-dasharray="2 4" opacity="0.75"/>
+              <g class="kmeh-horus-eye" transform="translate(400, 210)">
+                <circle cx="0" cy="0" r="58" fill="url(#gradHorusHalo)" opacity="0.60"/>
+                <ellipse class="kmeh-horus-orbit" cx="0" cy="0" rx="58" ry="18" fill="none" stroke="#E8C86A" stroke-width="1.4" stroke-dasharray="3 5" opacity="0.88"/>
+                <ellipse class="kmeh-horus-orbit-rev" cx="0" cy="0" rx="44" ry="13" fill="none" stroke="#00FFA3" stroke-width="1.1" stroke-dasharray="2 4" opacity="0.78"/>
 
-                <!-- Œil stylisé -->
                 <g filter="url(#glowA)">
-                  <path d="M-34 0 Q-17 -15 0 -15 Q17 -15 34 0 Q17 15 0 15 Q-17 15 -34 0 Z" fill="#0A0D10" stroke="#00FFA3" stroke-width="2.2"/>
-                  <circle cx="0" cy="0" r="7.5" fill="#00FFA3"/>
-                  <circle cx="-2.5" cy="-2.5" r="2.2" fill="#FFFFFF" opacity="0.95"/>
-                  <!-- Larme d'Horus -->
-                  <path d="M0 15 L-3.5 30" stroke="#E8C86A" stroke-width="1.9" stroke-linecap="round"/>
-                  <path d="M0 15 L4.5 28" stroke="#C5A059" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M-36 0 Q-18 -16 0 -16 Q18 -16 36 0 Q18 16 0 16 Q-18 16 -36 0 Z" fill="#0A0D10" stroke="#00FFA3" stroke-width="2.4"/>
+                  <circle cx="0" cy="0" r="8" fill="#00FFA3"/>
+                  <circle cx="-2.5" cy="-2.5" r="2.4" fill="#FFFFFF" opacity="0.95"/>
+                  <path d="M0 16 L-4 32" stroke="#E8C86A" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M0 16 L5 30" stroke="#C5A059" stroke-width="1.8" stroke-linecap="round"/>
                 </g>
 
-                <!-- Satellites orbitaux -->
-                <circle cx="56" cy="0" r="2.8" fill="#E8C86A" filter="url(#glowA)"/>
-                <circle cx="-56" cy="0" r="2.8" fill="#00FFA3" filter="url(#glowG)"/>
+                <circle cx="58" cy="0" r="3" fill="#E8C86A" filter="url(#glowA)"/>
+                <circle cx="-58" cy="0" r="3" fill="#00FFA3" filter="url(#glowG)"/>
               </g>
 
             </svg>
@@ -1089,8 +1231,7 @@
         </div>
       </div>
     </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
+        <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
          4 NIVEAUX VOLUMÉTRIQUES
@@ -1168,7 +1309,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         8 MODULES SKID · ASSEMBLAGE LEGO INDUSTRIEL
+         8 MODULES SKID
          ═══════════════════════════════════════════════════════ -->
     <section id="skids" class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1180,7 +1321,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-        <!-- SKD-01 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code">SKD-01</span>
@@ -1190,7 +1330,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Centrale de distribution fluidique, compresseurs industriels à vis, pompes centrifuges et armoires de régulation pneumatique. Cœur hydraulique et pneumatique de l'installation.</p>
         </div>
 
-        <!-- SKD-02 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code au">SKD-02</span>
@@ -1200,7 +1339,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Réacteurs de biométhanisation anaérobie modulaires (<strong class="text-kemetGoldBright">600 m³</strong> de volume utile), échangeurs thermiques hydroniques d-HVAC à 37 °C et colonnes d'épuration du biogaz. Moteur biologique du Kemet Loop.</p>
         </div>
 
-        <!-- SKD-03 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code">SKD-03</span>
@@ -1210,7 +1348,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Convoyeurs continus NBR antistatiques haute cadence, matrice de spectromètres <strong class="text-cyberGreen">proche infrarouge (NIR)</strong>, projecteurs laser de guidage optique AR-Sorting (latence &lt; 20 ms) et rampe d'éjection pneumatique à 128 buses piézoélectriques.</p>
         </div>
 
-        <!-- SKD-04 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code au">SKD-04</span>
@@ -1220,7 +1357,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Unité d'osmose inverse à 3 étages <strong class="text-kemetGoldBright">K-WATER</strong> (taux de récupération des eaux industrielles &gt; 92 %, boucle ZLD à rejet liquide nul) et séparateurs hydrocarbures en acier Super Duplex.</p>
         </div>
 
-        <!-- SKD-05 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code">SKD-05</span>
@@ -1230,7 +1366,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Unité de cogénération biogaz CHP (<strong class="text-cyberGreen">100 kWe / 150 kWth</strong>), système de stockage stationnaire BESS LiFePO₄ (250 kWh) et architecture Smart Grid bidirectionnelle.</p>
         </div>
 
-        <!-- SKD-06 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code">SKD-06</span>
@@ -1240,7 +1375,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Baies serveurs durcies Edge L2, modules HSM de scellement cryptographique matériel, diodes de données à isolation galvanique et commutateurs PTP v2. Ossature de la blockchain Hyperledger Fabric.</p>
         </div>
 
-        <!-- SKD-07 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code au">SKD-07</span>
@@ -1250,7 +1384,6 @@
           <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Pupitres de supervision SCADA, interfaces holographiques HMI et télémétrie de bord sécurisée en temps réel. Le cerveau humain du hub (Phare de Maat).</p>
         </div>
 
-        <!-- SKD-08 -->
         <div class="skid-card space-y-2">
           <div class="flex items-center justify-between">
             <span class="skid-code">SKD-08</span>
@@ -1269,7 +1402,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         CONCEPT · L'USINE VIVANTE
+         CONCEPT
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1306,7 +1439,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         MANIFESTE ARCHITECTONIQUE
+         MANIFESTE
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1352,7 +1485,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         KEMET LOOP · THERMODYNAMIQUE & ÉCONOMIE CIRCULAIRE
+         KEMET LOOP
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1395,7 +1528,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         MAAT OS · CERVEAU UNIFICATEUR
+         MAAT OS
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1442,7 +1575,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         INDUSTRIE 5.0 · HUMANISME TECHNOLOGIQUE
+         INDUSTRIE 5.0
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1481,7 +1614,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         KÉNITRA · PÔLE MANUFACTURIER & VISION PANAFRICAINE
+         KÉNITRA
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1524,7 +1657,7 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         COMPARATIF INDUSTRIE 4.0 vs K-MEH-20
+         COMPARATIF
          ═══════════════════════════════════════════════════════ -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
@@ -1637,7 +1770,7 @@
       <p class="text-[9px] sm:text-[10px] text-slate-600">K-MEH-20 · Maat OS · PurKemet B2B · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
     </div>
   </footer>
-
+ 
   <!-- ═══════════════════════════════════════════════════════════
        MODAL DATA ROOM (NDA)
        ═══════════════════════════════════════════════════════════ -->
@@ -1705,7 +1838,7 @@
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
   <!-- ═══════════════════════════════════════════════════════════
-       SCRIPTS
+       SCRIPTS EXTERNES
        ═══════════════════════════════════════════════════════════ -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
@@ -1716,13 +1849,16 @@
   (function () {
     'use strict';
 
+    /* ============================================================
+       YEAR
+       ============================================================ */
     (function () {
       var y = document.getElementById('year');
       if (y) y.textContent = String(new Date().getFullYear());
     })();
 
     /* ============================================================
-       PIRAMIDE SVG — API PUBLIQUE v5.0
+       PIRAMIDE SVG v6.0 — API PUBLIQUE
        ============================================================ */
     var SVG_STATE = { exploded: false, autoRotate: true, activeLevel: 1 };
 
@@ -2242,4 +2378,4 @@
   })();
   </script>
 </body>
-</html>
+</html> 
