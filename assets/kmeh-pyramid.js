@@ -1,12 +1,12 @@
 /* ============================================================
-   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.5.0
+   K-MEH-20 · MOTEUR DE RENDU 3D CYBER-PHYSIQUE v4.0.0
    Industrial Illusion SARL · Deep Tech Systems · Marrakech
 
-   ⚠️  REPRÉSENTATION VISUELLE UNIQUEMENT
-   Aucune spécification technique propriétaire (P&ID, formules,
-   câblage, dimensions internes) n'est incluse dans ce fichier.
-   La documentation technique intégrale est réservée à la Data
-   Room institutionnelle sous NDA.
+   ⚠️  REPRÉSENTATION VISUELLE & CINÉTIQUE
+   Modélisation géométrique bioclimatique 56m × 56m (3 136 m²).
+   Architecture modulaire par skids Plug & Process.
+   Aucune formule thermochimique propriétaire n'est divulguée.
+   Documentation intégrale sous secret d'affaires en Data Room NDA.
 
    Copyright © 2026 Industrial Illusion SARL. Tous droits réservés.
    ============================================================ */
@@ -15,36 +15,25 @@
   'use strict';
 
   /* ============================================================
-     §0 · VERSION TAG + DEBUG FLAG (v3.5.0)
+     §0 · VERSION & INITIALISATION
      ============================================================ */
-  window.__KMEH_VERSION__ = '3.5.0';
+  window.__KMEH_VERSION__ = '4.0.0';
   try {
     console.info(
-      '%c[K-MEH-20] ★ v3.5.0 LOADED (HIGH-VISIBILITY BOOST) ★',
-      'color:#00FFA3;font-weight:bold;font-size:11px;background:#0A0D10;padding:3px 6px;border-radius:4px;'
+      '%c[K-MEH-20] ★ ENGINE 3D v4.0.0 MASTER READY ★',
+      'color:#00FFA3;font-weight:bold;font-size:11px;background:#060A0D;padding:4px 8px;border:1px solid #00FFA3;border-radius:4px;'
     );
   } catch (e) {}
 
-  var DEBUG = (function () {
-    try {
-      if (window.__KMEH_DEBUG__ === true) return true;
-      if (typeof location !== 'undefined' && /[?&]kmeh_debug=1/.test(location.search)) return true;
-    } catch (e) {}
-    return false;
-  })();
-
-  /* ============================================================
-     §1 · CANVAS + PRÉFÉRENCES UTILISATEUR
-     ============================================================ */
-  var canvas = document.getElementById('kmehPyramidCanvas');
+  var canvas = document.getElementById('kmehPyramidCanvas') || document.getElementById('heroPyramidCanvas');
   if (!canvas) {
-    try { console.warn('[K-MEH-20] Canvas #kmehPyramidCanvas introuvable — v3.5.0'); } catch (e) {}
+    try { console.warn('[K-MEH-20] Canvas introuvable (#kmehPyramidCanvas / #heroPyramidCanvas).'); } catch (e) {}
     return;
   }
 
   var ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) {
-    try { console.warn('[K-MEH-20] Contexte 2D indisponible — v3.5.0'); } catch (e) {}
+    try { console.warn('[K-MEH-20] Contexte 2D non disponible.'); } catch (e) {}
     return;
   }
 
@@ -52,74 +41,106 @@
   function reducedMotion() { return reducedMotionQuery.matches; }
 
   /* ============================================================
-     §2 · PALETTE
+     §1 · PALETTE CHROMATIQUE OFFICIELLE
      ============================================================ */
   var PALETTE = {
-    cyberCore: '#00FFA3', cyberMid: '#00B871', cyberDeep: '#059669',
-    kemetBright: '#E8C86A', kemetMid: '#C5A059', kemetDeep: '#8B6F2A',
-    whitePure: '#FFFFFF', whiteSoft: '#F1F5F9',
-    slateLight: '#94A3B8', slateMid: '#64748B', slateDark: '#334155',
-    danger: '#F87171', warning: '#E6CA86', info: '#60A5FA'
+    cyberCore: '#00FFA3',
+    cyberMid: '#00B871',
+    cyberDeep: '#059669',
+    kemetBright: '#E8C86A',
+    kemetMid: '#C5A059',
+    kemetDeep: '#8B6F2A',
+    whitePure: '#FFFFFF',
+    whiteSoft: '#F1F5F9',
+    slateLight: '#94A3B8',
+    slateMid: '#64748B',
+    slateDark: '#334155',
+    danger: '#F87171',
+    warning: '#E6CA86',
+    info: '#60A5FA'
   };
 
   /* ============================================================
-     §3 · GÉOMÉTRIE PYRAMIDE
+     §2 · GÉOMÉTRIE DE LA PYRAMIDE TRONQUÉE (56m × 56m)
      ============================================================ */
   var PYRAMID = {
-    halfBase: 1.000, halfTop: 0.220, height: 1.500,
-    facesCount: 4, levelsCount: 4,
-    realBase: 56, realHeight: 32, surfaceBase: 3136
+    halfBase: 1.00,
+    halfTop: 0.22,
+    height: 1.50,
+    facesCount: 4,
+    levelsCount: 4,
+    realBase: 56,
+    surfaceBase: 3136
   };
 
-  var EXPLOSION_GAP_PER_LEVEL = 0.42;
+  var EXPLOSION_GAP_PER_LEVEL = 0.40;
 
   /* ============================================================
-     §4 · CONFIG DES 4 NIVEAUX
+     §3 · CONFIGURATION DES 4 STRATES VOLUMÉTRIQUES
      ============================================================ */
   var LEVELS_CONFIG = [
-    { index: 0, key: 'base', color: PALETTE.cyberCore, colorDim: PALETTE.cyberMid, accent: PALETTE.cyberDeep,
-      label: 'NIVEAU 1 · BASE', subtitle: 'Réception & Matière' },
-    { index: 1, key: 'centre', color: PALETTE.cyberMid, colorDim: PALETTE.cyberDeep, accent: PALETTE.cyberDeep,
-      label: 'NIVEAU 2 · CENTRE', subtitle: 'Systèmes & Fluides' },
-    { index: 2, key: 'elev', color: PALETTE.kemetMid, colorDim: PALETTE.kemetDeep, accent: PALETTE.kemetBright,
-      label: 'NIVEAU 3 · ÉLÉVATION', subtitle: 'Intelligence & Données' },
-    { index: 3, key: 'top', color: PALETTE.kemetBright, colorDim: PALETTE.kemetMid, accent: PALETTE.whitePure,
-      label: 'NIVEAU 4 · SOMMET', subtitle: 'Vision & Commandement' }
+    {
+      index: 0,
+      key: 'base',
+      color: PALETTE.cyberCore,
+      colorDim: PALETTE.cyberMid,
+      label: 'NIVEAU 1 · BASE (3 136 m²)',
+      subtitle: 'La Bouche & l\'Estomac · Tri Optique & Compactage'
+    },
+    {
+      index: 1,
+      key: 'centre',
+      color: PALETTE.cyberMid,
+      colorDim: PALETTE.cyberDeep,
+      label: 'NIVEAU 2 · CENTRE (1 400 m²)',
+      subtitle: 'Système Nerveux · Fluidique & Climatisation d-HVAC'
+    },
+    {
+      index: 2,
+      key: 'elevation',
+      color: PALETTE.kemetMid,
+      colorDim: PALETTE.kemetDeep,
+      label: 'NIVEAU 3 · ÉLÉVATION (600 m²)',
+      subtitle: 'Cerveau Algorithmique · Cluster Maat OS & Data Lake'
+    },
+    {
+      index: 3,
+      key: 'sommet',
+      color: PALETTE.kemetBright,
+      colorDim: PALETTE.kemetMid,
+      label: 'NIVEAU 4 · SOMMET (150 m²)',
+      subtitle: 'L\'Œil d\'Horus · Tour de Contrôle & Observatoire 360°'
+    }
   ];
 
   /* ============================================================
-     §5 · SKIDS (FLUX ABSTRAITS)
+     §4 · SKIDS MODULAIRES ORBITAUX
      ============================================================ */
   var SKID_TYPES = {
-    MATTER: { key: 'MATTER', color: PALETTE.kemetBright, size: 0.055, speed: 0.32, icon: '◧' },
-    DATA:   { key: 'DATA',   color: PALETTE.cyberCore,   size: 0.045, speed: 0.52, icon: '◈' },
-    ENERGY: { key: 'ENERGY', color: PALETTE.kemetMid,    size: 0.040, speed: 0.78, icon: '◉' }
+    MATTER: { key: 'MATTER', color: PALETTE.kemetBright, size: 0.052, speed: 0.32, icon: '◧' },
+    DATA:   { key: 'DATA',   color: PALETTE.cyberCore,   size: 0.044, speed: 0.50, icon: '◈' },
+    ENERGY: { key: 'ENERGY', color: PALETTE.kemetMid,    size: 0.040, speed: 0.75, icon: '◉' }
   };
 
   var SKIDS_CONFIG = [
     { level: 0, type: 'MATTER', angleOffset: 0.00 },
     { level: 0, type: 'MATTER', angleOffset: 0.42 },
     { level: 0, type: 'MATTER', angleOffset: 0.84 },
-    { level: 0, type: 'MATTER', angleOffset: 1.26 },
     { level: 0, type: 'DATA',   angleOffset: 0.21 },
     { level: 0, type: 'ENERGY', angleOffset: 0.63 },
     { level: 1, type: 'DATA',   angleOffset: 0.10 },
     { level: 1, type: 'DATA',   angleOffset: 0.52 },
-    { level: 1, type: 'DATA',   angleOffset: 0.94 },
     { level: 1, type: 'ENERGY', angleOffset: 0.31 },
-    { level: 1, type: 'ENERGY', angleOffset: 0.73 },
-    { level: 1, type: 'MATTER', angleOffset: 0.00 },
+    { level: 1, type: 'MATTER', angleOffset: 0.73 },
     { level: 2, type: 'DATA',   angleOffset: 0.15 },
     { level: 2, type: 'DATA',   angleOffset: 0.57 },
-    { level: 2, type: 'DATA',   angleOffset: 0.99 },
     { level: 2, type: 'ENERGY', angleOffset: 0.36 },
     { level: 3, type: 'DATA',   angleOffset: 0.00 },
-    { level: 3, type: 'DATA',   angleOffset: 0.50 },
-    { level: 3, type: 'ENERGY', angleOffset: 0.25 }
+    { level: 3, type: 'ENERGY', angleOffset: 0.50 }
   ];
 
   /* ============================================================
-     §6 · ÉTAT GLOBAL
+     §5 · ÉTAT INTERNE DE L'ENGINE
      ============================================================ */
   var engine = {
     W: 0, H: 0, DPR: 1,
@@ -127,33 +148,37 @@
     fps: 60, fpsAccumulator: 0, fpsFrames: 0,
     paused: false, initialized: false,
     renderRequestId: 0, pointer: null, rect: null,
-    _loggedRenderError: false, _firstRenderLogged: false,
-    _debugStampDrawn: false
+    firstRenderLogged: false
   };
 
   var camera = {
-    rotation: 0.6, targetRotation: 0.6,
-    tilt: 0.32, targetTilt: 0.32,
-    zoom: 1.0, targetZoom: 1.0,
-    autoRotate: true, autoRotateSpeed: 0.12,
+    rotation: -0.65, targetRotation: -0.65,
+    tilt: 0.38, targetTilt: 0.38,
+    zoom: 1.05, targetZoom: 1.05,
+    autoRotate: true, autoRotateSpeed: 0.10,
     velocity: 0, velocityDamping: 0.92,
     isDragging: false, hasDragged: false,
     lastX: 0, lastY: 0, dragStartTime: 0
   };
 
   var selection = {
-    level: -1, levelTarget: -1,
-    hoveredLevel: -1, skid: -1, hoveredSkid: -1,
-    explosion: 0, explosionTarget: 0,
-    showTelemetry: true, showCompass: true,
-    showGrid: true, showLabels: true
+    level: 0,
+    hoveredLevel: -1,
+    skid: -1,
+    hoveredSkid: -1,
+    explosion: 1.0,
+    explosionTarget: 1.0,
+    showTelemetry: true,
+    showCompass: true,
+    showGrid: true
   };
 
   /* ============================================================
-     §7 · UTILITAIRES
+     §6 · FONCTIONS MATHÉMATIQUES & PROJECTION 3D
      ============================================================ */
   function clamp(v, min, max) { return v < min ? min : (v > max ? max : v); }
   function lerp(a, b, t) { return a + (b - a) * t; }
+
   function hexToRgba(hex, alpha) {
     var r = parseInt(hex.slice(1, 3), 16);
     var g = parseInt(hex.slice(3, 5), 16);
@@ -161,9 +186,12 @@
     return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
   }
 
-  /* ============================================================
-     §8 · PROJECTION 3D → 2D
-     ============================================================ */
+  /*
+   * PROJECTION 3D ISO-PERSPECTIVE
+   * Y 3D > 0 = BAS (sol/base)
+   * Y 3D < 0 = HAUT (sommet/apex)
+   * Ainsi la pyramide est dessinée à l'endroit, base fermement posée.
+   */
   function projectPoint(x, y, z) {
     var cosR = Math.cos(camera.rotation);
     var sinR = Math.sin(camera.rotation);
@@ -175,8 +203,9 @@
     var ry = y * cosT - rz * sinT;
     var rz2 = y * sinT + rz * cosT;
 
-    var perspFactor = 500 / (500 + rz2 * 120);
-    var baseScale = Math.min(engine.W / 2.4, engine.H / 1.85);
+    var fov = 420;
+    var perspFactor = fov / (fov + rz2 * 110);
+    var baseScale = Math.min(engine.W / 2.3, engine.H / 1.75);
     var scale = baseScale * camera.zoom;
 
     return {
@@ -187,117 +216,92 @@
     };
   }
 
+  function getExplosionOffset(level) {
+    // Les étages montent vers le haut (donc Y devient plus négatif)
+    return -1 * selection.explosion * (level * EXPLOSION_GAP_PER_LEVEL);
+  }
+
   function projectRing(t, yOffset) {
     yOffset = yOffset || 0;
+    // t = 0 (base large) -> t = 1 (sommet étroit)
     var halfWidth = lerp(PYRAMID.halfBase, PYRAMID.halfTop, t);
-    var y = -PYRAMID.height / 2 + t * PYRAMID.height + yOffset;
+    // Base à +height/2, sommet à -height/2
+    var y3d = (PYRAMID.height / 2) - (t * PYRAMID.height) + yOffset;
+
     var corners = [
       { x: -halfWidth, z: -halfWidth },
       { x: +halfWidth, z: -halfWidth },
       { x: +halfWidth, z: +halfWidth },
       { x: -halfWidth, z: +halfWidth }
     ];
-    return corners.map(function (c) { return projectPoint(c.x, y, c.z); });
-  }
 
-  function getExplosionOffset(level) {
-    return selection.explosion * level * EXPLOSION_GAP_PER_LEVEL;
+    return corners.map(function (c) {
+      return projectPoint(c.x, y3d, c.z);
+    });
   }
 
   /* ============================================================
-     §9 · SCÈNE
+     §7 · SCÈNE & PARTICULES
      ============================================================ */
   var scene = {
-    skids: [], energyParticles: [], dataParticles: [], coreParticles: [],
-    ringsCache: [], scanLineY: 0
+    skids: [],
+    energyParticles: [],
+    dataParticles: [],
+    coreParticles: [],
+    ringsCache: [],
+    scanLineY: 0
   };
 
   function createSkid(config, idx) {
     var type = SKID_TYPES[config.type];
     var level = config.level;
     var tMid = (level + 0.5) / PYRAMID.levelsCount;
-    var yMid = -PYRAMID.height / 2 + tMid * PYRAMID.height;
+    var yMid = (PYRAMID.height / 2) - (tMid * PYRAMID.height);
     var halfWidthAtLevel = lerp(PYRAMID.halfBase, PYRAMID.halfTop, tMid);
-    var orbitRadius = halfWidthAtLevel * 1.45 + 0.08;
+    var orbitRadius = halfWidthAtLevel * 1.48 + 0.08;
+
     return {
-      id: idx, level: level, type: type, typeKey: config.type,
+      id: idx,
+      level: level,
+      type: type,
+      typeKey: config.type,
       angle: config.angleOffset * Math.PI * 2,
-      angleOffset: config.angleOffset * Math.PI * 2,
-      radius: orbitRadius, baseY: yMid,
+      radius: orbitRadius,
+      baseY: yMid,
       speed: type.speed * (0.85 + Math.random() * 0.3),
       phase: Math.random() * Math.PI * 2,
-      bobAmp: 0.025 + Math.random() * 0.02,
-      size: type.size, trail: [], trailMax: 12,
-      hover: false, selected: false, px: 0, py: 0, pz: 0, projScale: 1
+      bobAmp: 0.02 + Math.random() * 0.02,
+      size: type.size,
+      trail: [],
+      trailMax: 12,
+      hover: false,
+      px: 0, py: 0, pz: 0, projScale: 1
     };
   }
 
-  function createEnergyParticles() {
-    var particles = [], countPerLevel = 6;
-    for (var lvl = 0; lvl < PYRAMID.levelsCount; lvl++) {
-      for (var p = 0; p < countPerLevel; p++) {
-        particles.push({
-          level: lvl, corner: p % PYRAMID.facesCount,
-          t: Math.random(),
-          speed: 0.0035 + Math.random() * 0.0025,
-          color: LEVELS_CONFIG[lvl].color,
-          size: 1.4 + Math.random() * 1.2,
-          pulse: Math.random() * Math.PI * 2, currentPulse: 1
-        });
-      }
-    }
-    return particles;
-  }
-
-  function createDataParticles() {
-    var particles = [], count = 14;
-    for (var i = 0; i < count; i++) {
-      particles.push({
-        level: Math.floor(Math.random() * PYRAMID.levelsCount),
-        corner: Math.floor(Math.random() * PYRAMID.facesCount),
-        t: Math.random(),
-        speed: -0.0028 - Math.random() * 0.0022,
-        color: PALETTE.cyberCore,
-        size: 1.0 + Math.random() * 0.8,
-        pulse: Math.random() * Math.PI * 2,
-        blinkInterval: 0.3 + Math.random() * 0.6,
-        blinkPhase: Math.random(), currentBlink: 1
-      });
-    }
-    return particles;
-  }
-
   function createCoreParticles() {
-    var particles = [], count = 32;
+    var list = [];
+    var count = 36;
     for (var i = 0; i < count; i++) {
-      particles.push({
+      list.push({
         progress: Math.random(),
-        speed: 0.15 + Math.random() * 0.12,
+        speed: 0.18 + Math.random() * 0.14,
         angle: Math.random() * Math.PI * 2,
-        radius: 0.04 + Math.random() * 0.12,
-        size: 1.2 + Math.random() * 1.4,
+        radius: 0.03 + Math.random() * 0.10,
+        size: 1.4 + Math.random() * 1.6,
         phase: Math.random() * Math.PI * 2,
-        color: Math.random() < 0.5 ? PALETTE.kemetBright : PALETTE.cyberCore
+        color: Math.random() < 0.5 ? PALETTE.cyberCore : PALETTE.kemetBright
       });
     }
-    return particles;
-  }
-
-  function rebuildSkids() {
-    scene.skids = SKIDS_CONFIG.map(function (cfg, idx) { return createSkid(cfg, idx); });
+    return list;
   }
 
   function initializeScene() {
-    rebuildSkids();
-    scene.energyParticles = createEnergyParticles();
-    scene.dataParticles = createDataParticles();
+    scene.skids = SKIDS_CONFIG.map(function (cfg, idx) { return createSkid(cfg, idx); });
     scene.coreParticles = createCoreParticles();
     scene.ringsCache = [];
   }
 
-  /* ============================================================
-     §10 · RINGS CACHE
-     ============================================================ */
   function updateRingsCache() {
     var cache = [];
     for (var lvl = 0; lvl < PYRAMID.levelsCount; lvl++) {
@@ -305,7 +309,8 @@
       var bottomT = lvl / PYRAMID.levelsCount;
       var topT = (lvl + 1) / PYRAMID.levelsCount;
       cache.push({
-        level: lvl, offsetY: offset,
+        level: lvl,
+        offsetY: offset,
         bottom: projectRing(bottomT, offset),
         top: projectRing(topT, offset)
       });
@@ -314,7 +319,7 @@
   }
 
   /* ============================================================
-     §11 · UPDATE SCENE
+     §8 · MISES À JOUR CINÉTIQUES
      ============================================================ */
   function updateSkids(dt) {
     var timeSec = engine.elapsedTime;
@@ -322,64 +327,50 @@
       var skid = scene.skids[i];
       if (!reducedMotion()) {
         skid.angle += skid.speed * dt;
-        skid.angle = skid.angle % (Math.PI * 2);
+        if (skid.angle > Math.PI * 2) skid.angle -= Math.PI * 2;
       }
-      var bob = Math.sin(skid.phase + timeSec * 1.2) * skid.bobAmp;
+
+      var bob = Math.sin(skid.phase + timeSec * 1.5) * skid.bobAmp;
       var levelOffset = getExplosionOffset(skid.level);
       var px3d = Math.cos(skid.angle) * skid.radius;
       var pz3d = Math.sin(skid.angle) * skid.radius;
       var py3d = skid.baseY + levelOffset + bob;
+
       var projected = projectPoint(px3d, py3d, pz3d);
       skid.px = projected.x;
       skid.py = projected.y;
       skid.pz = projected.depth;
       skid.projScale = projected.scale;
+
       skid.trail.push({ x: projected.x, y: projected.y });
       if (skid.trail.length > skid.trailMax) skid.trail.shift();
+
       if (engine.pointer) {
         var dx = engine.pointer.x - projected.x;
         var dy = engine.pointer.y - projected.y;
-        skid.hover = (dx * dx + dy * dy) < (22 * 22);
-      } else { skid.hover = false; }
+        skid.hover = (dx * dx + dy * dy) < (24 * 24);
+      } else {
+        skid.hover = false;
+      }
     }
   }
 
   function updateParticles(dt) {
-    var timeSec = engine.elapsedTime;
-    for (var i = 0; i < scene.energyParticles.length; i++) {
-      var p = scene.energyParticles[i];
-      p.t += p.speed * dt * 60;
-      if (p.t > 1) { p.t = 0; p.pulse = Math.random() * Math.PI * 2; }
-      p.currentPulse = 0.7 + 0.3 * Math.sin(timeSec * 3 + p.pulse);
-    }
-    for (var j = 0; j < scene.dataParticles.length; j++) {
-      var dp = scene.dataParticles[j];
-      dp.t += dp.speed * dt * 60;
-      if (dp.t < 0) {
-        dp.t = 1;
-        dp.level = Math.floor(Math.random() * PYRAMID.levelsCount);
-        dp.corner = Math.floor(Math.random() * PYRAMID.facesCount);
-      }
-      dp.blinkPhase += dt * dp.blinkInterval * 6;
-      if (dp.blinkPhase > 1) dp.blinkPhase -= 1;
-      dp.currentBlink = dp.blinkPhase < 0.15 ? 1 : 0.5;
-    }
     for (var k = 0; k < scene.coreParticles.length; k++) {
       var cp = scene.coreParticles[k];
       cp.progress += cp.speed * dt;
       if (cp.progress > 1) {
         cp.progress = 0;
-        cp.radius = 0.04 + Math.random() * 0.12;
-        cp.color = Math.random() < 0.5 ? PALETTE.kemetBright : PALETTE.cyberCore;
+        cp.radius = 0.03 + Math.random() * 0.10;
       }
-      cp.angle += dt * 0.6;
+      cp.angle += dt * 0.8;
     }
   }
 
   function updateExplosion(dt) {
     var diff = selection.explosionTarget - selection.explosion;
     var step = 1.8 * dt;
-    if (Math.abs(diff) < 0.001) {
+    if (Math.abs(diff) < 0.002) {
       selection.explosion = selection.explosionTarget;
     } else {
       selection.explosion += Math.sign(diff) * Math.min(Math.abs(diff), step);
@@ -394,85 +385,78 @@
   }
 
   /* ============================================================
-     §12 · DRAW · RADIAL BG
+     §9 · RENDU GRAPHIQUE (HIGH VISIBILITY)
      ============================================================ */
-  function drawRadialBackground(cx, cy, radius, colorInner, colorOuter) {
-    var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-    grd.addColorStop(0, colorInner);
-    grd.addColorStop(0.55, colorOuter);
-    grd.addColorStop(1, 'rgba(0,0,0,0)');
+
+  // 1. Halo et fond radial
+  function drawPyramidAtmosphere() {
+    var cx = engine.W / 2;
+    var cy = engine.H / 2;
+    var r = Math.min(engine.W, engine.H) * 0.58;
+    if (r <= 0) return;
+
+    var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grd.addColorStop(0, 'rgba(0, 255, 163, 0.12)');
+    grd.addColorStop(0.35, 'rgba(197, 160, 89, 0.06)');
+    grd.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, engine.W, engine.H);
   }
 
-  /* ============================================================
-     §13 · DRAW · HALO (VISIBILITÉ)
-     ============================================================ */
-  function drawPyramidHalo() {
-    var cx = engine.W / 2;
-    var cy = engine.H / 2;
-    var radius = Math.min(engine.W, engine.H) * 0.55;
-    if (radius <= 0) return;
-    var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-    grd.addColorStop(0, 'rgba(0, 255, 163, 0.14)');
-    grd.addColorStop(0.40, 'rgba(232, 200, 106, 0.08)');
-    grd.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  /* ============================================================
-     §14 · DRAW · PYRAMID LEVELS (v3.5.0 BOOST VISIBILITÉ)
-     ============================================================ */
+  // 2. Facettes et structure solide
   function drawPyramidLevels() {
     var faces = [];
+
     for (var lvl = 0; lvl < scene.ringsCache.length; lvl++) {
       var cache = scene.ringsCache[lvl];
       var ringTop = cache.top;
       var ringBot = cache.bottom;
+
       for (var side = 0; side < PYRAMID.facesCount; side++) {
         var s0 = ringTop[side];
         var s1 = ringTop[(side + 1) % PYRAMID.facesCount];
         var s2 = ringBot[(side + 1) % PYRAMID.facesCount];
         var s3 = ringBot[side];
         var avgDepth = (s0.depth + s1.depth + s2.depth + s3.depth) / 4;
-        faces.push({ level: lvl, side: side, pts: [s0, s1, s2, s3], depth: avgDepth, config: LEVELS_CONFIG[lvl] });
+
+        faces.push({
+          level: lvl,
+          side: side,
+          pts: [s0, s1, s2, s3],
+          depth: avgDepth,
+          config: LEVELS_CONFIG[lvl]
+        });
       }
     }
+
+    // Tri par profondeur Z (Painter's algorithm)
     faces.sort(function (a, b) { return b.depth - a.depth; });
-    for (var i = 0; i < faces.length; i++) drawPyramidFace(faces[i]);
+
+    for (var f = 0; f < faces.length; f++) {
+      drawFace(faces[f]);
+    }
   }
 
-  function drawPyramidFace(face) {
+  function drawFace(face) {
     var cfg = face.config;
-    var isSelected = selection.level === face.level;
-    var isHovered = selection.hoveredLevel === face.level;
-    var exploded = selection.explosion > 0.1;
+    var isSelected = (selection.level === face.level);
+    var isHovered = (selection.hoveredLevel === face.level);
 
-    // v3.5 · ALPHA BOOST — optimisation du contraste sur fond d'espace profond
-    var baseAlpha, strokeAlpha, glowBlur, lineWidth;
-    if (isSelected) {
-      baseAlpha = 0.95; strokeAlpha = 1.0; glowBlur = 30; lineWidth = 3.5;
-    } else if (isHovered) {
-      baseAlpha = 0.85; strokeAlpha = 1.0; glowBlur = 22; lineWidth = 3.0;
-    } else {
-      baseAlpha = exploded ? 0.80 : 0.75;
-      strokeAlpha = 1.0;
-      glowBlur = exploded ? 18 : 15;
-      lineWidth = exploded ? 2.8 : 2.5;
-    }
+    // Alpha boost pour garantir la visibilité sur fond étoilé
+    var baseAlpha = isSelected ? 0.92 : (isHovered ? 0.85 : 0.74);
+    var strokeAlpha = 1.0;
+    var glowBlur = isSelected ? 26 : (isHovered ? 18 : 10);
+    var lineWidth = isSelected ? 3.0 : 2.2;
 
     if (isSelected && !reducedMotion()) {
-      baseAlpha += 0.05 + 0.05 * Math.sin(engine.elapsedTime * 4);
-      baseAlpha = Math.min(baseAlpha, 1.0);
+      baseAlpha += 0.06 * Math.sin(engine.elapsedTime * 4);
     }
 
+    // Remplissage avec dégradé d'ombrage industriel
     var fillGrd = ctx.createLinearGradient(face.pts[0].x, face.pts[0].y, face.pts[2].x, face.pts[2].y);
     fillGrd.addColorStop(0, hexToRgba(cfg.color, baseAlpha * 0.85));
     fillGrd.addColorStop(0.5, hexToRgba(cfg.color, baseAlpha));
-    fillGrd.addColorStop(1, hexToRgba(cfg.colorDim, baseAlpha * 0.7));
+    fillGrd.addColorStop(1, hexToRgba(cfg.colorDim, baseAlpha * 0.70));
 
     ctx.fillStyle = fillGrd;
     ctx.beginPath();
@@ -483,10 +467,19 @@
     ctx.closePath();
     ctx.fill();
 
+    // Grille blueprint intérieure
     if (selection.showGrid && (isSelected || isHovered)) {
-      drawBlueprintGridOnFace(face, cfg, strokeAlpha * 0.5);
+      ctx.strokeStyle = hexToRgba(cfg.color, 0.35);
+      ctx.lineWidth = 0.6;
+      for (var g = 1; g <= 2; g++) {
+        var t = g / 3;
+        var xa = lerp(face.pts[0].x, face.pts[1].x, t), ya = lerp(face.pts[0].y, face.pts[1].y, t);
+        var xb = lerp(face.pts[3].x, face.pts[2].x, t), yb = lerp(face.pts[3].y, face.pts[2].y, t);
+        ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+      }
     }
 
+    // Arêtes extérieures lumineuses
     ctx.shadowColor = cfg.color;
     ctx.shadowBlur = glowBlur;
     ctx.strokeStyle = hexToRgba(cfg.color, strokeAlpha);
@@ -495,70 +488,45 @@
     ctx.shadowBlur = 0;
   }
 
-  function drawBlueprintGridOnFace(face, cfg, alpha) {
-    var p0 = face.pts[0], p1 = face.pts[1], p2 = face.pts[2], p3 = face.pts[3];
-    ctx.strokeStyle = hexToRgba(cfg.color, alpha);
-    ctx.lineWidth = 0.5;
-    for (var i = 1; i <= 2; i++) {
-      var t = i / 3;
-      var xa = lerp(p0.x, p1.x, t), ya = lerp(p0.y, p1.y, t);
-      var xb = lerp(p3.x, p2.x, t), yb = lerp(p3.y, p2.y, t);
-      ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+  // 3. Plateforme supérieure et vertices
+  function drawPyramidTopsAndVertices() {
+    var topCache = scene.ringsCache[PYRAMID.levelsCount - 1];
+    if (topCache) {
+      var topRing = topCache.top;
+      var cfgTop = LEVELS_CONFIG[3];
+      var isTopActive = (selection.level === 3 || selection.hoveredLevel === 3);
+
+      ctx.fillStyle = hexToRgba(cfgTop.color, isTopActive ? 0.90 : 0.75);
+      ctx.beginPath();
+      ctx.moveTo(topRing[0].x, topRing[0].y);
+      for (var i = 1; i < 4; i++) ctx.lineTo(topRing[i].x, topRing[i].y);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowColor = cfgTop.color;
+      ctx.shadowBlur = isTopActive ? 24 : 12;
+      ctx.strokeStyle = hexToRgba(cfgTop.color, 1.0);
+      ctx.lineWidth = isTopActive ? 3.2 : 2.4;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     }
-    var xc = lerp(p0.x, p3.x, 0.5), yc = lerp(p0.y, p3.y, 0.5);
-    var xd = lerp(p1.x, p2.x, 0.5), yd = lerp(p1.y, p2.y, 0.5);
-    ctx.beginPath(); ctx.moveTo(xc, yc); ctx.lineTo(xd, yd); ctx.stroke();
-  }
 
-  /* ============================================================
-     §15 · DRAW · TOP FACE (v3.5.0 BOOST VISIBILITÉ)
-     ============================================================ */
-  function drawPyramidTopFace() {
-    var topLevel = scene.ringsCache[PYRAMID.levelsCount - 1];
-    if (!topLevel) return;
-    var topRing = topLevel.top;
-    var cfg = LEVELS_CONFIG[3];
-    var isSelected = selection.level === 3;
-    var isHovered = selection.hoveredLevel === 3;
-
-    var alpha = isSelected ? 0.95 : (isHovered ? 0.85 : 0.75);
-    var strokeAlpha = 1.0;
-
-    ctx.fillStyle = hexToRgba(cfg.color, alpha);
-    ctx.beginPath();
-    ctx.moveTo(topRing[0].x, topRing[0].y);
-    for (var i = 1; i < 4; i++) ctx.lineTo(topRing[i].x, topRing[i].y);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.shadowColor = cfg.color;
-    ctx.shadowBlur = isSelected ? 28 : (isHovered ? 22 : 15);
-    ctx.strokeStyle = hexToRgba(cfg.color, strokeAlpha);
-    ctx.lineWidth = isSelected ? 3.5 : 2.8;
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }
-
-  /* ============================================================
-     §16 · DRAW · VERTICES (v3.5.0 BOOST VISIBILITÉ)
-     ============================================================ */
-  function drawPyramidVertices() {
+    // Noeuds et sommets (Vertices)
     for (var lvl = 0; lvl < scene.ringsCache.length; lvl++) {
       var cache = scene.ringsCache[lvl];
       var cfg = LEVELS_CONFIG[lvl];
       var rings = [cache.bottom, cache.top];
-      var isLevelActive = (selection.level === lvl) || (selection.hoveredLevel === lvl);
+      var active = (selection.level === lvl || selection.hoveredLevel === lvl);
+
       for (var r = 0; r < rings.length; r++) {
         var ring = rings[r];
-        for (var side = 0; side < ring.length; side++) {
-          var pt = ring[side];
-          var size = isLevelActive ? 5.5 : 3.5;
-          var alpha = isLevelActive ? 1.0 : 0.95;
-          ctx.fillStyle = hexToRgba(cfg.color, alpha);
+        for (var s = 0; s < ring.length; s++) {
+          var pt = ring[s];
+          ctx.fillStyle = hexToRgba(cfg.color, 1.0);
           ctx.shadowColor = cfg.color;
-          ctx.shadowBlur = isLevelActive ? 14 : 8;
+          ctx.shadowBlur = active ? 14 : 7;
           ctx.beginPath();
-          ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
+          ctx.arc(pt.x, pt.y, active ? 4.8 : 3.2, 0, Math.PI * 2);
           ctx.fill();
           ctx.shadowBlur = 0;
         }
@@ -566,485 +534,280 @@
     }
   }
 
-  /* ============================================================
-     §17 · DRAW · KEMET LOOP CORE
-     ============================================================ */
+  // 4. Noyau central Kemet Loop
   function drawKemetLoopCore() {
-    var showIntensity = Math.max(selection.explosion, 0.15);
-    if (showIntensity < 0.05) return;
-    var bottomY = -PYRAMID.height / 2;
-    var topY = -PYRAMID.height / 2 + PYRAMID.height + getExplosionOffset(3);
-    var pBot = projectPoint(0, bottomY, 0);
-    var pTop = projectPoint(0, topY, 0);
+    if (selection.explosion < 0.05) return;
+
+    var botY = PYRAMID.height / 2;
+    var topY = -PYRAMID.height / 2 + getExplosionOffset(3);
+    var pBot = projectPoint(0, botY, 0);
+    var pTop = projectPoint(0, topY - 0.25, 0);
     if (!pBot || !pTop) return;
 
-    var beamWidth = 26 + 18 * selection.explosion;
+    // Faisceau central de plasma
+    var beamW = 28 * selection.explosion;
     var grd = ctx.createLinearGradient(pBot.x, pBot.y, pTop.x, pTop.y);
-    grd.addColorStop(0, 'rgba(0, 255, 163, 0)');
-    grd.addColorStop(0.18, hexToRgba(PALETTE.cyberCore, 0.18 * showIntensity));
-    grd.addColorStop(0.5, hexToRgba(PALETTE.kemetBright, 0.38 * showIntensity));
-    grd.addColorStop(0.82, hexToRgba(PALETTE.kemetBright, 0.18 * showIntensity));
-    grd.addColorStop(1, 'rgba(232, 200, 106, 0)');
+    grd.addColorStop(0, 'rgba(0, 255, 163, 0.0)');
+    grd.addColorStop(0.3, hexToRgba(PALETTE.cyberCore, 0.40 * selection.explosion));
+    grd.addColorStop(0.7, hexToRgba(PALETTE.kemetBright, 0.60 * selection.explosion));
+    grd.addColorStop(1, 'rgba(232, 200, 106, 0.0)');
 
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     ctx.fillStyle = grd;
     ctx.beginPath();
-    ctx.moveTo(pBot.x - beamWidth / 2, pBot.y);
-    ctx.lineTo(pTop.x - beamWidth * 0.6, pTop.y);
-    ctx.lineTo(pTop.x + beamWidth * 0.6, pTop.y);
-    ctx.lineTo(pBot.x + beamWidth / 2, pBot.y);
+    ctx.moveTo(pBot.x - beamW / 2, pBot.y);
+    ctx.lineTo(pTop.x - beamW * 0.4, pTop.y);
+    ctx.lineTo(pTop.x + beamW * 0.4, pTop.y);
+    ctx.lineTo(pBot.x + beamW / 2, pBot.y);
     ctx.closePath();
     ctx.fill();
-    ctx.restore();
 
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    var pulse = 0.6 + 0.4 * Math.sin(engine.elapsedTime * 2.5);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.55 * pulse * showIntensity);
-    ctx.lineWidth = 2.2;
-    ctx.shadowColor = PALETTE.kemetBright;
-    ctx.shadowBlur = 16;
+    // Ligne centrale ultra-brillante
+    ctx.strokeStyle = hexToRgba(PALETTE.whitePure, 0.85 * selection.explosion);
+    ctx.lineWidth = 2.0;
+    ctx.shadowColor = PALETTE.cyberCore;
+    ctx.shadowBlur = 18;
     ctx.beginPath();
     ctx.moveTo(pBot.x, pBot.y);
     ctx.lineTo(pTop.x, pTop.y);
     ctx.stroke();
     ctx.shadowBlur = 0;
-    ctx.restore();
 
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
+    // Particules d'énergie ascendantes
     for (var i = 0; i < scene.coreParticles.length; i++) {
       var cp = scene.coreParticles[i];
-      if (cp.progress > selection.explosion + 0.2) continue;
-      var y3d = -PYRAMID.height / 2 + cp.progress * PYRAMID.height;
-      var levelOfParticle = Math.min(PYRAMID.levelsCount - 1, Math.floor(cp.progress * PYRAMID.levelsCount));
-      var offsetY = getExplosionOffset(levelOfParticle);
-      var p = projectPoint(Math.cos(cp.angle) * cp.radius, y3d + offsetY, Math.sin(cp.angle) * cp.radius);
-      var alpha = (0.4 + 0.6 * Math.sin(engine.elapsedTime * 3 + cp.phase)) * showIntensity;
-      ctx.fillStyle = hexToRgba(cp.color, alpha);
+      // Ascension le long de Y (du bas vers le haut)
+      var currentT = cp.progress;
+      var curLevel = Math.min(PYRAMID.levelsCount - 1, Math.floor(currentT * PYRAMID.levelsCount));
+      var y3d = (PYRAMID.height / 2) - (currentT * PYRAMID.height) + getExplosionOffset(curLevel);
+
+      var px = Math.cos(cp.angle) * cp.radius;
+      var pz = Math.sin(cp.angle) * cp.radius;
+      var pt = projectPoint(px, y3d, pz);
+
+      ctx.fillStyle = cp.color;
       ctx.shadowColor = cp.color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 10;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, cp.size, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, cp.size, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.shadowBlur = 0;
     ctx.restore();
   }
 
-  /* ============================================================
-     §18 · DRAW · HORUS EYE
-     ============================================================ */
-  function drawHorusEye() {
-    var topY = -PYRAMID.height / 2 + PYRAMID.height + getExplosionOffset(3) + 0.18;
+  // 5. Œil d'Horus holographique au sommet
+  function drawHorusEyeApex() {
+    var topY = -PYRAMID.height / 2 + getExplosionOffset(3) - 0.28;
     var apex = projectPoint(0, topY, 0);
     if (!apex) return;
 
     var time = engine.elapsedTime;
-    var pulse = 0.75 + 0.25 * Math.sin(time * 2);
-    var baseScale = Math.min(engine.W / 2.4, engine.H / 1.85);
-    var size = baseScale * 0.14 * (0.9 + 0.1 * pulse);
-
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    var haloR = size * 2.4;
-    var haloGrd = ctx.createRadialGradient(apex.x, apex.y, 0, apex.x, apex.y, haloR);
-    haloGrd.addColorStop(0, hexToRgba(PALETTE.kemetBright, 0.32 * pulse));
-    haloGrd.addColorStop(0.4, hexToRgba(PALETTE.kemetBright, 0.12 * pulse));
-    haloGrd.addColorStop(1, 'rgba(232, 200, 106, 0)');
-    ctx.fillStyle = haloGrd;
-    ctx.beginPath();
-    ctx.arc(apex.x, apex.y, haloR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.fillStyle = hexToRgba(PALETTE.kemetBright, 0.12);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.65);
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.arc(apex.x, apex.y, size * 1.1, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
+    var pulse = 0.8 + 0.2 * Math.sin(time * 2.5);
+    var size = 30 * camera.zoom;
 
     ctx.save();
     ctx.translate(apex.x, apex.y);
-    var rot1 = time * 0.5;
-    ctx.rotate(rot1);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetMid, 0.75);
-    ctx.lineWidth = 1.0;
-    ctx.setLineDash([2, 3]);
+
+    // Anneaux orbitaux tournants
+    ctx.strokeStyle = hexToRgba(PALETTE.kemetMid, 0.7);
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 4]);
+    ctx.save();
+    ctx.rotate(time * 0.6);
     ctx.beginPath();
     ctx.ellipse(0, 0, size * 1.6, size * 0.55, 0, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.rotate(-rot1 * 1.6);
-    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 0.7);
-    ctx.lineWidth = 0.8;
-    ctx.setLineDash([1.5, 2.5]);
-    ctx.beginPath();
-    ctx.ellipse(0, 0, size * 1.35, size * 0.45, 0, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
     ctx.restore();
 
+    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 0.75);
+    ctx.setLineDash([2, 3]);
     ctx.save();
-    ctx.translate(apex.x, apex.y);
-    var eyeW = size * 1.0, eyeH = size * 0.55;
-    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 1.0);
-    ctx.lineWidth = 1.8;
-    ctx.shadowColor = PALETTE.cyberCore;
-    ctx.shadowBlur = 10;
+    ctx.rotate(-time * 0.9);
     ctx.beginPath();
-    ctx.moveTo(-eyeW, 0);
-    ctx.quadraticCurveTo(-eyeW * 0.4, -eyeH, 0, -eyeH * 0.65);
-    ctx.quadraticCurveTo(eyeW * 0.4, -eyeH, eyeW, 0);
-    ctx.quadraticCurveTo(eyeW * 0.4, eyeH, 0, eyeH * 0.65);
-    ctx.quadraticCurveTo(-eyeW * 0.4, eyeH, -eyeW, 0);
+    ctx.ellipse(0, 0, size * 1.3, size * 0.45, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+    ctx.setLineDash([]);
+
+    // Symbole vectoriel de l'Œil d'Horus
+    ctx.strokeStyle = PALETTE.cyberCore;
+    ctx.lineWidth = 2.0;
+    ctx.shadowColor = PALETTE.cyberCore;
+    ctx.shadowBlur = 14;
+
+    ctx.beginPath();
+    ctx.moveTo(-size, 0);
+    ctx.quadraticCurveTo(-size * 0.35, -size * 0.65, 0, -size * 0.45);
+    ctx.quadraticCurveTo(size * 0.35, -size * 0.65, size, 0);
+    ctx.quadraticCurveTo(size * 0.35, size * 0.65, 0, size * 0.45);
+    ctx.quadraticCurveTo(-size * 0.35, size * 0.65, -size, 0);
     ctx.closePath();
     ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = hexToRgba(PALETTE.cyberCore, 0.95 * pulse);
-    ctx.shadowColor = PALETTE.cyberCore;
-    ctx.shadowBlur = 12;
+
+    // Pupille radiante
+    ctx.fillStyle = PALETTE.cyberCore;
     ctx.beginPath();
-    ctx.arc(0, 0, size * 0.22, 0, Math.PI * 2);
+    ctx.arc(0, 0, size * 0.24 * pulse, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = hexToRgba(PALETTE.whitePure, 0.9);
+
+    ctx.fillStyle = PALETTE.whitePure;
     ctx.beginPath();
-    ctx.arc(-size * 0.06, -size * 0.06, size * 0.06, 0, Math.PI * 2);
+    ctx.arc(-size * 0.06, -size * 0.06, size * 0.07, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.95);
+
+    // Larmes sacrées inférieures
+    ctx.strokeStyle = PALETTE.kemetBright;
     ctx.lineWidth = 1.6;
     ctx.beginPath();
-    ctx.moveTo(0, size * 0.55);
-    ctx.lineTo(-size * 0.06, size * 1.0);
+    ctx.moveTo(0, size * 0.45);
+    ctx.lineTo(-size * 0.08, size * 0.95);
     ctx.stroke();
+
     ctx.beginPath();
-    ctx.moveTo(0, size * 0.55);
-    ctx.lineTo(size * 0.12, size * 0.95);
+    ctx.moveTo(0, size * 0.45);
+    ctx.lineTo(size * 0.12, size * 0.90);
     ctx.stroke();
-    ctx.restore();
 
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    var orbitAngle = time * 1.2;
-    for (var k = 0; k < 2; k++) {
-      var ang = orbitAngle + k * Math.PI;
-      var satX = apex.x + Math.cos(ang) * size * 1.55;
-      var satY = apex.y + Math.sin(ang) * size * 0.5;
-      ctx.fillStyle = hexToRgba(k === 0 ? PALETTE.cyberCore : PALETTE.kemetBright, 0.95);
-      ctx.shadowColor = k === 0 ? PALETTE.cyberCore : PALETTE.kemetBright;
-      ctx.shadowBlur = 8;
-      ctx.beginPath();
-      ctx.arc(satX, satY, 2.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.shadowBlur = 0;
     ctx.restore();
   }
 
-  /* ============================================================
-     §19 · DRAW · PARTICULES
-     ============================================================ */
-  function drawEnergyParticles() {
-    for (var i = 0; i < scene.energyParticles.length; i++) {
-      var p = scene.energyParticles[i];
-      var cache = scene.ringsCache[p.level];
-      if (!cache) continue;
-      var top = cache.top[p.corner];
-      var bot = cache.bottom[p.corner];
-      if (!top || !bot) continue;
-      var x = lerp(bot.x, top.x, p.t);
-      var y = lerp(bot.y, top.y, p.t);
-      var alpha = p.currentPulse * 0.95;
-      var size = p.size * (0.8 + p.currentPulse * 0.4);
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = hexToRgba(p.color, alpha);
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    }
-  }
-
-  function drawDataParticles() {
-    for (var i = 0; i < scene.dataParticles.length; i++) {
-      var p = scene.dataParticles[i];
-      var cache = scene.ringsCache[p.level];
-      if (!cache) continue;
-      var top = cache.top[p.corner];
-      var bot = cache.bottom[p.corner];
-      if (!top || !bot) continue;
-      var x = lerp(top.x, bot.x, p.t);
-      var y = lerp(top.y, bot.y, p.t);
-      var alpha = p.currentBlink * 0.85;
-      var col = p.currentBlink > 0.9 ? PALETTE.whitePure : p.color;
-      ctx.shadowColor = PALETTE.cyberCore;
-      ctx.shadowBlur = 6;
-      ctx.fillStyle = hexToRgba(col, alpha);
-      ctx.beginPath();
-      ctx.arc(x, y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    }
-  }
-
-  /* ============================================================
-     §20 · DRAW · SKIDS
-     ============================================================ */
+  // 6. Skids orbitaux
   function drawSkids() {
     var sorted = scene.skids.slice().sort(function (a, b) { return (b.pz || 0) - (a.pz || 0); });
-    for (var i = 0; i < sorted.length; i++) drawSkid(sorted[i]);
-  }
 
-  function drawSkid(skid) {
-    if (!skid.px || !skid.py) return;
-    var type = skid.type;
-    var isActive = skid.hover || skid.selected || (selection.level === skid.level);
+    for (var i = 0; i < sorted.length; i++) {
+      var skid = sorted[i];
+      if (!skid.px || !skid.py) continue;
 
-    if (skid.trail.length > 1) {
-      for (var t = 0; t < skid.trail.length - 1; t++) {
-        var p1 = skid.trail[t], p2 = skid.trail[t + 1];
-        var trailAlpha = (t / skid.trail.length) * 0.4;
-        ctx.strokeStyle = hexToRgba(type.color, trailAlpha);
-        ctx.lineWidth = (t / skid.trail.length) * 2.2;
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
+      var type = skid.type;
+      var active = skid.hover || (selection.level === skid.level);
+
+      // Traîne de flux
+      if (skid.trail.length > 1) {
+        for (var t = 0; t < skid.trail.length - 1; t++) {
+          var p1 = skid.trail[t], p2 = skid.trail[t + 1];
+          ctx.strokeStyle = hexToRgba(type.color, (t / skid.trail.length) * 0.35);
+          ctx.lineWidth = (t / skid.trail.length) * 2.2;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
       }
-    }
 
-    var size = type.size * 120 * (skid.projScale || 1);
-    if (isActive) size *= 1.45;
-    ctx.shadowColor = type.color;
-    ctx.shadowBlur = isActive ? 16 : 8;
-    var x = skid.px, y = skid.py;
-    ctx.fillStyle = hexToRgba(type.color, 0.9);
-    ctx.strokeStyle = type.color;
-    ctx.lineWidth = isActive ? 1.6 : 0.9;
-    ctx.beginPath();
-    ctx.moveTo(x - size / 2, y - size / 2);
-    ctx.lineTo(x + size / 2, y - size / 2);
-    ctx.lineTo(x + size / 2, y + size / 2);
-    ctx.lineTo(x - size / 2, y + size / 2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
+      var sz = type.size * 125 * (skid.projScale || 1);
+      if (active) sz *= 1.45;
 
-    ctx.fillStyle = hexToRgba(type.color, 0.6);
-    ctx.beginPath();
-    ctx.moveTo(x - size / 2, y - size / 2);
-    ctx.lineTo(x - size / 2 + size * 0.25, y - size / 2 - size * 0.25);
-    ctx.lineTo(x + size / 2 + size * 0.25, y - size / 2 - size * 0.25);
-    ctx.lineTo(x + size / 2, y - size / 2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    ctx.shadowBlur = 0;
+      ctx.save();
+      ctx.shadowColor = type.color;
+      ctx.shadowBlur = active ? 18 : 8;
+      ctx.fillStyle = hexToRgba(type.color, 0.92);
+      ctx.strokeStyle = PALETTE.whitePure;
+      ctx.lineWidth = active ? 1.6 : 0.8;
 
-    if (isActive) {
-      ctx.fillStyle = PALETTE.whitePure;
-      ctx.font = 'bold ' + Math.max(8, size * 0.6) + 'px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(type.icon, x, y);
+      ctx.beginPath();
+      ctx.rect(skid.px - sz / 2, skid.py - sz / 2, sz, sz);
+      ctx.fill();
+      ctx.stroke();
+
+      if (active) {
+        ctx.fillStyle = PALETTE.whitePure;
+        ctx.font = 'bold ' + Math.max(9, sz * 0.55) + 'px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(type.icon, skid.px, skid.py);
+      }
+      ctx.restore();
     }
   }
 
-  /* ============================================================
-     §21 · DRAW · SCANLINE / HUD / COMPASS
-     ============================================================ */
-  function drawScanLine(dt) {
+  // 7. HUD Telemetria e Bussola
+  function drawHUD(dt) {
     if (!selection.showTelemetry) return;
-    scene.scanLineY += dt * 80;
-    if (scene.scanLineY > engine.H + 50) scene.scanLineY = -50;
-    var y = scene.scanLineY;
-    var grd = ctx.createLinearGradient(0, y - 20, 0, y + 20);
-    grd.addColorStop(0, 'rgba(0, 255, 163, 0)');
-    grd.addColorStop(0.5, 'rgba(0, 255, 163, 0.08)');
-    grd.addColorStop(1, 'rgba(0, 255, 163, 0)');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, y - 20, engine.W, 40);
+
+    // Ligne de balayage laser
+    scene.scanLineY += dt * 75;
+    if (scene.scanLineY > engine.H + 40) scene.scanLineY = -40;
     ctx.strokeStyle = 'rgba(0, 255, 163, 0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(engine.W, y);
+    ctx.moveTo(0, scene.scanLineY);
+    ctx.lineTo(engine.W, scene.scanLineY);
     ctx.stroke();
-  }
 
-  function drawHudLine(label, value, x, y, valueColor) {
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = PALETTE.slateMid;
-    ctx.font = '10px "JetBrains Mono", monospace';
-    ctx.fillText(label + ':', x, y);
-    ctx.fillStyle = valueColor;
-    ctx.font = 'bold 10px "JetBrains Mono", monospace';
-    ctx.fillText(value, x + 78, y);
-  }
-
-  function drawTelemetryHUD() {
-    if (!selection.showTelemetry) return;
-    var pad = 14, lineH = 15;
-    var x = pad, y = pad;
-    var boxW = 220, boxH = 172;
-    ctx.fillStyle = 'rgba(5, 10, 13, 0.85)';
+    // Boîtier télémétrique supérieur gauche
+    var bx = 16, by = 16, bw = 210, bh = 148;
+    ctx.fillStyle = 'rgba(6, 10, 13, 0.86)';
     ctx.strokeStyle = 'rgba(0, 255, 163, 0.35)';
     ctx.lineWidth = 1;
-    if (ctx.roundRect) ctx.roundRect(x, y, boxW, boxH, 8);
-    else ctx.rect(x, y, boxW, boxH);
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(bx, by, bw, bh, 8);
+    else ctx.rect(bx, by, bw, bh);
     ctx.fill();
     ctx.stroke();
-    var lx = x + 12, ly = y + 20;
+
     ctx.fillStyle = PALETTE.cyberCore;
     ctx.font = 'bold 11px "JetBrains Mono", monospace';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillText('▸ K-MEH-20 LIVE', lx, ly);
-    ctx.strokeStyle = 'rgba(0, 255, 163, 0.2)';
-    ctx.beginPath();
-    ctx.moveTo(lx, ly + 8);
-    ctx.lineTo(x + boxW - 12, ly + 8);
-    ctx.stroke();
-    ly += lineH + 8;
-    ctx.font = '10px "JetBrains Mono", monospace';
-    var fpsColor = engine.fps >= 55 ? PALETTE.cyberCore : engine.fps >= 40 ? PALETTE.kemetBright : PALETTE.danger;
-    drawHudLine('FPS', engine.fps.toFixed(0), lx, ly, fpsColor); ly += lineH;
-    var rotDeg = ((camera.rotation * 180 / Math.PI) % 360).toFixed(1);
-    drawHudLine('Azimuth', rotDeg + '°', lx, ly, PALETTE.whiteSoft); ly += lineH;
-    var tiltDeg = (camera.tilt * 180 / Math.PI).toFixed(1);
-    drawHudLine('Tilt', tiltDeg + '°', lx, ly, PALETTE.whiteSoft); ly += lineH;
-    drawHudLine('Zoom', camera.zoom.toFixed(2) + '×', lx, ly, PALETTE.whiteSoft); ly += lineH;
-    var activeLvl = selection.level >= 0 ? selection.level : selection.hoveredLevel;
-    var activeLvlStr = activeLvl >= 0 ? 'N' + (activeLvl + 1) : '—';
-    var activeLvlColor = activeLvl >= 0 ? LEVELS_CONFIG[activeLvl].color : PALETTE.slateMid;
-    drawHudLine('Niveau', activeLvlStr, lx, ly, activeLvlColor); ly += lineH;
-    var visSkids = 0;
-    for (var i = 0; i < scene.skids.length; i++) {
-      if (scene.skids[i].pz !== undefined && scene.skids[i].pz < 1.5) visSkids++;
-    }
-    drawHudLine('Skids', visSkids + '/' + scene.skids.length, lx, ly, PALETTE.kemetBright); ly += lineH;
-    var explStr = selection.explosion < 0.05 ? 'OFF' : selection.explosion > 0.95 ? 'ON' : Math.round(selection.explosion * 100) + '%';
-    var explColor = selection.explosion > 0.5 ? PALETTE.kemetBright : PALETTE.slateLight;
-    drawHudLine('Éclatée', explStr, lx, ly, explColor);
-    var badgeY = y + boxH - 22;
-    var badgeX = x + 12, badgeW = 100, badgeH = 16;
-    ctx.fillStyle = 'rgba(197, 160, 89, 0.15)';
-    ctx.strokeStyle = 'rgba(197, 160, 89, 0.5)';
-    ctx.lineWidth = 1;
-    if (ctx.roundRect) ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 3);
-    else ctx.rect(badgeX, badgeY, badgeW, badgeH);
-    ctx.fill();
-    ctx.stroke();
-    ctx.fillStyle = PALETTE.kemetBright;
-    ctx.font = 'bold 8px "JetBrains Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('OMPIC · PENDING', badgeX + badgeW / 2, badgeY + badgeH / 2);
-  }
+    ctx.fillText('▸ K-MEH-20 TELEMETRY', bx + 12, by + 22);
 
-  function drawCompass() {
-    if (!selection.showCompass) return;
-    var size = 54, pad = 14;
-    var cx = engine.W - pad - size / 2;
-    var cy = engine.H - pad - size / 2;
-    var r = size / 2;
-    ctx.fillStyle = 'rgba(5, 10, 13, 0.85)';
-    ctx.strokeStyle = 'rgba(0, 255, 163, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-    ctx.strokeStyle = 'rgba(0, 255, 163, 0.15)';
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2);
-    ctx.stroke();
-    var colors = [PALETTE.cyberCore, PALETTE.cyberMid, PALETTE.kemetBright, PALETTE.kemetMid];
-    var labels = ['N', 'E', 'S', 'W'];
-    var rot = -camera.rotation;
-    for (var i = 0; i < 4; i++) {
-      var angle = rot + (i * Math.PI / 2);
-      var endR = r * 0.75;
-      var ex = cx + Math.cos(angle - Math.PI / 2) * endR;
-      var ey = cy + Math.sin(angle - Math.PI / 2) * endR;
-      ctx.strokeStyle = colors[i];
-      ctx.lineWidth = i === 0 ? 2 : 1;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(ex, ey);
-      ctx.stroke();
-      var labelR = r * 0.9;
-      var lx = cx + Math.cos(angle - Math.PI / 2) * labelR;
-      var ly = cy + Math.sin(angle - Math.PI / 2) * labelR;
-      ctx.fillStyle = colors[i];
-      ctx.font = 'bold 9px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(labels[i], lx, ly);
-    }
-    ctx.fillStyle = PALETTE.cyberCore;
-    ctx.shadowColor = PALETTE.cyberCore;
-    ctx.shadowBlur = 6;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = PALETTE.slateLight;
+    ctx.fillText('FPS :', bx + 12, by + 46);
+    ctx.fillStyle = engine.fps >= 50 ? PALETTE.cyberCore : PALETTE.kemetBright;
+    ctx.fillText(engine.fps.toFixed(0), bx + 80, by + 46);
+
+    ctx.fillStyle = PALETTE.slateLight;
+    ctx.fillText('Azimuth :', bx + 12, by + 66);
+    ctx.fillStyle = PALETTE.whiteSoft;
+    ctx.fillText(((camera.rotation * 180 / Math.PI) % 360).toFixed(0) + '°', bx + 80, by + 66);
+
+    ctx.fillStyle = PALETTE.slateLight;
+    ctx.fillText('Niveau :', bx + 12, by + 86);
+    ctx.fillStyle = LEVELS_CONFIG[selection.level >= 0 ? selection.level : 0].color;
+    ctx.fillText('N' + ((selection.level >= 0 ? selection.level : 0) + 1), bx + 80, by + 86);
+
+    ctx.fillStyle = PALETTE.slateLight;
+    ctx.fillText('Mode :', bx + 12, by + 106);
+    ctx.fillStyle = selection.explosion > 0.5 ? PALETTE.kemetBright : PALETTE.cyberCore;
+    ctx.fillText(selection.explosion > 0.5 ? 'ÉCLATÉ' : 'COMPACT', bx + 80, by + 106);
+
+    ctx.fillStyle = PALETTE.kemetBright;
+    ctx.font = 'bold 8.5px "JetBrains Mono", monospace';
+    ctx.fillText('OMPIC R&D · EN DÉPÔT', bx + 12, by + 130);
   }
 
   /* ============================================================
-     §22 · HIT TEST
+     §10 · HIT-TEST & INTERACTION DIRECTE
      ============================================================ */
   function hitTestLevel(clientX, clientY) {
     if (!engine.rect) engine.rect = canvas.getBoundingClientRect();
-    var mx = clientX - engine.rect.left;
     var my = clientY - engine.rect.top;
     if (!scene.ringsCache.length) return -1;
-    var baseCache = scene.ringsCache[0];
-    var topCache = scene.ringsCache[PYRAMID.levelsCount - 1];
+
+    // Projection ordonnée : Sommet en haut, Base en bas
     var minY = Infinity, maxY = -Infinity;
-    var allPts = [baseCache.bottom, baseCache.top, topCache.bottom, topCache.top];
-    for (var a = 0; a < allPts.length; a++) {
-      for (var b = 0; b < allPts[a].length; b++) {
-        if (allPts[a][b].y < minY) minY = allPts[a][b].y;
-        if (allPts[a][b].y > maxY) maxY = allPts[a][b].y;
+    for (var l = 0; l < scene.ringsCache.length; l++) {
+      var pts = scene.ringsCache[l].top.concat(scene.ringsCache[l].bottom);
+      for (var p = 0; p < pts.length; p++) {
+        if (pts[p].y < minY) minY = pts[p].y;
+        if (pts[p].y > maxY) maxY = pts[p].y;
       }
     }
+
     if (my < minY || my > maxY) return -1;
-    var relY = (my - minY) / (maxY - minY);
-    if (relY < 0.25) return 3;
-    if (relY < 0.50) return 2;
-    if (relY < 0.75) return 1;
+    var ratio = (my - minY) / (maxY - minY);
+
+    // En haut (ratio faible) = Niveau 3 (Sommet)
+    // En bas (ratio élevé) = Niveau 0 (Base)
+    if (ratio < 0.25) return 3;
+    if (ratio < 0.50) return 2;
+    if (ratio < 0.75) return 1;
     return 0;
   }
 
-  function hitTestSkid(clientX, clientY) {
-    if (!engine.rect) engine.rect = canvas.getBoundingClientRect();
-    var mx = clientX - engine.rect.left;
-    var my = clientY - engine.rect.top;
-    var closest = -1, minDist = 22;
-    for (var i = 0; i < scene.skids.length; i++) {
-      var sk = scene.skids[i];
-      if (!sk.px || !sk.py) continue;
-      var dx = mx - sk.px, dy = my - sk.py;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < minDist) { minDist = dist; closest = i; }
-    }
-    return closest;
-  }
-
-  /* ============================================================
-     §23 · INPUT · MOUSE
-     ============================================================ */
-  canvas.addEventListener('mousedown', function (e) {
+  canvas.addEventListener('pointerdown', function (e) {
     camera.isDragging = true;
     camera.hasDragged = false;
     camera.lastX = e.clientX;
@@ -1052,206 +815,79 @@
     camera.dragStartTime = Date.now();
     camera.autoRotate = false;
     canvas.style.cursor = 'grabbing';
-    e.preventDefault();
   });
 
-  window.addEventListener('mousemove', function (e) {
+  window.addEventListener('pointermove', function (e) {
     if (!engine.rect) engine.rect = canvas.getBoundingClientRect();
     var mx = e.clientX - engine.rect.left;
     var my = e.clientY - engine.rect.top;
     engine.pointer = { x: mx, y: my };
+
     if (camera.isDragging) {
       var dx = e.clientX - camera.lastX;
       var dy = e.clientY - camera.lastY;
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) camera.hasDragged = true;
-      camera.targetRotation += dx * 0.012;
-      camera.targetTilt = clamp(camera.targetTilt + dy * 0.008, -0.15, 1.32);
-      camera.velocity = dx * 0.008;
+
+      camera.targetRotation += dx * 0.010;
+      // Tilt borné pour ne jamais voir la pyramide à l'envers
+      camera.targetTilt = clamp(camera.targetTilt + dy * 0.007, 0.05, 1.15);
+      camera.velocity = dx * 0.006;
       camera.lastX = e.clientX;
       camera.lastY = e.clientY;
     } else {
       var lvl = hitTestLevel(e.clientX, e.clientY);
-      if (lvl !== selection.hoveredLevel) selection.hoveredLevel = lvl;
-      var skidIdx = hitTestSkid(e.clientX, e.clientY);
-      selection.hoveredSkid = skidIdx;
-      canvas.style.cursor = (lvl >= 0 || skidIdx >= 0) ? 'pointer' : 'grab';
+      selection.hoveredLevel = lvl;
+      canvas.style.cursor = (lvl >= 0) ? 'pointer' : 'grab';
     }
   });
 
-  window.addEventListener('mouseup', function (e) {
+  window.addEventListener('pointerup', function (e) {
     if (!camera.isDragging) return;
     camera.isDragging = false;
     canvas.style.cursor = 'grab';
-    var dragDuration = Date.now() - camera.dragStartTime;
-    if (!camera.hasDragged && dragDuration < 500) {
-      var skidIdx = hitTestSkid(e.clientX, e.clientY);
-      if (skidIdx >= 0) selectSkid(skidIdx);
-      else {
-        var lvl = hitTestLevel(e.clientX, e.clientY);
-        if (lvl >= 0) selectLevel(lvl);
-      }
+
+    var duration = Date.now() - camera.dragStartTime;
+    if (!camera.hasDragged && duration < 400) {
+      var lvl = hitTestLevel(e.clientX, e.clientY);
+      if (lvl >= 0) selectLevel(lvl);
     } else {
       setTimeout(function () {
         if (!camera.isDragging) camera.autoRotate = true;
-      }, 4000);
+      }, 5000);
     }
-  });
-
-  canvas.addEventListener('mouseleave', function () {
-    engine.pointer = null;
-    selection.hoveredLevel = -1;
-    selection.hoveredSkid = -1;
   });
 
   canvas.addEventListener('wheel', function (e) {
     e.preventDefault();
-    var delta = e.deltaY > 0 ? -0.05 : 0.05;
-    camera.targetZoom = clamp(camera.targetZoom + delta, 0.6, 1.8);
+    var delta = e.deltaY > 0 ? -0.06 : 0.06;
+    camera.targetZoom = clamp(camera.targetZoom + delta, 0.65, 1.75);
   }, { passive: false });
 
   /* ============================================================
-     §24 · INPUT · TOUCH
-     ============================================================ */
-  var touchState = { active: false, pinchStartDistance: 0, pinchStartZoom: 1 };
-
-  canvas.addEventListener('touchstart', function (e) {
-    if (e.touches.length === 1) {
-      camera.isDragging = true;
-      camera.hasDragged = false;
-      camera.lastX = e.touches[0].clientX;
-      camera.lastY = e.touches[0].clientY;
-      camera.dragStartTime = Date.now();
-      camera.autoRotate = false;
-      touchState.active = true;
-    } else if (e.touches.length === 2) {
-      var dx = e.touches[0].clientX - e.touches[1].clientX;
-      var dy = e.touches[0].clientY - e.touches[1].clientY;
-      touchState.pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
-      touchState.pinchStartZoom = camera.zoom;
-    }
-  }, { passive: true });
-
-  canvas.addEventListener('touchmove', function (e) {
-    if (e.touches.length === 1 && camera.isDragging) {
-      var t = e.touches[0];
-      var dx = t.clientX - camera.lastX;
-      var dy = t.clientY - camera.lastY;
-      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) camera.hasDragged = true;
-      camera.targetRotation += dx * 0.015;
-      camera.targetTilt = clamp(camera.targetTilt + dy * 0.010, -0.15, 1.32);
-      camera.lastX = t.clientX;
-      camera.lastY = t.clientY;
-      e.preventDefault();
-    } else if (e.touches.length === 2) {
-      var dx2 = e.touches[0].clientX - e.touches[1].clientX;
-      var dy2 = e.touches[0].clientY - e.touches[1].clientY;
-      var dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-      if (touchState.pinchStartDistance > 0) {
-        var scale = dist / touchState.pinchStartDistance;
-        camera.targetZoom = clamp(touchState.pinchStartZoom * scale, 0.6, 1.8);
-      }
-      e.preventDefault();
-    }
-  }, { passive: false });
-
-  canvas.addEventListener('touchend', function (e) {
-    if (e.touches.length === 0) {
-      camera.isDragging = false;
-      touchState.active = false;
-      touchState.pinchStartDistance = 0;
-      var dragDuration = Date.now() - camera.dragStartTime;
-      if (!camera.hasDragged && dragDuration < 500 && e.changedTouches[0]) {
-        var t = e.changedTouches[0];
-        var skidIdx = hitTestSkid(t.clientX, t.clientY);
-        if (skidIdx >= 0) selectSkid(skidIdx);
-        else {
-          var lvl = hitTestLevel(t.clientX, t.clientY);
-          if (lvl >= 0) selectLevel(lvl);
-        }
-      } else {
-        setTimeout(function () {
-          if (!camera.isDragging) camera.autoRotate = true;
-        }, 4000);
-      }
-    } else if (e.touches.length === 1) {
-      camera.lastX = e.touches[0].clientX;
-      camera.lastY = e.touches[0].clientY;
-      touchState.pinchStartDistance = 0;
-    }
-  }, { passive: true });
-
-  /* ============================================================
-     §25 · INPUT · KEYBOARD
-     ============================================================ */
-  window.addEventListener('keydown', function (e) {
-    var tag = document.activeElement && document.activeElement.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-    switch (e.key) {
-      case 'ArrowLeft': camera.targetRotation -= 0.15; camera.autoRotate = false; break;
-      case 'ArrowRight': camera.targetRotation += 0.15; camera.autoRotate = false; break;
-      case 'ArrowUp': camera.targetTilt = clamp(camera.targetTilt - 0.08, -0.15, 1.32); break;
-      case 'ArrowDown': camera.targetTilt = clamp(camera.targetTilt + 0.08, -0.15, 1.32); break;
-      case '+': case '=': camera.targetZoom = clamp(camera.targetZoom + 0.1, 0.6, 1.8); break;
-      case '-': case '_': camera.targetZoom = clamp(camera.targetZoom - 0.1, 0.6, 1.8); break;
-      case '1': selectLevel(0); break;
-      case '2': selectLevel(1); break;
-      case '3': selectLevel(2); break;
-      case '4': selectLevel(3); break;
-      case 'e': case 'E': toggleExplosion(); break;
-      case 'a': case 'A': toggleAutoRotate(); break;
-      case 'r': case 'R': resetCamera(); break;
-      case 'g': case 'G': selection.showGrid = !selection.showGrid; break;
-      case 'c': case 'C': selection.showCompass = !selection.showCompass; break;
-      case 't': case 'T': selection.showTelemetry = !selection.showTelemetry; break;
-      case 'Escape': selection.level = -1; selection.levelTarget = -1; selection.skid = -1; break;
-    }
-  });
-
-  /* ============================================================
-     §26 · SELECTION HELPERS
+     §11 · SELECTION & SYNCHRONISATION DOM
      ============================================================ */
   function selectLevel(idx) {
-    if (idx < 0 || idx >= PYRAMID.levelsCount) { selection.level = -1; selection.levelTarget = -1; }
-    else if (selection.level === idx) { selection.level = -1; selection.levelTarget = -1; }
-    else { selection.level = idx; selection.levelTarget = idx; }
+    selection.level = idx;
+    var config = LEVELS_CONFIG[idx];
+
+    // Notification globale vers l'interface HTML
     if (typeof window.onKmehLevelSelect === 'function') {
-      try { window.onKmehLevelSelect(selection.level); } catch (err) {}
+      try { window.onKmehLevelSelect(idx, config); } catch (err) {}
     }
-  }
-
-  function selectSkid(idx) {
-    if (idx < 0) { selection.skid = -1; scene.skids.forEach(function (s) { s.selected = false; }); return; }
-    selection.skid = idx;
-    scene.skids.forEach(function (s, i) { s.selected = (i === idx); });
-    if (typeof window.onKmehSkidSelect === 'function') {
-      try { window.onKmehSkidSelect(idx, scene.skids[idx]); } catch (err) {}
-    }
-  }
-
-  function resetCamera() {
-    camera.targetRotation = 0.6;
-    camera.targetTilt = 0.32;
-    camera.targetZoom = 1.0;
-    camera.autoRotate = true;
-    camera.velocity = 0;
   }
 
   function toggleExplosion() {
-    selection.explosionTarget = selection.explosionTarget > 0.5 ? 0 : 1;
-    if (selection.explosionTarget > 0.5) document.body.classList.add('kmeh-exploded');
-    else document.body.classList.remove('kmeh-exploded');
-    if (typeof window.__syncKmehButtons === 'function') window.__syncKmehButtons();
+    selection.explosionTarget = selection.explosionTarget > 0.5 ? 0.0 : 1.0;
+    return selection.explosionTarget > 0.5;
   }
 
   function toggleAutoRotate() {
     camera.autoRotate = !camera.autoRotate;
-    if (camera.autoRotate) document.body.classList.remove('kmeh-auto-off');
-    else document.body.classList.add('kmeh-auto-off');
-    if (typeof window.__syncKmehButtons === 'function') window.__syncKmehButtons();
+    return camera.autoRotate;
   }
 
   /* ============================================================
-     §27 · ANIMATION LOOP
+     §12 · BOUCLE PRINCIPALE DE RENDU (60 FPS)
      ============================================================ */
   function animate(now) {
     engine.renderRequestId = requestAnimationFrame(animate);
@@ -1263,174 +899,105 @@
     }
 
     if (!engine.lastFrameTime) { engine.lastFrameTime = now; return; }
-    var rawDt = (now - engine.lastFrameTime) / 1000;
-    engine.deltaTime = Math.min(rawDt, 0.05);
+    var dt = Math.min((now - engine.lastFrameTime) / 1000, 0.05);
     engine.lastFrameTime = now;
-    engine.elapsedTime += engine.deltaTime;
-    engine.fpsAccumulator += engine.deltaTime;
+    engine.elapsedTime += dt;
+
+    engine.fpsAccumulator += dt;
     engine.fpsFrames++;
     if (engine.fpsAccumulator >= 0.5) {
       engine.fps = engine.fpsFrames / engine.fpsAccumulator;
       engine.fpsAccumulator = 0;
       engine.fpsFrames = 0;
     }
-    var dt = engine.deltaTime;
 
-    try {
-      if (camera.autoRotate && !reducedMotion()) {
-        camera.targetRotation += camera.autoRotateSpeed * dt;
-      }
-      camera.rotation += (camera.targetRotation - camera.rotation) * 0.12;
-      camera.rotation += camera.velocity;
-      camera.velocity *= camera.velocityDamping;
-      camera.tilt += (camera.targetTilt - camera.tilt) * 0.10;
-      camera.zoom += (camera.targetZoom - camera.zoom) * 0.12;
+    // Caméra dynamique
+    if (camera.autoRotate && !reducedMotion()) {
+      camera.targetRotation += camera.autoRotateSpeed * dt;
+    }
+    camera.rotation += (camera.targetRotation - camera.rotation) * 0.12;
+    camera.rotation += camera.velocity;
+    camera.velocity *= camera.velocityDamping;
+    camera.tilt += (camera.targetTilt - camera.tilt) * 0.10;
+    camera.zoom += (camera.targetZoom - camera.zoom) * 0.12;
 
-      updateScene(dt);
+    updateScene(dt);
 
-      ctx.clearRect(0, 0, engine.W, engine.H);
-      drawRadialBackground(engine.W / 2, engine.H / 2, Math.min(engine.W, engine.H) * 0.7, 'rgba(0, 255, 163, 0.04)', 'rgba(0, 0, 0, 0)');
-      drawPyramidHalo();
-      drawPyramidLevels();
-      drawPyramidTopFace();
-      drawPyramidVertices();
-      drawKemetLoopCore();
-      drawDataParticles();
-      drawSkids();
-      drawEnergyParticles();
-      drawHorusEye();
-      drawScanLine(dt);
-      drawTelemetryHUD();
-      drawCompass();
+    // Dessin des calques
+    ctx.clearRect(0, 0, engine.W, engine.H);
+    drawPyramidAtmosphere();
+    drawPyramidLevels();
+    drawPyramidTopsAndVertices();
+    drawKemetLoopCore();
+    drawSkids();
+    drawHorusEyeApex();
+    drawHUD(dt);
 
-      if (DEBUG && !engine._debugStampDrawn) {
-        engine._debugStampDrawn = true;
-        ctx.save();
-        ctx.fillStyle = 'rgba(0, 255, 163, 0.9)';
-        ctx.font = 'bold 13px "JetBrains Mono", monospace';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-        ctx.fillText('K-MEH-20 · RENDER OK · v3.5.0', 20, engine.H - 30);
-        ctx.fillStyle = 'rgba(232, 200, 106, 0.9)';
-        ctx.font = 'bold 10px "JetBrains Mono", monospace';
-        ctx.fillText('W=' + engine.W.toFixed(0) + ' H=' + engine.H.toFixed(0) + ' rings=' + scene.ringsCache.length, 20, engine.H - 12);
-        ctx.restore();
-      }
-
-      if (!engine._firstRenderLogged) {
-        engine._firstRenderLogged = true;
-        try {
-          console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0) + ' · v3.5.0');
-        } catch (e) {}
-      }
-    } catch (renderErr) {
-      if (!engine._loggedRenderError) {
-        try { console.error('[K-MEH-20] Render error:', renderErr); } catch (e) {}
-        engine._loggedRenderError = true;
-      }
+    if (!engine.firstRenderLogged) {
+      engine.firstRenderLogged = true;
+      try {
+        console.info('[K-MEH-20] 3D Scene rendered (' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0) + ')');
+      } catch (e) {}
     }
   }
 
   /* ============================================================
-     §28 · RESIZE (CHAÎNE DE FALLBACK ROBUSTE)
+     §13 · REDIMENSIONNEMENT DU CANVAS
      ============================================================ */
   function resizeCanvas() {
-    if (!canvas.parentElement) return;
-    var rect = canvas.parentElement.getBoundingClientRect();
+    var parent = canvas.parentElement;
+    if (!parent) return;
 
-    if (rect.width < 1 || rect.height < 1) {
-      var parentEl = canvas.parentElement;
-      var fallbackW = parentEl.offsetWidth || parentEl.clientWidth || 0;
-      var fallbackH = parentEl.offsetHeight || parentEl.clientHeight || 0;
-      if (fallbackW < 1 || fallbackH < 1) {
-        fallbackW = Math.max(320, Math.min(window.innerWidth - 40, 900));
-        fallbackH = Math.max(400, Math.min(window.innerHeight * 0.78, 900));
-        try { console.warn('[K-MEH-20] Using window fallback dimensions:', fallbackW, fallbackH); } catch (e) {}
-      }
-      rect = { width: fallbackW, height: fallbackH };
-    }
+    var rect = parent.getBoundingClientRect();
+    var curW = rect.width || 800;
+    var curH = rect.height || 480;
 
-    if (engine.W > 0 && Math.abs(engine.W - rect.width) < 20 && Math.abs(engine.H - rect.height) < 20) {
+    if (engine.W > 0 && Math.abs(engine.W - curW) < 15 && Math.abs(engine.H - curH) < 15) {
       return;
     }
 
-    engine.W = rect.width;
-    engine.H = rect.height;
+    engine.W = curW;
+    engine.H = curH;
     engine.DPR = Math.min(window.devicePixelRatio || 1, 2);
 
-    canvas.width = Math.max(1, Math.round(rect.width * engine.DPR));
-    canvas.height = Math.max(1, Math.round(rect.height * engine.DPR));
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
+    canvas.width = Math.round(curW * engine.DPR);
+    canvas.height = Math.round(curH * engine.DPR);
+    canvas.style.width = curW + 'px';
+    canvas.style.height = curH + 'px';
 
     ctx.setTransform(engine.DPR, 0, 0, engine.DPR, 0, 0);
     engine.rect = canvas.getBoundingClientRect();
 
     if (engine.initialized) updateRingsCache();
-
-    try {
-      console.info('[K-MEH-20] Canvas sized:', engine.W.toFixed(0) + '×' + engine.H.toFixed(0), 'DPR:', engine.DPR);
-    } catch (e) {}
   }
 
   /* ============================================================
-     §29 · PUBLIC API
+     §14 · API PUBLIQUE EXPOSÉE
      ============================================================ */
   window.kmehPyramidSelectLevel = function (idx) { selectLevel(idx); };
-  window.kmehPyramidToggleExplosion = function () { toggleExplosion(); return selection.explosionTarget > 0.5; };
-  window.kmehPyramidToggleAutoRotate = function () { toggleAutoRotate(); return camera.autoRotate; };
-  window.kmehPyramidGetState = function () {
-    return {
-      version: '3.5.0',
-      level: selection.level, hoveredLevel: selection.hoveredLevel,
-      skid: selection.skid, hoveredSkid: selection.hoveredSkid,
-      explosion: selection.explosion, explosionTarget: selection.explosionTarget,
-      autoRotate: camera.autoRotate,
-      camera: { rotation: camera.rotation, tilt: camera.tilt, zoom: camera.zoom },
-      fps: engine.fps, paused: engine.paused,
-      canvasSize: { w: engine.W, h: engine.H }
-    };
-  };
-  window.kmehPyramidReset = function () {
-    resetCamera();
-    selection.level = -1; selection.levelTarget = -1;
-    selection.skid = -1; selection.hoveredLevel = -1; selection.hoveredSkid = -1;
-    scene.skids.forEach(function (s) { s.selected = false; });
-    if (typeof window.__syncKmehButtons === 'function') window.__syncKmehButtons();
-  };
-  window.kmehPyramidToggleGrid = function () { selection.showGrid = !selection.showGrid; return selection.showGrid; };
-  window.kmehPyramidToggleTelemetry = function () { selection.showTelemetry = !selection.showTelemetry; return selection.showTelemetry; };
-  window.kmehPyramidToggleCompass = function () { selection.showCompass = !selection.showCompass; return selection.showCompass; };
-  window.kmehPyramidToggleLabels = function () { selection.showLabels = !selection.showLabels; return selection.showLabels; };
-  window.kmehPyramidZoom = function (delta) { camera.targetZoom = clamp(camera.targetZoom + delta, 0.6, 1.8); return camera.targetZoom; };
-  window.kmehPyramidRotate = function (radians) {
-    camera.targetRotation += radians;
-    camera.autoRotate = false;
-    setTimeout(function () { if (!camera.isDragging) camera.autoRotate = true; }, 4000);
-  };
-  window.kmehPyramidInfo = function () {
-    return {
-      version: '3.5.0',
-      brand: 'Industrial Illusion SARL',
-      product: 'K-MEH-20 · Kemet Modular Eco Hub 20',
-      status: 'Technologie propriétaire avancée · En développement · OMPIC en préparation',
-      levels: LEVELS_CONFIG.map(function (l) {
-        return { label: l.label, subtitle: l.subtitle };
-      })
-    };
+  window.kmehSelectLevel = function (idx) { selectLevel(idx); };
+
+  window.kmehPyramidToggleExplosion = function () { return toggleExplosion(); };
+  window.kmehToggleExplode = function () { return toggleExplosion(); };
+
+  window.kmehPyramidToggleAutoRotate = function () { return toggleAutoRotate(); };
+  window.kmehToggleRotate = function () { return toggleAutoRotate(); };
+
+  window.kmehResetCamera = function () {
+    camera.targetRotation = -0.65;
+    camera.targetTilt = 0.38;
+    camera.targetZoom = 1.05;
+    camera.autoRotate = true;
   };
 
   /* ============================================================
-     §30 · VISIBILITY
+     §15 · BOOTSTRAP DU MOTEUR
      ============================================================ */
   document.addEventListener('visibilitychange', function () {
     engine.paused = document.hidden;
     if (!document.hidden) engine.lastFrameTime = 0;
   });
 
-  /* ============================================================
-     §31 · BOOTSTRAP (RESIZEOBSERVER + FONTS.READY + RETRIES)
-     ============================================================ */
   function bootstrap() {
     if (engine.initialized) return;
     resizeCanvas();
@@ -1438,70 +1005,26 @@
     updateRingsCache();
     engine.initialized = true;
     engine.lastFrameTime = 0;
-    animate(performance.now());
+    requestAnimationFrame(animate);
 
-    var resizeTimer = null;
     window.addEventListener('resize', function () {
-      if (resizeTimer) clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resizeCanvas, 150);
+      setTimeout(resizeCanvas, 100);
     });
-
-    window.addEventListener('scroll', function () {
-      engine.rect = null;
-    }, { passive: true });
 
     if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
       new ResizeObserver(function () { resizeCanvas(); }).observe(canvas.parentElement);
     }
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () {
-        setTimeout(resizeCanvas, 100);
-      });
-    }
-
-    setTimeout(resizeCanvas, 50);
-    setTimeout(resizeCanvas, 200);
-    setTimeout(resizeCanvas, 400);
-    setTimeout(resizeCanvas, 1200);
-
-    if (reducedMotionQuery.addEventListener) {
-      reducedMotionQuery.addEventListener('change', function () {
-        camera.autoRotate = !reducedMotion();
-      });
-    }
-
-    setTimeout(function () {
-      if (!engine._firstRenderLogged) {
-        try {
-          console.warn(
-            '%c[K-MEH-20] ⚠️ Pas de premier rendu après 3s — v3.5.0',
-            'color:#F87171;font-weight:bold;font-size:11px;'
-          );
-          console.warn('[K-MEH-20] Version chargée:', window.__KMEH_VERSION__);
-          console.warn('[K-MEH-20] Engine state:', {
-            W: engine.W, H: engine.H, DPR: engine.DPR,
-            initialized: engine.initialized,
-            renderError: engine._loggedRenderError
-          });
-          console.warn('[K-MEH-20] Canvas DOM:', canvas);
-          console.warn('[K-MEH-20] Canvas computed size:',
-            canvas.style.width, '×', canvas.style.height,
-            '| attr:', canvas.width, '×', canvas.height);
-          console.warn('[K-MEH-20] Parent rect:', canvas.parentElement && canvas.parentElement.getBoundingClientRect());
-        } catch (e) {}
-      }
-    }, 3000);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(bootstrap, 50); });
+    document.addEventListener('DOMContentLoaded', bootstrap);
   } else {
-    setTimeout(bootstrap, 50);
+    bootstrap();
   }
+
   window.addEventListener('load', function () {
     if (!engine.initialized) bootstrap();
-    else setTimeout(resizeCanvas, 100);
+    else setTimeout(resizeCanvas, 50);
   });
 
 })();
