@@ -1,5 +1,5 @@
 /* ============================================================
-   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.2
+   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.3
    Industrial Illusion SARL · Deep Tech Systems · Marrakech
 
    ⚠️  REPRÉSENTATION VISUELLE UNIQUEMENT
@@ -14,20 +14,27 @@
 (function () {
   'use strict';
 
-  /* §1 · CANVAS + PREFERENCES */
+  /* ============================================================
+     §1 · CANVAS + PRÉFÉRENCES UTILISATEUR
+     ============================================================ */
   var canvas = document.getElementById('kmehPyramidCanvas');
   if (!canvas) return;
 
   var ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) { console.warn('[K-MEH-20] Contexte 2D indisponible.'); return; }
 
+  // FIX CRITIQUE : reducedMotion doit être une FONCTION (pas un boolean)
+  // Bug précédent : appelé comme reducedMotion() dans updateSkids/drawPyramidFace/animate
+  // causait TypeError: reducedMotion is not a function → crash du loop → canvas vide.
   var reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var reducedMotion = reducedMotionQuery.matches;
+  function reducedMotion() { return reducedMotionQuery.matches; }
   if (reducedMotionQuery.addEventListener) {
-    reducedMotionQuery.addEventListener('change', function (e) { reducedMotion = e.matches; });
+    reducedMotionQuery.addEventListener('change', function () { /* évalué à chaque appel */ });
   }
 
-  /* §2 · PALETTE */
+  /* ============================================================
+     §2 · PALETTE
+     ============================================================ */
   var PALETTE = {
     cyberCore: '#00FFA3', cyberMid: '#00B871', cyberDeep: '#059669',
     kemetBright: '#E8C86A', kemetMid: '#C5A059', kemetDeep: '#8B6F2A',
@@ -36,49 +43,38 @@
     danger: '#F87171', warning: '#E6CA86', info: '#60A5FA'
   };
 
-  /* §3 · GEOMETRIE (données publiques — visible de l'extérieur) */
+  /* ============================================================
+     §3 · GÉOMÉTRIE PYRAMIDE
+     ============================================================ */
   var PYRAMID = {
     halfBase: 1.000, halfTop: 0.220, height: 1.500,
     facesCount: 4, levelsCount: 4,
-    realBase: 56, realHeight: 32,
-    surfaceBase: 3136
+    realBase: 56, realHeight: 32, surfaceBase: 3136
   };
 
   var EXPLOSION_GAP_PER_LEVEL = 0.42;
 
-  /* §4 · LEVELS CONFIG (abstrait — pas de specs internes) */
+  /* ============================================================
+     §4 · CONFIG DES 4 NIVEAUX (abstrait, IP-safe)
+     ============================================================ */
   var LEVELS_CONFIG = [
-    {
-      index: 0, key: 'base',
-      color: PALETTE.cyberCore, colorDim: PALETTE.cyberMid, accent: PALETTE.cyberDeep,
-      label: 'NIVEAU 1 · BASE', subtitle: 'Réception & Matière', area: '3 136 m²',
-      mission: 'Interface matière · Préparation'
-    },
-    {
-      index: 1, key: 'centre',
-      color: PALETTE.cyberMid, colorDim: PALETTE.cyberDeep, accent: PALETTE.cyberDeep,
-      label: 'NIVEAU 2 · CENTRE', subtitle: 'Systèmes & Fluides', area: '1 400 m²',
-      mission: 'Régulation · Support technique'
-    },
-    {
-      index: 2, key: 'elev',
-      color: PALETTE.kemetMid, colorDim: PALETTE.kemetDeep, accent: PALETTE.kemetBright,
-      label: 'NIVEAU 3 · ÉLÉVATION', subtitle: 'Intelligence & Données', area: '600 m²',
-      mission: 'Supervision · Traçabilité'
-    },
-    {
-      index: 3, key: 'top',
-      color: PALETTE.kemetBright, colorDim: PALETTE.kemetMid, accent: PALETTE.whitePure,
-      label: 'NIVEAU 4 · SOMMET', subtitle: 'Vision & Commandement', area: '150 m²',
-      mission: 'Gouvernance · Stratégie'
-    }
+    { index: 0, key: 'base', color: PALETTE.cyberCore, colorDim: PALETTE.cyberMid, accent: PALETTE.cyberDeep,
+      label: 'NIVEAU 1 · BASE', subtitle: 'Réception & Matière' },
+    { index: 1, key: 'centre', color: PALETTE.cyberMid, colorDim: PALETTE.cyberDeep, accent: PALETTE.cyberDeep,
+      label: 'NIVEAU 2 · CENTRE', subtitle: 'Systèmes & Fluides' },
+    { index: 2, key: 'elev', color: PALETTE.kemetMid, colorDim: PALETTE.kemetDeep, accent: PALETTE.kemetBright,
+      label: 'NIVEAU 3 · ÉLÉVATION', subtitle: 'Intelligence & Données' },
+    { index: 3, key: 'top', color: PALETTE.kemetBright, colorDim: PALETTE.kemetMid, accent: PALETTE.whitePure,
+      label: 'NIVEAU 4 · SOMMET', subtitle: "Vision & Commandement" }
   ];
 
-  /* §5 · SKIDS (représentation abstraite de flux) */
+  /* ============================================================
+     §5 · SKIDS (flux abstraits)
+     ============================================================ */
   var SKID_TYPES = {
-    MATTER: { key: 'MATTER', color: PALETTE.kemetBright, size: 0.055, speed: 0.32, icon: '◧', label: 'Matière' },
-    DATA:   { key: 'DATA',   color: PALETTE.cyberCore,   size: 0.045, speed: 0.52, icon: '◈', label: 'Données' },
-    ENERGY: { key: 'ENERGY', color: PALETTE.kemetMid,    size: 0.040, speed: 0.78, icon: '◉', label: 'Énergie' }
+    MATTER: { key: 'MATTER', color: PALETTE.kemetBright, size: 0.055, speed: 0.32, icon: '◧' },
+    DATA:   { key: 'DATA',   color: PALETTE.cyberCore,   size: 0.045, speed: 0.52, icon: '◈' },
+    ENERGY: { key: 'ENERGY', color: PALETTE.kemetMid,    size: 0.040, speed: 0.78, icon: '◉' }
   };
 
   var SKIDS_CONFIG = [
@@ -103,14 +99,16 @@
     { level: 3, type: 'ENERGY', angleOffset: 0.25 }
   ];
 
-  /* §6 · STATE */
+  /* ============================================================
+     §6 · ÉTAT GLOBAL
+     ============================================================ */
   var engine = {
     W: 0, H: 0, DPR: 1,
     lastFrameTime: 0, elapsedTime: 0, deltaTime: 0,
     fps: 60, fpsAccumulator: 0, fpsFrames: 0,
     paused: false, initialized: false,
     renderRequestId: 0, pointer: null, rect: null,
-    _loggedRenderError: false
+    _loggedRenderError: false, _firstRenderLogged: false
   };
 
   var camera = {
@@ -131,7 +129,9 @@
     showGrid: true, showLabels: true
   };
 
-  /* §7 · UTILS */
+  /* ============================================================
+     §7 · UTILITAIRES
+     ============================================================ */
   function clamp(v, min, max) { return v < min ? min : (v > max ? max : v); }
   function lerp(a, b, t) { return a + (b - a) * t; }
   function hexToRgba(hex, alpha) {
@@ -141,7 +141,9 @@
     return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
   }
 
-  /* §8 · PROJECTION */
+  /* ============================================================
+     §8 · PROJECTION 3D → 2D
+     ============================================================ */
   function projectPoint(x, y, z) {
     var cosR = Math.cos(camera.rotation);
     var sinR = Math.sin(camera.rotation);
@@ -182,7 +184,9 @@
     return selection.explosion * level * EXPLOSION_GAP_PER_LEVEL;
   }
 
-  /* §9 · SCENE */
+  /* ============================================================
+     §9 · SCÈNE
+     ============================================================ */
   var scene = {
     skids: [], energyParticles: [], dataParticles: [], coreParticles: [],
     ringsCache: [], scanLineY: 0
@@ -204,13 +208,12 @@
       phase: Math.random() * Math.PI * 2,
       bobAmp: 0.025 + Math.random() * 0.02,
       size: type.size, trail: [], trailMax: 12,
-      hover: false, selected: false
+      hover: false, selected: false, px: 0, py: 0, pz: 0, projScale: 1
     };
   }
 
   function createEnergyParticles() {
-    var particles = [];
-    var countPerLevel = 6;
+    var particles = [], countPerLevel = 6;
     for (var lvl = 0; lvl < PYRAMID.levelsCount; lvl++) {
       for (var p = 0; p < countPerLevel; p++) {
         particles.push({
@@ -272,7 +275,9 @@
     scene.ringsCache = [];
   }
 
-  /* §10 · UPDATE RINGS */
+  /* ============================================================
+     §10 · RINGS CACHE
+     ============================================================ */
   function updateRingsCache() {
     var cache = [];
     for (var lvl = 0; lvl < PYRAMID.levelsCount; lvl++) {
@@ -288,7 +293,9 @@
     scene.ringsCache = cache;
   }
 
-  /* §11 · UPDATE SCENE */
+  /* ============================================================
+     §11 · UPDATE SCENE
+     ============================================================ */
   function updateSkids(dt) {
     var timeSec = engine.elapsedTime;
     for (var i = 0; i < scene.skids.length; i++) {
@@ -366,7 +373,9 @@
     updateParticles(dt);
   }
 
-  /* §12 · DRAW · RADIAL BG */
+  /* ============================================================
+     §12 · DRAW · RADIAL BG
+     ============================================================ */
   function drawRadialBackground(cx, cy, radius, colorInner, colorOuter) {
     var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
     grd.addColorStop(0, colorInner);
@@ -376,7 +385,9 @@
     ctx.fillRect(0, 0, engine.W, engine.H);
   }
 
-  /* §13 · DRAW · HALO (VISIBILITÉ) */
+  /* ============================================================
+     §13 · DRAW · HALO (visibilité)
+     ============================================================ */
   function drawPyramidHalo() {
     var cx = engine.W / 2;
     var cy = engine.H / 2;
@@ -392,7 +403,9 @@
     ctx.fill();
   }
 
-  /* §14 · DRAW · PYRAMID LEVELS (VISIBILITÉ BOOSTÉE) */
+  /* ============================================================
+     §14 · DRAW · PYRAMID LEVELS (VISIBILITÉ BOOSTÉE)
+     ============================================================ */
   function drawPyramidLevels() {
     var faces = [];
     for (var lvl = 0; lvl < scene.ringsCache.length; lvl++) {
@@ -418,7 +431,6 @@
     var isHovered = selection.hoveredLevel === face.level;
     var exploded = selection.explosion > 0.1;
 
-    // VISIBILITÉ : alpha nettement augmentées
     var baseAlpha, strokeAlpha, glowBlur, lineWidth;
     if (isSelected) {
       baseAlpha = 0.50; strokeAlpha = 1.0; glowBlur = 22; lineWidth = 2.6;
@@ -476,7 +488,9 @@
     ctx.beginPath(); ctx.moveTo(xc, yc); ctx.lineTo(xd, yd); ctx.stroke();
   }
 
-  /* §15 · DRAW · TOP FACE (VISIBILITÉ BOOSTÉE) */
+  /* ============================================================
+     §15 · DRAW · TOP FACE
+     ============================================================ */
   function drawPyramidTopFace() {
     var topLevel = scene.ringsCache[PYRAMID.levelsCount - 1];
     if (!topLevel) return;
@@ -502,7 +516,9 @@
     ctx.shadowBlur = 0;
   }
 
-  /* §16 · DRAW · VERTICES */
+  /* ============================================================
+     §16 · DRAW · VERTICES
+     ============================================================ */
   function drawPyramidVertices() {
     for (var lvl = 0; lvl < scene.ringsCache.length; lvl++) {
       var cache = scene.ringsCache[lvl];
@@ -526,7 +542,9 @@
     }
   }
 
-  /* §17 · DRAW · KEMET LOOP CORE */
+  /* ============================================================
+     §17 · DRAW · KEMET LOOP CORE
+     ============================================================ */
   function drawKemetLoopCore() {
     var showIntensity = Math.max(selection.explosion, 0.15);
     if (showIntensity < 0.05) return;
@@ -591,7 +609,9 @@
     ctx.restore();
   }
 
-  /* §18 · DRAW · HORUS EYE */
+  /* ============================================================
+     §18 · DRAW · HORUS EYE
+     ============================================================ */
   function drawHorusEye() {
     var topY = -PYRAMID.height / 2 + PYRAMID.height + getExplosionOffset(3) + 0.18;
     var apex = projectPoint(0, topY, 0);
@@ -703,7 +723,9 @@
     ctx.restore();
   }
 
-  /* §19 · DRAW · PARTICLES */
+  /* ============================================================
+     §19 · DRAW · PARTICULES
+     ============================================================ */
   function drawEnergyParticles() {
     for (var i = 0; i < scene.energyParticles.length; i++) {
       var p = scene.energyParticles[i];
@@ -748,7 +770,9 @@
     }
   }
 
-  /* §20 · DRAW · SKIDS */
+  /* ============================================================
+     §20 · DRAW · SKIDS
+     ============================================================ */
   function drawSkids() {
     var sorted = scene.skids.slice().sort(function (a, b) { return (b.pz || 0) - (a.pz || 0); });
     for (var i = 0; i < sorted.length; i++) drawSkid(sorted[i]);
@@ -807,7 +831,9 @@
     }
   }
 
-  /* §21 · DRAW · SCANLINE + HUD + COMPASS */
+  /* ============================================================
+     §21 · DRAW · SCANLINE / HUD / COMPASS
+     ============================================================ */
   function drawScanLine(dt) {
     if (!selection.showTelemetry) return;
     scene.scanLineY += dt * 80;
@@ -948,7 +974,9 @@
     ctx.shadowBlur = 0;
   }
 
-  /* §22 · HIT TEST */
+  /* ============================================================
+     §22 · HIT TEST
+     ============================================================ */
   function hitTestLevel(clientX, clientY) {
     if (!engine.rect) engine.rect = canvas.getBoundingClientRect();
     var mx = clientX - engine.rect.left;
@@ -987,7 +1015,9 @@
     return closest;
   }
 
-  /* §23 · INPUT · MOUSE */
+  /* ============================================================
+     §23 · INPUT · MOUSE
+     ============================================================ */
   canvas.addEventListener('mousedown', function (e) {
     camera.isDragging = true;
     camera.hasDragged = false;
@@ -1053,7 +1083,9 @@
     camera.targetZoom = clamp(camera.targetZoom + delta, 0.6, 1.8);
   }, { passive: false });
 
-  /* §24 · INPUT · TOUCH */
+  /* ============================================================
+     §24 · INPUT · TOUCH
+     ============================================================ */
   var touchState = { active: false, pinchStartDistance: 0, pinchStartZoom: 1 };
 
   canvas.addEventListener('touchstart', function (e) {
@@ -1122,7 +1154,9 @@
     }
   }, { passive: true });
 
-  /* §25 · INPUT · KEYBOARD */
+  /* ============================================================
+     §25 · INPUT · KEYBOARD
+     ============================================================ */
   window.addEventListener('keydown', function (e) {
     var tag = document.activeElement && document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
@@ -1147,7 +1181,9 @@
     }
   });
 
-  /* §26 · SELECTION HELPERS */
+  /* ============================================================
+     §26 · SELECTION HELPERS
+     ============================================================ */
   function selectLevel(idx) {
     if (idx < 0 || idx >= PYRAMID.levelsCount) { selection.level = -1; selection.levelTarget = -1; }
     else if (selection.level === idx) { selection.level = -1; selection.levelTarget = -1; }
@@ -1188,10 +1224,19 @@
     if (typeof window.__syncKmehButtons === 'function') window.__syncKmehButtons();
   }
 
-  /* §27 · ANIMATION LOOP (render protégé try/catch) */
+  /* ============================================================
+     §27 · ANIMATION LOOP (guard dimensionale + try/catch)
+     ============================================================ */
   function animate(now) {
     engine.renderRequestId = requestAnimationFrame(animate);
     if (engine.paused) return;
+
+    // Guard dimensionale : si W ou H = 0, tente un resize et skip le frame
+    if (engine.W < 1 || engine.H < 1) {
+      resizeCanvas();
+      if (engine.W < 1 || engine.H < 1) return;
+    }
+
     if (!engine.lastFrameTime) { engine.lastFrameTime = now; return; }
     var rawDt = (now - engine.lastFrameTime) / 1000;
     engine.deltaTime = Math.min(rawDt, 0.05);
@@ -1205,18 +1250,19 @@
       engine.fpsFrames = 0;
     }
     var dt = engine.deltaTime;
-    if (camera.autoRotate && !reducedMotion()) {
-      camera.targetRotation += camera.autoRotateSpeed * dt;
-    }
-    camera.rotation += (camera.targetRotation - camera.rotation) * 0.12;
-    camera.rotation += camera.velocity;
-    camera.velocity *= camera.velocityDamping;
-    camera.tilt += (camera.targetTilt - camera.tilt) * 0.10;
-    camera.zoom += (camera.targetZoom - camera.zoom) * 0.12;
-
-    updateScene(dt);
 
     try {
+      if (camera.autoRotate && !reducedMotion()) {
+        camera.targetRotation += camera.autoRotateSpeed * dt;
+      }
+      camera.rotation += (camera.targetRotation - camera.rotation) * 0.12;
+      camera.rotation += camera.velocity;
+      camera.velocity *= camera.velocityDamping;
+      camera.tilt += (camera.targetTilt - camera.tilt) * 0.10;
+      camera.zoom += (camera.targetZoom - camera.zoom) * 0.12;
+
+      updateScene(dt);
+
       ctx.clearRect(0, 0, engine.W, engine.H);
       drawRadialBackground(engine.W / 2, engine.H / 2, Math.min(engine.W, engine.H) * 0.7, 'rgba(0, 255, 163, 0.04)', 'rgba(0, 0, 0, 0)');
       drawPyramidHalo();
@@ -1231,6 +1277,11 @@
       drawScanLine(dt);
       drawTelemetryHUD();
       drawCompass();
+
+      if (!engine._firstRenderLogged) {
+        engine._firstRenderLogged = true;
+        console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0));
+      }
     } catch (renderErr) {
       if (!engine._loggedRenderError) {
         console.error('[K-MEH-20] Render error:', renderErr);
@@ -1239,7 +1290,9 @@
     }
   }
 
-  /* §28 · RESIZE (fallback chain robuste) */
+  /* ============================================================
+     §28 · RESIZE (fallback chain robuste)
+     ============================================================ */
   function resizeCanvas() {
     if (!canvas.parentElement) return;
     var rect = canvas.parentElement.getBoundingClientRect();
@@ -1251,7 +1304,7 @@
       if (fallbackW < 1 || fallbackH < 1) {
         fallbackW = Math.max(320, Math.min(window.innerWidth - 40, 900));
         fallbackH = Math.max(400, Math.min(window.innerHeight * 0.78, 900));
-        console.warn('[K-MEH-20] Using window fallback:', fallbackW, fallbackH);
+        console.warn('[K-MEH-20] Using window fallback dimensions:', fallbackW, fallbackH);
       }
       rect = { width: fallbackW, height: fallbackH };
     }
@@ -1277,7 +1330,9 @@
     console.info('[K-MEH-20] Canvas sized:', engine.W.toFixed(0) + '×' + engine.H.toFixed(0), 'DPR:', engine.DPR);
   }
 
-  /* §29 · PUBLIC API */
+  /* ============================================================
+     §29 · PUBLIC API
+     ============================================================ */
   window.kmehPyramidSelectLevel = function (idx) { selectLevel(idx); };
   window.kmehPyramidToggleExplosion = function () { toggleExplosion(); return selection.explosionTarget > 0.5; };
   window.kmehPyramidToggleAutoRotate = function () { toggleAutoRotate(); return camera.autoRotate; };
@@ -1288,7 +1343,8 @@
       explosion: selection.explosion, explosionTarget: selection.explosionTarget,
       autoRotate: camera.autoRotate,
       camera: { rotation: camera.rotation, tilt: camera.tilt, zoom: camera.zoom },
-      fps: engine.fps, paused: engine.paused, canvasSize: { w: engine.W, h: engine.H }
+      fps: engine.fps, paused: engine.paused,
+      canvasSize: { w: engine.W, h: engine.H }
     };
   };
   window.kmehPyramidReset = function () {
@@ -1310,23 +1366,27 @@
   };
   window.kmehPyramidInfo = function () {
     return {
-      version: '3.2',
+      version: '3.3',
       brand: 'Industrial Illusion SARL',
       product: 'K-MEH-20 · Kemet Modular Eco Hub 20',
       status: 'Technologie propriétaire avancée · En développement · OMPIC en préparation',
       levels: LEVELS_CONFIG.map(function (l) {
-        return { label: l.label, subtitle: l.subtitle, area: l.area, mission: l.mission };
+        return { label: l.label, subtitle: l.subtitle };
       })
     };
   };
 
-  /* §30 · VISIBILITY */
+  /* ============================================================
+     §30 · VISIBILITY
+     ============================================================ */
   document.addEventListener('visibilitychange', function () {
     engine.paused = document.hidden;
     if (!document.hidden) engine.lastFrameTime = 0;
   });
 
-  /* §31 · BOOTSTRAP (fallback complet) */
+  /* ============================================================
+     §31 · BOOTSTRAP (ResizeObserver + fonts.ready + retries)
+     ============================================================ */
   function bootstrap() {
     if (engine.initialized) return;
     resizeCanvas();
@@ -1352,11 +1412,13 @@
       });
     }
 
+    setTimeout(resizeCanvas, 50);
+    setTimeout(resizeCanvas, 200);
     setTimeout(resizeCanvas, 400);
     setTimeout(resizeCanvas, 1200);
 
     reducedMotionQuery.addEventListener('change', function () {
-      camera.autoRotate = reducedMotion ? false : true;
+      camera.autoRotate = !reducedMotion();
     });
   }
 
