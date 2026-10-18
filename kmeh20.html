@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <!-- SCROLL RESCUE GUARD v7.4 -->
+  <!-- SCROLL RESCUE GUARD -->
   <script>
   (function () {
     'use strict';
@@ -50,6 +50,9 @@
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
+    /* ============================================================
+       K-MEH-20 · DESIGN SYSTEM CYBER-PHYSIQUE v4.0.0
+       ============================================================ */
     html {
       background-color: #060A0D !important;
       -webkit-text-size-adjust: 100%;
@@ -68,7 +71,6 @@
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      touch-action: manipulation;
     }
 
     #spaceCanvas {
@@ -243,8 +245,6 @@
       );
       pointer-events: none;
       z-index: 0;
-      /* v3.4 : filter blur(18px) retiré — pouvait produire un rendu carré
-         sur certains navigateurs quand le canvas n'avait pas encore dessiné. */
       animation: heroHaloPulse 8s ease-in-out infinite;
     }
     @keyframes heroHaloPulse {
@@ -527,7 +527,8 @@
       <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
     </nav>
   </header>
-    <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
+
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
     <!-- HERO PIRAMIDE FLOTTANTE -->
     <section class="pt-2 sm:pt-4">
@@ -572,9 +573,9 @@
           <canvas id="kmehPyramidCanvas" tabindex="0" aria-label="Pyramide K-MEH-20 interactive 3D"></canvas>
           <div class="pyramid-hint">🖱️ Glisser pour pivoter · Cliquer sur un niveau</div>
           <div class="pyramid-controls">
-            <button type="button" id="btnExplosion" onclick="window.kmehPyramidToggleExplosion && window.kmehPyramidToggleExplosion()" class="btn btn-o" aria-pressed="false">⟡ Vue Modulaire Éclatée</button>
-            <button type="button" id="btnAutoRotate" onclick="window.kmehPyramidToggleAutoRotate && window.kmehPyramidToggleAutoRotate()" class="btn btn-o is-active" aria-pressed="true">⟳ Auto-rotation</button>
-            <button type="button" id="btnResetView" onclick="window.kmehPyramidReset && window.kmehPyramidReset()" class="btn btn-o">↺ Réinitialiser</button>
+            <button type="button" id="btnExplosion" onclick="window.kmehPyramidToggleExplosion && (window.kmehPyramidToggleExplosion(), window.__syncKmehButtons && window.__syncKmehButtons())" class="btn btn-o is-active" aria-pressed="true">⟡ Vue Modulaire Éclatée</button>
+            <button type="button" id="btnAutoRotate" onclick="window.kmehPyramidToggleAutoRotate && (window.kmehPyramidToggleAutoRotate(), window.__syncKmehButtons && window.__syncKmehButtons())" class="btn btn-o is-active" aria-pressed="true">⟳ Auto-rotation</button>
+            <button type="button" id="btnResetView" onclick="(window.kmehPyramidReset ? window.kmehPyramidReset() : (window.kmehResetCamera && window.kmehResetCamera())), window.__syncKmehButtons && window.__syncKmehButtons()" class="btn btn-o">↺ Réinitialiser</button>
           </div>
         </div>
       </div>
@@ -1095,31 +1096,25 @@
   <script src="assets/site.js"></script>
   <script src="assets/space-canvas.js"></script>
 
-  <!-- v3.4.0 · Cache-buster sur le moteur pyramide -->
-  <script src="assets/kmeh-pyramid.js?v=3.4.0"></script>
+  <!-- CHARGEMENT DU MOTEUR 3D PYRAMIDE v4.0.0 -->
+  <script src="assets/kmeh-pyramid.js?v=4.0.0"></script>
 
-  <!-- v3.4.0 · Version sanity check — détecte SW cache obsolète -->
+  <!-- VERSION SANITY CHECK v4.0.0 -->
   <script>
   (function () {
     setTimeout(function () {
       try {
-        if (window.__KMEH_VERSION__ !== '3.4.0') {
+        if (window.__KMEH_VERSION__ !== '4.0.0') {
           console.error(
             '%c[K-MEH-20] ⚠️ VERSION MISMATCH',
             'color:#F87171;font-weight:bold;font-size:12px;background:#0A0D10;padding:3px 6px;border-radius:4px;'
           );
-          console.error('Expected: 3.4.0 · Got:', window.__KMEH_VERSION__ || 'undefined');
-          console.error('Cause probable: Service Worker / HTTP cache obsolète.');
-          console.error('Fix — colle ceci dans la console puis recharge :');
-          console.error(
-            "navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});" +
-            "caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});" +
-            "location.reload(true);"
-          );
+          console.error('Expected: 4.0.0 · Got:', window.__KMEH_VERSION__ || 'undefined');
+          console.error('Cause probable: Cache HTTP / Service Worker actif. Effectuez Ctrl+Shift+R.');
         } else {
           try {
             console.info(
-              '%c[K-MEH-20] ✓ Version check OK · v3.4.0',
+              '%c[K-MEH-20] ✓ Version check OK · v4.0.0',
               'color:#00FFA3;font-weight:bold;font-size:10px;'
             );
           } catch (e) {}
