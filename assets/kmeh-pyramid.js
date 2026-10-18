@@ -1,5 +1,5 @@
 /* ============================================================
-   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.4.0
+   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.5.0
    Industrial Illusion SARL · Deep Tech Systems · Marrakech
 
    ⚠️  REPRÉSENTATION VISUELLE UNIQUEMENT
@@ -15,12 +15,12 @@
   'use strict';
 
   /* ============================================================
-     §0 · VERSION TAG + DEBUG FLAG (v3.4.0)
+     §0 · VERSION TAG + DEBUG FLAG (v3.5.0)
      ============================================================ */
-  window.__KMEH_VERSION__ = '3.4.0';
+  window.__KMEH_VERSION__ = '3.5.0';
   try {
     console.info(
-      '%c[K-MEH-20] ★ v3.4.0 LOADED ★',
+      '%c[K-MEH-20] ★ v3.5.0 LOADED (HIGH-VISIBILITY BOOST) ★',
       'color:#00FFA3;font-weight:bold;font-size:11px;background:#0A0D10;padding:3px 6px;border-radius:4px;'
     );
   } catch (e) {}
@@ -38,17 +38,16 @@
      ============================================================ */
   var canvas = document.getElementById('kmehPyramidCanvas');
   if (!canvas) {
-    try { console.warn('[K-MEH-20] Canvas #kmehPyramidCanvas introuvable — v3.4.0'); } catch (e) {}
+    try { console.warn('[K-MEH-20] Canvas #kmehPyramidCanvas introuvable — v3.5.0'); } catch (e) {}
     return;
   }
 
   var ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) {
-    try { console.warn('[K-MEH-20] Contexte 2D indisponible — v3.4.0'); } catch (e) {}
+    try { console.warn('[K-MEH-20] Contexte 2D indisponible — v3.5.0'); } catch (e) {}
     return;
   }
 
-  // reducedMotion est une FONCTION (pas un boolean). Évaluée à chaque appel.
   var reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   function reducedMotion() { return reducedMotionQuery.matches; }
 
@@ -75,7 +74,7 @@
   var EXPLOSION_GAP_PER_LEVEL = 0.42;
 
   /* ============================================================
-     §4 · CONFIG DES 4 NIVEAUX (abstrait, IP-safe)
+     §4 · CONFIG DES 4 NIVEAUX
      ============================================================ */
   var LEVELS_CONFIG = [
     { index: 0, key: 'base', color: PALETTE.cyberCore, colorDim: PALETTE.cyberMid, accent: PALETTE.cyberDeep,
@@ -85,11 +84,11 @@
     { index: 2, key: 'elev', color: PALETTE.kemetMid, colorDim: PALETTE.kemetDeep, accent: PALETTE.kemetBright,
       label: 'NIVEAU 3 · ÉLÉVATION', subtitle: 'Intelligence & Données' },
     { index: 3, key: 'top', color: PALETTE.kemetBright, colorDim: PALETTE.kemetMid, accent: PALETTE.whitePure,
-      label: 'NIVEAU 4 · SOMMET', subtitle: "Vision & Commandement" }
+      label: 'NIVEAU 4 · SOMMET', subtitle: 'Vision & Commandement' }
   ];
 
   /* ============================================================
-     §5 · SKIDS (flux abstraits)
+     §5 · SKIDS (FLUX ABSTRAITS)
      ============================================================ */
   var SKID_TYPES = {
     MATTER: { key: 'MATTER', color: PALETTE.kemetBright, size: 0.055, speed: 0.32, icon: '◧' },
@@ -204,6 +203,7 @@
   function getExplosionOffset(level) {
     return selection.explosion * level * EXPLOSION_GAP_PER_LEVEL;
   }
+
   /* ============================================================
      §9 · SCÈNE
      ============================================================ */
@@ -406,7 +406,7 @@
   }
 
   /* ============================================================
-     §13 · DRAW · HALO (visibilité)
+     §13 · DRAW · HALO (VISIBILITÉ)
      ============================================================ */
   function drawPyramidHalo() {
     var cx = engine.W / 2;
@@ -414,8 +414,8 @@
     var radius = Math.min(engine.W, engine.H) * 0.55;
     if (radius <= 0) return;
     var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-    grd.addColorStop(0, 'rgba(0, 255, 163, 0.10)');
-    grd.addColorStop(0.40, 'rgba(232, 200, 106, 0.06)');
+    grd.addColorStop(0, 'rgba(0, 255, 163, 0.14)');
+    grd.addColorStop(0.40, 'rgba(232, 200, 106, 0.08)');
     grd.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = grd;
     ctx.beginPath();
@@ -424,7 +424,7 @@
   }
 
   /* ============================================================
-     §14 · DRAW · PYRAMID LEVELS
+     §14 · DRAW · PYRAMID LEVELS (v3.5.0 BOOST VISIBILITÉ)
      ============================================================ */
   function drawPyramidLevels() {
     var faces = [];
@@ -451,26 +451,28 @@
     var isHovered = selection.hoveredLevel === face.level;
     var exploded = selection.explosion > 0.1;
 
+    // v3.5 · ALPHA BOOST — optimisation du contraste sur fond d'espace profond
     var baseAlpha, strokeAlpha, glowBlur, lineWidth;
     if (isSelected) {
-      baseAlpha = 0.50; strokeAlpha = 1.0; glowBlur = 22; lineWidth = 2.6;
+      baseAlpha = 0.95; strokeAlpha = 1.0; glowBlur = 30; lineWidth = 3.5;
     } else if (isHovered) {
-      baseAlpha = 0.34; strokeAlpha = 0.95; glowBlur = 12; lineWidth = 1.8;
+      baseAlpha = 0.85; strokeAlpha = 1.0; glowBlur = 22; lineWidth = 3.0;
     } else {
-      baseAlpha = exploded ? 0.26 : 0.24;
-      strokeAlpha = exploded ? 0.85 : 0.78;
-      glowBlur = exploded ? 8 : 5;
-      lineWidth = exploded ? 1.6 : 1.4;
+      baseAlpha = exploded ? 0.80 : 0.75;
+      strokeAlpha = 1.0;
+      glowBlur = exploded ? 18 : 15;
+      lineWidth = exploded ? 2.8 : 2.5;
     }
 
     if (isSelected && !reducedMotion()) {
-      baseAlpha += 0.12 + 0.08 * Math.sin(engine.elapsedTime * 4);
+      baseAlpha += 0.05 + 0.05 * Math.sin(engine.elapsedTime * 4);
+      baseAlpha = Math.min(baseAlpha, 1.0);
     }
 
     var fillGrd = ctx.createLinearGradient(face.pts[0].x, face.pts[0].y, face.pts[2].x, face.pts[2].y);
-    fillGrd.addColorStop(0, hexToRgba(cfg.color, baseAlpha * 0.7));
+    fillGrd.addColorStop(0, hexToRgba(cfg.color, baseAlpha * 0.85));
     fillGrd.addColorStop(0.5, hexToRgba(cfg.color, baseAlpha));
-    fillGrd.addColorStop(1, hexToRgba(cfg.colorDim, baseAlpha * 0.5));
+    fillGrd.addColorStop(1, hexToRgba(cfg.colorDim, baseAlpha * 0.7));
 
     ctx.fillStyle = fillGrd;
     ctx.beginPath();
@@ -482,7 +484,7 @@
     ctx.fill();
 
     if (selection.showGrid && (isSelected || isHovered)) {
-      drawBlueprintGridOnFace(face, cfg, strokeAlpha * 0.4);
+      drawBlueprintGridOnFace(face, cfg, strokeAlpha * 0.5);
     }
 
     ctx.shadowColor = cfg.color;
@@ -509,7 +511,7 @@
   }
 
   /* ============================================================
-     §15 · DRAW · TOP FACE
+     §15 · DRAW · TOP FACE (v3.5.0 BOOST VISIBILITÉ)
      ============================================================ */
   function drawPyramidTopFace() {
     var topLevel = scene.ringsCache[PYRAMID.levelsCount - 1];
@@ -518,8 +520,9 @@
     var cfg = LEVELS_CONFIG[3];
     var isSelected = selection.level === 3;
     var isHovered = selection.hoveredLevel === 3;
-    var alpha = isSelected ? 0.52 : (isHovered ? 0.34 : 0.20);
-    var strokeAlpha = isSelected ? 1.0 : (isHovered ? 0.85 : 0.72);
+
+    var alpha = isSelected ? 0.95 : (isHovered ? 0.85 : 0.75);
+    var strokeAlpha = 1.0;
 
     ctx.fillStyle = hexToRgba(cfg.color, alpha);
     ctx.beginPath();
@@ -529,14 +532,15 @@
     ctx.fill();
 
     ctx.shadowColor = cfg.color;
-    ctx.shadowBlur = isSelected ? 20 : (isHovered ? 12 : 8);
+    ctx.shadowBlur = isSelected ? 28 : (isHovered ? 22 : 15);
     ctx.strokeStyle = hexToRgba(cfg.color, strokeAlpha);
-    ctx.lineWidth = isSelected ? 2.4 : 1.5;
+    ctx.lineWidth = isSelected ? 3.5 : 2.8;
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
+
   /* ============================================================
-     §16 · DRAW · VERTICES
+     §16 · DRAW · VERTICES (v3.5.0 BOOST VISIBILITÉ)
      ============================================================ */
   function drawPyramidVertices() {
     for (var lvl = 0; lvl < scene.ringsCache.length; lvl++) {
@@ -548,10 +552,11 @@
         var ring = rings[r];
         for (var side = 0; side < ring.length; side++) {
           var pt = ring[side];
-          var size = isLevelActive ? 3.4 : 2.0;
-          var alpha = isLevelActive ? 0.95 : 0.65;
+          var size = isLevelActive ? 5.5 : 3.5;
+          var alpha = isLevelActive ? 1.0 : 0.95;
           ctx.fillStyle = hexToRgba(cfg.color, alpha);
-          if (isLevelActive) { ctx.shadowColor = cfg.color; ctx.shadowBlur = 10; }
+          ctx.shadowColor = cfg.color;
+          ctx.shadowBlur = isLevelActive ? 14 : 8;
           ctx.beginPath();
           ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
           ctx.fill();
@@ -576,9 +581,9 @@
     var beamWidth = 26 + 18 * selection.explosion;
     var grd = ctx.createLinearGradient(pBot.x, pBot.y, pTop.x, pTop.y);
     grd.addColorStop(0, 'rgba(0, 255, 163, 0)');
-    grd.addColorStop(0.18, hexToRgba(PALETTE.cyberCore, 0.15 * showIntensity));
-    grd.addColorStop(0.5, hexToRgba(PALETTE.kemetBright, 0.32 * showIntensity));
-    grd.addColorStop(0.82, hexToRgba(PALETTE.kemetBright, 0.15 * showIntensity));
+    grd.addColorStop(0.18, hexToRgba(PALETTE.cyberCore, 0.18 * showIntensity));
+    grd.addColorStop(0.5, hexToRgba(PALETTE.kemetBright, 0.38 * showIntensity));
+    grd.addColorStop(0.82, hexToRgba(PALETTE.kemetBright, 0.18 * showIntensity));
     grd.addColorStop(1, 'rgba(232, 200, 106, 0)');
 
     ctx.save();
@@ -596,10 +601,10 @@
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     var pulse = 0.6 + 0.4 * Math.sin(engine.elapsedTime * 2.5);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.5 * pulse * showIntensity);
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.55 * pulse * showIntensity);
+    ctx.lineWidth = 2.2;
     ctx.shadowColor = PALETTE.kemetBright;
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = 16;
     ctx.beginPath();
     ctx.moveTo(pBot.x, pBot.y);
     ctx.lineTo(pTop.x, pTop.y);
@@ -645,8 +650,8 @@
     ctx.globalCompositeOperation = 'lighter';
     var haloR = size * 2.4;
     var haloGrd = ctx.createRadialGradient(apex.x, apex.y, 0, apex.x, apex.y, haloR);
-    haloGrd.addColorStop(0, hexToRgba(PALETTE.kemetBright, 0.28 * pulse));
-    haloGrd.addColorStop(0.4, hexToRgba(PALETTE.kemetBright, 0.10 * pulse));
+    haloGrd.addColorStop(0, hexToRgba(PALETTE.kemetBright, 0.32 * pulse));
+    haloGrd.addColorStop(0.4, hexToRgba(PALETTE.kemetBright, 0.12 * pulse));
     haloGrd.addColorStop(1, 'rgba(232, 200, 106, 0)');
     ctx.fillStyle = haloGrd;
     ctx.beginPath();
@@ -655,8 +660,8 @@
     ctx.restore();
 
     ctx.save();
-    ctx.fillStyle = hexToRgba(PALETTE.kemetBright, 0.08);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.55);
+    ctx.fillStyle = hexToRgba(PALETTE.kemetBright, 0.12);
+    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.65);
     ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.arc(apex.x, apex.y, size * 1.1, 0, Math.PI * 2);
@@ -668,16 +673,16 @@
     ctx.translate(apex.x, apex.y);
     var rot1 = time * 0.5;
     ctx.rotate(rot1);
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetMid, 0.7);
-    ctx.lineWidth = 0.9;
+    ctx.strokeStyle = hexToRgba(PALETTE.kemetMid, 0.75);
+    ctx.lineWidth = 1.0;
     ctx.setLineDash([2, 3]);
     ctx.beginPath();
     ctx.ellipse(0, 0, size * 1.6, size * 0.55, 0, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.rotate(-rot1 * 1.6);
-    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 0.6);
-    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 0.7);
+    ctx.lineWidth = 0.8;
     ctx.setLineDash([1.5, 2.5]);
     ctx.beginPath();
     ctx.ellipse(0, 0, size * 1.35, size * 0.45, 0, 0, Math.PI * 2);
@@ -688,10 +693,10 @@
     ctx.save();
     ctx.translate(apex.x, apex.y);
     var eyeW = size * 1.0, eyeH = size * 0.55;
-    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 0.95);
-    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = hexToRgba(PALETTE.cyberCore, 1.0);
+    ctx.lineWidth = 1.8;
     ctx.shadowColor = PALETTE.cyberCore;
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = 10;
     ctx.beginPath();
     ctx.moveTo(-eyeW, 0);
     ctx.quadraticCurveTo(-eyeW * 0.4, -eyeH, 0, -eyeH * 0.65);
@@ -701,19 +706,19 @@
     ctx.closePath();
     ctx.stroke();
     ctx.shadowBlur = 0;
-    ctx.fillStyle = hexToRgba(PALETTE.cyberCore, 0.9 * pulse);
+    ctx.fillStyle = hexToRgba(PALETTE.cyberCore, 0.95 * pulse);
     ctx.shadowColor = PALETTE.cyberCore;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
     ctx.arc(0, 0, size * 0.22, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
-    ctx.fillStyle = hexToRgba(PALETTE.whitePure, 0.85);
+    ctx.fillStyle = hexToRgba(PALETTE.whitePure, 0.9);
     ctx.beginPath();
     ctx.arc(-size * 0.06, -size * 0.06, size * 0.06, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.9);
-    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = hexToRgba(PALETTE.kemetBright, 0.95);
+    ctx.lineWidth = 1.6;
     ctx.beginPath();
     ctx.moveTo(0, size * 0.55);
     ctx.lineTo(-size * 0.06, size * 1.0);
@@ -731,11 +736,11 @@
       var ang = orbitAngle + k * Math.PI;
       var satX = apex.x + Math.cos(ang) * size * 1.55;
       var satY = apex.y + Math.sin(ang) * size * 0.5;
-      ctx.fillStyle = hexToRgba(k === 0 ? PALETTE.cyberCore : PALETTE.kemetBright, 0.9);
+      ctx.fillStyle = hexToRgba(k === 0 ? PALETTE.cyberCore : PALETTE.kemetBright, 0.95);
       ctx.shadowColor = k === 0 ? PALETTE.cyberCore : PALETTE.kemetBright;
-      ctx.shadowBlur = 6;
+      ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.arc(satX, satY, 2, 0, Math.PI * 2);
+      ctx.arc(satX, satY, 2.2, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.shadowBlur = 0;
@@ -755,7 +760,7 @@
       if (!top || !bot) continue;
       var x = lerp(bot.x, top.x, p.t);
       var y = lerp(bot.y, top.y, p.t);
-      var alpha = p.currentPulse * 0.9;
+      var alpha = p.currentPulse * 0.95;
       var size = p.size * (0.8 + p.currentPulse * 0.4);
       ctx.shadowColor = p.color;
       ctx.shadowBlur = 10;
@@ -777,7 +782,7 @@
       if (!top || !bot) continue;
       var x = lerp(top.x, bot.x, p.t);
       var y = lerp(top.y, bot.y, p.t);
-      var alpha = p.currentBlink * 0.8;
+      var alpha = p.currentBlink * 0.85;
       var col = p.currentBlink > 0.9 ? PALETTE.whitePure : p.color;
       ctx.shadowColor = PALETTE.cyberCore;
       ctx.shadowBlur = 6;
@@ -805,9 +810,9 @@
     if (skid.trail.length > 1) {
       for (var t = 0; t < skid.trail.length - 1; t++) {
         var p1 = skid.trail[t], p2 = skid.trail[t + 1];
-        var trailAlpha = (t / skid.trail.length) * 0.35;
+        var trailAlpha = (t / skid.trail.length) * 0.4;
         ctx.strokeStyle = hexToRgba(type.color, trailAlpha);
-        ctx.lineWidth = (t / skid.trail.length) * 2;
+        ctx.lineWidth = (t / skid.trail.length) * 2.2;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
@@ -816,13 +821,13 @@
     }
 
     var size = type.size * 120 * (skid.projScale || 1);
-    if (isActive) size *= 1.4;
+    if (isActive) size *= 1.45;
     ctx.shadowColor = type.color;
-    ctx.shadowBlur = isActive ? 14 : 6;
+    ctx.shadowBlur = isActive ? 16 : 8;
     var x = skid.px, y = skid.py;
-    ctx.fillStyle = hexToRgba(type.color, 0.85);
+    ctx.fillStyle = hexToRgba(type.color, 0.9);
     ctx.strokeStyle = type.color;
-    ctx.lineWidth = isActive ? 1.5 : 0.8;
+    ctx.lineWidth = isActive ? 1.6 : 0.9;
     ctx.beginPath();
     ctx.moveTo(x - size / 2, y - size / 2);
     ctx.lineTo(x + size / 2, y - size / 2);
@@ -831,7 +836,8 @@
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-    ctx.fillStyle = hexToRgba(type.color, 0.55);
+
+    ctx.fillStyle = hexToRgba(type.color, 0.6);
     ctx.beginPath();
     ctx.moveTo(x - size / 2, y - size / 2);
     ctx.lineTo(x - size / 2 + size * 0.25, y - size / 2 - size * 0.25);
@@ -841,6 +847,7 @@
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
+
     if (isActive) {
       ctx.fillStyle = PALETTE.whitePure;
       ctx.font = 'bold ' + Math.max(8, size * 0.6) + 'px "JetBrains Mono", monospace';
@@ -849,6 +856,7 @@
       ctx.fillText(type.icon, x, y);
     }
   }
+
   /* ============================================================
      §21 · DRAW · SCANLINE / HUD / COMPASS
      ============================================================ */
@@ -887,8 +895,8 @@
     var pad = 14, lineH = 15;
     var x = pad, y = pad;
     var boxW = 220, boxH = 172;
-    ctx.fillStyle = 'rgba(5, 10, 13, 0.82)';
-    ctx.strokeStyle = 'rgba(0, 255, 163, 0.3)';
+    ctx.fillStyle = 'rgba(5, 10, 13, 0.85)';
+    ctx.strokeStyle = 'rgba(0, 255, 163, 0.35)';
     ctx.lineWidth = 1;
     if (ctx.roundRect) ctx.roundRect(x, y, boxW, boxH, 8);
     else ctx.rect(x, y, boxW, boxH);
@@ -948,7 +956,7 @@
     var cx = engine.W - pad - size / 2;
     var cy = engine.H - pad - size / 2;
     var r = size / 2;
-    ctx.fillStyle = 'rgba(5, 10, 13, 0.82)';
+    ctx.fillStyle = 'rgba(5, 10, 13, 0.85)';
     ctx.strokeStyle = 'rgba(0, 255, 163, 0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -1243,7 +1251,7 @@
   }
 
   /* ============================================================
-     §27 · ANIMATION LOOP (guard dimensionale + try/catch + debug stamp)
+     §27 · ANIMATION LOOP
      ============================================================ */
   function animate(now) {
     engine.renderRequestId = requestAnimationFrame(animate);
@@ -1295,7 +1303,6 @@
       drawTelemetryHUD();
       drawCompass();
 
-      // Debug stamp (opt-in via ?kmeh_debug=1 ou window.__KMEH_DEBUG__ = true)
       if (DEBUG && !engine._debugStampDrawn) {
         engine._debugStampDrawn = true;
         ctx.save();
@@ -1303,7 +1310,7 @@
         ctx.font = 'bold 13px "JetBrains Mono", monospace';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.fillText('K-MEH-20 · RENDER OK · v3.4.0', 20, engine.H - 30);
+        ctx.fillText('K-MEH-20 · RENDER OK · v3.5.0', 20, engine.H - 30);
         ctx.fillStyle = 'rgba(232, 200, 106, 0.9)';
         ctx.font = 'bold 10px "JetBrains Mono", monospace';
         ctx.fillText('W=' + engine.W.toFixed(0) + ' H=' + engine.H.toFixed(0) + ' rings=' + scene.ringsCache.length, 20, engine.H - 12);
@@ -1313,7 +1320,7 @@
       if (!engine._firstRenderLogged) {
         engine._firstRenderLogged = true;
         try {
-          console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0) + ' · v3.4.0');
+          console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0) + ' · v3.5.0');
         } catch (e) {}
       }
     } catch (renderErr) {
@@ -1325,7 +1332,7 @@
   }
 
   /* ============================================================
-     §28 · RESIZE (fallback chain robuste)
+     §28 · RESIZE (CHAÎNE DE FALLBACK ROBUSTE)
      ============================================================ */
   function resizeCanvas() {
     if (!canvas.parentElement) return;
@@ -1374,7 +1381,7 @@
   window.kmehPyramidToggleAutoRotate = function () { toggleAutoRotate(); return camera.autoRotate; };
   window.kmehPyramidGetState = function () {
     return {
-      version: '3.4.0',
+      version: '3.5.0',
       level: selection.level, hoveredLevel: selection.hoveredLevel,
       skid: selection.skid, hoveredSkid: selection.hoveredSkid,
       explosion: selection.explosion, explosionTarget: selection.explosionTarget,
@@ -1403,7 +1410,7 @@
   };
   window.kmehPyramidInfo = function () {
     return {
-      version: '3.4.0',
+      version: '3.5.0',
       brand: 'Industrial Illusion SARL',
       product: 'K-MEH-20 · Kemet Modular Eco Hub 20',
       status: 'Technologie propriétaire avancée · En développement · OMPIC en préparation',
@@ -1422,7 +1429,7 @@
   });
 
   /* ============================================================
-     §31 · BOOTSTRAP (ResizeObserver + fonts.ready + retries + warnings)
+     §31 · BOOTSTRAP (RESIZEOBSERVER + FONTS.READY + RETRIES)
      ============================================================ */
   function bootstrap() {
     if (engine.initialized) return;
@@ -1439,7 +1446,6 @@
       resizeTimer = setTimeout(resizeCanvas, 150);
     });
 
-    // v3.4.0 — invalide engine.rect au scroll pour éviter stale bounding rect
     window.addEventListener('scroll', function () {
       engine.rect = null;
     }, { passive: true });
@@ -1465,12 +1471,11 @@
       });
     }
 
-    // v3.4.0 — early warning timer : signale si aucun render après 3s
     setTimeout(function () {
       if (!engine._firstRenderLogged) {
         try {
           console.warn(
-            '%c[K-MEH-20] ⚠️ Pas de premier rendu après 3s — v3.4.0',
+            '%c[K-MEH-20] ⚠️ Pas de premier rendu après 3s — v3.5.0',
             'color:#F87171;font-weight:bold;font-size:11px;'
           );
           console.warn('[K-MEH-20] Version chargée:', window.__KMEH_VERSION__);
@@ -1500,5 +1505,3 @@
   });
 
 })();
-
- 
