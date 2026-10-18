@@ -17,6 +17,61 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
+  <!-- ============================================================
+       SCROLL RESCUE GUARD  (v7.4)
+       Safety net temporanea: impedisce che listener wheel/touchmove
+       GLOBALI non-passive (caricati da core.js/site.js/space-canvas.js)
+       blocchino rotellina, trackpad e swipe verticale mobile tramite
+       e.preventDefault().
+
+       Ambito: SOLO target globali (window / document / html / body).
+       Listener su elementi specifici (canvas 3D, slider, modali, mappe,
+       carousel) restano INTATTI — quindi nessuna funzionalità a valle
+       viene degradata.
+
+       TODO: rimuovere questa guard una volta corretto il listener
+       incriminato nei file JS esterni. Non è la fix architetturale,
+       è solo una difesa in profondità.
+       ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+    if (window.__scrollRescueGuardInstalled) return;
+    window.__scrollRescueGuardInstalled = true;
+
+    var origAdd = EventTarget.prototype.addEventListener;
+
+    // wheel / mousewheel / DOMMouseScroll → rotellina desktop (bug segnalato)
+    // touchmove / touchstart              → swipe verticale mobile (difesa proattiva)
+    // Applicati SOLO su target globali, mai su elementi specifici.
+    var BLOCKED = {
+      wheel: 1,
+      mousewheel: 1,
+      DOMMouseScroll: 1,
+      touchmove: 1,
+      touchstart: 1
+    };
+
+    function isGlobalTarget(t) {
+      return t === window
+          || t === document
+          || t === document.documentElement
+          || t === document.body;
+    }
+
+    EventTarget.prototype.addEventListener = function (type, fn, opts) {
+      if (BLOCKED[type] && isGlobalTarget(this)) {
+        var o = (typeof opts === 'object' && opts !== null) ? opts : {};
+        if (o.passive !== true) {
+          o = Object.assign({}, o, { passive: true });
+        }
+        return origAdd.call(this, type, fn, o);
+      }
+      return origAdd.call(this, type, fn, opts);
+    };
+  })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,56 +84,64 @@
 
   <style>
     /* ============================================================
-       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.2
-       FIX MOBILE : canvas visible sur tous browsers (z-index 0)
-       + optimisations mobile-first (tap, font, backdrop-filter)
+       PURKEMET B2B · DESIGN SYSTEM INDUSTRIEL v7.4
+       FIX SCROLL : overflow-x uniquement sur html (pas body),
+       pas de overscroll-behavior-y, touch-action: manipulation
+       conservé sur body (aucun impact sur le wheel desktop),
+       canvas en z-index 0 pointer-events none !important.
        ============================================================ */
     html {
       background-color: #060A0D !important;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
       -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
 
-    /* Body trasparente → canvas visibile */
+    /* Body : AUCUN overflow-x (delegato a html), AUCUN overscroll-behavior.
+       touch-action: manipulation RESTAURIATO perché:
+         - non ha alcun ruolo nel blocco della rotellina (evento wheel ≠ touch)
+         - evita il tap-delay 300ms su Android/Samsung Internet legacy
+         - non interferisce con lo scroll verticale (consente pan-x pan-y) */
     body {
       background-color: transparent !important;
       background-image: none !important;
       color: #F1F5F9 !important;
       font-family: 'Plus Jakarta Sans', sans-serif;
       margin: 0;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overscroll-behavior-y: contain;
       touch-action: manipulation;
     }
 
-    /* FIX MOBILE #1 : canvas con z-index 0 (robusto su Safari iOS) */
+    /* Canvas cosmique : verrouillé en fond, jamais interactif */
     #spaceCanvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      display: block;
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      display: block !important;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
     }
 
-    /* FIX MOBILE #2 : contenuto sopra il canvas con z-index 10 */
+    /* Couches de contenu au-dessus du canvas */
     main,
     footer {
       position: relative;
       z-index: 10;
     }
 
-    /* FIX MOBILE #3 : input ≥ 16px per evitare zoom automatico su iOS */
+    /* Header fixé : conservé, déjà z-50 côté Tailwind */
+    header {
+      z-index: 50;
+    }
+
+    /* Inputs ≥ 16px : évite le zoom automatique iOS */
     input,
     select,
     textarea,
@@ -94,7 +157,7 @@
       }
     }
 
-    /* FIX MOBILE #4 : tap target minimo 44x44px */
+    /* Tap target minimum 44px */
     .btn,
     button,
     .step-tab {
@@ -112,9 +175,7 @@
       white-space: nowrap;
       min-height: 44px;
     }
-    .cta-inline:hover {
-      transform: translateY(-1px);
-    }
+    .cta-inline:hover { transform: translateY(-1px); }
 
     #scrollProgress {
       position: fixed;
@@ -125,6 +186,7 @@
       z-index: 9999;
       box-shadow: 0 0 12px rgba(0, 255, 163, .6);
       transition: width .1s ease-out;
+      pointer-events: none;
     }
 
     .reveal {
@@ -139,9 +201,7 @@
       transition: transform .3s ease-out, box-shadow .3s;
       will-change: transform;
     }
-    .tilt-card:hover {
-      box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3);
-    }
+    .tilt-card:hover { box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3); }
 
     .animated-divider {
       height: 1px;
@@ -150,7 +210,10 @@
       margin: 2.5rem auto;
       max-width: 60%;
     }
-    @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
+    @keyframes dividerPulse {
+      0%, 100% { opacity: .3; transform: scaleX(.7); }
+      50%      { opacity: 1;  transform: scaleX(1); }
+    }
 
     .glass-panel {
       background: linear-gradient(165deg, rgba(19, 25, 32, 0.88), rgba(9, 13, 16, 0.96)) !important;
@@ -161,9 +224,7 @@
       box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    @media (min-width: 640px) {
-      .glass-panel { border-radius: 1.5rem !important; }
-    }
+    @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
     .glass-panel.g {
       border-color: rgba(0, 255, 163, 0.45) !important;
       box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important;
@@ -199,19 +260,19 @@
       cursor: pointer;
       border: none;
     }
-    .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
-    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
+    .btn-g  { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
+    .btn-g:hover  { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
     .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
     .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
-    .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
-    .btn-o:hover { border-color: #00FFA3 !important; }
+    .btn-o  { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
+    .btn-o:hover  { border-color: #00FFA3 !important; }
 
-    @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-    @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
-    .anim-orbit { animation: orbitSpin 16s linear infinite; transform-origin: 60px 60px; }
-    .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
-    .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
+    @keyframes orbitSpin   { from { transform: rotate(0deg); }   to { transform: rotate(360deg); } }
+    @keyframes orbitRev    { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes pupilPulse  { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
+    .anim-orbit         { animation: orbitSpin 16s linear infinite;     transform-origin: 60px 60px; }
+    .anim-counter-orbit { animation: orbitRev 11s linear infinite;      transform-origin: 60px 60px; }
+    .anim-pupil         { animation: pupilPulse 2.4s ease-in-out infinite; }
 
     .scanner-beam {
       position: absolute;
@@ -221,7 +282,11 @@
       animation: scanLine 3.8s ease-in-out infinite;
       pointer-events: none;
     }
-    @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
+    @keyframes scanLine {
+      0%   { top: 0%;   opacity: .85; }
+      50%  {            opacity: 1; }
+      100% { top: 100%; opacity: .2; }
+    }
 
     .slider-esg {
       -webkit-appearance: none;
@@ -238,8 +303,7 @@
     .slider-esg::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px;
-      height: 24px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       background: #090D10;
       border: 2px solid #00FFA3;
@@ -249,8 +313,7 @@
     }
     .slider-esg::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .slider-esg::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       background: #090D10;
       border: 2px solid #00FFA3;
@@ -258,9 +321,7 @@
       cursor: pointer;
     }
 
-    .step-tab {
-      transition: all 0.25s ease-out;
-    }
+    .step-tab { transition: all 0.25s ease-out; }
     .step-tab.active {
       border-color: #00FFA3 !important;
       background: rgba(0, 255, 163, 0.12) !important;
@@ -269,45 +330,25 @@
 
     .safe-top { padding-top: env(safe-area-inset-top); }
 
-    /* ============================================================
-       FIX MOBILE #5 : riduzione performance-heavy su mobile
-       ============================================================ */
     @media (max-width: 640px) {
-      .cta-inline {
-        white-space: normal !important;
-      }
-
-      /* Riduzione backdrop-filter per performance mobile */
+      .cta-inline { white-space: normal !important; }
       .glass-panel {
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
       }
-
-      /* Disattiva hover effects su touch device */
       .tilt-card:hover,
       .glass-panel:hover {
         transform: none;
         box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
       }
-
-      /* Riduce padding header su phone */
       header > div:first-child {
         padding-left: 0.875rem;
         padding-right: 0.875rem;
       }
-
-      /* Migliora leggibilità testo su schermi piccoli */
-      body {
-        font-size: 15px;
-      }
-
-      /* Più spazio per safe-area su notch */
-      footer {
-        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-      }
+      body { font-size: 15px; }
+      footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
     }
 
-    /* Disattiva animazioni per chi ha reduced motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -318,7 +359,9 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+<body class="min-h-screen flex flex-col justify-between">
+<!-- NOTE : suppression du "overflow-x-hidden" Tailwind sur <body>
+     (la gestion horizontale reste sur html uniquement). -->
 
   <!-- SPACE CANVAS BACKGROUND -->
   <canvas id="spaceCanvas" aria-hidden="true"></canvas>
@@ -652,22 +695,10 @@
         <div class="lg:col-span-5 p-5 bg-black/70 rounded-2xl border border-kemetGold/30 space-y-3 font-mono text-xs">
           <span class="text-kemetGoldBright font-bold block uppercase text-[11px]">Garanties Contractuelles PurKemet</span>
           <ul class="space-y-2 text-[11px] text-slate-300">
-            <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold shrink-0">✓</span>
-              <span>Contrat de valorisation conforme aux normes de la Wilaya de Marrakech-Safi.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold shrink-0">✓</span>
-              <span>Décharge totale de responsabilité civile dès le scellement de la pesée P1 sur site.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold shrink-0">✓</span>
-              <span>Attestation mensuelle d'évitement de mise en décharge (M'Nabha).</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-cyberGreen font-bold shrink-0">✓</span>
-              <span>Alignement sur les grilles d'audit Clef Verte, Travelife et ISO 14001.</span>
-            </li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Contrat de valorisation conforme aux normes de la Wilaya de Marrakech-Safi.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Décharge totale de responsabilité civile dès le scellement de la pesée P1 sur site.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Attestation mensuelle d'évitement de mise en décharge (M'Nabha).</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Alignement sur les grilles d'audit Clef Verte, Travelife et ISO 14001.</span></li>
           </ul>
         </div>
       </div>
@@ -780,7 +811,7 @@
     </section>
 
   </main>
-  
+
   <!-- FOOTER -->
   <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
