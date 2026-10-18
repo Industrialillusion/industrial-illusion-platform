@@ -1,5 +1,5 @@
 /* ============================================================
-   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.3
+   K-MEH-20 · MOTEUR DE RENDU CYBER-PHYSIQUE v3.4.0
    Industrial Illusion SARL · Deep Tech Systems · Marrakech
 
    ⚠️  REPRÉSENTATION VISUELLE UNIQUEMENT
@@ -15,22 +15,42 @@
   'use strict';
 
   /* ============================================================
+     §0 · VERSION TAG + DEBUG FLAG (v3.4.0)
+     ============================================================ */
+  window.__KMEH_VERSION__ = '3.4.0';
+  try {
+    console.info(
+      '%c[K-MEH-20] ★ v3.4.0 LOADED ★',
+      'color:#00FFA3;font-weight:bold;font-size:11px;background:#0A0D10;padding:3px 6px;border-radius:4px;'
+    );
+  } catch (e) {}
+
+  var DEBUG = (function () {
+    try {
+      if (window.__KMEH_DEBUG__ === true) return true;
+      if (typeof location !== 'undefined' && /[?&]kmeh_debug=1/.test(location.search)) return true;
+    } catch (e) {}
+    return false;
+  })();
+
+  /* ============================================================
      §1 · CANVAS + PRÉFÉRENCES UTILISATEUR
      ============================================================ */
   var canvas = document.getElementById('kmehPyramidCanvas');
-  if (!canvas) return;
+  if (!canvas) {
+    try { console.warn('[K-MEH-20] Canvas #kmehPyramidCanvas introuvable — v3.4.0'); } catch (e) {}
+    return;
+  }
 
   var ctx = canvas.getContext('2d', { alpha: true });
-  if (!ctx) { console.warn('[K-MEH-20] Contexte 2D indisponible.'); return; }
+  if (!ctx) {
+    try { console.warn('[K-MEH-20] Contexte 2D indisponible — v3.4.0'); } catch (e) {}
+    return;
+  }
 
-  // FIX CRITIQUE : reducedMotion doit être une FONCTION (pas un boolean)
-  // Bug précédent : appelé comme reducedMotion() dans updateSkids/drawPyramidFace/animate
-  // causait TypeError: reducedMotion is not a function → crash du loop → canvas vide.
+  // reducedMotion est une FONCTION (pas un boolean). Évaluée à chaque appel.
   var reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   function reducedMotion() { return reducedMotionQuery.matches; }
-  if (reducedMotionQuery.addEventListener) {
-    reducedMotionQuery.addEventListener('change', function () { /* évalué à chaque appel */ });
-  }
 
   /* ============================================================
      §2 · PALETTE
@@ -108,7 +128,8 @@
     fps: 60, fpsAccumulator: 0, fpsFrames: 0,
     paused: false, initialized: false,
     renderRequestId: 0, pointer: null, rect: null,
-    _loggedRenderError: false, _firstRenderLogged: false
+    _loggedRenderError: false, _firstRenderLogged: false,
+    _debugStampDrawn: false
   };
 
   var camera = {
@@ -183,7 +204,6 @@
   function getExplosionOffset(level) {
     return selection.explosion * level * EXPLOSION_GAP_PER_LEVEL;
   }
-
   /* ============================================================
      §9 · SCÈNE
      ============================================================ */
@@ -404,7 +424,7 @@
   }
 
   /* ============================================================
-     §14 · DRAW · PYRAMID LEVELS (VISIBILITÉ BOOSTÉE)
+     §14 · DRAW · PYRAMID LEVELS
      ============================================================ */
   function drawPyramidLevels() {
     var faces = [];
@@ -515,7 +535,6 @@
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
-
   /* ============================================================
      §16 · DRAW · VERTICES
      ============================================================ */
@@ -830,7 +849,6 @@
       ctx.fillText(type.icon, x, y);
     }
   }
-
   /* ============================================================
      §21 · DRAW · SCANLINE / HUD / COMPASS
      ============================================================ */
@@ -1225,13 +1243,12 @@
   }
 
   /* ============================================================
-     §27 · ANIMATION LOOP (guard dimensionale + try/catch)
+     §27 · ANIMATION LOOP (guard dimensionale + try/catch + debug stamp)
      ============================================================ */
   function animate(now) {
     engine.renderRequestId = requestAnimationFrame(animate);
     if (engine.paused) return;
 
-    // Guard dimensionale : si W ou H = 0, tente un resize et skip le frame
     if (engine.W < 1 || engine.H < 1) {
       resizeCanvas();
       if (engine.W < 1 || engine.H < 1) return;
@@ -1278,13 +1295,30 @@
       drawTelemetryHUD();
       drawCompass();
 
+      // Debug stamp (opt-in via ?kmeh_debug=1 ou window.__KMEH_DEBUG__ = true)
+      if (DEBUG && !engine._debugStampDrawn) {
+        engine._debugStampDrawn = true;
+        ctx.save();
+        ctx.fillStyle = 'rgba(0, 255, 163, 0.9)';
+        ctx.font = 'bold 13px "JetBrains Mono", monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('K-MEH-20 · RENDER OK · v3.4.0', 20, engine.H - 30);
+        ctx.fillStyle = 'rgba(232, 200, 106, 0.9)';
+        ctx.font = 'bold 10px "JetBrains Mono", monospace';
+        ctx.fillText('W=' + engine.W.toFixed(0) + ' H=' + engine.H.toFixed(0) + ' rings=' + scene.ringsCache.length, 20, engine.H - 12);
+        ctx.restore();
+      }
+
       if (!engine._firstRenderLogged) {
         engine._firstRenderLogged = true;
-        console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0));
+        try {
+          console.info('[K-MEH-20] First pyramid render — canvas ' + engine.W.toFixed(0) + '×' + engine.H.toFixed(0) + ' · v3.4.0');
+        } catch (e) {}
       }
     } catch (renderErr) {
       if (!engine._loggedRenderError) {
-        console.error('[K-MEH-20] Render error:', renderErr);
+        try { console.error('[K-MEH-20] Render error:', renderErr); } catch (e) {}
         engine._loggedRenderError = true;
       }
     }
@@ -1304,7 +1338,7 @@
       if (fallbackW < 1 || fallbackH < 1) {
         fallbackW = Math.max(320, Math.min(window.innerWidth - 40, 900));
         fallbackH = Math.max(400, Math.min(window.innerHeight * 0.78, 900));
-        console.warn('[K-MEH-20] Using window fallback dimensions:', fallbackW, fallbackH);
+        try { console.warn('[K-MEH-20] Using window fallback dimensions:', fallbackW, fallbackH); } catch (e) {}
       }
       rect = { width: fallbackW, height: fallbackH };
     }
@@ -1327,7 +1361,9 @@
 
     if (engine.initialized) updateRingsCache();
 
-    console.info('[K-MEH-20] Canvas sized:', engine.W.toFixed(0) + '×' + engine.H.toFixed(0), 'DPR:', engine.DPR);
+    try {
+      console.info('[K-MEH-20] Canvas sized:', engine.W.toFixed(0) + '×' + engine.H.toFixed(0), 'DPR:', engine.DPR);
+    } catch (e) {}
   }
 
   /* ============================================================
@@ -1338,6 +1374,7 @@
   window.kmehPyramidToggleAutoRotate = function () { toggleAutoRotate(); return camera.autoRotate; };
   window.kmehPyramidGetState = function () {
     return {
+      version: '3.4.0',
       level: selection.level, hoveredLevel: selection.hoveredLevel,
       skid: selection.skid, hoveredSkid: selection.hoveredSkid,
       explosion: selection.explosion, explosionTarget: selection.explosionTarget,
@@ -1366,7 +1403,7 @@
   };
   window.kmehPyramidInfo = function () {
     return {
-      version: '3.3',
+      version: '3.4.0',
       brand: 'Industrial Illusion SARL',
       product: 'K-MEH-20 · Kemet Modular Eco Hub 20',
       status: 'Technologie propriétaire avancée · En développement · OMPIC en préparation',
@@ -1385,7 +1422,7 @@
   });
 
   /* ============================================================
-     §31 · BOOTSTRAP (ResizeObserver + fonts.ready + retries)
+     §31 · BOOTSTRAP (ResizeObserver + fonts.ready + retries + warnings)
      ============================================================ */
   function bootstrap() {
     if (engine.initialized) return;
@@ -1402,6 +1439,11 @@
       resizeTimer = setTimeout(resizeCanvas, 150);
     });
 
+    // v3.4.0 — invalide engine.rect au scroll pour éviter stale bounding rect
+    window.addEventListener('scroll', function () {
+      engine.rect = null;
+    }, { passive: true });
+
     if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
       new ResizeObserver(function () { resizeCanvas(); }).observe(canvas.parentElement);
     }
@@ -1417,9 +1459,34 @@
     setTimeout(resizeCanvas, 400);
     setTimeout(resizeCanvas, 1200);
 
-    reducedMotionQuery.addEventListener('change', function () {
-      camera.autoRotate = !reducedMotion();
-    });
+    if (reducedMotionQuery.addEventListener) {
+      reducedMotionQuery.addEventListener('change', function () {
+        camera.autoRotate = !reducedMotion();
+      });
+    }
+
+    // v3.4.0 — early warning timer : signale si aucun render après 3s
+    setTimeout(function () {
+      if (!engine._firstRenderLogged) {
+        try {
+          console.warn(
+            '%c[K-MEH-20] ⚠️ Pas de premier rendu après 3s — v3.4.0',
+            'color:#F87171;font-weight:bold;font-size:11px;'
+          );
+          console.warn('[K-MEH-20] Version chargée:', window.__KMEH_VERSION__);
+          console.warn('[K-MEH-20] Engine state:', {
+            W: engine.W, H: engine.H, DPR: engine.DPR,
+            initialized: engine.initialized,
+            renderError: engine._loggedRenderError
+          });
+          console.warn('[K-MEH-20] Canvas DOM:', canvas);
+          console.warn('[K-MEH-20] Canvas computed size:',
+            canvas.style.width, '×', canvas.style.height,
+            '| attr:', canvas.width, '×', canvas.height);
+          console.warn('[K-MEH-20] Parent rect:', canvas.parentElement && canvas.parentElement.getBoundingClientRect());
+        } catch (e) {}
+      }
+    }, 3000);
   }
 
   if (document.readyState === 'loading') {
@@ -1433,3 +1500,5 @@
   });
 
 })();
+
+ 
