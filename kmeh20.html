@@ -237,18 +237,19 @@
       inset: -6%;
       background: radial-gradient(
         ellipse at center,
-        rgba(0, 255, 163, 0.22) 0%,
-        rgba(232, 200, 106, 0.10) 38%,
+        rgba(0, 255, 163, 0.06) 0%,
+        rgba(232, 200, 106, 0.03) 38%,
         transparent 68%
       );
       pointer-events: none;
       z-index: 0;
-      filter: blur(18px);
+      /* v3.4 : filter blur(18px) retiré — pouvait produire un rendu carré
+         sur certains navigateurs quand le canvas n'avait pas encore dessiné. */
       animation: heroHaloPulse 8s ease-in-out infinite;
     }
     @keyframes heroHaloPulse {
-      0%, 100% { opacity: 0.65; transform: scale(1); }
-      50%      { opacity: 1;    transform: scale(1.06); }
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      50%      { opacity: 0.65; transform: scale(1.04); }
     }
 
     #kmehPyramidCanvas {
@@ -1093,7 +1094,40 @@
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
   <script src="assets/space-canvas.js"></script>
-  <script src="assets/kmeh-pyramid.js"></script>
+
+  <!-- v3.4.0 · Cache-buster sur le moteur pyramide -->
+  <script src="assets/kmeh-pyramid.js?v=3.4.0"></script>
+
+  <!-- v3.4.0 · Version sanity check — détecte SW cache obsolète -->
+  <script>
+  (function () {
+    setTimeout(function () {
+      try {
+        if (window.__KMEH_VERSION__ !== '3.4.0') {
+          console.error(
+            '%c[K-MEH-20] ⚠️ VERSION MISMATCH',
+            'color:#F87171;font-weight:bold;font-size:12px;background:#0A0D10;padding:3px 6px;border-radius:4px;'
+          );
+          console.error('Expected: 3.4.0 · Got:', window.__KMEH_VERSION__ || 'undefined');
+          console.error('Cause probable: Service Worker / HTTP cache obsolète.');
+          console.error('Fix — colle ceci dans la console puis recharge :');
+          console.error(
+            "navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});" +
+            "caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});" +
+            "location.reload(true);"
+          );
+        } else {
+          try {
+            console.info(
+              '%c[K-MEH-20] ✓ Version check OK · v3.4.0',
+              'color:#00FFA3;font-weight:bold;font-size:10px;'
+            );
+          } catch (e) {}
+        }
+      } catch (e) {}
+    }, 500);
+  })();
+  </script>
 
   <script>
   (function () {
