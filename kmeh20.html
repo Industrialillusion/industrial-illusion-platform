@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>K-MEH-20 | Industrial Illusion SARL — L'Usine Vivante de l'Industrie 5.0</title>
-  <meta name="description" content="Kemet Modular Eco Hub 20 (K-MEH-20) : architecture cyber-physique propriétaire en développement et préparation au dépôt OMPIC. Pyramide tronquée industrielle 56m × 56m, modularité par skids, boucle Kemet Loop et ergonomie SIL-3.">
+  <meta name="description" content="Kemet Modular Eco Hub 20 (K-MEH-20) : architecture cyber-physique propriétaire en développement et préparation au dépôt OMPIC. Pyramide bioclimatique modulaire, boucle énergétique et ergonomie SIL-3.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="index, follow">
@@ -17,41 +17,21 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <!-- ============================================================
-       SCROLL RESCUE GUARD (v7.4)
-       Deve essere il PRIMO script eseguito. Forza passive:true sui
-       listener wheel/touchmove globali non-passive provenienti da
-       core.js/site.js/space-canvas.js. I listener su elementi
-       specifici (canvas 3D, slider, modal) restano intatti.
-       ============================================================ -->
+  <!-- SCROLL RESCUE GUARD (v7.4) -->
   <script>
   (function () {
     'use strict';
     if (window.__scrollRescueGuardInstalled) return;
     window.__scrollRescueGuardInstalled = true;
-
     var origAdd = EventTarget.prototype.addEventListener;
-    var BLOCKED = {
-      wheel: 1,
-      mousewheel: 1,
-      DOMMouseScroll: 1,
-      touchmove: 1,
-      touchstart: 1
-    };
-
+    var BLOCKED = { wheel:1, mousewheel:1, DOMMouseScroll:1, touchmove:1, touchstart:1 };
     function isGlobalTarget(t) {
-      return t === window
-          || t === document
-          || t === document.documentElement
-          || t === document.body;
+      return t === window || t === document || t === document.documentElement || t === document.body;
     }
-
     EventTarget.prototype.addEventListener = function (type, fn, opts) {
       if (BLOCKED[type] && isGlobalTarget(this)) {
         var o = (typeof opts === 'object' && opts !== null) ? opts : {};
-        if (o.passive !== true) {
-          o = Object.assign({}, o, { passive: true });
-        }
+        if (o.passive !== true) o = Object.assign({}, o, { passive: true });
         return origAdd.call(this, type, fn, o);
       }
       return origAdd.call(this, type, fn, opts);
@@ -70,14 +50,6 @@
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
-    /* ============================================================
-       K-MEH-20 · DESIGN SYSTEM CYBER-PHYSIQUE v3.1
-       FIX SCROLL : overflow-x uniquement sur html (pas body),
-       pas de overscroll-behavior-y, touch-action: manipulation
-       conservé sur body, canvas cosmique blindé.
-       NOUVEAU : Hero "pyramide flottante" — pas de boîte rigide,
-       la pyramide fusionne avec le fond spatial.
-       ============================================================ */
     html {
       background-color: #060A0D !important;
       -webkit-text-size-adjust: 100%;
@@ -99,7 +71,6 @@
       touch-action: manipulation;
     }
 
-    /* Canvas cosmique : verrouillé en fond, jamais interactif */
     #spaceCanvas {
       position: fixed !important;
       inset: 0 !important;
@@ -112,7 +83,6 @@
       -webkit-transform: translateZ(0);
     }
 
-    /* Sfondo secondario: costellazioni e geroglifici in overlay CSS */
     #kmehAmbientLayer {
       position: fixed;
       inset: 0;
@@ -141,20 +111,14 @@
     .btn, button, .step-tab, .level-card { min-height: 44px; min-width: 44px; }
 
     .cta-inline {
-      width: auto !important;
-      max-width: 100%;
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      white-space: nowrap;
-      min-height: 44px;
+      width: auto !important; max-width: 100%;
+      display: inline-flex !important; align-items: center; justify-content: center;
+      gap: 0.4rem; white-space: nowrap; min-height: 44px;
     }
     .cta-inline:hover { transform: translateY(-1px); }
 
     #scrollProgress {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       height: 3px; width: 0%;
       background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
       z-index: 9999;
@@ -164,25 +128,19 @@
     }
 
     .reveal {
-      opacity: 0;
-      transform: translateY(35px);
+      opacity: 0; transform: translateY(35px);
       transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .tilt-card {
-      transform-style: preserve-3d;
-      transition: transform .3s ease-out, box-shadow .3s;
-      will-change: transform;
-    }
+    .tilt-card { transform-style: preserve-3d; transition: transform .3s ease-out, box-shadow .3s; will-change: transform; }
     .tilt-card:hover { box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3); }
 
     .animated-divider {
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
       animation: dividerPulse 3s ease-in-out infinite;
-      margin: 2.5rem auto;
-      max-width: 60%;
+      margin: 2.5rem auto; max-width: 60%;
     }
     @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
 
@@ -196,14 +154,8 @@
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
-    .glass-panel.g {
-      border-color: rgba(0, 255, 163, 0.45) !important;
-      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important;
-    }
-    .glass-panel:hover {
-      transform: translateY(-3px);
-      border-color: rgba(0, 255, 163, 0.6) !important;
-    }
+    .glass-panel.g { border-color: rgba(0, 255, 163, 0.45) !important; box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important; }
+    .glass-panel:hover { transform: translateY(-3px); border-color: rgba(0, 255, 163, 0.6) !important; }
 
     .inp {
       width: 100%;
@@ -211,25 +163,17 @@
       border: 1px solid rgba(255, 255, 255, 0.14) !important;
       border-radius: 0.75rem !important;
       padding: 0.75rem !important;
-      color: #fff !important;
-      outline: none;
-      transition: border-color .2s;
+      color: #fff !important; outline: none; transition: border-color .2s;
     }
     .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
 
     .btn {
-      padding: 0.85rem;
-      border-radius: 0.8rem;
+      padding: 0.85rem; border-radius: 0.8rem;
       font: 800 0.72rem 'JetBrains Mono', monospace;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: 0.06em; text-transform: uppercase;
       transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      border: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      text-align: center; cursor: pointer; border: none;
     }
     .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
     .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
@@ -237,11 +181,7 @@
     .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
     .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
     .btn-o:hover { border-color: #00FFA3 !important; }
-    .btn-o.is-active {
-      background: rgba(0, 255, 163, 0.15) !important;
-      border-color: #00FFA3 !important;
-      box-shadow: 0 0 18px -3px rgba(0, 255, 163, 0.5);
-    }
+    .btn-o.is-active { background: rgba(0, 255, 163, 0.15) !important; border-color: #00FFA3 !important; box-shadow: 0 0 18px -3px rgba(0, 255, 163, 0.5); }
 
     @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
@@ -251,8 +191,7 @@
     .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
 
     .scanner-beam {
-      position: absolute;
-      left: 0; right: 0; height: 2px;
+      position: absolute; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, #00FFA3, transparent);
       box-shadow: 0 0 14px #00FFA3;
       animation: scanLine 3.8s ease-in-out infinite;
@@ -260,11 +199,7 @@
     }
     @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
 
-    /* ============================================================
-       HERO K-MEH-20 · PIRAMIDE FLOTTANTE
-       Aucune boîte rigide, aucun border-radius, aucun fond opaque.
-       Le canvas fusionne avec le fond spatial profond.
-       ============================================================ */
+    /* HERO PIRAMIDE FLOTTANTE */
     .hero-kmeh {
       position: relative;
       display: grid;
@@ -282,38 +217,40 @@
 
     .hero-text { position: relative; z-index: 2; }
 
+    /* FIX : min-width preventivo + height esplicito (evita collasso canvas) */
     .hero-pyramid {
       position: relative;
+      width: 100%;
+      min-width: 280px;
       min-height: 62vh;
+      height: 62vh;
       z-index: 1;
-      /* AUCUN border, AUCUN background, AUCUN overflow:hidden */
     }
     @media (min-width: 1024px) {
-      .hero-pyramid { min-height: 78vh; }
+      .hero-pyramid { min-height: 78vh; height: 78vh; }
     }
     @media (min-width: 1440px) {
-      .hero-pyramid { min-height: 82vh; }
+      .hero-pyramid { min-height: 82vh; height: 82vh; }
     }
 
-    /* Léger halo radial DERRIÈRE le canvas (pseudo-élément)
-       pour aider à la fusion avec l'espace, sans boîte rigide */
+    /* Halo strong pour fusion fond spatial */
     .hero-pyramid::before {
       content: '';
       position: absolute;
-      inset: -8%;
+      inset: -6%;
       background: radial-gradient(
         ellipse at center,
-        rgba(0, 255, 163, 0.10) 0%,
-        rgba(232, 200, 106, 0.04) 35%,
-        transparent 65%
+        rgba(0, 255, 163, 0.22) 0%,
+        rgba(232, 200, 106, 0.10) 38%,
+        transparent 68%
       );
       pointer-events: none;
       z-index: 0;
-      filter: blur(20px);
+      filter: blur(18px);
       animation: heroHaloPulse 8s ease-in-out infinite;
     }
     @keyframes heroHaloPulse {
-      0%, 100% { opacity: 0.55; transform: scale(1); }
+      0%, 100% { opacity: 0.65; transform: scale(1); }
       50%      { opacity: 1;    transform: scale(1.06); }
     }
 
@@ -330,18 +267,14 @@
     }
     #kmehPyramidCanvas:active { cursor: grabbing; }
 
-    /* Contrôles flottants sous la pyramide */
     .pyramid-controls {
       position: absolute;
       bottom: 0.5rem;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      z-index: 5;
-      pointer-events: auto;
+      display: flex; flex-wrap: wrap;
+      gap: 0.5rem; justify-content: center;
+      z-index: 5; pointer-events: auto;
       max-width: calc(100% - 1rem);
     }
     .pyramid-controls .btn {
@@ -377,7 +310,6 @@
       50% { opacity: 0.95; }
     }
 
-    /* Level cards */
     .level-card {
       position: relative;
       cursor: pointer;
@@ -390,10 +322,7 @@
       display: block;
       width: 100%;
     }
-    .level-card:hover {
-      border-color: rgba(0,255,163,0.5);
-      background: rgba(0,255,163,0.06);
-    }
+    .level-card:hover { border-color: rgba(0,255,163,0.5); background: rgba(0,255,163,0.06); }
     .level-card.active {
       border-color: #00FFA3 !important;
       background: rgba(0,255,163,0.12) !important;
@@ -402,21 +331,14 @@
     }
     .level-card.active .level-dot { box-shadow: 0 0 12px currentColor; }
     .level-dot {
-      display: inline-block;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      margin-right: 6px;
-      vertical-align: middle;
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; margin-right: 6px; vertical-align: middle;
       transition: box-shadow 0.3s;
     }
 
-    /* Manifeste rows */
     .manifest-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-      padding: 1rem;
-      border-radius: 1rem;
+      display: grid; grid-template-columns: 1fr;
+      gap: 0.75rem; padding: 1rem; border-radius: 1rem;
       background: rgba(0,0,0,0.45);
       border: 1px solid rgba(255,255,255,0.08);
       transition: all 0.3s;
@@ -424,128 +346,77 @@
     @media (min-width: 768px) {
       .manifest-row { grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; align-items: center; }
     }
-    .manifest-row:hover {
-      border-color: rgba(0,255,163,0.4);
-      background: rgba(0,255,163,0.04);
-    }
+    .manifest-row:hover { border-color: rgba(0,255,163,0.4); background: rgba(0,255,163,0.04); }
 
-    /* Impact cards */
     .impact-card {
-      position: relative;
-      padding: 1.5rem;
-      border-radius: 1.25rem;
+      position: relative; padding: 1.5rem; border-radius: 1.25rem;
       background: linear-gradient(165deg, rgba(19,25,32,0.88), rgba(9,13,16,0.96));
       border: 1px solid rgba(197,160,89,0.35);
-      overflow: hidden;
-      transition: all 0.35s;
+      overflow: hidden; transition: all 0.35s;
     }
     .impact-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(circle at 20% 20%, rgba(0,255,163,0.06) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
+      opacity: 0; transition: opacity 0.4s; pointer-events: none;
     }
     .impact-card:hover { transform: translateY(-3px); border-color: rgba(0,255,163,0.55); }
     .impact-card:hover::before { opacity: 1; }
 
-    /* OMPIC badge shimmer */
     .ompic-badge {
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
       background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08));
       border: 1px solid rgba(232,200,106,0.45);
     }
     .ompic-badge::after {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
+      content: ''; position: absolute; top: -50%; left: -50%;
       width: 200%; height: 200%;
       background: linear-gradient(45deg, transparent 30%, rgba(232,200,106,0.15) 50%, transparent 70%);
-      animation: ompicShimmer 4s linear infinite;
-      pointer-events: none;
+      animation: ompicShimmer 4s linear infinite; pointer-events: none;
     }
     @keyframes ompicShimmer {
       0% { transform: translate(-100%, -100%) rotate(45deg); }
       100% { transform: translate(100%, 100%) rotate(45deg); }
     }
 
-    /* Easter eggs */
     body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
-    @keyframes eeTurboHue {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-    body.ee-turbo .glass-panel {
-      border-color: rgba(255, 100, 200, 0.6) !important;
-      box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important;
-    }
-    body.ee-pharaonic {
-      background: radial-gradient(circle at 50% 50%, rgba(232, 200, 106, 0.15), transparent 70%) !important;
-    }
+    @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
+    body.ee-pharaonic { background: radial-gradient(circle at 50% 50%, rgba(232, 200, 106, 0.15), transparent 70%) !important; }
     body.ee-pharaonic .font-kemetTitle { text-shadow: 0 0 20px rgba(232, 200, 106, 0.6); }
     body.ee-kemet::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9998;
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
       background-image:
         radial-gradient(circle at 10% 20%, rgba(232, 200, 106, 0.15) 0%, transparent 25%),
         radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.12) 0%, transparent 25%);
       animation: kemetPulse 6s ease-in-out infinite;
     }
-    @keyframes kemetPulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.7; }
-    }
+    @keyframes kemetPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
     #hieroglyphOverlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9997;
-      display: none;
-      font-family: 'Cinzel', serif;
+      position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      display: none; font-family: 'Cinzel', serif;
       color: rgba(232, 200, 106, 0.15);
-      font-size: 48px;
-      line-height: 1.2;
-      overflow: hidden;
-      padding: 2rem;
+      font-size: 48px; line-height: 1.2; overflow: hidden; padding: 2rem;
       text-shadow: 0 0 20px rgba(232, 200, 106, 0.3);
     }
     #hieroglyphOverlay.active { display: block; }
     #hieroglyphOverlay .glyph-row {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 1rem;
+      display: flex; justify-content: space-around; margin-bottom: 1rem;
       animation: glyphFloat 8s ease-in-out infinite;
     }
     #hieroglyphOverlay .glyph-row:nth-child(2) { animation-delay: 1s; }
     #hieroglyphOverlay .glyph-row:nth-child(3) { animation-delay: 2s; }
     #hieroglyphOverlay .glyph-row:nth-child(4) { animation-delay: 3s; }
-    @keyframes glyphFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
+    @keyframes glyphFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     .ee-toast {
-      position: fixed;
-      top: 50%; left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.8);
       background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95));
-      color: #1a1405;
-      padding: 1.5rem 2.5rem;
-      border-radius: 1rem;
+      color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem;
       font: 800 14px 'JetBrains Mono', monospace;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      z-index: 10000;
-      box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
+      letter-spacing: 0.05em; text-transform: uppercase;
+      z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
       animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      text-align: center;
-      pointer-events: none;
-      max-width: 90vw;
+      text-align: center; pointer-events: none; max-width: 90vw;
     }
     @keyframes eeToastIn {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); }
@@ -562,13 +433,10 @@
     @media (max-width: 640px) {
       .cta-inline { white-space: normal !important; }
       .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-      .tilt-card:hover, .glass-panel:hover {
-        transform: none;
-        box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
-      }
+      .tilt-card:hover, .glass-panel:hover { transform: none; box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important; }
       body { font-size: 15px; }
       footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
-      .hero-pyramid { min-height: 58vh; }
+      .hero-pyramid { min-height: 58vh; height: 58vh; }
       .pyramid-controls { bottom: 0.25rem; }
       .pyramid-controls .btn { font-size: 0.55rem; padding: 0.45rem 0.7rem; }
       #hieroglyphOverlay { font-size: 28px; }
@@ -585,14 +453,12 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
-<!-- NOTE : suppression du "overflow-x-hidden" Tailwind sur <body> -->
 
   <canvas id="spaceCanvas" aria-hidden="true"></canvas>
   <div id="kmehAmbientLayer" aria-hidden="true"></div>
   <div id="hieroglyphOverlay" aria-hidden="true"></div>
   <div id="scrollProgress" aria-hidden="true"></div>
 
-  <!-- HEADER -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
     <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
       <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
@@ -645,9 +511,7 @@
         </button>
         <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
                 class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
-                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">
-          ☰
-        </button>
+                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">☰</button>
       </div>
     </div>
 
@@ -665,16 +529,12 @@
     </nav>
   </header>
 
-  <!-- MAIN -->
   <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
-    <!-- ═══════════════════════════════════════════════════════════
-         HERO · PIRAMIDE FLOTTANTE (fulcro visivo)
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- HERO PIRAMIDE FLOTTANTE -->
     <section class="pt-2 sm:pt-4">
       <div class="hero-kmeh">
 
-        <!-- TEXT COLUMN -->
         <div class="hero-text space-y-5 sm:space-y-6">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
             <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
@@ -686,7 +546,7 @@
           </h2>
 
           <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl">
-            <strong>Kemet Modular Eco Hub 20</strong> — L'infrastructure cyber-physique en développement qui transforme les déchets en ressources, énergie et dignité humaine. Conçue sous une géométrie bioclimatique de <strong>pyramide tronquée 56m × 56m</strong>, elle incarne la rupture entre l'ancien modèle manufacturier inerte et l'usine organique intelligente : robotique de tri optoélectronique, symbiose humaine SIL-3 et boucle énergétique fermée.
+            <strong>Kemet Modular Eco Hub 20</strong> — L'infrastructure cyber-physique en développement qui transforme les flux urbains en ressources, énergie et dignité humaine. Conçue sous une géométrie bioclimatique <strong>pyramidale modulaire</strong>, elle incarne la rupture entre l'ancien modèle manufacturier inerte et l'usine organique intelligente : symbiose humaine, circularité industrielle et souveraineté technologique du Royaume.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1 font-mono">
@@ -702,32 +562,22 @@
             <strong class="text-kemetGoldBright">Statut Légal &amp; PI :</strong> Technologie propriétaire avancée en phase de développement et de prédisposition au dépôt auprès de l'<strong class="text-white">OMPIC</strong> (Office Marocain de la Propriété Industrielle et Commerciale). Documentation intégrale protégée par secret industriel.
           </div>
 
-          <!-- Mini status row -->
           <div class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
-            <span class="text-cyberGreen">56 × 56 m</span>
+            <span class="text-cyberGreen">Hub territorial modulaire</span>
             <span aria-hidden="true" class="text-slate-600">•</span>
-            <span>3 136 m² base</span>
+            <span>Réplicable par zones</span>
             <span aria-hidden="true" class="text-slate-600">•</span>
-            <span class="text-kemetGoldBright">20 000 t/an</span>
-            <span aria-hidden="true" class="text-slate-600">•</span>
-            <span>OMPIC · pending</span>
+            <span class="text-kemetGoldBright">OMPIC · pending</span>
           </div>
         </div>
 
-        <!-- PYRAMID COLUMN — flottant, sans boîte -->
         <div class="hero-pyramid" aria-label="Modèle 3D interactif de la pyramide K-MEH-20">
           <canvas id="kmehPyramidCanvas" tabindex="0" aria-label="Pyramide K-MEH-20 interactive 3D"></canvas>
           <div class="pyramid-hint">🖱️ Glisser pour pivoter · Cliquer sur un niveau</div>
           <div class="pyramid-controls">
-            <button type="button" id="btnExplosion" onclick="window.kmehPyramidToggleExplosion && window.kmehPyramidToggleExplosion()" class="btn btn-o" aria-pressed="false">
-              ⟡ Vue Modulaire Éclatée
-            </button>
-            <button type="button" id="btnAutoRotate" onclick="window.kmehPyramidToggleAutoRotate && window.kmehPyramidToggleAutoRotate()" class="btn btn-o is-active" aria-pressed="true">
-              ⟳ Auto-rotation
-            </button>
-            <button type="button" id="btnResetView" onclick="window.kmehPyramidReset && window.kmehPyramidReset()" class="btn btn-o">
-              ↺ Réinitialiser
-            </button>
+            <button type="button" id="btnExplosion" onclick="window.kmehPyramidToggleExplosion && window.kmehPyramidToggleExplosion()" class="btn btn-o" aria-pressed="false">⟡ Vue Modulaire Éclatée</button>
+            <button type="button" id="btnAutoRotate" onclick="window.kmehPyramidToggleAutoRotate && window.kmehPyramidToggleAutoRotate()" class="btn btn-o is-active" aria-pressed="true">⟳ Auto-rotation</button>
+            <button type="button" id="btnResetView" onclick="window.kmehPyramidReset && window.kmehPyramidReset()" class="btn btn-o">↺ Réinitialiser</button>
           </div>
         </div>
 
@@ -736,15 +586,13 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · LES 4 NIVEAUX (cards + panneau info synchro 3D)
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- 4 NIVEAUX -->
     <section id="niveaux" class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Ingénierie Modulaire Propriétaire</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Les 4 Niveaux Volumétriques de la Pyramide Tronquée</h3>
+        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Les 4 Niveaux Volumétriques de la Pyramide</h3>
         <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">
-          Cliquez sur un niveau de la pyramide 3D (dans la section Hero) ou sur une des cards ci-dessous. Le niveau s'illumine en résonance CyberGreen/Gold et la fiche technique se met à jour.
+          Cliquez sur un niveau de la pyramide 3D ou sur une des cards ci-dessous. Le niveau s'illumine en résonance CyberGreen/Gold. <strong class="text-kemetGoldBright">Les spécifications techniques de chaque strate sont réservées à la Data Room institutionnelle.</strong>
         </p>
       </div>
 
@@ -755,9 +603,9 @@
               <span class="level-dot" style="background:#00FFA3;color:#00FFA3"></span>
               Niveau 1 · Base
             </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">3 136 m²</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">Réception</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">La Bouche &amp; l'Estomac — Réception, tri optique NIR, presses à balles.</p>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Interface matière — réception, orientation et préparation des flux entrants.</p>
         </button>
 
         <button type="button" onclick="window.kmehPyramidSelectLevel(1)" data-level="1" class="level-card">
@@ -766,9 +614,9 @@
               <span class="level-dot" style="background:#0D9E8E;color:#0D9E8E"></span>
               Niveau 2 · Centre
             </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">1 400 m²</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Systèmes</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Le Système Nerveux — Serveurs blindés, d-HVAC, climatisation industrielle.</p>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Cœur technique — régulation, distribution et support des systèmes opérationnels.</p>
         </button>
 
         <button type="button" onclick="window.kmehPyramidSelectLevel(2)" data-level="2" class="level-card">
@@ -777,9 +625,9 @@
               <span class="level-dot" style="background:#C5A059;color:#C5A059"></span>
               Niveau 3 · Élévation
             </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGold border border-kemetGold/30">600 m²</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGold border border-kemetGold/30">Intelligence</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Le Cerveau Algorithmique — Cluster Maat OS, synchronisation Data Lake.</p>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Couche cyber-physique — supervision, analyse et traçabilité certifiée.</p>
         </button>
 
         <button type="button" onclick="window.kmehPyramidSelectLevel(3)" data-level="3" class="level-card">
@@ -788,36 +636,34 @@
               <span class="level-dot" style="background:#E8C86A;color:#E8C86A"></span>
               Niveau 4 · Sommet
             </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGoldBright/30">150 m²</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGoldBright/30">Vision</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">L'Œil d'Horus — Control Room, observatoire 360°, commandement.</p>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Observatoire stratégique — gouvernance, partenaires et commandement.</p>
         </button>
       </div>
 
       <div id="kmehLevelPanel" class="p-5 sm:p-7 bg-black/75 rounded-2xl border border-cyberGreen/30 space-y-3 font-mono text-xs" aria-live="polite">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
-          <span id="kmehLevelTitle" class="text-sm font-bold text-cyberGreen uppercase">Niveau 1 (Base · 3 136 m²) — La Bouche &amp; l'Estomac</span>
-          <span id="kmehLevelBadge" class="px-2 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-[9px] text-cyberGreen font-bold">FLUX MATIÈRE BRUTE</span>
+          <span id="kmehLevelTitle" class="text-sm font-bold text-cyberGreen uppercase">Niveau 1 (Base) — Réception &amp; Matière</span>
+          <span id="kmehLevelBadge" class="px-2 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-[9px] text-cyberGreen font-bold">INTERFACE MATIÈRE</span>
         </div>
         <p id="kmehLevelDescription" class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          Quai d'alimentation étanche en dépression d'air, trémies de réception primaires, lignes de tri optoélectronique proche infrarouge (NIR) à haute vitesse et presses automatiques de compactage haute densité.
+          Interface d'entrée de l'infrastructure : réception des flux entrants, préparation primaire et orientation vers les circuits internes de valorisation.
         </p>
         <div id="kmehLevelSpecs" class="p-3 bg-obsidianCard/60 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1">
-          <div><strong class="text-white">Capacité de traitement :</strong> 20 000 tonnes / an en régime continu.</div>
-          <div><strong class="text-white">Architecture Skids :</strong> Modules conteneurisés interchangeables pour réduction du temps de chantier.</div>
+          <div><strong class="text-white">Mission :</strong> interface matière et préparation des flux.</div>
+          <div><strong class="text-white">Détail technique :</strong> spécifications réservées — Data Room sous NDA.</div>
         </div>
       </div>
 
       <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 text-[10px] text-slate-400 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Modularité par Skids :</strong> chaque niveau est assemblé à partir de blocs modulaires pré-assemblés et testés en usine, pour un raccordement rapide sur site (Plug &amp; Process). Utilisez <strong class="text-white">Vue Modulaire Éclatée</strong> dans la Hero pour voir la séparation verticale des 4 niveaux.
+        <strong class="text-kemetGoldBright font-mono">Modularité :</strong> chaque niveau est assemblé à partir d'unités pré-qualifiées en usine. Utilisez <strong class="text-white">Vue Modulaire Éclatée</strong> pour visualiser la séparation verticale des 4 strates. Le détail d'assemblage est réservé aux partenaires accrédités.
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · LE CONCEPT
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- CONCEPT -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique</span>
@@ -832,14 +678,14 @@
           <div class="w-9 h-9 rounded-xl bg-cyberGreen/10 border border-cyberGreen/30 flex items-center justify-center font-bold text-cyberGreen text-sm">01</div>
           <h4 class="font-bold text-white text-sm">Autonomie Métabolique</h4>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-            L'infrastructure ingère les flux de matières sèches et résiduelles urbaines pour les régénérer en matières premières secondaires pures (Grade-A ≥ 98%) et en vecteurs d'énergie décentralisés.
+            L'infrastructure régénère les flux résiduels urbains en matières premières secondaires de haute pureté et en vecteurs d'énergie décentralisés, dans une logique de circularité industrielle complète.
           </p>
         </div>
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
           <div class="w-9 h-9 rounded-xl bg-kemetGold/10 border border-kemetGold/30 flex items-center justify-center font-bold text-kemetGoldBright text-sm">02</div>
           <h4 class="font-bold text-white text-sm">Géométrie Protectrice</h4>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-            L'architecture pyramidale tronquée optimise la convection thermique naturelle, dissipe les ondes sismiques et minimise l'emprise foncière par sa géométrie à 4 niveaux volumétriques.
+            L'architecture pyramidale tronquée optimise la convection thermique naturelle, dissipe les ondes sismiques et minimise l'emprise foncière par sa géométrie stratifiée en 4 niveaux fonctionnels.
           </p>
         </div>
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
@@ -854,62 +700,58 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · MANIFESTE ARCHITECTONIQUE
-         ═══════════════════════════════════════════════════════════ -->
-    <section id="manifeste-architectonique" class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+    <!-- MANIFESTE -->
+    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Manifeste Architectonique · Comparaison</span>
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Manifeste Architectonique</span>
         <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">La Pyramide contre le Hangar : La Rupture Géométrique</h3>
         <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          La pyramide tronquée K-MEH-20 n'est pas un choix esthétique. C'est une réponse structurelle aux six limites fondamentales des hangars industriels hérités de l'Industrie 4.0.
+          La pyramide tronquée K-MEH-20 n'est pas un choix esthétique. C'est une réponse structurelle aux limites fondamentales des hangars industriels hérités de l'Industrie 4.0.
         </p>
       </div>
 
       <div class="space-y-3 font-mono text-xs">
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Empreinte au sol</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Linéaire 120m × 80m minimum · 9 600 m²</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Pyramide 56m × 56m · 3 136 m² seulement</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Linéaire étendu, forte emprise foncière</div>
+          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Densité verticale optimisée par empilement</div>
         </div>
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Volume utile / empreinte</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Référence 1.0× · mètres cubes gaspillés en hauteur</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Ratio 1.7× à volume de production équivalent</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Volume gaspillé en hauteur sous toiture</div>
+          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Ratio volumétrique nettement supérieur</div>
         </div>
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Convection thermique</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>HVAC forcé permanent · consommation continue</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Effet cheminée passif · HVAC résiduel uniquement</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>HVAC forcé permanent, consommation continue</div>
+          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Effet cheminée passif, HVAC résiduel</div>
         </div>
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Résilience sismique</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Structure métallique rigide · concentration des contraintes</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Base large · dissipation d'ondes optimale</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Structure rigide, concentration de contraintes</div>
+          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Base large, dissipation d'ondes optimale</div>
         </div>
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Modularité</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Chantier fixe · 18 à 24 mois de construction</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Skids pré-assemblés · assemblage &lt; 12 semaines</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Chantier fixe, 18 à 24 mois</div>
+          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Assemblage rapide, unités pré-qualifiées</div>
         </div>
         <div class="manifest-row">
           <div class="text-white font-bold text-sm">Scalabilité</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Extension = nouveau hangar à construire</div>
+          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Extension = nouveau hangar</div>
           <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Duplication modulaire à l'identique</div>
         </div>
       </div>
 
       <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 text-xs text-slate-300 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Architecture de rupture :</strong> là où l'Industrie 4.0 empile les machines dans une boîte inerte, l'Industrie 5.0 organise la production en strates fonctionnelles superposées. Chaque niveau est dédié à un métabolisme : matière en bas, fluides au centre, intelligence en haut, gouvernance au sommet.
+        <strong class="text-kemetGoldBright font-mono">Architecture de rupture :</strong> là où l'Industrie 4.0 empile les machines dans une boîte inerte, l'Industrie 5.0 organise la production en strates fonctionnelles superposées : matière en bas, fluides au centre, intelligence en haut, gouvernance au sommet.
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · IMPACT GÉOGRAPHIQUE
-         ═══════════════════════════════════════════════════════════ -->
-    <section id="impact-geographique" class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+    <!-- IMPACT -->
+    <section class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Portée Stratégique · Asie · Moyen-Orient · Afrique</span>
         <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Une Infrastructure Conçue pour les Contraintes du XXI<sup>e</sup> Siècle</h3>
@@ -925,7 +767,7 @@
             <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">DENSITÉ</span>
           </div>
           <p class="text-xs text-slate-300 font-sans leading-relaxed">
-            Adaptation aux contraintes foncières extrêmes des mégapoles asiatiques — Tokyo, Séoul, Singapour, Jakarta — où le m² industriel dépasse <strong class="text-white">300 USD/m²</strong>. La pyramide minimise l'emprise au sol et maximise la densité fonctionnelle, permettant l'insertion en tissu urbain saturé.
+            Adaptation aux contraintes foncières extrêmes des mégapoles asiatiques, où le m² industriel atteint des niveaux critiques. La pyramide minimise l'emprise au sol et maximise la densité fonctionnelle, permettant l'insertion en tissu urbain saturé.
           </p>
           <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-500 space-y-0.5">
             <div>Japon · Corée du Sud · Singapour · Indonésie</div>
@@ -939,7 +781,7 @@
             <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">VISION 2030</span>
           </div>
           <p class="text-xs text-slate-300 font-sans leading-relaxed">
-            Alignement avec les programmes de diversification économique — <strong class="text-white">Vision 2030 Arabie Saoudite</strong>, <strong class="text-white">We The UAE 2031</strong> — qui cherchent des infrastructures industrielles à faible empreinte carbone et à haute valeur symbolique. La pyramide incarne le lien entre héritage civilisationnel et innovation cyber-physique.
+            Alignement avec les programmes de diversification économique qui cherchent des infrastructures industrielles à faible empreinte carbone et à haute valeur symbolique. La pyramide incarne le lien entre héritage civilisationnel et innovation cyber-physique.
           </p>
           <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-500 space-y-0.5">
             <div>Arabie Saoudite · Émirats Arabes Unis · Qatar · Koweït</div>
@@ -953,7 +795,7 @@
             <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 font-mono">CORRIDORS</span>
           </div>
           <p class="text-xs text-slate-300 font-sans leading-relaxed">
-            Modèle exportable vers les zones franches du continent — <strong class="text-white">Maroc, Sénégal, Côte d'Ivoire, Kenya</strong> — qui bénéficient des corridors logistiques en développement. Chaque module est conçu pour être assemblé localement à partir de skids pré-testés en usine, garantissant une <strong class="text-white">souveraineté industrielle</strong> du pays hôte sans transfert de technologie propriétaire.
+            Modèle exportable vers les zones franches du continent — <strong class="text-white">Maroc, Sénégal, Côte d'Ivoire, Kenya</strong> — qui bénéficient des corridors logistiques en développement. Chaque module est conçu pour être assemblé localement, garantissant une <strong class="text-white">souveraineté industrielle</strong> du pays hôte sans transfert de technologie propriétaire.
           </p>
           <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-500 space-y-0.5">
             <div>Maroc · Sénégal · Côte d'Ivoire · Kenya · Égypte</div>
@@ -963,16 +805,14 @@
       </div>
 
       <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 text-xs text-slate-300 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Positionnement marocain :</strong> le Royaume se positionne comme <strong class="text-white">plateforme souveraine d'exportation de technologie industrielle lourde</strong>, en combinant les corridors logistiques existants (Tanger Med, Casablanca) avec une maîtrise locale complète de la chaîne d'assemblage des skids.
+        <strong class="text-kemetGoldBright font-mono">Positionnement marocain :</strong> le Royaume se positionne comme <strong class="text-white">plateforme souveraine d'exportation de technologie industrielle lourde</strong>, en combinant les corridors logistiques existants avec une maîtrise locale complète de la chaîne d'assemblage modulaire.
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · STATUT OMPIC
-         ═══════════════════════════════════════════════════════════ -->
-    <section id="statut-ompic" class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
+    <!-- OMPIC -->
+    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriété Intellectuelle · Phase de Préparation</span>
         <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">K-MEH-20 : Technologie Propriétaire en Préparation de Dépôt</h3>
@@ -989,7 +829,7 @@
               <span class="font-mono font-bold text-kemetGoldBright text-sm uppercase tracking-widest">OMPIC · Phase de Préparation</span>
             </div>
             <p class="text-xs text-slate-200 font-sans leading-relaxed">
-              Technologie propriétaire avancée en phase de développement et de prédisposition au dépôt auprès de l'Office Marocain de la Propriété Industrielle et Commerciale. Le dossier inclut l'architecture modulaire de la pyramide tronquée, le système de skids cyber-physiques interchangeables, la méthode d'assemblage Plug &amp; Process, ainsi que l'intégration Maat OS / Maat Data Lake.
+              Technologie propriétaire avancée en phase de développement et de prédisposition au dépôt auprès de l'Office Marocain de la Propriété Industrielle et Commerciale. Le dossier couvre plusieurs périmètres complémentaires, dont le détail est strictement réservé aux partenaires accrédités en Data Room.
             </p>
           </div>
 
@@ -997,22 +837,22 @@
             <div class="p-3.5 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1.5">
               <span class="text-[9px] font-mono text-cyberGreen uppercase tracking-widest block">Périmètre 01</span>
               <span class="text-white text-xs font-bold block">Architecture pyramidale</span>
-              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Géométrie tronquée 56×56m et distribution volumétrique sur 4 niveaux fonctionnels.</p>
+              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Géométrie et distribution volumétrique stratifiée en niveaux fonctionnels.</p>
             </div>
             <div class="p-3.5 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1.5">
               <span class="text-[9px] font-mono text-cyberGreen uppercase tracking-widest block">Périmètre 02</span>
-              <span class="text-white text-xs font-bold block">Système de skids</span>
-              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Modules cyber-physiques interchangeables, pré-testés en usine, à raccordement Plug &amp; Process.</p>
+              <span class="text-white text-xs font-bold block">Système modulaire</span>
+              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Composants interchangeables pré-qualifiés pour assemblage rapide sur site.</p>
             </div>
             <div class="p-3.5 bg-black/60 rounded-xl border border-kemetGold/30 space-y-1.5">
               <span class="text-[9px] font-mono text-kemetGoldBright uppercase tracking-widest block">Périmètre 03</span>
               <span class="text-white text-xs font-bold block">Méthode d'assemblage</span>
-              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Protocole d'installation et de raccordement des skids sur site final.</p>
+              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Protocole propriétaire d'installation et de mise en service.</p>
             </div>
             <div class="p-3.5 bg-black/60 rounded-xl border border-kemetGold/30 space-y-1.5">
               <span class="text-[9px] font-mono text-kemetGoldBright uppercase tracking-widest block">Périmètre 04</span>
               <span class="text-white text-xs font-bold block">Intégration logicielle</span>
-              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Couche Maat OS, pipeline Maat Data Lake, notarisation blockchain.</p>
+              <p class="text-[10px] text-slate-400 font-sans leading-relaxed">Couche applicative et pipeline de traçabilité propriétaire.</p>
             </div>
           </div>
         </div>
@@ -1020,7 +860,7 @@
         <div class="lg:col-span-5 p-5 bg-black/70 rounded-2xl border border-kemetGold/30 space-y-3 font-mono text-xs">
           <span class="text-kemetGoldBright font-bold block uppercase text-[11px] tracking-widest">Protection par Secret Industriel</span>
           <ul class="space-y-2.5 text-[11px] text-slate-300">
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Aucune spécification technique propriétaire divulguée publiquement (P&amp;ID, formules de réaction, schémas de câblage).</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Aucune spécification technique propriétaire divulguée publiquement.</span></li>
             <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Documentation technique intégrale disponible uniquement en Data Room, sous NDA préalablement signé.</span></li>
             <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Procédure de divulgation contrôlée, conforme aux usages de protection industrielle internationaux.</span></li>
             <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span>Le statut OMPIC est en préparation et non encore déposé — aucune revendication de brevet n'est formulée à ce jour.</span></li>
@@ -1034,9 +874,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · KEMET LOOP
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- KEMET LOOP -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Thermodynamique &amp; Économie Circulaire</span>
@@ -1049,13 +887,13 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div class="space-y-4 text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
           <p>
-            Le cœur du <strong>Kemet Loop</strong> repose sur la valorisation conjointe des matières sèches et des fractions organiques. Les flux de biomasse sont canalisés vers des unités de biométhanisation contrôlée, tandis que les matières sèches non recyclables mécaniquement font l'objet d'une conversion thermique propre.
+            Le cœur du <strong>Kemet Loop</strong> repose sur la valorisation conjointe de plusieurs familles de flux internes. Les voies de conversion et les rendements attendus font l'objet d'une documentation propriétaire en cours de finalisation.
           </p>
           <p>
-            L'énergie ainsi générée est réinjectée dans la micro-grille interne du hub pour alimenter les lignes de tri optique, les compresseurs et les serveurs de calcul Maat OS. Ce cycle fermé vise une réduction drastique de la dépendance au réseau électrique conventionnel.
+            L'énergie ainsi générée sera réinjectée dans la micro-grille interne du hub pour alimenter les modules opérationnels. Ce cycle fermé vise une réduction significative de la dépendance au réseau électrique conventionnel.
           </p>
           <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-[11px] text-slate-400 leading-relaxed">
-            🔒 <strong class="text-kemetGoldBright">Secret Industriel :</strong> Les rendements enthalpiques, spécifications thermochimiques et P&amp;ID détaillés font l'objet d'une protection stricte. Consultation réservée aux partenaires institutionnels accrédités en Data Room.
+            🔒 <strong class="text-kemetGoldBright">Secret Industriel :</strong> Les rendements enthalpiques, spécifications thermochimiques et schémas de procédé détaillés sont strictement réservés aux partenaires institutionnels accrédités en Data Room.
           </div>
         </div>
 
@@ -1063,16 +901,16 @@
           <span class="text-cyberGreen font-bold block uppercase text-[11px]">Vecteurs de Sortie Qualifiés Kemet Loop</span>
           <div class="space-y-2">
             <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-white font-bold block">1. Matières Premières Secondaires Grade-A</span>
-              <p class="text-[11px] text-slate-400 font-sans">PET transparent, PE-HD, Aluminium 3004/6061 et Carton avec pureté certifiée ≥ 98%.</p>
+              <span class="text-white font-bold block">1. Matières Premières Secondaires</span>
+              <p class="text-[11px] text-slate-400 font-sans">Fractions calibrées et certifiées, destinées aux filières industrielles aval.</p>
             </div>
             <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-cyberGreen font-bold block">2. Électricité &amp; Chaleur Décentralisée</span>
-              <p class="text-[11px] text-slate-400 font-sans">Cogénération interne assurant l'autonomie des modules opérationnels.</p>
+              <span class="text-cyberGreen font-bold block">2. Énergie Décentralisée</span>
+              <p class="text-[11px] text-slate-400 font-sans">Cogénération interne visant l'autonomie des modules opérationnels.</p>
             </div>
             <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-kemetGoldBright font-bold block">3. Digestat &amp; Amendement Organique</span>
-              <p class="text-[11px] text-slate-400 font-sans">Fertilisant naturel destiné aux programmes de régénération des sols agricoles du Royaume.</p>
+              <span class="text-kemetGoldBright font-bold block">3. Amendement pour Sols</span>
+              <p class="text-[11px] text-slate-400 font-sans">Co-produits destinés aux programmes de régénération des sols agricoles du Royaume.</p>
             </div>
           </div>
         </div>
@@ -1081,9 +919,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · INDUSTRIE 5.0
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- INDUSTRIE 5.0 -->
     <section class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Humanisme Technologique</span>
@@ -1096,31 +932,31 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-cyberGreen font-bold text-sm block">Kemet Pulse &amp; SIL-3</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 shrink-0">BIOMÉTRIE</span>
+            <span class="text-cyberGreen font-bold text-sm block">Sécurité Opérateur</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 shrink-0">SIL-3</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-            Chaque opérateur est équipé de la montre haptique <strong>Kemet Pulse</strong>. En cas de détection de pic de fatigue ou de stress thermique, le système SIL-3 ralentit automatiquement la cadence de ligne pour prévenir le risque d'accident, sans impact sur la rémunération.
+            Les dispositifs de sécurité active et de biométrie embarquée ralentissent automatiquement la cadence de ligne en cas de détection de fatigue ou de stress thermique, sans impact sur la rémunération.
           </p>
         </div>
 
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-kemetGoldBright font-bold text-sm block">Guidage Optique AR-Sorting</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 shrink-0">ASSISTANCE</span>
+            <span class="text-kemetGoldBright font-bold text-sm block">Assistance Augmentée</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 shrink-0">COGNITIF</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-            Des projecteurs dynamiques projettent directement sur les flux convoyés des repères colorimétriques de tri. L'opérateur est guidé avec une précision millimétrique, réduisant la charge cognitive et éliminant les erreurs de sélection.
+            Les interfaces de guidage cognitif réduisent la charge mentale des opérateurs, éliminent les erreurs de manipulation et fluidifient la formation des nouvelles recrues.
           </p>
         </div>
 
         <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-white font-bold text-sm block">Actions de Classe B</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 shrink-0">COPROPRIÉTÉ</span>
+            <span class="text-white font-bold text-sm block">Copropriété de Valeur</span>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 shrink-0">ÉQUITÉ</span>
           </div>
           <p class="text-slate-300 text-[11px] font-sans leading-relaxed">
-            Les travailleurs du tri (anciens collecteurs informels formalisés en CDI) sont directement associés à la valeur de l'infrastructure via les <strong>Actions de Classe B</strong>, percevant 30% des dividendes nets d'infrastructure générés par leur unité.
+            Les travailleurs du tri (anciens collecteurs informels formalisés en CDI) sont directement associés à la valeur de l'infrastructure via un mécanisme de participation aux dividendes de leur unité.
           </p>
         </div>
       </div>
@@ -1128,13 +964,11 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · HARDWARE LOURD
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- HARDWARE LOURD -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Scalabilité Industrielle</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Hardware Lourd : Assemblage Industriel &amp; Export</h3>
+        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Assemblage Industriel &amp; Export</h3>
         <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
           Le déploiement du K-MEH-20 repose sur une stratégie d'<strong>assemblage industriel lourd</strong> dans une zone franche du Royaume, dédiée à la fabrication et à l'exportation des modules cyber-physiques.
         </p>
@@ -1143,23 +977,23 @@
       <div class="grid lg:grid-cols-12 gap-6 lg:gap-10 items-start">
         <div class="lg:col-span-7 space-y-4 text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
           <p>
-            Pour assurer un déploiement modulaire à grande échelle sans dépendre de chantiers artisanaux sur site, l'ingénierie des <strong>modules cyber-physiques</strong> s'appuie sur un pôle d'<strong>hardware lourd</strong> installé dans une zone franche industrielle du Royaume, bénéficiant des infrastructures portuaires et logistiques nécessaires à l'export.
+            Pour assurer un déploiement modulaire à grande échelle sans dépendre de chantiers artisanaux sur site, l'ingénierie des <strong>modules cyber-physiques</strong> s'appuie sur un pôle industriel dédié, installé dans une zone franche du Royaume, bénéficiant des infrastructures portuaires et logistiques nécessaires à l'export.
           </p>
           <p>
-            Chaque niveau de la pyramide est découpé en <strong>skids conteneurisés</strong> : blocs autonomes pré-assemblés, testés, calibrés et certifiés en usine. Cette approche réduit drastiquement les délais de déploiement, garantit une qualité reproductible et permet une <strong>installation en moins de 12 semaines</strong> sur le site final — quel que soit le pays d'accueil.
+            Chaque niveau est découpé en <strong>unités pré-assemblées et certifiées en usine</strong> : blocs autonomes testés et calibrés avant expédition. Cette approche réduit drastiquement les délais de déploiement, garantit une qualité reproductible et permet une <strong>installation en moins de 12 semaines</strong> sur le site final.
           </p>
           <p>
-            Les modules terminés sont ensuite acheminés par voie maritime ou ferroviaire vers les hubs régionaux du Royaume, de l'Afrique de l'Ouest et du bassin méditerranéen, positionnant le Maroc comme <strong>plateforme souveraine d'exportation de technologie industrielle lourde</strong>.
+            Les modules terminés sont ensuite acheminés par voie maritime ou ferroviaire vers les hubs régionaux, positionnant le Maroc comme <strong>plateforme souveraine d'exportation de technologie industrielle lourde</strong>.
           </p>
         </div>
 
         <div class="lg:col-span-5 p-5 bg-black/70 rounded-2xl border border-kemetGold/30 space-y-3 font-mono text-xs">
           <span class="text-kemetGoldBright font-bold block uppercase text-[11px]">Avantages de l'Assemblage Lourd Dédié</span>
           <ul class="space-y-2 text-[11px] text-slate-300">
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Écosystème industriel qualifié</strong> : chaudronnerie, capteurs et automates programmables intégrés localement.</span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Gabarits conteneurisés ISO</strong> : transport rapide, économique et sécurisé vers tout port méditerranéen ou africain.</span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Scalabilité immédiate</strong> : production en série de modules identiques, prêts à être déployés en cascade.</span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Souveraineté industrielle</strong> : maîtrise complète de la chaîne de valeur, du composant au module assemblé.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Écosystème industriel qualifié</strong> — partenaires locaux certifiés sur l'ensemble de la chaîne de valeur.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Gabarits ISO conteneurisés</strong> — transport rapide, économique et sécurisé vers tout port méditerranéen ou africain.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Scalabilité immédiate</strong> — production en série de modules identiques, déployables en cascade.</span></li>
+            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">✓</span><span><strong class="text-white">Souveraineté industrielle</strong> — maîtrise complète de la chaîne de valeur, du composant au module assemblé.</span></li>
           </ul>
         </div>
       </div>
@@ -1167,9 +1001,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · TABLEAU COMPARATIF
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- COMPARATIF -->
     <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
       <div class="border-b border-white/10 pb-4">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Matrice Comparative</span>
@@ -1188,39 +1020,39 @@
           </thead>
           <tbody class="divide-y divide-white/5 text-slate-300">
             <tr>
-              <td class="py-3.5 px-3 font-bold text-white">Philosophie de Base</td>
+              <td class="py-3.5 px-3 font-bold text-white">Philosophie</td>
               <td class="py-3.5 px-3 text-slate-400">Rendement unilatéral centré sur la machine</td>
               <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Équilibre cyber-physique Homme-Machine-Ressource</td>
             </tr>
             <tr>
-              <td class="py-3.5 px-3 font-bold text-white">Rôle de l'Opérateur</td>
+              <td class="py-3.5 px-3 font-bold text-white">Rôle Opérateur</td>
               <td class="py-3.5 px-3 text-red-400">Ressource exécutante subordonnée au rythme machine</td>
-              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Pilote protégé (SIL-3, Kemet Pulse, copropriétaire)</td>
+              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Pilote protégé et copropriétaire de la valeur</td>
             </tr>
             <tr>
               <td class="py-3.5 px-3 font-bold text-white">Infrastructure</td>
-              <td class="py-3.5 px-3 text-slate-400">Hangar métallique générique, déperditions thermiques</td>
-              <td class="py-3.5 px-3 font-bold text-white bg-cyberGreen/5">Pyramide bioclimatique tronquée 56m × 56m</td>
+              <td class="py-3.5 px-3 text-slate-400">Hangar métallique générique</td>
+              <td class="py-3.5 px-3 font-bold text-white bg-cyberGreen/5">Pyramide bioclimatique tronquée</td>
             </tr>
             <tr>
               <td class="py-3.5 px-3 font-bold text-white">Bilan Énergétique</td>
-              <td class="py-3.5 px-3 text-red-400">Forte dépendance au réseau électrique externe</td>
+              <td class="py-3.5 px-3 text-red-400">Forte dépendance au réseau externe</td>
               <td class="py-3.5 px-3 font-bold text-kemetGoldBright bg-cyberGreen/5">Auto-soutien Kemet Loop en développement</td>
             </tr>
             <tr>
-              <td class="py-3.5 px-3 font-bold text-white">Pureté de la Matière</td>
-              <td class="py-3.5 px-3 text-slate-400">Contaminations fréquentes (60% à 75% de pureté)</td>
-              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Tri optoélectronique Grade-A ≥ 98%</td>
+              <td class="py-3.5 px-3 font-bold text-white">Pureté Matière</td>
+              <td class="py-3.5 px-3 text-slate-400">Variable, dépendante de l'opérateur</td>
+              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Contrôlée, certifiée et auditée</td>
             </tr>
             <tr>
-              <td class="py-3.5 px-3 font-bold text-white">Traçabilité Notariée</td>
+              <td class="py-3.5 px-3 font-bold text-white">Traçabilité</td>
               <td class="py-3.5 px-3 text-slate-400">Registres papier déclaratifs non opposables</td>
-              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Scellement temps réel blockchain (Fabric + Bitcoin)</td>
+              <td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Scellement temps réel sur registre distribué</td>
             </tr>
             <tr>
-              <td class="py-3.5 px-3 font-bold text-white">Statut Propriété Intellectuelle</td>
-              <td class="py-3.5 px-3 text-slate-400">Intégration d'équipements tiers sans souveraineté</td>
-              <td class="py-3.5 px-3 font-bold text-kemetGoldBright bg-cyberGreen/5">Technologie propriétaire avancée · OMPIC en préparation</td>
+              <td class="py-3.5 px-3 font-bold text-white">Statut PI</td>
+              <td class="py-3.5 px-3 text-slate-400">Intégration d'équipements tiers</td>
+              <td class="py-3.5 px-3 font-bold text-kemetGoldBright bg-cyberGreen/5">Technologie propriétaire · OMPIC en préparation</td>
             </tr>
           </tbody>
         </table>
@@ -1229,9 +1061,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SECTION · CTA + DATA ROOM + TOUR DE TABLE TEASER
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- CTA -->
     <section class="glass-panel g p-5 sm:p-8 lg:p-12 space-y-6 reveal">
       <div class="max-w-3xl mx-auto text-center space-y-3">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Continuité Opérationnelle &amp; Tour de Table Institutionnel</span>
@@ -1239,7 +1069,7 @@
           Du Terrain à la Pyramide : L'Innervation PurKemet
         </h3>
         <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          Le déploiement du réseau logistique B2B <strong>PurKemet (Track 0)</strong> constitue la phase opérationnelle immédiate : il capte les gisements de déchets secs auprès des producteurs de Marrakech et alimente le Maat Data Lake en données réelles. Dès l'atteinte de la masse critique de gisement, l'installation du premier module industriel <strong>K-MEH-20 (Track 1)</strong> sera enclenchée.
+          Le déploiement du réseau logistique B2B <strong>PurKemet (Track 0)</strong> constitue la phase opérationnelle immédiate : il capte les gisements auprès des producteurs de Marrakech et alimente le Maat Data Lake en données réelles. Dès l'atteinte de la masse critique de gisement, l'installation du premier module industriel <strong>K-MEH-20 (Track 1)</strong> sera enclenchée.
         </p>
       </div>
 
@@ -1272,7 +1102,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
       <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
@@ -1347,16 +1176,12 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- SCRIPTS -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
   <script src="assets/space-canvas.js"></script>
   <script src="assets/kmeh-pyramid.js"></script>
 
   <script>
-  /* ============================================================
-     K-MEH-20 · LOGIQUE CLIENT v3.1 + EASTER EGGS
-     ============================================================ */
   (function () {
     'use strict';
 
@@ -1365,9 +1190,7 @@
       if (y) y.textContent = String(new Date().getFullYear());
     })();
 
-    /* ============================================================
-       EASTER EGG #1 · KONAMI CODE → Turbo Mode
-       ============================================================ */
+    /* EASTER EGGS (identiques v3.1) */
     (function () {
       var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
       var konamiIndex = 0;
@@ -1376,25 +1199,19 @@
         if (key === konamiCode[konamiIndex]) {
           konamiIndex++;
           if (konamiIndex === konamiCode.length) {
-            activateTurboMode();
+            if (document.body.classList.contains('ee-turbo')) return;
+            document.body.classList.add('ee-turbo');
+            showEasterEggToast('🚀 TURBO MODE · KEMET ACTIVATED');
+            if (window.Maat && window.Maat.buzz) window.Maat.buzz(150);
+            setTimeout(function () { document.body.classList.remove('ee-turbo'); }, 12000);
             konamiIndex = 0;
           }
         } else {
           konamiIndex = (key === konamiCode[0]) ? 1 : 0;
         }
       });
-      function activateTurboMode() {
-        if (document.body.classList.contains('ee-turbo')) return;
-        document.body.classList.add('ee-turbo');
-        showEasterEggToast('🚀 TURBO MODE · KEMET ACTIVATED');
-        if (window.Maat && window.Maat.buzz) window.Maat.buzz(150);
-        setTimeout(function () { document.body.classList.remove('ee-turbo'); }, 12000);
-      }
     })();
 
-    /* ============================================================
-       EASTER EGG #2 · DOPPIO CLICK LOGO → Kemet Mode
-       ============================================================ */
     (function () {
       var logoLink = document.getElementById('logoLink');
       if (!logoLink) return;
@@ -1412,13 +1229,10 @@
       });
     })();
 
-    /* ============================================================
-       EASTER EGG #3 · TASTO H → Geroglifici Overlay
-       ============================================================ */
     (function () {
       var overlay = document.getElementById('hieroglyphOverlay');
       if (!overlay) return;
-      var glyphs = ['𓂀', '𓆣', '𓋹', '𓁹', '𓃭', '𓅓', '𓆓', '𓇋', '𓈖', '𓊪', '𓋴', '𓌀', '𓍿', '𓎛', '𓏏', '𓂋', '𓃀', '𓄿', '𓅱', '𓆑'];
+      var glyphs = ['𓂀','𓆣','𓋹','𓁹','𓃭','𓅓','𓆓','𓇋','𓈖','𓊪','𓋴','𓌀','𓍿','𓎛','𓏏','𓂋','𓃀','𓄿','𓅱','𓆑'];
       var isActive = false;
       var rowsHTML = '';
       for (var r = 0; r < 6; r++) {
@@ -1440,14 +1254,10 @@
       });
     })();
 
-    /* ============================================================
-       EASTER EGG #4 · TRIPLO CLICK SULLA PIRAMIDE → Pharaonic Mode
-       ============================================================ */
     (function () {
       var pyramidCanvas = document.getElementById('kmehPyramidCanvas');
       if (!pyramidCanvas) return;
-      var clickCount = 0;
-      var clickTimer = null;
+      var clickCount = 0, clickTimer = null;
       pyramidCanvas.addEventListener('click', function () {
         clickCount++;
         if (clickTimer) clearTimeout(clickTimer);
@@ -1469,14 +1279,10 @@
       });
     })();
 
-    /* ============================================================
-       EASTER EGG #5 · 5x LOGIN CLICK → Secret Unlock
-       ============================================================ */
     (function () {
       var loginBtn = document.getElementById('loginBtn');
       if (!loginBtn) return;
-      var loginClicks = 0;
-      var loginTimer = null;
+      var loginClicks = 0, loginTimer = null;
       window.__eeOnLoginClick = function () {
         loginClicks++;
         if (loginTimer) clearTimeout(loginTimer);
@@ -1491,9 +1297,6 @@
       };
     })();
 
-    /* ============================================================
-       EASTER EGG · TOAST VISUAL
-       ============================================================ */
     function showEasterEggToast(text) {
       var existing = document.querySelector('.ee-toast');
       if (existing) existing.remove();
@@ -1508,9 +1311,6 @@
     }
     window.showEasterEggToast = showEasterEggToast;
 
-    /* ============================================================
-       LOGIN MULTI-CLIC
-       ============================================================ */
     (function () {
       var _origOpenLogin = window.openUniversalLogin;
       function resetLoginFlags() {
@@ -1541,8 +1341,9 @@
           resetLoginFlags();
           try { if (m.parentNode) m.parentNode.removeChild(m); } catch (e) {}
         }
-        var triggers = m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close');
-        triggers.forEach(function (btn) { btn.addEventListener('click', closeCleanly); });
+        m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close').forEach(function (btn) {
+          btn.addEventListener('click', closeCleanly);
+        });
         m.addEventListener('click', function (e) {
           if (e.target === m || e.target.classList.contains('backdrop')) closeCleanly();
         });
@@ -1568,9 +1369,6 @@
       };
     })();
 
-    /* ============================================================
-       SCROLL PROGRESS
-       ============================================================ */
     window.addEventListener('scroll', function () {
       var bar = document.getElementById('scrollProgress');
       if (!bar) return;
@@ -1578,9 +1376,6 @@
       bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
     }, { passive: true });
 
-    /* ============================================================
-       REVEAL
-       ============================================================ */
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -1590,9 +1385,6 @@
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
     }
 
-    /* ============================================================
-       TILT
-       ============================================================ */
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
       document.querySelectorAll('.tilt-card').forEach(function (card) {
         card.addEventListener('mousemove', function (e) {
@@ -1612,9 +1404,6 @@
       } catch (e) {}
     };
 
-    /* ============================================================
-       TOAST
-       ============================================================ */
     function toast(text, kind) {
       if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
       var d = document.createElement('div');
@@ -1630,9 +1419,6 @@
       setTimeout(function () { d.remove(); }, 4000);
     }
 
-    /* ============================================================
-       MENU MOBILE
-       ============================================================ */
     window.toggleMobileNav = function () {
       var nav = document.getElementById('mobileNavMenu');
       var btn = document.getElementById('menuBtn');
@@ -1653,9 +1439,6 @@
       nav.classList.add('hidden');
     });
 
-    /* ============================================================
-       MODAL DATA ROOM
-       ============================================================ */
     function openModal(id) {
       var m = document.getElementById(id);
       if (!m) return;
@@ -1679,41 +1462,39 @@
       if (e.target && e.target.id === 'dataRoomModal') window.closeDataRoomModal();
     });
 
-    /* ============================================================
-       LEVELS DATA + SYNC PYRAMID ↔ CARDS ↔ PANEL
-       ============================================================ */
+    /* SYNC LEVELS ↔ CARDS ↔ PANEL (versions abstraites) */
     var LEVELS_DATA = [
       {
-        title: "Niveau 1 (Base · 3 136 m²) — La Bouche & l'Estomac",
-        badge: "FLUX MATIÈRE BRUTE",
+        title: "Niveau 1 (Base) — Réception & Matière",
+        badge: "INTERFACE MATIÈRE",
         color: "#00FFA3",
-        description: "Quai d'alimentation étanche en dépression d'air, trémies de réception primaires, lignes de tri optoélectronique proche infrarouge (NIR) à haute vitesse et presses automatiques de compactage continu haute densité.",
-        k1: "Équipements", v1: "Trémies d'injection, séparateurs optiques NIR, presses à balles 500 kN.",
-        k2: "Fonction clé", v2: "Séparation robotisée des fractions sèches (PET, PE-HD, Aluminium, Carton, Verre)."
+        description: "Interface d'entrée de l'infrastructure : réception des flux entrants, préparation primaire et orientation vers les circuits internes de valorisation.",
+        k1: "Mission", v1: "Interface matière et préparation des flux entrants.",
+        k2: "Détail technique", v2: "Spécifications réservées — Data Room sous NDA."
       },
       {
-        title: "Niveau 2 (Centre · 1 400 m²) — Le Système Nerveux",
-        badge: "INFRASTRUCTURE TECHNIQUE",
+        title: "Niveau 2 (Centre) — Systèmes & Fluides",
+        badge: "CŒUR TECHNIQUE",
         color: "#0D9E8E",
-        description: "Centre névralgique de régulation fluidique et climatique : unités industrielles d-HVAC à récupération enthalpique, pompes de surpression et salle serveurs blindée Faraday hébergeant les nœuds de calcul Edge.",
-        k1: "Infrastructure", v1: "Serveurs Edge durcis, racks télécoms sécurisés, filtrage particulaire F9.",
-        k2: "Sécurité", v2: "Contrôle d'accès biométrique, détection incendie inertielle sans eau."
+        description: "Cœur technique de l'infrastructure : régulation thermique et fluidique, distribution énergétique et support des systèmes opérationnels.",
+        k1: "Mission", v1: "Régulation, distribution et support des systèmes.",
+        k2: "Détail technique", v2: "Spécifications réservées — Data Room sous NDA."
       },
       {
-        title: "Niveau 3 (Élévation · 600 m²) — Le Cerveau Algorithmique",
-        badge: "INTELLIGENCE ARTIFICIELLE & DATA LAKE",
+        title: "Niveau 3 (Élévation) — Intelligence & Données",
+        badge: "COUCHE CYBER-PHYSIQUE",
         color: "#C5A059",
-        description: "Cluster de calcul dédié à l'exécution en temps réel de Maat OS. Traitement des flux de télémétrie SIL-3, optimisation dynamique des convoyeurs et passerelle de notarisation blockchain vers le Maat Data Lake.",
-        k1: "Logiciel", v1: "Kernel Maat OS, pipeline télémétrique temps réel, ancrage Bitcoin OTS.",
-        k2: "Rôle", v2: "Scellement cryptographique des transactions de matière et calcul des bilans ESG."
+        description: "Couche cyber-physique dédiée à la supervision en temps réel, à l'analyse des flux et à la traçabilité certifiée.",
+        k1: "Mission", v1: "Supervision, analyse et traçabilité des flux.",
+        k2: "Détail technique", v2: "Architecture logicielle propriétaire — Data Room sous NDA."
       },
       {
-        title: "Niveau 4 (Sommet · 150 m²) — L'Œil d'Horus",
-        badge: "COMMANDEMENT OPÉRATIONNEL",
+        title: "Niveau 4 (Sommet) — Vision & Commandement",
+        badge: "OBSERVATOIRE STRATÉGIQUE",
         color: "#E8C86A",
-        description: "Tour de contrôle et observatoire à vision panoramique à 360°. Console de supervision pour les ingénieurs d'exploitation et liaison satellitaire continue avec la Direction Générale et les partenaires publics.",
-        k1: "Supervision", v1: "Écrans télémétriques SCADA, console de pilotage d'urgence, liaison satellite.",
-        k2: "Gouvernance", v2: "Surveillance de l'intégrité opérationnelle et certification des audits régionaux."
+        description: "Observatoire stratégique et centre de commandement : gouvernance, pilotage opérationnel et interface avec les partenaires institutionnels.",
+        k1: "Mission", v1: "Gouvernance, pilotage et relations institutionnelles.",
+        k2: "Détail technique", v2: "Dispositif de commandement — Data Room sous NDA."
       }
     ];
 
@@ -1750,9 +1531,6 @@
     window.onKmehLevelSelect = function (idx) { updatePanel(idx); };
     setTimeout(function () { updatePanel(0); }, 200);
 
-    /* ============================================================
-       SYNC BUTTON STATES (explosion + auto-rotate)
-       ============================================================ */
     function syncExplosionButton() {
       var b = document.getElementById('btnExplosion');
       if (!b) return;
@@ -1773,9 +1551,6 @@
     };
     setTimeout(window.__syncKmehButtons, 500);
 
-    /* ============================================================
-       FORM : DATA ROOM ACCREDITATION
-       ============================================================ */
     window.handleDataRoomSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -1851,9 +1626,6 @@
       }
     };
 
-    /* ============================================================
-       SERVICE WORKER
-       ============================================================ */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js').catch(function () {});
