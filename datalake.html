@@ -1,376 +1,2239 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark font-sans">
+<html lang="fr" class="dark font-sans scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Maat Data Lake | Industrial Illusion SARL — Blockchain Audit & Registre</title>
-    <meta name="description" content="Registre public et privé de notarisation Maat Data Lake : vérification des clés cryptographiques, traçabilité de la double pesée et bilans carbone.">
-    <meta name="theme-color" content="#00FFA3">
-    
-    <!-- Google Fonts & Tailwind CSS CDN -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Maat Data Lake | Industrial Illusion SARL — Registre Notarié &amp; Plateforme Big Data Panafricaine</title>
+  <meta name="description" content="Maat Data Lake : registre immuable Hyperledger Fabric v2.5 + ancrage Bitcoin OpenTimestamps. Réconciliation double pesée (P1/P2), Africa-Polymer-Dataset, plateforme Big Data panafricaine. Conforme Loi CNDP n° 09-08 & Loi n° 28-00.">
+  <meta name="theme-color" content="#090D10">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Maat Data Lake">
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        kemetTitle: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    },
-                    colors: {
-                        cyberDark: '#0B0F12',
-                        cyberCard: '#131920',
-                        cyberGreen: '#00FFA3',
-                        cyberGreenDark: '#00B871',
-                        kemetGold: '#C5A059',
-                        kemetGoldBright: '#E8C86A'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #0B0F12; color: #F1F5F9; }
-        .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
-        .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
-        .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
-        .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
-        .inp:focus { border-color: #00FFA3; }
-        .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
-        .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
-        .btn-g:hover { filter: brightness(1.1); }
-        .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
-        .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-        @keyframes scan { 0% { top: 0; opacity: .8; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
-        .beam { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FFA3, transparent); box-shadow: 0 0 12px #00FFA3; animation: scan 3s ease-in-out infinite; }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between">
+  <!-- ============================================================
+       SCROLL RESCUE GUARD v7.4
+       ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+    if (window.__scrollRescueGuardInstalled) return;
+    window.__scrollRescueGuardInstalled = true;
+    var origAdd = EventTarget.prototype.addEventListener;
+    var BLOCKED = { wheel:1, mousewheel:1, DOMMouseScroll:1, touchmove:1, touchstart:1 };
+    function isGlobalTarget(t) {
+      return t === window || t === document || t === document.documentElement || t === document.body;
+    }
+    EventTarget.prototype.addEventListener = function (type, fn, opts) {
+      if (BLOCKED[type] && isGlobalTarget(this)) {
+        var o = (typeof opts === 'object' && opts !== null) ? opts : {};
+        if (o.passive !== true) o = Object.assign({}, o, { passive: true });
+        return origAdd.call(this, type, fn, o);
+      }
+      return origAdd.call(this, type, fn, opts);
+    };
+  })();
+  </script>
 
-    <!-- HEADER INSTITUTIONNEL -->
-    <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none"><path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/><circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/><circle cx="50" cy="50" r="6" fill="#00FFA3"/></svg>
-                </div>
-                <div>
-                    <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">MAAT DATA LAKE</h1>
-                    <p class="text-[9px] font-mono text-cyberGreen uppercase">Industrial Illusion SARL • Registre Blockchain</p>
-                </div>
-            </a>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-            <!-- NAVIGATION & LIENS DE VERIFICATION -->
-            <div class="flex items-center space-x-3 sm:space-x-6 font-mono text-xs">
-                <nav class="hidden md:flex items-center space-x-4 text-[11px] text-slate-300">
-                    <a href="index.html" class="hover:text-cyberGreen">Accueil</a>
-                    <a href="dashboard.html" class="hover:text-cyberGreen">Espace ESG B2B</a>
-                    <a href="pwa.html" class="hover:text-cyberGreen">Workstation PWA</a>
-                </nav>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="assets/tw-config.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <link rel="stylesheet" href="assets/maat.css">
 
-                <div class="flex items-center space-x-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-cyberGreen animate-pulse"></span>
-                    <span class="text-[10px] font-mono text-cyberGreen font-bold hidden sm:inline">NODES ACTIVE (100%)</span>
-                </div>
-            </div>
+  <style>
+    /* ============================================================
+       MAAT DATA LAKE · DESIGN SYSTEM v1.0
+       ============================================================ */
+    html {
+      background-color: #060A0D !important;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: transparent !important;
+      background-image: none !important;
+      color: #F1F5F9 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      touch-action: manipulation;
+    }
+
+    /* Matrix canvas — verrouillé en fond */
+    #matrixCanvas {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      display: block !important;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    /* Calque ambiance — voile radial pour lisibilité */
+    #dataAmbientLayer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.55;
+      background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(6, 10, 13, 0.85) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(6, 10, 13, 0.80) 0%, transparent 55%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 163, 0.03) 0%, transparent 65%);
+    }
+
+    main, footer { position: relative; z-index: 10; }
+    header { z-index: 50; }
+
+    input, select, textarea, .inp { font-size: 16px !important; }
+    @media (min-width: 640px) {
+      input, select, textarea, .inp { font-size: 0.8rem !important; }
+    }
+
+    .btn, button, .step-tab, .data-card, .level-card { min-height: 44px; min-width: 44px; }
+
+    .cta-inline {
+      width: auto !important; max-width: 100%;
+      display: inline-flex !important; align-items: center; justify-content: center;
+      gap: 0.4rem; white-space: nowrap; min-height: 44px;
+    }
+    .cta-inline:hover { transform: translateY(-1px); }
+
+    #scrollProgress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
+      z-index: 9999;
+      box-shadow: 0 0 12px rgba(0, 255, 163, .6);
+      transition: width .1s ease-out;
+      pointer-events: none;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(35px);
+      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .tilt-card { transform-style: preserve-3d; transition: transform .3s ease-out, box-shadow .3s; will-change: transform; }
+    .tilt-card:hover { box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3); }
+
+    .animated-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
+      animation: dividerPulse 3s ease-in-out infinite;
+      margin: 2.5rem auto; max-width: 60%;
+    }
+    @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
+
+    .glass-panel {
+      background: linear-gradient(165deg, rgba(19, 25, 32, 0.90), rgba(9, 13, 16, 0.97)) !important;
+      border: 1px solid rgba(197, 160, 89, 0.35) !important;
+      border-radius: 1.25rem !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85) !important;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
+    .glass-panel.g {
+      border-color: rgba(0, 255, 163, 0.45) !important;
+      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.20) !important;
+    }
+    .glass-panel:hover {
+      border-color: rgba(0, 255, 163, 0.6) !important;
+    }
+
+    .inp {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 0.75rem !important;
+      padding: 0.75rem !important;
+      color: #fff !important;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
+
+    .btn {
+      padding: 0.85rem; border-radius: 0.8rem;
+      font: 800 0.72rem 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+      text-align: center; cursor: pointer; border: none;
+    }
+    .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
+    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
+    .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
+    .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+    .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
+    .btn-o:hover { border-color: #00FFA3 !important; }
+    .btn-o.is-active { background: rgba(0, 255, 163, 0.15) !important; border-color: #00FFA3 !important; box-shadow: 0 0 18px -3px rgba(0, 255, 163, 0.5); }
+
+    @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
+    .anim-orbit { animation: orbitSpin 16s linear infinite; transform-origin: 60px 60px; }
+    .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
+    .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
+
+    .scanner-beam {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #00FFA3, transparent);
+      box-shadow: 0 0 14px #00FFA3;
+      animation: scanLine 3.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
+
+    /* ============================================================
+       HERO · MAAT DATA LAKE
+       ============================================================ */
+    .hero-datalake {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-datalake {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        gap: 2.5rem;
+      }
+    }
+
+    /* ============================================================
+       LIVE TELEMETRY TICKER
+       ============================================================ */
+    .live-ticker {
+      position: relative;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(0, 255, 163, 0.35);
+      border-radius: 0.85rem;
+      box-shadow: inset 0 0 25px rgba(0, 255, 163, 0.08), 0 8px 25px -10px rgba(0, 0, 0, 0.9);
+    }
+    .live-ticker__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid rgba(0, 255, 163, 0.20);
+      background: linear-gradient(180deg, rgba(0, 255, 163, 0.06), transparent);
+    }
+    .live-ticker__body {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      overflow: hidden;
+      position: relative;
+      mask-image: linear-gradient(90deg, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+    }
+    .live-ticker__track {
+      display: flex;
+      gap: 2rem;
+      padding-left: 1rem;
+      animation: tickerScroll 60s linear infinite;
+      will-change: transform;
+      white-space: nowrap;
+    }
+    .live-ticker__track:hover { animation-play-state: paused; }
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #94A3B8;
+      white-space: nowrap;
+    }
+    .ticker-item__hash {
+      color: #00FFA3;
+      font-weight: 700;
+    }
+    .ticker-item__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00FFA3;
+      box-shadow: 0 0 8px #00FFA3;
+      flex-shrink: 0;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    .ticker-item__dot.gold {
+      background: #E8C86A;
+      box-shadow: 0 0 8px #E8C86A;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    .ticker-item__status {
+      color: #00FFA3;
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.25rem;
+      background: rgba(0, 255, 163, 0.12);
+      border: 1px solid rgba(0, 255, 163, 0.30);
+    }
+    .ticker-item__status.gold {
+      color: #E8C86A;
+      background: rgba(232, 200, 106, 0.12);
+      border-color: rgba(232, 200, 106, 0.35);
+    }
+
+    /* ============================================================
+       4 DATA CARDS · KPI GRID
+       ============================================================ */
+    .data-card {
+      position: relative;
+      padding: 1.1rem 1rem;
+      border-radius: 1rem;
+      background: linear-gradient(160deg, rgba(15, 22, 28, 0.92), rgba(9, 13, 16, 0.98));
+      border: 1px solid rgba(0, 255, 163, 0.20);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    .data-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, 0.60), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .data-card:hover {
+      border-color: rgba(0, 255, 163, 0.55);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px -15px rgba(0, 255, 163, 0.25);
+    }
+    .data-card:hover::before { opacity: 1; }
+    .data-card.au {
+      border-color: rgba(232, 200, 106, 0.25);
+    }
+    .data-card.au::before {
+      background: linear-gradient(90deg, transparent, rgba(232, 200, 106, 0.70), transparent);
+    }
+    .data-card.au:hover {
+      border-color: rgba(232, 200, 106, 0.60);
+      box-shadow: 0 18px 40px -15px rgba(232, 200, 106, 0.22);
+    }
+    .data-card__label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: #94A3B8;
+    }
+    .data-card__value {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-top: 0.4rem;
+      color: #00FFA3;
+      letter-spacing: 0.02em;
+    }
+    .data-card.au .data-card__value { color: #E8C86A; }
+    .data-card__unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #64748B;
+      margin-top: 0.25rem;
+      display: block;
+    }
+    .data-card__delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #00FFA3;
+    }
+
+    /* ============================================================
+       FROSTED GATE · Blindage sections protégées
+       ============================================================ */
+    .protected-section {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.5rem;
+    }
+    .protected-section__content {
+      transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+    }
+    .protected-section.is-locked .protected-section__content {
+      filter: blur(9px) brightness(0.55) saturate(0.7);
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+    }
+    .protected-section__overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 5;
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .protected-section.is-unlocked .protected-section__overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .protected-section:not(.is-locked) .protected-section__overlay {
+      display: none;
+    }
+    .gate-lock {
+      pointer-events: auto;
+      max-width: 460px;
+      text-align: center;
+      padding: 1.5rem 1.25rem;
+      border-radius: 1rem;
+      background: linear-gradient(165deg, rgba(10, 13, 16, 0.96), rgba(6, 10, 13, 0.98));
+      border: 1px solid rgba(232, 200, 106, 0.45);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 45px -10px rgba(232, 200, 106, 0.20);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .gate-lock__icon {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 30%, rgba(232, 200, 106, 0.25), rgba(232, 200, 106, 0.05));
+      border: 1px solid rgba(232, 200, 106, 0.55);
+      animation: gatePulse 3s ease-in-out infinite;
+    }
+    @keyframes gatePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232, 200, 106, 0.35); }
+      50% { box-shadow: 0 0 0 12px rgba(232, 200, 106, 0); }
+    }
+    .gate-lock__badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #E8C86A;
+      background: rgba(232, 200, 106, 0.10);
+      border: 1px solid rgba(232, 200, 106, 0.40);
+      padding: 0.25rem 0.55rem;
+      border-radius: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ============================================================
+       TERMINAL WINDOW
+       ============================================================ */
+    .terminal-window {
+      background: linear-gradient(180deg, rgba(6, 10, 13, 0.98), rgba(3, 6, 8, 0.99));
+      border: 1px solid rgba(0, 255, 163, 0.30);
+      border-radius: 0.85rem;
+      overflow: hidden;
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 255, 163, 0.04);
+    }
+    .terminal-window__bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid rgba(0, 255, 163, 0.20);
+      background: linear-gradient(180deg, rgba(0, 255, 163, 0.06), transparent);
+    }
+    .terminal-window__dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .terminal-window__dot--r { background: #F87171; }
+    .terminal-window__dot--y { background: #E8C86A; }
+    .terminal-window__dot--g { background: #00FFA3; }
+
+    /* ============================================================
+       LEDGER ROWS (registre)
+       ============================================================ */
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      padding: 0.85rem;
+      border-radius: 0.75rem;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      transition: all 0.25s;
+    }
+    .ledger-row:hover {
+      border-color: rgba(0, 255, 163, 0.40);
+      background: rgba(0, 255, 163, 0.02);
+    }
+    @media (min-width: 768px) {
+      .ledger-row {
+        grid-template-columns: 8ch 24ch 1fr 8ch 8ch 10ch;
+        gap: 0.75rem;
+        align-items: center;
+      }
+    }
+    .ledger-hash {
+      color: #00FFA3;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 0.68rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ledger-status {
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.60rem;
+      text-align: center;
+      padding: 0.18rem 0.4rem;
+      border-radius: 0.30rem;
+      color: #00FFA3;
+      background: rgba(0, 255, 163, 0.10);
+      border: 1px solid rgba(0, 255, 163, 0.35);
+    }
+
+    /* ============================================================
+       POLYMER BARS · Ripartizione volumetrica
+       ============================================================ */
+    .polymer-bar-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+    }
+    .polymer-bar-row:last-child { border-bottom: none; }
+    @media (min-width: 640px) {
+      .polymer-bar-row {
+        grid-template-columns: 16ch 1fr 10ch;
+        gap: 1rem;
+        align-items: center;
+      }
+    }
+    .polymer-bar-track {
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      position: relative;
+    }
+    .polymer-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(0, 255, 163, 0.35);
+    }
+    .polymer-bar-fill.pet { background: linear-gradient(90deg, #00B871, #00FFA3); }
+    .polymer-bar-fill.hd { background: linear-gradient(90deg, #0D9E8E, #7FFFD4); }
+    .polymer-bar-fill.alu { background: linear-gradient(90deg, #C5A059, #F6E4A0); }
+    .polymer-bar-fill.card { background: linear-gradient(90deg, #8B6F2A, #C5A059); }
+    .polymer-bar-fill.glass { background: linear-gradient(90deg, #334155, #94A3B8); }
+    .polymer-bar-fill.org { background: linear-gradient(90deg, #065A4C, #0D9E8E); }
+
+    /* ============================================================
+       DATASET CARDS (Africa-Polymer-Dataset)
+       ============================================================ */
+    .dataset-card {
+      padding: 1.1rem;
+      border-radius: 1rem;
+      background: linear-gradient(160deg, rgba(15, 22, 28, 0.94), rgba(9, 13, 16, 0.98));
+      border: 1px solid rgba(0, 255, 163, 0.18);
+      transition: all 0.3s;
+    }
+    .dataset-card:hover {
+      border-color: rgba(0, 255, 163, 0.50);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       MANIFEST ROW (comparaison)
+       ============================================================ */
+    .manifest-row {
+      display: grid; grid-template-columns: 1fr;
+      gap: 0.75rem; padding: 1rem; border-radius: 1rem;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.3s;
+    }
+    @media (min-width: 768px) {
+      .manifest-row { grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; align-items: center; }
+    }
+    .manifest-row:hover { border-color: rgba(0,255,163,0.4); background: rgba(0,255,163,0.04); }
+
+    /* ============================================================
+       IMPACT CARD
+       ============================================================ */
+    .impact-card {
+      position: relative; padding: 1.5rem; border-radius: 1.25rem;
+      background: linear-gradient(165deg, rgba(19,25,32,0.90), rgba(9,13,16,0.97));
+      border: 1px solid rgba(197,160,89,0.35);
+      overflow: hidden; transition: all 0.35s;
+    }
+    .impact-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(0,255,163,0.06) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s; pointer-events: none;
+    }
+    .impact-card:hover { transform: translateY(-3px); border-color: rgba(0,255,163,0.55); }
+    .impact-card:hover::before { opacity: 1; }
+
+    /* ============================================================
+       OMPIC BADGE
+       ============================================================ */
+    .ompic-badge {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08));
+      border: 1px solid rgba(232,200,106,0.45);
+    }
+    .ompic-badge::after {
+      content: ''; position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(232,200,106,0.15) 50%, transparent 70%);
+      animation: ompicShimmer 4s linear infinite; pointer-events: none;
+    }
+    @keyframes ompicShimmer {
+      0% { transform: translate(-100%, -100%) rotate(45deg); }
+      100% { transform: translate(100%, 100%) rotate(45deg); }
+    }
+
+    /* ============================================================
+       EASTER EGGS
+       ============================================================ */
+    body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
+    @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
+    body.ee-pharaonic { background: radial-gradient(circle at 50% 50%, rgba(232, 200, 106, 0.15), transparent 70%) !important; }
+    body.ee-pharaonic .font-kemetTitle { text-shadow: 0 0 20px rgba(232, 200, 106, 0.6); }
+    body.ee-kemet::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(232, 200, 106, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.12) 0%, transparent 25%);
+      animation: kemetPulse 6s ease-in-out infinite;
+    }
+    @keyframes kemetPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
+    #hieroglyphOverlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      display: none; font-family: 'Cinzel', serif;
+      color: rgba(232, 200, 106, 0.15);
+      font-size: 48px; line-height: 1.2; overflow: hidden; padding: 2rem;
+      text-shadow: 0 0 20px rgba(232, 200, 106, 0.3);
+    }
+    #hieroglyphOverlay.active { display: block; }
+    #hieroglyphOverlay .glyph-row {
+      display: flex; justify-content: space-around; margin-bottom: 1rem;
+      animation: glyphFloat 8s ease-in-out infinite;
+    }
+    #hieroglyphOverlay .glyph-row:nth-child(2) { animation-delay: 1s; }
+    #hieroglyphOverlay .glyph-row:nth-child(3) { animation-delay: 2s; }
+    #hieroglyphOverlay .glyph-row:nth-child(4) { animation-delay: 3s; }
+    @keyframes glyphFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    .ee-toast {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95));
+      color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem;
+      font: 800 14px 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
+      animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      text-align: center; pointer-events: none; max-width: 90vw;
+    }
+    @keyframes eeToastIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    }
+    .ee-toast.ee-toast-out { animation: eeToastOut 0.4s ease-in forwards; }
+    @keyframes eeToastOut {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    }
+
+    .safe-top { padding-top: env(safe-area-inset-top); }
+
+    @media (max-width: 640px) {
+      .cta-inline { white-space: normal !important; }
+      .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      .tilt-card:hover, .glass-panel:hover { transform: none; box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important; }
+      body { font-size: 15px; }
+      footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+      .live-ticker__body { height: 40px; }
+      .data-card__value { font-size: 1.25rem; }
+      #hieroglyphOverlay { font-size: 28px; }
+      .protected-section.is-locked .protected-section__content { filter: blur(6px) brightness(0.55); }
+      .gate-lock { padding: 1.25rem 0.9rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .live-ticker__track { animation: none; }
+    }
+  </style>
+    <body class="min-h-screen flex flex-col justify-between">
+
+  <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+  <div id="dataAmbientLayer" aria-hidden="true"></div>
+  <div id="hieroglyphOverlay" aria-hidden="true"></div>
+  <div id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       HEADER — BRANDING UNIFIÉ (NO [ I² ])
+       ============================================================ -->
+  <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
+    <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+      <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
+        <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+          <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+            <g class="anim-orbit">
+              <ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/>
+              <circle cx="60" cy="6" r="2.2" fill="#00FFA3"/>
+              <circle cx="114" cy="60" r="2.2" fill="#00FFA3"/>
+              <circle cx="60" cy="114" r="2.2" fill="#00FFA3"/>
+              <circle cx="6" cy="60" r="2.2" fill="#00FFA3"/>
+            </g>
+            <g class="anim-counter-orbit">
+              <ellipse cx="60" cy="60" rx="45" ry="45" stroke="#00FFA3" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.45"/>
+              <circle cx="60" cy="15" r="1.6" fill="#E8C86A"/>
+              <circle cx="105" cy="60" r="1.6" fill="#E8C86A"/>
+              <circle cx="60" cy="105" r="1.6" fill="#E8C86A"/>
+              <circle cx="15" cy="60" r="1.6" fill="#E8C86A"/>
+            </g>
+            <path d="M20 54 Q32 44 46 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M100 54 Q88 44 74 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M22 60 Q60 38 98 60 Q60 82 22 60 Z" stroke="#00FFA3" stroke-width="2.2" fill="#0A0D10"/>
+            <circle cx="60" cy="60" r="14" stroke="#C5A059" stroke-width="1.8" fill="#11161C"/>
+            <circle cx="60" cy="60" r="7" fill="#00FFA3" class="anim-pupil"/>
+            <path d="M60 74 L58 90" stroke="#00FFA3" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M60 78 L64 92" stroke="#C5A059" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
         </div>
-    </header>
-
-    <!-- MAIN CONTAINER -->
-    <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-8 w-full">
-
-        <!-- BANNIÈRE HERO REGISTRE PUBLIQUE / PRIVÉ -->
-        <section class="glass-card g p-6 sm:p-8 relative overflow-hidden space-y-4">
-            <div class="beam"></div>
-            <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-6">
-                <div class="space-y-2">
-                    <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest bg-cyberGreen/10 px-3 py-1 rounded-full border border-cyberGreen/30">
-                        🔗 REGISTRE DE NOTARISATION IMMUABLE
-                    </span>
-                    <h2 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">
-                        L'Ancrage Cryptographique de la Valorisation Industrielle
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-300 max-w-3xl font-sans">
-                        Chaque lot de matière sèche collecté par PurKemet fait l'objet d'une notarisation à double empreinte (Pesée 1 Site Client &amp; Pesée 2 Dépôt Hub). Le Maat Data Lake scelle l'intégrité des données conformément à la Loi n° 28-00 et la norme CNDP n° 09-08.
-                    </p>
-                </div>
-
-                <div class="p-4 bg-black/80 rounded-2xl border border-kemetGold/40 font-mono text-center space-y-1 shrink-0">
-                    <span class="text-[10px] text-slate-400 block uppercase">Dernier Bloc Notarié</span>
-                    <span id="latest-block-hash" class="text-xs font-bold text-kemetGoldBright block">0x9F82...4C00</span>
-                    <span class="text-[9px] text-cyberGreen block">✓ Notarisation Blockchain Scellée</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- KPIS NATIONAUX ET MESURES D'IMPACT -->
-        <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 font-mono">
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-cyberGreen">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Total Matières Traitées</span>
-                <span id="kpi-total-tonnage" class="text-3xl font-black text-cyberGreen">61.25 <span class="text-xs font-normal">T</span></span>
-                <p class="text-[10px] text-slate-400">Notarisé au Data Lake</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-kemetGold">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Évitement Émissions CO₂</span>
-                <span id="kpi-total-co2" class="text-3xl font-black text-kemetGoldBright">111.47 <span class="text-xs font-normal">T</span></span>
-                <p class="text-[10px] text-slate-400">Facteur UNEP/ADEME 1.82 kg CO₂/kg</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-emerald-500">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Taux de Tolérance Δ</span>
-                <span class="text-3xl font-black text-white">&lt; 0.8%</span>
-                <p class="text-[10px] text-emerald-400">✓ Conforme protocole Double Pesée</p>
-            </div>
-
-            <div class="glass-card p-5 space-y-2 border-l-4 border-l-blue-500">
-                <span class="text-[10px] text-slate-400 uppercase block font-bold">Conformité Juridique</span>
-                <span class="text-sm font-bold text-white block pt-1">CNDP 09-08 &amp; LOI 28-00</span>
-                <span class="text-[10px] text-blue-400 block">Souveraineté des Données Maroc</span>
-            </div>
-        </section>
-
-        <!-- RECHERCHE DE LOT ET AUDIT DE CLÉ CRYPTOGRAPHIQUE -->
-        <section class="glass-card p-6 space-y-4 font-mono text-xs">
-            <div class="border-b border-white/10 pb-3 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-white text-sm">🔍 Inspecteur de Clé Cryptographique &amp; N° Lot</h3>
-                    <p class="text-[10px] text-slate-400 font-sans">Saisissez un N° de Bordereau, un ID Client ou un Hash pour vérifier l'empreinte immuable</p>
-                </div>
-                <span class="px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 text-[9px]">AUDIT SEARCH</span>
-            </div>
-
-            <div class="grid sm:grid-cols-12 gap-3">
-                <div class="sm:col-span-9">
-                    <input type="text" id="search_key_input" placeholder="ex: LOT-901, 0x8f2a...901, CL-001" class="inp">
-                </div>
-                <div class="sm:col-span-3">
-                    <button type="button" onclick="window.searchDataLake()" class="btn btn-g w-full !py-3">Vérifier Clé 🔗</button>
-                </div>
-            </div>
-
-            <div id="search-result-box" class="hidden p-4 bg-black/80 rounded-2xl border border-cyberGreen/40 space-y-2 text-slate-200">
-                <!-- Generato dinamicamente via JS -->
-            </div>
-        </section>
-
-        <!-- REGISTRE GENERAL DES TRANSACTION NOTARIÉES EN TEMPS RÉEL -->
-        <section class="glass-card p-6 space-y-4">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3 font-mono">
-                <div>
-                    <h3 class="font-kemetTitle text-lg font-bold text-white">Flux National des Pesées Notariées</h3>
-                    <p class="text-xs text-slate-400">Consultation en direct des bordereaux scellés sur le Maat Data Lake.</p>
-                </div>
-                <button type="button" onclick="window.loadNationalDataLakeFromSupabase()" class="px-3 py-1 bg-black border border-cyberGreen/40 text-cyberGreen text-xs rounded-xl font-bold hover:bg-cyberGreen/10">
-                    Rafraîchir ↻
-                </button>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left font-mono text-xs">
-                    <thead>
-                        <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
-                            <th class="py-3 px-2">N° Lot / QR</th>
-                            <th class="py-3 px-2">Client B2B</th>
-                            <th class="py-3 px-2">Matériau</th>
-                            <th class="py-3 px-2">Pesée 1 (Collecte)</th>
-                            <th class="py-3 px-2">Pesée 2 (Dépôt)</th>
-                            <th class="py-3 px-2">Écart Δ</th>
-                            <th class="py-3 px-2">Statut Notarisation</th>
-                            <th class="py-3 px-2 text-right">Cryptographic Hash</th>
-                        </tr>
-                    </thead>
-                    <tbody id="datalake-tbody" class="divide-y divide-white/5 text-slate-300">
-                        <tr>
-                            <td colspan="8" class="py-4 text-center text-slate-500">Chargement des transactions depuis le Maat Data Lake Supabase...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL INSPECTION DE PREUVE PHOTO & PROTOCLE -->
-    <div id="proofInspectionModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card g max-w-md w-full p-6 space-y-4 text-left font-mono text-xs relative">
-            <button type="button" onclick="window.closeProofModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold">&times;</button>
-            
-            <div class="border-b border-white/10 pb-2">
-                <span class="lbl">Détail d'Ancrage Cryptographique</span>
-                <h3 id="modal-lot-id" class="font-bold text-white text-base mt-0.5">LOT-901</h3>
-            </div>
-
-            <div id="modal-proof-content" class="space-y-2 text-[11px] text-slate-300">
-                <!-- Content via JS -->
-            </div>
-
-            <button type="button" onclick="window.closeProofModal()" class="btn btn-o w-full !py-2.5">Fermer la Fiche</button>
+        <div class="min-w-0">
+          <h1 class="font-kemetTitle text-[11px] sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
+          <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
         </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
+        <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
+        <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
+        <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
+        <a href="datalake.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5" aria-current="page">Data Lake</a>
+        <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
+        <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
+      </nav>
+
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button type="button" id="loginBtn"
+                onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin(); if (window.__eeOnLoginClick) window.__eeOnLoginClick();"
+                aria-label="Connexion à l'espace membre"
+                class="btn btn-g !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          Connexion 🔒
+        </button>
+        <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
+                class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
+                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">☰</button>
+      </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
-        © 2026 Industrial Illusion SARL — Maat Data Lake. Tous droits réservés.
-    </footer>
+    <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
+      <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-2">Accueil</a>
+      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-2">PurKemet B2B (Hôtels)</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-2">Architecture K-MEH-20</a>
+      <a href="datalake.html" class="block text-cyberGreen font-bold py-2">Maat Data Lake</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-2">Carrières</a>
+      <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-2">À Propos</a>
+      <hr class="border-white/10 my-2">
+      <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
+      <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
+    </nav>
+  </header>
 
-    <!-- LOGIQUE JAVASCRIPT MAAT DATA LAKE -->
-    <script>
-        (function() {
-            'use strict';
-            var $ = function(id) { return document.getElementById(id); };
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
-            const SUPABASE_URL = "https://sqlgsaxdqcgwfxjrkpuc.supabase.co";
-            const SUPABASE_ANON_KEY = "sb_publishable_von1008wEcuKM8Zpm1l9Lw_zuWU4aVg";
-            let supabaseClient = null;
+    <!-- ═══════════════════════════════════════════════════════
+         HERO · MAAT DATA LAKE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="pt-2 sm:pt-4">
+      <div class="hero-datalake">
 
-            try {
-                if (window.supabase && window.supabase.createClient) {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                }
-            } catch (err) {}
+        <div class="space-y-5 sm:space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
+            <span>🇲🇦 Data Lake Souverain · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</span>
+          </div>
 
-            var fallbackDataLake = [
-                { id: "LOT-901", bag_qr_id: "SAC-PET-9041", client_id: "CL-001 (La Mamounia)", material_type: "PET_CLEAR", weight_collect_kg: "18.50", weight_depot_kg: "18.45", status: "ANCHORED", blockchain_hash: "0x8f2a4c9018274b38", created_at: "2026-10-11T09:30:00Z" },
-                { id: "LOT-902", bag_qr_id: "SAC-CAR-3120", client_id: "CL-002 (Royal Mansour)", material_type: "CARTON", weight_collect_kg: "34.20", weight_depot_kg: "34.10", status: "ANCHORED", blockchain_hash: "0x7b1c33a902847591", created_at: "2026-10-11T10:15:00Z" },
-                { id: "LOT-884", bag_qr_id: "SAC-ALU-1029", client_id: "CL-003 (Le Jardin)", material_type: "ALUMINIUM", weight_collect_kg: "12.40", weight_depot_kg: "12.40", status: "ANCHORED", blockchain_hash: "0x4c9e884192837400", created_at: "2026-10-10T14:20:00Z" },
-                { id: "LOT-871", bag_qr_id: "SAC-VER-8821", client_id: "CL-001 (La Mamounia)", material_type: "VERRE", weight_collect_kg: "124.00", weight_depot_kg: "123.80", status: "ANCHORED", blockchain_hash: "0x33a1871239485012", created_at: "2026-10-09T16:45:00Z" }
-            ];
+          <h2 class="font-kemetTitle text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.02]">
+            Maat Data Lake : <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Le Registre Notarié</span> &amp; la Plateforme Big Data Panafricaine
+          </h2>
 
-            window.loadNationalDataLakeFromSupabase = async function() {
-                var tbody = $('datalake-tbody');
-                if (!tbody) return;
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl">
+            Le <strong>nucleus de vérité immuable</strong> de l'écosystème Illusion Kemet. Ce registre unifie la collecte décentralisée B2B de <strong class="text-cyberGreen">PurKemet (Track 0)</strong> avec l'intelligence industrielle de <strong class="text-kemetGoldBright">K-MEH-20 (Track 1)</strong>, en scellant chaque kilogramme de matière valorisée dans une chaîne d'intégrité cryptographique Hyperledger Fabric v2.5, ancrée quotidiennement sur la blockchain Bitcoin via OpenTimestamps.
+          </p>
 
-                try {
-                    if (supabaseClient) {
-                        const { data: collections, error } = await supabaseClient
-                            .from('collections')
-                            .select('*')
-                            .order('created_at', { ascending: false });
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyberGreen"></span>Hyperledger Fabric v2.5</span>
+            <span aria-hidden="true" class="text-slate-600">•</span>
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-kemetGoldBright"></span>Bitcoin OpenTimestamps</span>
+            <span aria-hidden="true" class="text-slate-600">•</span>
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white"></span>SHA-256 &amp; Merkle Root</span>
+          </div>
 
-                        if (!error && collections && collections.length > 0) {
-                            renderTable(collections);
-                            return;
-                        }
-                    }
-                } catch(e) {}
+          <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1 font-mono">
+            <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
+              Demander l'Accréditation 🔒
+            </button>
+            <button type="button" onclick="window.openLoginModal()" class="btn btn-au w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6">
+              Accéder au Terminal Analytique →
+            </button>
+          </div>
 
-                renderTable(fallbackDataLake);
-            };
+          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 text-[10px] font-mono text-slate-400 leading-relaxed max-w-2xl">
+            <strong class="text-kemetGoldBright">Statut Légal &amp; PI :</strong> Plateforme propriétaire avancée, en cours de développement et de préparation au dépôt de brevets auprès de l'<strong class="text-white">OMPIC</strong>. Les algorithmes de réconciliation P1/P2, les modèles spectraux NIR et les pipelines de notarisation font l'objet d'une rétention légale stricte, consultables uniquement en <strong class="text-white">Virtual Data Room</strong> après signature d'un accord de non-divulgation (NDA).
+          </div>
+        </div>
 
-            function renderTable(data) {
-                var tbody = $('datalake-tbody');
-                let totalKg = 0;
+        <!-- Panneau latéral · Architecture du flux -->
+        <div class="glass-panel g p-5 sm:p-7 space-y-4 relative overflow-hidden">
+          <div class="scanner-beam" aria-hidden="true"></div>
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
+            <span class="text-cyberGreen uppercase tracking-widest font-bold flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse"></span>
+              ARCHITECTURE DU FLUX
+            </span>
+            <span class="text-kemetGoldBright font-bold">2-LAYER LEDGER</span>
+          </div>
 
-                tbody.innerHTML = data.map(b => {
-                    var w1 = parseFloat(b.weight_collect_kg || 0);
-                    var w2 = b.weight_depot_kg ? parseFloat(b.weight_depot_kg) : 0;
-                    totalKg += (w2 > 0 ? w2 : w1);
+          <div class="space-y-3 font-mono text-[11px]">
+            <div class="p-3 bg-black/60 rounded-lg border border-cyberGreen/30 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-cyberGreen font-bold">Track 0 · PurKemet</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen">TERRAIN</span>
+              </div>
+              <p class="text-slate-400 font-sans text-[10px]">Collecte décentralisée HoReCa — Pesée P1 certifiée BLE Bluetooth</p>
+            </div>
 
-                    var deltaStr = b.weight_depot_kg ? (w2 - w1).toFixed(2) + ' Kg' : '-';
+            <div class="flex justify-center">
+              <svg width="16" height="20" viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                <path d="M8 0 L8 14 M3 10 L8 15 L13 10" stroke="#00FFA3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+              </svg>
+            </div>
 
-                    return `
-                        <tr class="hover:bg-white/5 transition-all">
-                            <td class="py-3.5 px-2 font-bold text-white">${b.bag_qr_id || b.id}</td>
-                            <td class="py-3.5 px-2 text-slate-300 font-bold">${b.client_id || 'Client B2B'}</td>
-                            <td class="py-3.5 px-2 text-cyberGreen font-bold">${b.material_type}</td>
-                            <td class="py-3.5 px-2">${w1.toFixed(2)} Kg</td>
-                            <td class="py-3.5 px-2">${w2 > 0 ? w2.toFixed(2) + ' Kg' : '-'}</td>
-                            <td class="py-3.5 px-2 text-kemetGoldBright">${deltaStr}</td>
-                            <td class="py-3.5 px-2"><span class="px-2 py-0.5 rounded ${b.status === 'ANCHORED' ? 'bg-cyberGreen/20 text-cyberGreen border border-cyberGreen/30' : 'bg-kemetGold/20 text-kemetGold'} font-bold">${b.status || 'IN_TRANSIT'}</span></td>
-                            <td class="py-3.5 px-2 text-right">
-                                <button type="button" onclick="window.inspectHashDetails('${b.blockchain_hash || '0xPending'}', '${b.bag_qr_id}', '${b.client_id}', '${w1}', '${w2}')" class="text-kemetGoldBright hover:underline font-bold">
-                                    ${b.blockchain_hash ? b.blockchain_hash.substring(0, 10) + '...' : '0xPending'}
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
+            <div class="p-3 bg-black/60 rounded-lg border border-kemetGold/40 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-kemetGoldBright font-bold">Hub Sidi Ghanem</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-kemetGold/10 border border-kemetGold/30 text-kemetGoldBright">PESÉE P2</span>
+              </div>
+              <p class="text-slate-400 font-sans text-[10px]">Réconciliation algorithmique Δ ≤ 3% · Variance_Alert &lt; 3%</p>
+            </div>
 
-                var totalTons = ((totalKg + 48250) / 1000).toFixed(2);
-                var totalCo2 = (totalTons * 1.82).toFixed(2);
+            <div class="flex justify-center">
+              <svg width="16" height="20" viewBox="0 0 16 20" fill="none" aria-hidden="true">
+                <path d="M8 0 L8 14 M3 10 L8 15 L13 10" stroke="#00FFA3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+              </svg>
+            </div>
 
-                if ($('kpi-total-tonnage'))$('kpi-total-tonnage').innerHTML = totalTons + ' <span class="text-xs font-normal">T</span>';
-                if ($('kpi-total-co2'))$('kpi-total-co2').innerHTML = totalCo2 + ' <span class="text-xs font-normal">T</span>';
-            }
+            <div class="p-3 bg-black/60 rounded-lg border border-white/15 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-white font-bold">Maat Data Lake</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white">REGISTRE</span>
+              </div>
+              <p class="text-slate-400 font-sans text-[10px]">Scellement SHA-256 · Fabric v2.5 · Ancrage Bitcoin OTS</p>
+            </div>
+          </div>
 
-            window.searchDataLake = function() {
-                var query = ($('search_key_input').value || '').trim().toLowerCase();
-                var resultBox = $('search-result-box');
+          <div class="pt-3 border-t border-white/10 text-center font-mono text-[10px] text-slate-500">
+            Uptime registre &gt; 99.97% · Latence scellement &lt; 800ms
+          </div>
+        </div>
 
-                if (!query) return alert("Saisissez une clé, un N° de sac ou un ID Client.");
+      </div>
+    </section>
 
-                var found = fallbackDataLake.find(b => 
-                    b.id.toLowerCase().includes(query) || 
-                    b.bag_qr_id.toLowerCase().includes(query) || 
-                    b.client_id.toLowerCase().includes(query) || 
-                    (b.blockchain_hash && b.blockchain_hash.toLowerCase().includes(query))
-                );
+    <div class="animated-divider" aria-hidden="true"></div>
 
-                resultBox.classList.remove('hidden');
+    <!-- ═══════════════════════════════════════════════════════
+         LIVE TELEMETRY STREAM (TICKER)
+         ═══════════════════════════════════════════════════════ -->
+    <section class="reveal">
+      <div class="live-ticker">
+        <div class="live-ticker__header">
+          <div class="flex items-center gap-2 font-mono">
+            <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse shrink-0"></span>
+            <span class="text-cyberGreen font-bold text-[10px] uppercase tracking-widest">Live Telemetry Stream</span>
+            <span class="text-slate-500 text-[9px] hidden sm:inline">· Hyperledger Fabric v2.5 · stream anonymisé</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen"></span>
+            <span>ONLINE</span>
+          </div>
+        </div>
 
-                if (found) {
-                    resultBox.innerHTML = `
-                        <div class="flex justify-between items-center border-b border-cyberGreen/30 pb-2">
-                            <span class="text-cyberGreen font-bold text-sm">✓ BORDEREAU NOTARIÉ TROUVÉ EN BASE</span>
-                            <span class="px-2 py-0.5 bg-cyberGreen/20 text-cyberGreen rounded text-[10px]">VERIFIED ON-CHAIN</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
-                            <div><span class="text-slate-400 block">N° SAC / LOT:</span> <strong class="text-white">${found.bag_qr_id}</strong></div>
-                            <div><span class="text-slate-400 block">CLIENT B2B:</span> <strong class="text-white">${found.client_id}</strong></div>
-                            <div><span class="text-slate-400 block">MATÉRIAU:</span> <strong class="text-cyberGreen">${found.material_type}</strong></div>
-                            <div><span class="text-slate-400 block">POIDS NOTARIÉ:</span> <strong class="text-kemetGoldBright">${found.weight_depot_kg || found.weight_collect_kg} Kg</strong></div>
-                            <div class="col-span-2"><span class="text-slate-400 block">HASH CRYPTOGRAPHIQUE MASTER:</span> <strong class="text-cyberGreen">${found.blockchain_hash}</strong></div>
-                        </div>
-                    `;
-                } else {
-                    resultBox.innerHTML = `
-                        <div class="text-red-400 font-bold text-xs">✕ Aucune transaction enregistrée ne correspond à la clé "${query}".</div>
-                    `;
-                }
-            };
+        <div class="live-ticker__body">
+          <div class="live-ticker__track" id="liveTickerTrack" aria-live="polite">
+            <!-- Les items sont injectés par JS · un fallback statique est présent -->
+            <div class="ticker-item">
+              <span class="ticker-item__dot"></span>
+              <span class="ticker-item__hash">0x4F8A2C…</span>
+              <span>PET</span>
+              <span>P1: 142.6 kg · P2: 140.8 kg</span>
+              <span class="ticker-item__status">ANCHORED</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-item__dot gold"></span>
+              <span class="ticker-item__hash">LOT-MR-0429</span>
+              <span>PE-HD</span>
+              <span>P1: 87.3 kg · P2: 86.9 kg</span>
+              <span class="ticker-item__status gold">NOTARIZED</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-item__dot"></span>
+              <span class="ticker-item__hash">0xA3E9D1…</span>
+              <span>Aluminium</span>
+              <span>P1: 52.4 kg · P2: 52.1 kg</span>
+              <span class="ticker-item__status">ANCHORED</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-item__dot"></span>
+              <span class="ticker-item__hash">SHA-256:9F2A…</span>
+              <span>Carton</span>
+              <span>P1: 210.8 kg · P2: 208.4 kg</span>
+              <span class="ticker-item__status">ANCHORED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            window.inspectHashDetails = function(hash, lot, client, w1, w2) {
-                $('modal-lot-id').innerText = lot + " — " + hash;
-                $('modal-proof-content').innerHTML = `
-                    <div class="p-3 bg-black/60 rounded-xl border border-white/10 space-y-1">
-                        <div><span class="text-slate-400">Établissement:</span> <strong class="text-white">${client}</strong></div>
-                        <div><span class="text-slate-400">Pesée 1 (Site Client):</span> <strong class="text-cyberGreen">${w1} Kg</strong></div>
-                        <div><span class="text-slate-400">Pesée 2 (Dépôt Hub):</span> <strong class="text-kemetGoldBright">${w2 !== '0' ? w2 + ' Kg' : 'En transit'}</strong></div>
-                        <div><span class="text-slate-400">Méthode de Mesure:</span> <strong>Balance Bluetooth GATT (API Native)</strong></div>
-                        <div><span class="text-slate-400">Horodatage Notarié:</span> <strong>${new Date().toLocaleString('fr-FR')}</strong></div>
-                    </div>
-                `;
-                $('proofInspectionModal').classList.add('open');
-            };
+    <!-- ═══════════════════════════════════════════════════════
+         4 DATA CARDS · KPI GLOBAUX
+         ═══════════════════════════════════════════════════════ -->
+    <section class="reveal">
+      <div class="border-b border-white/10 pb-4 mb-6">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Indicateurs Consolidés · Plateforme</span>
+        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Métriques Globales Notarisées</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+          Compteurs agrégés issus du registre immuable. Chaque unité est vérifiable par empreinte SHA-256 et ancrée quotidiennement sur Bitcoin via OpenTimestamps.
+        </p>
+      </div>
 
-            window.closeProofModal = function() {
-                $('proofInspectionModal').classList.remove('open');
-            };
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="data-card">
+          <span class="data-card__label">Tonnage Global Traité</span>
+          <div class="data-card__value" data-counter="1248736" data-format="kg">0</div>
+          <span class="data-card__unit">kg notarisés</span>
+          <span class="data-card__delta">▲ <span id="kpi-total-delta">+0.42%</span> · 24h</span>
+        </div>
 
-            // AUTO-INSPECTION PAR URL PARAMETER (ex: datalake.html?batch=LOT-901)
-            window.addEventListener('DOMContentLoaded', function() {
-                window.loadNationalDataLakeFromSupabase();
+        <div class="data-card">
+          <span class="data-card__label">Émissions CO₂e Évitées</span>
+          <div class="data-card__value" data-counter="4370576" data-format="kg">0</div>
+          <span class="data-card__unit">kg CO₂ eq. · Verra VCS</span>
+          <span class="data-card__delta">▲ <span id="kpi-co2-delta">+0.38%</span> · 24h</span>
+        </div>
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const batch = urlParams.get('batch');
-                const hash = urlParams.get('hash');
+        <div class="data-card au">
+          <span class="data-card__label">Africa-Polymer-Dataset</span>
+          <div class="data-card__value" data-counter="1864207" data-format="num">0</div>
+          <span class="data-card__unit">signatures NIR archivées</span>
+          <span class="data-card__delta" style="color:#E8C86A;">▲ <span id="kpi-dataset-delta">+0.61%</span> · 24h</span>
+        </div>
 
-                if (batch || hash) {
-                    $('search_key_input').value = batch || hash;
-                    setTimeout(window.searchDataLake, 400);
-                }
-            });
-        })();
-    </script>
+        <div class="data-card au">
+          <span class="data-card__label">Transactions Scellées</span>
+          <div class="data-card__value" data-counter="92471" data-format="num">0</div>
+          <span class="data-card__unit">Fabric v2.5 · OTS Bitcoin</span>
+          <span class="data-card__delta" style="color:#E8C86A;">▲ <span id="kpi-tx-delta">+0.29%</span> · 24h</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GATE TEASER · TERMINAL ANALYTIQUE SÉCURISÉ
+         ═══════════════════════════════════════════════════════ -->
+    <section class="reveal">
+      <div class="glass-panel g p-6 sm:p-10 space-y-6 text-center relative overflow-hidden">
+        <div class="scanner-beam" aria-hidden="true"></div>
+
+        <div class="max-w-3xl mx-auto space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-kemetGold/10 border border-kemetGold/40 text-kemetGoldBright text-[10px] font-mono font-bold tracking-wider uppercase">
+            <span class="w-1.5 h-1.5 rounded-full bg-kemetGoldBright"></span>
+            <span>Asset Stratégique · Accès Restreint</span>
+          </div>
+
+          <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">
+            Terminal Analytique <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Sécurisé</span>
+          </h3>
+
+          <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+            Le Maat Data Lake est un <strong class="text-white">actif stratégique propriétaire à haute valeur commerciale</strong>. L'intégralité des jeux de données analytiques — décomposition polymérique fine, registres de réconciliation P1/P2, catalogues spectraux NIR et bilans carbone certifiés — est protégée par accréditation institutionnelle.
+          </p>
+
+          <p class="text-xs sm:text-sm text-slate-400 font-sans">
+            L'accès est réservé aux <strong class="text-white">multinationales FMCG, fonds d'investissement, auditeurs ESG accrédités, institutions étatiques (Wilaya de Marrakech-Safi, DGI)</strong> et partenaires industriels liés par NDA.
+          </p>
+
+          <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2 font-mono">
+            <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3.5 px-6 shadow-xl">
+              Demander une Accréditation 🔒
+            </button>
+            <button type="button" onclick="window.openLoginModal()" class="btn btn-au w-full sm:w-auto text-xs !py-3.5 px-6">
+              Connexion Institutionnelle
+            </button>
+            <button type="button" onclick="window.unlockDemo && window.unlockDemo()" class="btn btn-o w-full sm:w-auto text-xs !py-3.5 px-6">
+              🔓 Aperçu Démo
+            </button>
+          </div>
+
+          <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto pt-2">
+            Conformité stricte Loi CNDP n° 09-08. Aucun transfert transfrontalier non autorisé. Journalisation complète des accès (audit trail immuable).
+          </p>
+        </div>
+      </div>
+    </section>
+</head>
+          <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION A · PROTOCOLE DE RÉCONCILIATION DOUBLE PESÉE
+         Statut : PROTÉGÉ (frosted gate)
+         ═══════════════════════════════════════════════════════ -->
+    <section id="section-a" class="protected-section is-locked reveal" data-gate="A">
+      <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
+        <div class="border-b border-white/10 pb-4">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section A · Protocole Anti-Fraude</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Réconciliation de Double Pesée (Sidi Ghanem Hub)</h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+            Protocole de contrôle physique en deux temps pour éliminer tout risque de fraude, d'ammanco ou de coulage de matière entre l'enlèvement client et l'arrivée au hub logistique.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-5 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-cyberGreen font-mono font-bold text-sm">PESÉE #1 · P1</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">CLIENT B2B</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Enlèvement Chez le Client</h4>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              À l'enlèvement, chaque sac scellé est pesé sur une <strong>balance industrielle Bluetooth BLE</strong> connectée à la Workstation Maat OS. Toute saisie manuelle au clavier est <strong class="text-cyberGreen">physiquement bloquée</strong> dans l'application : seul le signal certifié de la balance valide la transaction.
+            </p>
+            <div class="p-2.5 bg-black/50 rounded-lg border border-white/5 text-[10px] font-mono text-slate-400 space-y-1">
+              <div>→ Protocole GATT Bluetooth BLE</div>
+              <div>→ Signature numérique P1 + horodatage UTC</div>
+              <div>→ Transfert légal de garde de la matière</div>
+            </div>
+          </div>
+
+          <div class="p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-kemetGoldBright font-mono font-bold text-sm">PESÉE #2 · P2</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">HUB</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Arrivée au Hub Sidi Ghanem</h4>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              À l'arrivée au Hub logistique de Sidi Ghanem (Marrakech), chaque lot fait l'objet d'une <strong>seconde pesée de contrôle</strong> sur pont-bascule étalonné. La mesure est automatiquement réconciliée avec P1 par l'algorithme Maat OS.
+            </p>
+            <div class="p-2.5 bg-black/50 rounded-lg border border-white/5 text-[10px] font-mono text-slate-400 space-y-1">
+              <div>→ Pont-bascule certifié (étalonnage annuel)</div>
+              <div>→ Mesure P2 automatique (SCADA)</div>
+              <div>→ Scellement cryptographique du lot</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 bg-black/70 rounded-2xl border border-cyberGreen/40 space-y-3">
+          <div class="flex items-center gap-3">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2 L20 6 L20 12 C20 17 16 20 12 22 C8 20 4 17 4 12 L4 6 Z" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M8 12 L11 15 L16 9" stroke="#00FFA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="text-cyberGreen font-mono font-bold text-sm uppercase tracking-widest">Algorithme de Varianza Δ</span>
+          </div>
+          <div class="p-4 bg-black/80 rounded-lg border border-white/10 font-mono text-xs text-slate-300 text-center space-y-1">
+            <div class="text-base">Δ = | P1 − P2 | / P1</div>
+            <div class="text-slate-500 text-[11px]">Seuil de tolérance</div>
+            <div class="text-2xl font-black text-cyberGreen">Δ ≤ 3%</div>
+          </div>
+          <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+            <strong class="text-white">En cas de dépassement (Δ &gt; 3%) :</strong> le système bloque automatiquement l'accréditation du lot, génère un <strong class="text-red-400">Variance_Alert</strong> et congèle la transaction pour vérification ispectionnelle. Aucun poids non réconcilié ne peut être notarisé.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 font-mono text-[10px]">
+            <div class="p-2 bg-black/50 rounded border border-cyberGreen/30 text-center">
+              <div class="text-cyberGreen font-bold">Δ ≤ 1%</div>
+              <div class="text-slate-500">Auto-validé</div>
+            </div>
+            <div class="p-2 bg-black/50 rounded border border-kemetGold/40 text-center">
+              <div class="text-kemetGoldBright font-bold">1% &lt; Δ ≤ 3%</div>
+              <div class="text-slate-500">Revue opérateur</div>
+            </div>
+            <div class="p-2 bg-black/50 rounded border border-red-500/40 text-center">
+              <div class="text-red-400 font-bold">Δ &gt; 3%</div>
+              <div class="text-slate-500">Blocage + alerte</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay verrouillé -->
+      <div class="protected-section__overlay">
+        <div class="gate-lock">
+          <div class="gate-lock__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2" stroke="#E8C86A" stroke-width="1.8"/>
+              <path d="M8 10 V7 a4 4 0 0 1 8 0 V10" stroke="#E8C86A" stroke-width="1.8"/>
+              <circle cx="12" cy="15.5" r="1.4" fill="#E8C86A"/>
+            </svg>
+          </div>
+          <span class="gate-lock__badge">ACCÈS RESTREINT · ACCRÉDITATION REQUISE</span>
+          <h4 class="font-kemetTitle text-base font-bold text-white mb-1">Section A · Réconciliation P1/P2</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed mb-3">
+            Les registres de double pesée, les seuils de variance et les historiques d'alertes sont protégés par accréditation institutionnelle.
+          </p>
+          <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full text-[10px] !py-2.5">
+            Demander l'Accréditation 🔒
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION B · MODÈLE DE DONNÉES POLYMÉRIQUE
+         Statut : PROTÉGÉ (frosted gate)
+         ═══════════════════════════════════════════════════════ -->
+    <section id="section-b" class="protected-section is-locked reveal" data-gate="B">
+      <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
+        <div class="border-b border-white/10 pb-4">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section B · Big Data Analytics</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Modèle de Données &amp; Décomposition Polymérique</h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+            Caractérisation moléculaire et commerciale des flux. Chaque fraction est documentée avec sa densité, son point de fusion, son taux d'humidité et sa valorisation marché.
+          </p>
+        </div>
+
+        <div class="p-5 bg-black/60 rounded-2xl border border-cyberGreen/30">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
+            <span class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">Répartition Volumétrique Globale</span>
+            <span class="text-[10px] font-mono text-slate-500">Source : registre immuable · MAJ 24h</span>
+          </div>
+
+          <div class="space-y-0">
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">PET Chiaro</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill pet" style="width:31%"></div></div>
+              <span class="text-cyberGreen text-right font-bold">31%</span>
+            </div>
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">Cartone Ondulato</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill card" style="width:26%"></div></div>
+              <span class="text-kemetGold text-right font-bold">26%</span>
+            </div>
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">PE-HD Rigido</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill hd" style="width:18%"></div></div>
+              <span class="text-emerald-400 text-right font-bold">18%</span>
+            </div>
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">Vetro Bianco</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill glass" style="width:11%"></div></div>
+              <span class="text-slate-300 text-right font-bold">11%</span>
+            </div>
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">Alluminio 3004/6061</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill alu" style="width:8%"></div></div>
+              <span class="text-kemetGoldBright text-right font-bold">8%</span>
+            </div>
+            <div class="polymer-bar-row">
+              <span class="text-white font-bold">Frazione Organica</span>
+              <div class="polymer-bar-track"><div class="polymer-bar-fill org" style="width:6%"></div></div>
+              <span class="text-cyberGreen text-right font-bold">6%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 font-mono">
+          <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-cyberGreen font-bold text-xs">PET Chiaro</span>
+              <span class="text-cyberGreen font-black text-sm">6,50 DH/kg</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">Bouteilles eau/soda · Densité 1,38 g/cm³ · Fusion 260°C</p>
+          </div>
+          <div class="p-3 bg-black/60 rounded-xl border border-emerald-500/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-emerald-400 font-bold text-xs">PE-HD Rigide</span>
+              <span class="text-emerald-400 font-black text-sm">7,20 DH/kg</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">Flacons détergents · Densité 0,95 g/cm³ · Fusion 135°C</p>
+          </div>
+          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-kemetGoldBright font-bold text-xs">Alluminio</span>
+              <span class="text-kemetGoldBright font-black text-sm">17,50 DH/kg</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">3004/6061 · Économie énergétique 95% vs. primaire</p>
+          </div>
+          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-kemetGold font-bold text-xs">Cartone Ondulato</span>
+              <span class="text-kemetGold font-black text-sm">0,95 DH/kg</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">Fibres cellulosiques · Humidité &lt; 14% · 0,95 kg CO₂/kg</p>
+          </div>
+          <div class="p-3 bg-black/60 rounded-xl border border-white/20 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-white font-bold text-xs">Vetro Bianco</span>
+              <span class="text-white font-black text-sm">1,80 DH/kg</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">Cullet 100% recyclable · 0,67 kg CO₂/kg</p>
+          </div>
+          <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/20 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-cyberGreen font-bold text-xs">Frazione Organica</span>
+              <span class="text-cyberGreen font-black text-sm">Substrat</span>
+            </div>
+            <p class="text-[10px] text-slate-400 font-sans">Biométhanisation Kemet Loop · Digestat amendement sols</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="protected-section__overlay">
+        <div class="gate-lock">
+          <div class="gate-lock__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2" stroke="#E8C86A" stroke-width="1.8"/>
+              <path d="M8 10 V7 a4 4 0 0 1 8 0 V10" stroke="#E8C86A" stroke-width="1.8"/>
+              <circle cx="12" cy="15.5" r="1.4" fill="#E8C86A"/>
+            </svg>
+          </div>
+          <span class="gate-lock__badge">ACCÈS RESTREINT · ACCRÉDITATION REQUISE</span>
+          <h4 class="font-kemetTitle text-base font-bold text-white mb-1">Section B · Décomposition Polymérique</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed mb-3">
+            Les cours marché détaillés, les fiches techniques spectrales et les projections de valorisation par fraction sont réservés.
+          </p>
+          <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full text-[10px] !py-2.5">
+            Demander l'Accréditation 🔒
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION C · SOUVERAINETÉ NUMÉRIQUE & CRYPTOGRAPHIE
+         Statut : PROTÉGÉ (frosted gate)
+         ═══════════════════════════════════════════════════════ -->
+    <section id="section-c" class="protected-section is-locked reveal" data-gate="C">
+      <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
+        <div class="border-b border-white/10 pb-4">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section C · Souveraineté Digitale</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Privacy, Crittografia &amp; Conformità CNDP n° 09-08</h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+            Architecture à deux niveaux de notarisation, conforme aux exigences de la Commission Nationale de contrôle de la protection des Données à caractère Personnel (CNDP) et au secret industriel marocain.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-5 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-cyberGreen font-mono font-bold text-sm uppercase">Level 1 · Ledger Opératif</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">PRIVÉ</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Hyperledger Fabric v2.5</h4>
+            <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Consensus Raft · &gt; 2 000 TPS</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Private Data Collections (PDC) pour pseudonymisation SHA-256</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>HSM matériel pour signature cryptographique</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Audit trail immuable · 100% des accès journalisés</span></li>
+            </ul>
+          </div>
+
+          <div class="p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-kemetGoldBright font-mono font-bold text-sm uppercase">Level 2 · Ancrage Public</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">PUBLIC</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Bitcoin OpenTimestamps (OTS)</h4>
+            <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Ancrage quotidien de la Merkle Root sur blockchain Bitcoin</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>OP_RETURN · coût zéro de gas</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Opposabilité légale &amp; fiscale internationale</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Vérification indépendante sans tiers de confiance</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/20 space-y-2">
+            <div class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">Infrastructure Souveraine</div>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Serveurs physiques Tier-3/4 situés sur territoire marocain (Casablanca, Rabat). Aucun transfert transfrontalier non autorisé.</p>
+          </div>
+          <div class="p-4 bg-black/60 rounded-xl border border-kemetGold/30 space-y-2">
+            <div class="text-kemetGoldBright font-mono font-bold text-[11px] uppercase tracking-widest">Pseudonymisation PDC</div>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Raisons sociales des hôtels et identités opérateurs protégées par hachage SHA-256. Empêche l'espionnage concurrentiel.</p>
+          </div>
+          <div class="p-4 bg-black/60 rounded-xl border border-white/20 space-y-2">
+            <div class="text-white font-mono font-bold text-[11px] uppercase tracking-widest">Conformité CNDP</div>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Déclaration CNDP active. Registre de traitement documenté. Droit d'accès, de rectification et de portabilité garantis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="protected-section__overlay">
+        <div class="gate-lock">
+          <div class="gate-lock__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2" stroke="#E8C86A" stroke-width="1.8"/>
+              <path d="M8 10 V7 a4 4 0 0 1 8 0 V10" stroke="#E8C86A" stroke-width="1.8"/>
+              <circle cx="12" cy="15.5" r="1.4" fill="#E8C86A"/>
+            </svg>
+          </div>
+          <span class="gate-lock__badge">ACCÈS RESTREINT · ACCRÉDITATION REQUISE</span>
+          <h4 class="font-kemetTitle text-base font-bold text-white mb-1">Section C · Cryptographie &amp; Conformité</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed mb-3">
+            Les schémas d'architecture cryptographique, les configurations HSM et les journaux d'audit sont réservés aux auditeurs accrédités.
+          </p>
+          <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full text-[10px] !py-2.5">
+            Demander l'Accréditation 🔒
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION D · MONÉTISATION B2B / B2G
+         Statut : PROTÉGÉ (frosted gate)
+         ═══════════════════════════════════════════════════════ -->
+    <section id="section-d" class="protected-section is-locked reveal" data-gate="D">
+      <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
+        <div class="border-b border-white/10 pb-4">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section D · Monetizzazione Dati</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Modello B2B &amp; B2G · Corporate Analytics</h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+            Quatre canaux de monétisation des datasets consolidés. Chaque flux est structurellement scalable et adossé à des contrats-cadres pluriannuels.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="dataset-card space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">B2B · FMCG</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">API</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Corporate Analytics</h4>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              Vente d'API et de datasets de consommation aux multinationales du packaging pour les obligations de <strong class="text-white">Responsabilité Élargie du Producteur (EPR)</strong> et les rapports CSRD.
+            </p>
+            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-cyberGreen">Marges &gt; 95%</div>
+          </div>
+
+          <div class="dataset-card space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-kemetGoldBright font-mono font-bold text-[11px] uppercase tracking-widest">B2B · IA</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">NIR</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Africa-Polymer-Dataset</h4>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              Base continentale de signatures optiques et spectrales NIR utilisée pour entraîner les modèles de Computer Vision (YOLOv8 / Swin Transformer) des futurs hubs K-MEH-20.
+            </p>
+            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-kemetGoldBright">Licence per-seat + API</div>
+          </div>
+
+          <div class="dataset-card space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-white font-mono font-bold text-[11px] uppercase tracking-widest">B2G · État</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 font-mono">READ-ONLY</span>
+            </div>
+            <h4 class="text-white font-bold text-sm font-sans">Compliance Portal</h4>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+              Accès inpectionnel en lecture seule pour la <strong class="text-white">Wilaya de Marrakech-Safi</strong> et la <strong class="text-white">Direction Générale des Impôts (DGI)</strong> pour la vérification de la Loi n° 28-00 et la défiscalisation des grands producteurs.
+            </p>
+            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-white">Contrat-cadre pluriannuel</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-black/70 rounded-xl border border-kemetGold/40 text-xs text-slate-300 font-sans leading-relaxed">
+          <strong class="text-kemetGoldBright font-mono">Projection financière · 2026-2050 :</strong> quatre canaux de revenus hybrides, adossés à un actif industriel protégé par dépôt OMPIC et à un marché continental de <strong class="text-white">100+ hubs K-MEH-20 d'ici 2050</strong>. Le Data Lake constitue le <strong class="text-cyberGreen">moteur de monétisation récurrente</strong> de l'écosystème Illusion Kemet.
+        </div>
+      </div>
+
+      <div class="protected-section__overlay">
+        <div class="gate-lock">
+          <div class="gate-lock__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2" stroke="#E8C86A" stroke-width="1.8"/>
+              <path d="M8 10 V7 a4 4 0 0 1 8 0 V10" stroke="#E8C86A" stroke-width="1.8"/>
+              <circle cx="12" cy="15.5" r="1.4" fill="#E8C86A"/>
+            </svg>
+          </div>
+          <span class="gate-lock__badge">ACCÈS RESTREINT · ACCRÉDITATION REQUISE</span>
+          <h4 class="font-kemetTitle text-base font-bold text-white mb-1">Section D · Monétisation B2B / B2G</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed mb-3">
+            Les grilles tarifaires, contrats-cadres et projections financières détaillées sont réservés aux partenaires institutionnels sous NDA.
+          </p>
+          <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full text-[10px] !py-2.5">
+            Demander l'Accréditation 🔒
+          </button>
+        </div>
+      </div>
+    </section>
+        <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CTA · SERIES A & ACCÈS DATA ROOM
+         ═══════════════════════════════════════════════════════ -->
+    <section class="glass-panel g p-5 sm:p-8 lg:p-12 space-y-6 reveal">
+      <div class="max-w-3xl mx-auto text-center space-y-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Series A · Round d'Investissement Institutionnel</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">
+          Le Data Lake : L'Actif Analytique du Round Institutionnel
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+          Le Maat Data Lake combine la <strong class="text-white">valeur immuable d'un registre notarié</strong> et la <strong class="text-white">monétisation scalable d'une plateforme Big Data</strong>. Les dossiers financiers et techniques complets — 170+ documents — sont accessibles en Virtual Data Room après accréditation et signature NDA.
+        </p>
+      </div>
+
+      <div class="max-w-3xl mx-auto p-4 sm:p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-2.5">
+        <div class="flex items-center gap-2 font-mono">
+          <span class="w-2 h-2 rounded-full bg-kemetGoldBright animate-pulse"></span>
+          <span class="text-kemetGoldBright font-bold uppercase text-[11px] tracking-widest">Round Institutionnel · Ouverture Imminente</span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+          Dans le cadre de la réalisation des <strong class="text-white">premiers hubs territoriaux K-MEH-20</strong>, Industrial Illusion SARL anticipe l'ouverture imminente d'un <strong class="text-white">round institutionnel</strong> réservé aux fonds d'infrastructure, banques de développement (CDG, AMDIE, Attijariwafa Bank) et investisseurs qualifiés.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2 font-mono">
+        <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3.5 px-8 shadow-xl">
+          Demander l'Accès Virtual Data Room (NDA) 🔒
+        </button>
+        <a href="purkemet.html" class="btn btn-au w-full sm:w-auto text-xs !py-3.5 px-8">
+          Explorer le Service B2B PurKemet →
+        </a>
+      </div>
+
+      <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto text-center">
+        Accès strictement restreint aux investisseurs qualifiés, institutions publiques et directions régionales. Toute demande est soumise à vérification d'éligibilité et signature NDA préalable.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════ -->
+  <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
+      <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
+      <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+      <p class="text-[9px] sm:text-[10px] text-slate-600">K-MEH-20 · Maat OS · PurKemet B2B · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MODAL · ACCRÉDITATION INSTITUTIONNELLE
+       ═══════════════════════════════════════════════════════════ -->
+  <div id="accreditModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Demande d'accréditation Data Lake">
+    <div class="glass-panel g max-w-lg w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeAccreditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+
+      <div class="border-b border-white/10 pb-2">
+        <span class="lbl au">Dossier Restreint · Data Lake</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Demande d'Accréditation Institutionnelle</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Réservé aux FMCG, auditeurs ESG accrédités, investisseurs qualifiés et institutions publiques. Traitement sous 48h.</p>
+      </div>
+
+      <form id="accreditForm" onsubmit="window.handleAccreditSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl block mb-1" for="ac_name">Nom &amp; Prénom *</label>
+            <input id="ac_name" type="text" name="full_name" required autocomplete="name" placeholder="ex: Mehdi Benjelloun" class="inp">
+          </div>
+          <div>
+            <label class="lbl block mb-1" for="ac_org">Organisation / Institution *</label>
+            <input id="ac_org" type="text" name="organization" required autocomplete="organization" placeholder="ex: Fonds Souverain / FMCG / Wilaya" class="inp">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="lbl block mb-1" for="ac_cat">Catégorie *</label>
+            <select id="ac_cat" name="category" required class="inp">
+              <option value="FMCG_CORPORATE">Multinationale FMCG / Packaging</option>
+              <option value="ESG_AUDITOR">Auditeur ESG / Clef Verte / Travelife</option>
+              <option value="INVESTOR">Fonds d'Investissement / VC</option>
+              <option value="PUBLIC_INSTITUTION">Institution Publique (Wilaya / DGI)</option>
+              <option value="RESEARCHER">Chercheur / Laboratoire</option>
+              <option value="OTHER">Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl block mb-1" for="ac_phone">Téléphone / WhatsApp *</label>
+            <input id="ac_phone" type="tel" name="phone" required autocomplete="tel" placeholder="+212 6..." class="inp">
+          </div>
+        </div>
+
+        <div>
+          <label class="lbl block mb-1" for="ac_email">Email Professionnel *</label>
+          <input id="ac_email" type="email" name="email" required autocomplete="email" placeholder="m.benjelloun@institution.ma" class="inp">
+        </div>
+
+        <div>
+          <label class="lbl block mb-1" for="ac_motivation">Motif de la Demande d'Accès *</label>
+          <textarea id="ac_motivation" name="motivation" required placeholder="Précisez le cadre d'évaluation (due diligence, audit EPR, recherche, conformité Loi 28-00...)" class="inp h-16"></textarea>
+        </div>
+
+        <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 text-[10px] text-slate-400 space-y-1 font-sans">
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="ac_nda" name="nda_agreement" required class="mt-1 w-4 h-4 shrink-0 rounded border-white/20 text-cyberGreen focus:ring-0">
+            <span class="leading-relaxed">Je confirme agir au nom de mon institution et accepte la signature préalable d'un accord de non-divulgation (NDA) avant ouverture des accès techniques.</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnAccreditSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+          Transmettre la Demande d'Accréditation 🔒
+        </button>
+
+        <p class="text-[9px] text-slate-500 leading-relaxed text-center font-sans">
+          Conformité stricte Loi CNDP n° 09-08. Journalisation complète des accès. Traitement confidentiel par la Direction Générale.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MODAL · LOGIN TERMINAL ANALYTIQUE
+       ═══════════════════════════════════════════════════════════ -->
+  <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion Terminal Analytique">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeLoginModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+
+      <div class="border-b border-white/10 pb-2">
+        <span class="lbl au">Terminal Analytique Sécurisé</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Connexion Institutionnelle</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Le token d'accès vous est communiqué après signature du NDA et validation d'éligibilité.</p>
+      </div>
+
+      <form id="loginForm" onsubmit="window.handleLoginSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+        <div>
+          <label class="lbl block mb-1" for="lg_token">Token d'Accès Institutionnel *</label>
+          <input id="lg_token" type="text" name="token" required autocomplete="off" placeholder="ex: MAAT-XXXX-XXXX ou DEMO" class="inp tracking-widest font-mono">
+        </div>
+
+        <button type="submit" id="btnLoginSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+          Accéder au Terminal 🔓
+        </button>
+
+        <div class="relative flex items-center justify-center py-1">
+          <div class="absolute inset-x-0 h-px bg-white/10"></div>
+          <span class="relative bg-black/80 px-3 text-[9px] font-mono text-slate-500 uppercase tracking-widest">ou</span>
+        </div>
+
+        <button type="button" onclick="window.unlockDemo()" class="btn btn-o w-full !py-2.5 font-bold">
+          🔓 Aperçu Démo (Sans NDA)
+        </button>
+
+        <div class="relative flex items-center justify-center py-1">
+          <div class="absolute inset-x-0 h-px bg-white/10"></div>
+          <span class="relative bg-black/80 px-3 text-[9px] font-mono text-slate-500 uppercase tracking-widest">pas encore accrédité ?</span>
+        </div>
+
+        <button type="button" onclick="window.closeLoginModal(); window.openAccreditModal();" class="btn btn-au w-full !py-2.5 font-bold">
+          Demander l'Accréditation Institutionnelle
+        </button>
+
+        <p class="text-[9px] text-slate-500 leading-relaxed text-center font-sans">
+          Conformité Loi CNDP n° 09-08. Aucun transfert transfrontalier non autorisé. Tentatives d'accès non autorisées journalisées.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCRIPTS EXTERNES
+       ═══════════════════════════════════════════════════════════ -->
+  <script src="assets/core.js"></script>
+  <script src="assets/site.js"></script>
+  <script src="assets/matrix-canvas.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCRIPT INLINE
+       ═══════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ============================================================
+       YEAR
+       ============================================================ */
+    (function () {
+      var y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+
+    /* ============================================================
+       TOAST ROBUSTE
+       ============================================================ */
+    function toast(text, kind) {
+      if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
+      var d = document.createElement('div');
+      d.setAttribute('role', 'status');
+      d.style.cssText =
+        'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);' +
+        'background:#0A0D10;color:' +
+        (kind === 'err' ? '#f87171' : kind === 'warn' ? '#E6CA86' : '#00FFA3') +
+        ';padding:.7rem 1.2rem;border:1px solid currentColor;border-radius:.6rem;' +
+        'font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
+      d.textContent = text;
+      document.body.appendChild(d);
+      setTimeout(function () { d.remove(); }, 4000);
+    }
+
+    /* ============================================================
+       MODAL HELPERS
+       ============================================================ */
+    function openModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('hidden'); m.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      var fi = m.querySelector('input, select, textarea');
+      if (fi) setTimeout(function () { fi.focus(); }, 120);
+    }
+    function closeModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('hidden'); m.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    window.openAccreditModal = function () { openModal('accreditModal'); };
+    window.closeAccreditModal = function () { closeModal('accreditModal'); };
+    window.openLoginModal = function () { openModal('loginModal'); };
+    window.closeLoginModal = function () { closeModal('loginModal'); };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        window.closeAccreditModal();
+        window.closeLoginModal();
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.id === 'accreditModal') window.closeAccreditModal();
+      if (e.target && e.target.id === 'loginModal') window.closeLoginModal();
+    });
+
+    /* ============================================================
+       LIVE TELEMETRY TICKER
+       ============================================================ */
+    var POLYMERS = ['PET', 'PE-HD', 'Aluminium', 'Carton', 'Verre', 'Organique'];
+
+    function randomHash(len) {
+      len = len || 6;
+      var s = '';
+      var hex = '0123456789ABCDEF';
+      for (var i = 0; i < len; i++) s += hex[Math.floor(Math.random() * 16)];
+      return s;
+    }
+
+    function buildTicker() {
+      var track = document.getElementById('liveTickerTrack');
+      if (!track) return;
+
+      var items = [];
+      for (var i = 0; i < 8; i++) {
+        var p1 = (Math.random() * 220 + 15);
+        var p2 = p1 * (0.965 + Math.random() * 0.035);
+        var poly = POLYMERS[i % POLYMERS.length];
+        var gold = Math.random() < 0.25;
+        var prefix = gold ? 'LOT-MR-' : '0x';
+        items.push({
+          hash: prefix + randomHash(gold ? 4 : 6),
+          poly: poly,
+          p1: p1.toFixed(1),
+          p2: p2.toFixed(1),
+          gold: gold
+        });
+      }
+
+      var html = '';
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j];
+        html +=
+          '<div class="ticker-item">' +
+            '<span class="ticker-item__dot' + (it.gold ? ' gold' : '') + '"></span>' +
+            '<span class="ticker-item__hash">' + it.hash + '…</span>' +
+            '<span>' + it.poly + '</span>' +
+            '<span>P1: ' + it.p1 + ' kg · P2: ' + it.p2 + ' kg</span>' +
+            '<span class="ticker-item__status' + (it.gold ? ' gold' : '') + '">' + (it.gold ? 'NOTARIZED' : 'ANCHORED') + '</span>' +
+          '</div>';
+      }
+      // Duplication pour boucle continue
+      track.innerHTML = html + html;
+    }
+
+    function startTickerRefresh() {
+      // Régénération partielle des hashs toutes les 15s pour simuler des nouveaux blocs
+      setInterval(function () {
+        var hashes = document.querySelectorAll('.ticker-item__hash');
+        hashes.forEach(function (el) {
+          if (Math.random() < 0.35) {
+            var isGold = el.parentElement.querySelector('.ticker-item__status.gold') !== null;
+            var prefix = isGold ? 'LOT-MR-' : '0x';
+            el.textContent = prefix + randomHash(isGold ? 4 : 6) + '…';
+          }
+        });
+      }, 15000);
+    }
+
+    /* ============================================================
+       KPI COUNTERS ANIMÉS
+       ============================================================ */
+    function animateCounter(el) {
+      var target = parseFloat(el.getAttribute('data-counter')) || 0;
+      var format = el.getAttribute('data-format') || 'num';
+      var duration = 2000;
+      var start = performance.now();
+      var startVal = 0;
+
+      function tick(now) {
+        var t = Math.min(1, (now - start) / duration);
+        var eased = 1 - Math.pow(1 - t, 3);
+        var val = Math.round(startVal + (target - startVal) * eased);
+        if (format === 'kg') {
+          el.textContent = val.toLocaleString('fr-FR') + ' kg';
+        } else {
+          el.textContent = val.toLocaleString('fr-FR');
+        }
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function initKPICounters() {
+      var els = document.querySelectorAll('[data-counter]');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(animateCounter);
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            animateCounter(e.target);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      els.forEach(function (el) { obs.observe(el); });
+    }
+
+    function startKPIDeltas() {
+      // Petites variations random pour simuler un flux temps réel
+      setInterval(function () {
+        ['kpi-total-delta', 'kpi-co2-delta', 'kpi-dataset-delta', 'kpi-tx-delta'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var base = 0.25 + Math.random() * 0.55;
+          el.textContent = '+' + base.toFixed(2) + '%';
+        });
+      }, 6000);
+    }
+
+    /* ============================================================
+       GATE UNLOCK · MODE DÉMO
+       ============================================================ */
+    window.unlockDemo = function () {
+      var sections = document.querySelectorAll('.protected-section');
+      sections.forEach(function (el) {
+        el.classList.remove('is-locked');
+        el.classList.add('is-unlocked');
+      });
+      showDemoBadge();
+      if (window.Maat && window.Maat.buzz) window.Maat.buzz(120);
+      toast('Mode démo déverrouillé · accès temporaire accordé', 'ok');
+      // Scroll jusqu'à la première section protégée
+      var first = document.getElementById('section-a');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    function showDemoBadge() {
+      if (document.getElementById('demoBadge')) return;
+      var b = document.createElement('div');
+      b.id = 'demoBadge';
+      b.style.cssText =
+        'position:fixed;top:80px;right:16px;z-index:100;padding:8px 14px;' +
+        'background:linear-gradient(135deg,#E8C86A,#C5A059);color:#1a1405;' +
+        'font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;' +
+        'letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;' +
+        'box-shadow:0 8px 25px rgba(232,200,106,0.4);cursor:pointer;';
+      b.textContent = 'MODE DÉMO · ACCÈS DÉBLOQUÉ ✕';
+      b.title = 'Cliquez pour re-verrouiller';
+      b.onclick = function () {
+        document.querySelectorAll('.protected-section').forEach(function (el) {
+          el.classList.add('is-locked');
+          el.classList.remove('is-unlocked');
+        });
+        b.remove();
+        toast('Accès re-verrouillé', 'warn');
+      };
+      document.body.appendChild(b);
+    }
+
+    // Auto-unlock via URL ?access=granted
+    if (location.search.indexOf('access=granted') >= 0) {
+      setTimeout(window.unlockDemo, 600);
+    }
+
+    /* ============================================================
+       FORM · ACCRÉDITATION
+       ============================================================ */
+    window.handleAccreditSubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnAccreditSubmit');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Transmission en cours…';
+
+      var fd = new FormData(form);
+      var payload = {
+        full_name: String(fd.get('full_name') || '').trim(),
+        organization: String(fd.get('organization') || '').trim(),
+        category: String(fd.get('category') || '').trim(),
+        email: String(fd.get('email') || '').toLowerCase().trim(),
+        phone: String(fd.get('phone') || '').trim() || null,
+        motivation: String(fd.get('motivation') || '').trim(),
+        nda_agreement: fd.get('nda_agreement') === 'on'
+      };
+
+      if (!payload.full_name || !payload.organization || !payload.category || !payload.email || !payload.phone || !payload.motivation) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+      }
+      if (!payload.nda_agreement) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez accepter l\'accord de non-divulgation (NDA).', 'warn');
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Adresse email invalide.', 'warn');
+      }
+
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      var saved = false;
+
+      if (sb) {
+        try {
+          var r1 = await sb.from('market_study_leads').insert([{
+            full_name: payload.full_name,
+            organization: payload.organization,
+            role_title: '[' + payload.category + '] DATA LAKE ACCREDITATION',
+            email: payload.email,
+            phone: payload.phone
+          }]);
+          if (!r1.error) saved = true;
+        } catch (err) {
+          try {
+            var r2 = await sb.from('field_notes').insert([{
+              note_type: 'GENERAL',
+              content: 'ACCRÉDITATION DATA LAKE : ' + payload.full_name + ' (' + payload.category + ' @ ' + payload.organization + ') - Email: ' + payload.email + ' - Tél: ' + payload.phone + ' - Motif: ' + payload.motivation,
+              operator_email: payload.email
+            }]);
+            if (!r2.error) saved = true;
+          } catch (x) {}
+        }
+      }
+
+      if (saved) {
+        toast('Demande d\'accréditation transmise. Protocole NDA sous 48h.');
+        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+        form.reset();
+        btn.textContent = '✓ Demande Enregistrée';
+        setTimeout(function () {
+          window.closeAccreditModal();
+          btn.textContent = original;
+          btn.disabled = false;
+        }, 2200);
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        toast('Service temporairement indisponible. Veuillez réessayer.', 'err');
+      }
+    };
+
+    /* ============================================================
+       FORM · LOGIN TERMINAL
+       ============================================================ */
+    window.handleLoginSubmit = function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnLoginSubmit');
+      var original = btn.textContent;
+      var token = String(new FormData(form).get('token') || '').trim().toUpperCase();
+
+      if (!token) {
+        return toast('Veuillez saisir un token d\'accès.', 'warn');
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Vérification cryptographique…';
+
+      setTimeout(function () {
+        if (token === 'DEMO' || token === 'DEMO2026' || token === 'MAAT') {
+          window.closeLoginModal();
+          window.unlockDemo();
+          btn.textContent = '✓ Accès Accordé';
+          setTimeout(function () {
+            btn.textContent = original;
+            btn.disabled = false;
+            form.reset();
+          }, 1200);
+        } else {
+          btn.disabled = false;
+          btn.textContent = original;
+          toast('Token invalide · demande d\'accréditation requise.', 'err');
+        }
+      }, 900);
+    };
+
+    /* ============================================================
+       LOGIN UNIVERSEL (header)
+       ============================================================ */
+    (function () {
+      var _origOpenLogin = window.openUniversalLogin;
+      function resetLoginFlags() {
+        window.__loginModalOpen = false;
+        window.__isLoginOpen = false;
+        window.__loginOpening = false;
+        if (window.Maat) { window.Maat.__loginModalOpen = false; window.Maat.isLoginOpen = false; }
+        document.body.style.overflow = '';
+        var b = document.getElementById('loginBtn');
+        if (b) { b.disabled = false; b.style.pointerEvents = 'auto'; }
+      }
+      function findLoginModal() {
+        return document.getElementById('universalLoginModal') ||
+               document.getElementById('loginModal') ||
+               document.querySelector('.universal-login-modal') ||
+               document.querySelector('[data-login-modal]');
+      }
+      function bindCloseHandlers(m) {
+        if (!m || m._hasCleanClose) return;
+        m._hasCleanClose = true;
+        function closeCleanly() {
+          m.classList.add('hidden');
+          m.classList.remove('flex');
+          m.style.display = 'none';
+          resetLoginFlags();
+          try { if (m.parentNode) m.parentNode.removeChild(m); } catch (e) {}
+        }
+        m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close').forEach(function (btn) {
+          btn.addEventListener('click', closeCleanly);
+        });
+        m.addEventListener('click', function (e) {
+          if (e.target === m || e.target.classList.contains('backdrop')) closeCleanly();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && document.body.contains(m) && m.style.display !== 'none' && !m.classList.contains('hidden')) closeCleanly();
+        });
+      }
+      window.openUniversalLogin = function () {
+        resetLoginFlags();
+        var stale = findLoginModal();
+        if (stale && stale.parentNode) { try { stale.parentNode.removeChild(stale); } catch (e) {} }
+        if (typeof _origOpenLogin === 'function') { try { _origOpenLogin(); } catch (err) {} }
+        setTimeout(function () {
+          var m = findLoginModal();
+          if (m) {
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            m.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            bindCloseHandlers(m);
+          }
+        }, 30);
+      };
+    })();
+
+    /* ============================================================
+       EASTER EGGS
+       ============================================================ */
+    (function () {
+      var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      var konamiIndex = 0;
+      document.addEventListener('keydown', function (e) {
+        var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (key === konamiCode[konamiIndex]) {
+          konamiIndex++;
+          if (konamiIndex === konamiCode.length) {
+            if (document.body.classList.contains('ee-turbo')) { konamiIndex = 0; return; }
+            document.body.classList.add('ee-turbo');
+            showEasterEggToast('🚀 MODE TURBO · KEMET ACTIVÉ');
+            if (window.Maat && window.Maat.buzz) window.Maat.buzz(150);
+            setTimeout(function () { document.body.classList.remove('ee-turbo'); }, 12000);
+            konamiIndex = 0;
+          }
+        } else {
+          konamiIndex = (key === konamiCode[0]) ? 1 : 0;
+        }
+      });
+    })();
+
+    (function () {
+      var logoLink = document.getElementById('logoLink');
+      if (!logoLink) return;
+      logoLink.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        var isActive = document.body.classList.contains('ee-kemet');
+        if (isActive) {
+          document.body.classList.remove('ee-kemet');
+          showEasterEggToast('🔓 MODE KEMET · DÉSACTIVÉ');
+        } else {
+          document.body.classList.add('ee-kemet');
+          showEasterEggToast('👁️ MODE KEMET · ACTIVÉ');
+          if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
+        }
+      });
+    })();
+
+    (function () {
+      var overlay = document.getElementById('hieroglyphOverlay');
+      if (!overlay) return;
+      var glyphs = ['𓂀','𓆣','𓋹','𓁹','𓃭','𓅓','𓆓','𓇋','𓈖','𓊪','𓋴','𓌀','𓍿','𓎛','𓏏','𓂋','𓃀','𓄿','𓅱','𓆑'];
+      var isActive = false;
+      var rowsHTML = '';
+      for (var r = 0; r < 6; r++) {
+        rowsHTML += '<div class="glyph-row">';
+        for (var c = 0; c < 8; c++) {
+          rowsHTML += '<span>' + glyphs[Math.floor(Math.random() * glyphs.length)] + '</span>';
+        }
+        rowsHTML += '</div>';
+      }
+      overlay.innerHTML = rowsHTML;
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        if (e.key === 'h' || e.key === 'H') {
+          isActive = !isActive;
+          overlay.classList.toggle('active', isActive);
+          if (isActive) showEasterEggToast('𓂀 SUPERPOSITION HIÉROGLYPHIQUE');
+        }
+      });
+    })();
+
+    // Easter egg "maat" : tape les 4 lettres sur le clavier
+    (function () {
+      var seq = ['m','a','a','t'];
+      var idx = 0;
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        var k = (e.key || '').toLowerCase();
+        if (k === seq[idx]) {
+          idx++;
+          if (idx === seq.length) {
+            idx = 0;
+            showEasterEggToast('⚖️ MAÂT · VERITAS APERTA');
+            if (window.unlockDemo) window.unlockDemo();
+          }
+        } else {
+          idx = (k === seq[0]) ? 1 : 0;
+        }
+      });
+    })();
+
+    (function () {
+      var loginBtn = document.getElementById('loginBtn');
+      if (!loginBtn) return;
+      var loginClicks = 0, loginTimer = null;
+      window.__eeOnLoginClick = function () {
+        loginClicks++;
+        if (loginTimer) clearTimeout(loginTimer);
+        loginTimer = setTimeout(function () {
+          if (loginClicks >= 5) {
+            showEasterEggToast('👁️ CODE SECRET DÉBLOQUÉ · SCEAU DE MAAT');
+            if (window.unlockDemo) window.unlockDemo();
+            if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
+          }
+          loginClicks = 0;
+        }, 2000);
+      };
+    })();
+
+    function showEasterEggToast(text) {
+      var existing = document.querySelector('.ee-toast');
+      if (existing) existing.remove();
+      var toast = document.createElement('div');
+      toast.className = 'ee-toast';
+      toast.textContent = text;
+      document.body.appendChild(toast);
+      setTimeout(function () {
+        toast.classList.add('ee-toast-out');
+        setTimeout(function () { toast.remove(); }, 400);
+      }, 2200);
+    }
+    window.showEasterEggToast = showEasterEggToast;
+
+    /* ============================================================
+       SCROLL PROGRESS
+       ============================================================ */
+    window.addEventListener('scroll', function () {
+      var bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
+    }, { passive: true });
+
+    /* ============================================================
+       REVEAL ON SCROLL
+       ============================================================ */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    }
+
+    /* ============================================================
+       TILT 3D
+       ============================================================ */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
+      document.querySelectorAll('.tilt-card').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width;
+          var y = (e.clientY - r.top) / r.height;
+          card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * 6) + 'deg) rotateY(' + ((x - 0.5) * -6) + 'deg) translateZ(6px)';
+        });
+        card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+      });
+    }
+
+    /* ============================================================
+       ENSURE INIT (Supabase)
+       ============================================================ */
+    window.ensureInit = function () {
+      try {
+        if (!window.Maat) return;
+        if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
+      } catch (e) {}
+    };
+
+    /* ============================================================
+       MOBILE NAV
+       ============================================================ */
+    window.toggleMobileNav = function () {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || !btn) return;
+      var opening = nav.classList.contains('hidden');
+      nav.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    };
+    document.addEventListener('click', function (e) {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || nav.classList.contains('hidden')) return;
+      if (btn && btn.contains(e.target)) return;
+      if (nav.contains(e.target)) {
+        if (e.target.tagName === 'A') nav.classList.add('hidden');
+        return;
+      }
+      nav.classList.add('hidden');
+    });
+
+    /* ============================================================
+       SERVICE WORKER
+       ============================================================ */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      });
+    }
+
+    /* ============================================================
+       BOOTSTRAP
+       ============================================================ */
+    buildTicker();
+    startTickerRefresh();
+    initKPICounters();
+    startKPIDeltas();
+
+    try {
+      console.info('%c[MAAT DATA LAKE] Portal ready · v1.0', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
+    } catch (e) {}
+
+  })();
+  </script>
 </body>
 </html>
