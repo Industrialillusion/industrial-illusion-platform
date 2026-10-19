@@ -1,19 +1,47 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark scroll-smooth">
+<html lang="fr" class="dark font-sans scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Qui Sommes-Nous | Industrial Illusion SARL — Présentation Institutionnelle</title>
-  <meta name="description" content="Présentation officielle d'Industrial Illusion SARL, startup DeepTech marocaine basée à Marrakech. Modèle de valorisation B2B, gouvernance et conformité environnementale.">
-  <meta name="theme-color" content="#0A0D10">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Qui Sommes-Nous | Industrial Illusion SARL — Éditeur de Logiciels Industriels Souverains</title>
+  <meta name="description" content="Industrial Illusion SARL — Deep Tech Systems. Bâtir la souveraineté industrielle et environnementale du continent africain. Modèle marocain pour l'Afrique et le monde : Maat OS, PurKemet B2B, K-MEH-20, Maat Data Lake. Conforme Loi 28-00 & CNDP n° 09-08.">
+  <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Industrial Illusion · Qui Sommes-Nous">
 
-  <!-- Google Fonts -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <script>
+  (function () {
+    'use strict';
+    if (window.__scrollRescueGuardInstalled) return;
+    window.__scrollRescueGuardInstalled = true;
+    var origAdd = EventTarget.prototype.addEventListener;
+    var BLOCKED = { wheel:1, mousewheel:1, DOMMouseScroll:1, touchmove:1, touchstart:1 };
+    function isGlobalTarget(t) {
+      return t === window || t === document || t === document.documentElement || t === document.body;
+    }
+    EventTarget.prototype.addEventListener = function (type, fn, opts) {
+      if (BLOCKED[type] && isGlobalTarget(this)) {
+        var o = (typeof opts === 'object' && opts !== null) ? opts : {};
+        if (o.passive !== true) o = Object.assign({}, o, { passive: true });
+        return origAdd.call(this, type, fn, o);
+      }
+      return origAdd.call(this, type, fn, opts);
+    };
+  })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS & Maat OS Design System v8.1 -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="assets/tw-config.js"></script>
   <script src="assets/config.js"></script>
@@ -21,182 +49,1305 @@
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
-    @keyframes cyberPulse {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(0,255,163,0.6)); }
-      50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(0,255,163,0.9)); }
+    html {
+      background-color: #060A0D !important;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
-    .cyber-eye-anim {
-      animation: cyberPulse 4s ease-in-out infinite;
+    body {
+      background-color: transparent !important;
+      background-image: none !important;
+      color: #F1F5F9 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      touch-action: manipulation;
+    }
+
+    /* ═══════════ SPACE CANVAS (règle stricte) ═══════════ */
+    #spaceCanvas {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      display: block !important;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    #dataAmbientLayer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.55;
+      background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(6, 10, 13, 0.85) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(6, 10, 13, 0.80) 0%, transparent 55%),
+        radial-gradient(circle at 50% 50%, rgba(0, 255, 163, 0.03) 0%, transparent 65%);
+    }
+
+    main, footer { position: relative; z-index: 10; }
+    header { z-index: 50; }
+
+    input, select, textarea, .inp { font-size: 16px !important; }
+    @media (min-width: 640px) {
+      input, select, textarea, .inp { font-size: 0.8rem !important; }
+    }
+
+    #scrollProgress {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0%;
+      background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
+      z-index: 9999;
+      box-shadow: 0 0 12px rgba(0, 255, 163, .6);
+      transition: width .1s ease-out;
+      pointer-events: none;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(35px);
+      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform .3s ease-out, box-shadow .3s;
+      will-change: transform;
+    }
+
+    .animated-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
+      animation: dividerPulse 3s ease-in-out infinite;
+      margin: 2.5rem auto; max-width: 60%;
+    }
+    @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
+
+    .glass-panel {
+      background: linear-gradient(165deg, rgba(19, 25, 32, 0.90), rgba(9, 13, 16, 0.97)) !important;
+      border: 1px solid rgba(197, 160, 89, 0.35) !important;
+      border-radius: 1.25rem !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85) !important;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
+    .glass-panel.g {
+      border-color: rgba(0, 255, 163, 0.45) !important;
+      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.20) !important;
+    }
+    .glass-panel.au {
+      border-color: rgba(232, 200, 106, 0.55) !important;
+      box-shadow: 0 0 35px -8px rgba(232, 200, 106, 0.22) !important;
+    }
+    .glass-panel:hover { border-color: rgba(0, 255, 163, 0.6) !important; }
+
+    .inp {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      border-radius: 0.75rem !important;
+      padding: 0.75rem !important;
+      color: #fff !important;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
+
+    .btn {
+      padding: 0.85rem; border-radius: 0.8rem;
+      font: 800 0.72rem 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+      text-align: center; cursor: pointer; border: none;
+    }
+    .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
+    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
+    .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
+    .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
+    .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
+    .btn-o:hover { border-color: #00FFA3 !important; }
+
+    @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
+    .anim-orbit { animation: orbitSpin 16s linear infinite; transform-origin: 60px 60px; }
+    .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
+    .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
+
+    .scanner-beam {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #00FFA3, transparent);
+      box-shadow: 0 0 14px #00FFA3;
+      animation: scanLine 3.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
+
+    /* Holographic reflections on tilt cards */
+    .holo-shine {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg,
+        transparent 0%,
+        rgba(0, 255, 163, 0.06) 25%,
+        rgba(232, 200, 106, 0.06) 50%,
+        transparent 75%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .tilt-card:hover .holo-shine { opacity: 1; }
+
+    /* Pillar cards */
+    .pillar-card {
+      position: relative;
+      padding: 1.25rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(160deg, rgba(15,22,28,0.95), rgba(9,13,16,0.99));
+      border: 1px solid rgba(255,255,255,0.10);
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      cursor: pointer;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .pillar-card:hover::before { opacity: 1; }
+    .pillar-card.g { color: #00FFA3; border-color: rgba(0,255,163,0.25); }
+    .pillar-card.g:hover { border-color: rgba(0,255,163,0.75); box-shadow: 0 20px 45px -15px rgba(0,255,163,0.35); }
+    .pillar-card.au { color: #E8C86A; border-color: rgba(232,200,106,0.25); }
+    .pillar-card.au:hover { border-color: rgba(232,200,106,0.75); box-shadow: 0 20px 45px -15px rgba(232,200,106,0.35); }
+    .pillar-card.w { color: #E2E8F0; border-color: rgba(226,232,240,0.18); }
+    .pillar-card.w:hover { border-color: rgba(226,232,240,0.6); box-shadow: 0 20px 45px -15px rgba(226,232,240,0.3); }
+
+    /* Africa map */
+    .africa-map { width: 100%; height: auto; display: block; }
+    .africa-land { fill: rgba(15,22,28,0.85); stroke: rgba(0,255,163,0.35); stroke-width: 1.2; }
+    .africa-node { fill: #00FFA3; filter: drop-shadow(0 0 6px #00FFA3); cursor: pointer; transition: r 0.2s; }
+    .africa-node.gold { fill: #E8C86A; filter: drop-shadow(0 0 6px #E8C86A); }
+    .africa-node:hover { r: 8; }
+    .africa-link {
+      fill: none;
+      stroke: rgba(0,255,163,0.35);
+      stroke-width: 1.4;
+      stroke-dasharray: 6 6;
+      animation: linkDash 4s linear infinite;
+    }
+    .africa-link.gold {
+      stroke: rgba(232,200,106,0.4);
+      animation-duration: 5s;
+    }
+    @keyframes linkDash {
+      to { stroke-dashoffset: -48; }
+    }
+    .africa-pulse { fill: #00FFA3; filter: drop-shadow(0 0 8px #00FFA3); }
+    .africa-label {
+      fill: #CBD5E1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .africa-label.gold { fill: #E8C86A; }
+
+    /* Timeline */
+    .timeline-track {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      padding: 0.75rem 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,255,163,0.5) transparent;
+    }
+    .timeline-step {
+      flex: 0 0 auto;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.55);
+      color: #94A3B8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      min-width: 130px;
+    }
+    .timeline-step:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+    .timeline-step.is-active {
+      border-color: #00FFA3;
+      color: #00FFA3;
+      background: rgba(0,255,163,0.10);
+      box-shadow: 0 0 22px -5px rgba(0,255,163,0.55);
+    }
+    .timeline-step.is-active .year-badge { color: #00FFA3; }
+    .timeline-step .year-badge {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Counter cards */
+    .metric-card {
+      position: relative;
+      padding: 1.25rem 1rem;
+      border-radius: 1rem;
+      background: linear-gradient(160deg, rgba(15, 22, 28, 0.92), rgba(9, 13, 16, 0.98));
+      border: 1px solid rgba(0, 255, 163, 0.20);
+      transition: all 0.3s;
+      overflow: hidden;
+    }
+    .metric-card:hover { border-color: rgba(0,255,163,0.55); transform: translateY(-2px); }
+    .metric-card__value {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      font-weight: 800;
+      color: #00FFA3;
+      line-height: 1.1;
+      margin-top: 0.4rem;
+    }
+    .metric-card.au { border-color: rgba(232,200,106,0.25); }
+    .metric-card.au:hover { border-color: rgba(232,200,106,0.6); }
+    .metric-card.au .metric-card__value { color: #E8C86A; }
+
+    /* Gold rain easter egg */
+    @keyframes goldFall {
+      0%   { transform: translateY(-30px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+    .gold-drop {
+      position: absolute;
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      color: #E8C86A;
+      text-shadow: 0 0 12px #E8C86A, 0 0 24px rgba(232,200,106,0.5);
+      animation: goldFall linear forwards;
+      pointer-events: none;
+    }
+
+    /* Turbo mode */
+    body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
+    @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    body.ee-turbo .glass-panel { border-color: rgba(255,100,200,0.6) !important; }
+
+    /* Easter egg toast */
+    .ee-toast {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95));
+      color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem;
+      font: 800 14px 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
+      animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      text-align: center; pointer-events: none; max-width: 90vw;
+    }
+    @keyframes eeToastIn {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    }
+    .ee-toast.ee-toast-out { animation: eeToastOut 0.4s ease-in forwards; }
+    @keyframes eeToastOut {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    }
+
+    .safe-top { padding-top: env(safe-area-inset-top); }
+
+    @media (max-width: 640px) {
+      .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      body { font-size: 15px; }
+      footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+      .pillar-card { padding: 1rem; }
+      .africa-label { font-size: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
-<body class="bg-obsidian text-slate-200 antialiased min-h-screen flex flex-col justify-between selection:bg-cyberGreen selection:text-black">
+<body class="min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER INSTITUTIONNEL UNIFIÉ -->
-  <header class="border-b border-white/10 bg-obsidianCard/95 backdrop-blur-xl fixed top-0 w-full z-50 shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      
-      <a href="index.html" class="flex items-center space-x-3.5 group">
-        <div class="relative w-11 h-11 flex items-center justify-center bg-obsidian rounded-xl p-1.5 shadow-xl border border-cyberGreen/40 group-hover:border-cyberGreen transition-all duration-300">
-          <svg class="w-9 h-9 text-cyberGreen cyber-eye-anim" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-            <path d="M8 50 Q 50 10, 92 50 Q 50 90, 8 50 Z" stroke="#00FFA3" stroke-width="3.5" fill="#090D10"/>
-            <circle cx="50" cy="50" r="18" stroke="#C5A059" stroke-width="3" fill="#11161C"/>
-            <circle cx="50" cy="50" r="7" fill="#00FFA3"/>
-            <path d="M22 30 L32 18 M78 30 L68 18 M22 70 L32 82 M78 70 L68 82" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
-            <path d="M50 68 C 50 82, 38 88, 38 96" stroke="#C5A059" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M62 68 L 74 92" stroke="#C5A059" stroke-width="2.5" stroke-linecap="round"/>
+  <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+  <div id="dataAmbientLayer" aria-hidden="true"></div>
+  <div id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ═══════════ HEADER UNIFIÉ ═══════════ -->
+  <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
+    <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
+      <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
+        <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+          <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+            <g class="anim-orbit">
+              <ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/>
+              <circle cx="60" cy="6" r="2.2" fill="#00FFA3"/>
+              <circle cx="114" cy="60" r="2.2" fill="#00FFA3"/>
+              <circle cx="60" cy="114" r="2.2" fill="#00FFA3"/>
+              <circle cx="6" cy="60" r="2.2" fill="#00FFA3"/>
+            </g>
+            <g class="anim-counter-orbit">
+              <ellipse cx="60" cy="60" rx="45" ry="45" stroke="#00FFA3" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.45"/>
+              <circle cx="60" cy="15" r="1.6" fill="#E8C86A"/>
+              <circle cx="105" cy="60" r="1.6" fill="#E8C86A"/>
+              <circle cx="60" cy="105" r="1.6" fill="#E8C86A"/>
+              <circle cx="15" cy="60" r="1.6" fill="#E8C86A"/>
+            </g>
+            <path d="M20 54 Q32 44 46 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M100 54 Q88 44 74 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M22 60 Q60 38 98 60 Q60 82 22 60 Z" stroke="#00FFA3" stroke-width="2.2" fill="#0A0D10"/>
+            <circle cx="60" cy="60" r="14" stroke="#C5A059" stroke-width="1.8" fill="#11161C"/>
+            <circle cx="60" cy="60" r="7" fill="#00FFA3" class="anim-pupil"/>
+            <path d="M60 74 L58 90" stroke="#00FFA3" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M60 78 L64 92" stroke="#C5A059" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
         </div>
-        <div>
-          <h1 class="font-kemetTitle text-sm sm:text-base font-black tracking-widest text-white leading-none">INDUSTRIAL ILLUSION</h1>
-          <p class="text-[9px] font-mono tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-1">DEEP TECH SYSTEMS</p>
+        <div class="min-w-0">
+          <h1 class="font-kemetTitle text-[11px] sm:text-base font-black tracking-wider sm:tracking-widest text-white leading-none truncate group-hover:text-cyberGreen transition-colors">INDUSTRIAL ILLUSION</h1>
+          <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
         </div>
       </a>
-      
-      <!-- NAVIGATION DESKTOP -->
-      <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300">
+
+      <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
         <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
         <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
         <a href="kmeh20.html" class="hover:text-cyberGreen transition-colors">K-MEH-20</a>
-        <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Maat Data Lake</a>
+        <a href="datalake.html" class="hover:text-cyberGreen transition-colors">Data Lake</a>
         <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
-        <a href="apropos.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5">Qui Sommes-Nous</a>
+        <a href="apropos.html" class="text-cyberGreen font-black border-b-2 border-cyberGreen pb-0.5" aria-current="page">À Propos</a>
       </nav>
 
-      <!-- ACCÈS AU PORTAIL UNIFIÉ -->
-      <div class="flex items-center space-x-3">
-        <button type="button" id="loginBtn" class="btn btn-g !py-2 !px-4 !w-auto !text-xs font-mono font-bold">
-          Connexion Espace 🔓
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button type="button" id="adminShortcutBtn"
+                onclick="if (window.openAdminLoginModal) window.openAdminLoginModal();"
+                aria-label="Connexion Super-Admin"
+                title="Connexion Super-Admin · Email / Mot de passe"
+                class="hidden sm:inline-flex btn btn-au !py-1.5 sm:!py-2 !px-2 sm:!px-3 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          👑 Admin
         </button>
+        <button type="button" id="loginBtn"
+                onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin(); if (window.__eeOnLoginClick) window.__eeOnLoginClick();"
+                aria-label="Connexion à l'espace membre"
+                class="btn btn-g !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          Connexion 🔒
+        </button>
+        <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
+                class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
+                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">☰</button>
       </div>
-
     </div>
+
+    <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
+      <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-2">Accueil</a>
+      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-2">PurKemet B2B (Hôtels)</a>
+      <a href="kmeh20.html" class="block text-slate-300 hover:text-cyberGreen py-2">Architecture K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-2">Maat Data Lake</a>
+      <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-2">Carrières</a>
+      <a href="apropos.html" class="block text-cyberGreen font-bold py-2">À Propos</a>
+      <hr class="border-white/10 my-2">
+      <button type="button" onclick="if (window.openAdminLoginModal) window.openAdminLoginModal(); document.getElementById('mobileNavMenu').classList.add('hidden');" class="block w-full text-left text-kemetGoldBright py-2 font-bold">👑 Connexion Super-Admin</button>
+      <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
+      <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
+    </nav>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="mt-28 space-y-16 mb-20 max-w-7xl mx-auto px-4 sm:px-6 flex-1">
+  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
-    <!-- HERO SECTION INSTITUTIONNELLE -->
-    <section class="pt-4 max-w-4xl space-y-6">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs font-mono font-bold tracking-wider uppercase">
-        <span>🏛️</span>
-        <span>Présentation Institutionnelle — Industrial Illusion SARL</span>
-      </div>
-      <h2 class="font-kemetTitle text-3xl sm:text-5xl font-black text-white leading-tight">
-        Une Startup DeepTech Marocaine au Service de la Valorisation Industrielle
-      </h2>
-      <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-sans font-normal">
-        Basée à Marrakech, <strong class="text-white">Industrial Illusion SARL</strong> est une entreprise marocaine d'ingénierie environnementale. Nous développons des solutions technologiques intégrées destinées à optimiser la collecte, accroître le tonnage de matière valorisée et garantir la conformité réglementaire des grands producteurs B2B.
-      </p>
-    </section>
-
-    <!-- OBJECTIFS INDUSTRIELS & PLAN DE TONNAGE -->
-    <section class="grid lg:grid-cols-12 gap-8 items-stretch">
-      
-      <div class="lg:col-span-7 card g p-6 sm:p-10 rounded-3xl space-y-6">
-        <div class="space-y-1 border-b border-white/10 pb-4">
-          <span class="text-xs font-mono font-bold uppercase tracking-widest text-kemetGoldBright">Stratégie d'Exploitation</span>
-          <h3 class="font-kemetTitle text-2xl font-black text-white">Objectifs de Tonnage & Plan d'Impact</h3>
+    <!-- ═══════════ 1 · HERO MANIFESTE ═══════════ -->
+    <section class="pt-2 sm:pt-4 reveal">
+      <div class="max-w-4xl mx-auto text-center space-y-5">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse"></span>
+          <span>🏛️ Manifeste Institutionnel · Industrial Illusion SARL</span>
         </div>
-        
-        <p class="text-sm text-slate-300 leading-relaxed font-sans">
-          Notre plan d'affaires vise la capture et le traitement systématique des gisements de déchets secs issus des secteurs à forte activité (<strong class="text-white">HoReCa, Cliniques, Écoles, Supermarchés, Commerces & Artisans</strong>) dans la préfecture de Marrakech.
+
+        <h2 class="font-kemetTitle text-3xl sm:text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.02]">
+          Bâtir la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Souveraineté Industrielle et Environnementale</span> du Continent Africain
+        </h2>
+
+        <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed max-w-3xl mx-auto">
+          Éditeur de logiciels industriels et d'infrastructures cyber-physiques souveraines. Notre mission est d'opérer <strong class="text-cyberGreen">l'inversion de destin panafricaine</strong> : prendre ce qui constitue le plus lourd passif environnemental de l'Afrique — la prolifération incontrôlée des déchets et la saturation des décharges à ciel ouvert — et le métamorphoser en son <strong class="text-kemetGoldBright">actif économique, énergétique et social le plus précieux</strong>.
         </p>
 
-        <div class="space-y-3 pt-2 font-mono text-xs">
-          <div class="p-4 bg-black/50 rounded-2xl border border-white/10 space-y-1">
-            <h4 class="font-bold text-cyberGreen text-sm">1. Captation Maximale du Gisement Sec</h4>
-            <p class="text-slate-400 font-sans text-xs">Déploiement de circuits logistiques dédiés au PET, PE-HD, Verre, Carton et Aluminium pour détourner plusieurs milliers de tonnes annuelles des décharges municipales.</p>
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <span class="px-3 py-1 rounded-md bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] font-mono font-bold uppercase tracking-widest">Conforme Loi 28-00</span>
+          <span class="px-3 py-1 rounded-md bg-kemetGold/10 border border-kemetGold/40 text-kemetGoldBright text-[10px] font-mono font-bold uppercase tracking-widest">CNDP n° 09-08</span>
+          <span class="px-3 py-1 rounded-md bg-white/5 border border-white/20 text-white text-[10px] font-mono font-bold uppercase tracking-widest">Préparation dépôt OMPIC</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center pt-3 font-mono">
+          <a href="#piliers" class="btn btn-g text-xs !py-3 px-6">Explorer l'Écosystème →</a>
+          <a href="datalake.html" class="btn btn-au text-xs !py-3 px-6">Accéder au Data Lake</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 2 · 4 PILIERS ═══════════ -->
+    <section id="piliers" class="reveal">
+      <div class="text-center max-w-3xl mx-auto space-y-2 mb-8">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Architecture Industrielle</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Les Quatre Piliers de l'Écosystème</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans">Chaque brique est un composant souverain, développé en interne, protégé par dépôt OMPIC.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="pillar-card g tilt-card" data-pillar="maat" role="button" tabindex="0" onmouseenter="window.pillarBeep('maat')" onclick="window.openPillar('maat')">
+          <div class="holo-shine"></div>
+          <div class="text-3xl mb-2">⚙️</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white">Maat OS</h4>
+          <p class="text-[11px] font-mono text-cyberGreen mb-2 uppercase tracking-widest">Cyber-Physical OS</p>
+          <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Le système d'exploitation unificateur qui orchestre la collecte, la pesée, la logistique et la notarisation en un seul flux cyber-physique.</p>
+        </div>
+
+        <div class="pillar-card g tilt-card" data-pillar="purkemet" role="button" tabindex="0" onmouseenter="window.pillarBeep('purkemet')" onclick="window.openPillar('purkemet')">
+          <div class="holo-shine"></div>
+          <div class="text-3xl mb-2">♻️</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white">PurKemet B2B</h4>
+          <p class="text-[11px] font-mono text-cyberGreen mb-2 uppercase tracking-widest">Captation à 0 MAD</p>
+          <p class="text-[11px] text-slate-300 font-sans leading-relaxed">La logistique de captation décentralisée à coût zéro. Les hôtels, riads et restaurants bénéficient d'un enlèvement professionnel gratuit conforme Loi 28-00.</p>
+        </div>
+
+        <div class="pillar-card au tilt-card" data-pillar="kmeh20" role="button" tabindex="0" onmouseenter="window.pillarBeep('kmeh20')" onclick="window.openPillar('kmeh20')">
+          <div class="holo-shine"></div>
+          <div class="text-3xl mb-2">🏗️</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white">K-MEH-20</h4>
+          <p class="text-[11px] font-mono text-kemetGoldBright mb-2 uppercase tracking-widest">Hub Modulaire</p>
+          <p class="text-[11px] text-slate-300 font-sans leading-relaxed">L'infrastructure matérielle modulaire usinée à Kénitra Atlantic Free Zone. Pyramide tronquée 56m × 56m, déployable en 90 jours sur tout terrain africain.</p>
+        </div>
+
+        <div class="pillar-card w tilt-card" data-pillar="datalake" role="button" tabindex="0" onmouseenter="window.pillarBeep('datalake')" onclick="window.openPillar('datalake')">
+          <div class="holo-shine"></div>
+          <div class="text-3xl mb-2">🔐</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white">Maat Data Lake</h4>
+          <p class="text-[11px] font-mono text-white mb-2 uppercase tracking-widest">Registre Notarié</p>
+          <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Le registre de vérité blockchain. Hyperledger Fabric v2.5 + ancrage quotidien Bitcoin via OpenTimestamps. Chaque kilogramme est opposable légalement.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 3 · VISION PANAFRICAINE + ROADMAP ═══════════ -->
+    <section class="reveal">
+      <div class="text-center max-w-3xl mx-auto space-y-2 mb-8">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Vision 2026 – 2050</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Le Modèle Marocain pour l'Afrique et le Monde</h3>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans">Un modèle conçu à Marrakech, industrialisé à Kénitra, destiné à s'exporter via les corridors logistiques africains.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-4">
+        <!-- CARTE AFRIQUE -->
+        <div class="lg:col-span-7 glass-panel p-4 sm:p-6 space-y-3 relative overflow-hidden">
+          <div class="scanner-beam" aria-hidden="true"></div>
+          <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest">Corridors Logistiques Panafricains</span>
+            <span class="text-[10px] font-mono text-slate-500">6 nœuds · 2026 → 2050</span>
           </div>
 
-          <div class="p-4 bg-black/50 rounded-2xl border border-white/10 space-y-1">
-            <h4 class="font-bold text-kemetGoldBright text-sm">2. Conformité et Traçabilité (Loi 28-00)</h4>
-            <p class="text-slate-400 font-sans text-xs">Sécurisation légale des contrats d'enlèvement de la fraction recyclable et notarisation systématique des volumes sur Maat Data Lake.</p>
+          <svg class="africa-map" viewBox="0 0 1000 1000" role="img" aria-label="Carte de l'Afrique avec les hubs logistiques Industrial Illusion">
+            <defs>
+              <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="nodeGlowGold" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Continent Afrique (forme stylisée) -->
+            <path class="africa-land" d="M 210,180
+              L 380,140
+              L 520,150
+              L 620,130
+              L 720,150
+              L 780,200
+              L 810,280
+              L 800,360
+              L 850,420
+              L 820,500
+              L 770,580
+              L 700,680
+              L 620,760
+              L 560,820
+              L 520,880
+              L 480,860
+              L 460,780
+              L 420,720
+              L 380,680
+              L 340,660
+              L 300,680
+              L 260,700
+              L 230,660
+              L 210,600
+              L 190,520
+              L 170,440
+              L 150,360
+              L 160,280
+              L 180,220
+              Z" />
+
+            <!-- Corridors (lignes pulsantes) -->
+            <path class="africa-link" d="M 250,220 Q 220,320 170,400" />
+            <path class="africa-link" d="M 250,220 Q 300,350 270,520" />
+            <path class="africa-link gold" d="M 250,220 Q 450,180 680,220" />
+            <path class="africa-link" d="M 250,220 Q 500,400 700,600" />
+            <path class="africa-link" d="M 170,400 Q 220,470 270,520" />
+            <path class="africa-link gold" d="M 270,520 Q 500,540 700,600" />
+
+            <!-- Nœuds Maroc -->
+            <circle class="africa-node gold" cx="250" cy="220" r="6" onclick="window.cityBeep('marrakech')">
+              <title>Marrakech — Naissance (2026)</title>
+            </circle>
+            <circle cx="250" cy="220" r="16" fill="url(#nodeGlowGold)" pointer-events="none">
+              <animate attributeName="opacity" values="1;0.3;1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <text class="africa-label gold" x="265" y="215">Marrakech</text>
+
+            <circle class="africa-node gold" cx="245" cy="200" r="4" onclick="window.cityBeep('kenitra')">
+              <title>Kénitra — Usinage K-MEH-20</title>
+            </circle>
+            <text class="africa-label gold" x="195" y="195" text-anchor="end">Kénitra</text>
+
+            <!-- Dakar -->
+            <circle class="africa-node" cx="170" cy="400" r="5" onclick="window.cityBeep('dakar')">
+              <title>Dakar — Corridor Ouest (2035)</title>
+            </circle>
+            <text class="africa-label" x="130" y="395">Dakar</text>
+
+            <!-- Abidjan -->
+            <circle class="africa-node" cx="270" cy="520" r="5" onclick="window.cityBeep('abidjan')">
+              <title>Abidjan — Corridor Ouest (2035)</title>
+            </circle>
+            <text class="africa-label" x="285" y="525">Abidjan</text>
+
+            <!-- Nairobi -->
+            <circle class="africa-node" cx="700" cy="600" r="5" onclick="window.cityBeep('nairobi')">
+              <title>Nairobi — Corridor Est (2040+)</title>
+            </circle>
+            <text class="africa-label" x="715" y="605">Nairobi</text>
+
+            <!-- Le Caire -->
+            <circle class="africa-node" cx="680" cy="220" r="5" onclick="window.cityBeep('caire')">
+              <title>Le Caire — Corridor Nord (2038+)</title>
+            </circle>
+            <text class="africa-label" x="695" y="225">Le Caire</text>
+          </svg>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2 text-[10px] font-mono text-slate-400">
+            <div><span class="text-kemetGoldBright font-bold">◉ Marrakech</span> · Hub pilote 2026</div>
+            <div><span class="text-kemetGoldBright font-bold">◉ Kénitra</span> · Usinage K-MEH-20</div>
+            <div><span class="text-cyberGreen font-bold">◉ Dakar</span> · Corridor Ouest 2035</div>
+            <div><span class="text-cyberGreen font-bold">◉ Abidjan</span> · Corridor Ouest 2035</div>
+            <div><span class="text-cyberGreen font-bold">◉ Nairobi</span> · Corridor Est 2040+</div>
+            <div><span class="text-cyberGreen font-bold">◉ Le Caire</span> · Corridor Nord 2038+</div>
+          </div>
+        </div>
+
+        <!-- TIMELINE -->
+        <div class="lg:col-span-5 glass-panel g p-4 sm:p-6 space-y-3">
+          <div class="border-b border-white/10 pb-2">
+            <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest">Roadmap Stratégique</span>
+            <h4 class="font-kemetTitle text-lg font-black text-white mt-1">2026 → 2050</h4>
           </div>
 
-          <div class="p-4 bg-black/50 rounded-2xl border border-white/10 space-y-1">
-            <h4 class="font-bold text-white text-sm">3. Infrastructure Modulaire Unifiée</h4>
-            <p class="text-slate-400 font-sans text-xs">Mise en œuvre du hub K-MEH-20 et du pôle manufacturier de Kénitra pour assurer le conditionnement et la transformation locale des matières secondaires.</p>
+          <div class="timeline-track" role="tablist" aria-label="Jalons de la roadmap">
+            <button type="button" class="timeline-step is-active" data-year="2026" role="tab" onclick="window.selectYear('2026', this)">
+              <span class="year-badge">2026</span>
+              Pilote Marrakech
+            </button>
+            <button type="button" class="timeline-step" data-year="2028" role="tab" onclick="window.selectYear('2028', this)">
+              <span class="year-badge">2028</span>
+              Hubs Royaume
+            </button>
+            <button type="button" class="timeline-step" data-year="2035" role="tab" onclick="window.selectYear('2035', this)">
+              <span class="year-badge">2035</span>
+              Corridor Ouest
+            </button>
+            <button type="button" class="timeline-step" data-year="2050" role="tab" onclick="window.selectYear('2050', this)">
+              <span class="year-badge">2050</span>
+              Continental
+            </button>
+          </div>
+
+          <div id="yearDetail" class="p-4 bg-black/60 rounded-xl border border-white/10 min-h-[120px] text-xs text-slate-300 font-sans leading-relaxed">
+            <div class="text-cyberGreen font-mono font-bold text-sm mb-1">2026 · Pilote Marrakech</div>
+            <p>Déploiement du premier hub K-MEH-20 à Marrakech. Captation initiale des gisements HoReCa (hôtels, riads, restaurants). Lancement de Maat OS et du registre Data Lake. Premiers 500 contrats PurKemet signés.</p>
+            <div class="mt-2 font-mono text-[10px] text-kemetGoldBright">Objectif : 10 000 t/an · 200 salariés</div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- CARD DIRECTION GÉNÉRALE -->
-      <div class="lg:col-span-5 card au p-6 sm:p-10 rounded-3xl flex flex-col justify-between space-y-6">
-        <div class="space-y-4">
-          <span class="text-xs font-mono text-kemetGoldBright uppercase tracking-widest font-bold block">Direction Générale</span>
-          <h3 class="font-kemetTitle text-2xl font-black text-white">Roberto Passarella</h3>
-          <p class="text-xs text-cyberGreen font-mono">Fondateur & Directeur Général</p>
-          <hr class="border-white/10">
-          <blockquote class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans italic border-l-2 border-kemetGold pl-4">
-            « Notre priorité est d'apporter une réponse rigoureuse, mesurable et pérenne aux défis environnementaux du Maroc, en associant innovation logistique et modèle social collaboratif. »
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 4 · COMPTEURS MÉTRIQUES ═══════════ -->
+    <section class="reveal">
+      <div class="text-center max-w-3xl mx-auto space-y-2 mb-6">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Horizon 2050</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Les Chiffres de la Souveraineté</h3>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div class="metric-card">
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400">Tonnage Valor isé / An</span>
+          <div class="metric-card__value" data-target="2000000" data-suffix=" t">0</div>
+          <span class="text-[10px] font-mono text-slate-500 block mt-1">Objectif 2050</span>
+        </div>
+        <div class="metric-card">
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400">CO₂e Évité</span>
+          <div class="metric-card__value" data-target="3500000" data-suffix=" t">0</div>
+          <span class="text-[10px] font-mono text-slate-500 block mt-1">Émissions cumulées évitées</span>
+        </div>
+        <div class="metric-card au">
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400">Hubs K-MEH-20</span>
+          <div class="metric-card__value" data-target="100" data-suffix="+">0</div>
+          <span class="text-[10px] font-mono text-slate-500 block mt-1">Déployés sur le continent</span>
+        </div>
+        <div class="metric-card au">
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400">Brevets en Préparation</span>
+          <div class="metric-card__value" data-target="12" data-suffix="">0</div>
+          <span class="text-[10px] font-mono text-slate-500 block mt-1">Dépôt OMPIC en cours</span>
+        </div>
+        <div class="metric-card au">
+          <span class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400">Salariés Copropriétaires</span>
+          <div class="metric-card__value" data-target="5000" data-suffix="+">0</div>
+          <span class="text-[10px] font-mono text-slate-500 block mt-1">Actions de Classe B</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 5 · GOUVERNANCE SOCIALE ═══════════ -->
+    <section class="reveal">
+      <div class="glass-panel p-5 sm:p-8 space-y-6">
+        <div class="max-w-3xl space-y-2">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">RSE · Socialisme Privé</span>
+          <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Gouvernance Sociale &amp; Paradigme des Actions de Classe B</h3>
+          <p class="text-sm text-slate-300 font-sans leading-relaxed">
+            Industrial Illusion refuse le modèle extractif traditionnel. Nous construisons un capitalisme d'infrastructure où les travailleurs de terrain sont <strong class="text-white">copropriétaires de l'outil de production</strong> qu'ils opèrent quotidiennement.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3">
+            <div class="text-3xl">🛡️</div>
+            <h4 class="text-white font-bold text-base">Intégration des Mikhala</h4>
+            <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Formalisation en CDI avec couverture CNSS</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>EPI certifiés SIL-3 fournis et renouvelés</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Montre biométrique Kemet Pulse · arrêt d'urgence SIL-3</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Mutuelle santé famille prise en charge</span></li>
+            </ul>
+          </div>
+
+          <div class="p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-3">
+            <div class="text-3xl">💎</div>
+            <h4 class="text-white font-bold text-base">Actions de Classe B</h4>
+            <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Distribution statutaire de <strong class="text-white">20 à 30 %</strong> des dividendes sociétaux d'infrastructure</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Attribution progressive selon Échelon Maât (Bronze → Kemet Elite)</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Voix consultative aux assemblées d'infrastructure</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Statut de copropriétaire inaliénable après 35 tonnes</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-4 bg-cyberGreen/5 rounded-xl border border-cyberGreen/30 text-xs text-slate-300 font-sans">
+          <strong class="text-cyberGreen font-mono">Vision 2050 :</strong> 5 000+ salariés copropriétaires, chacun bénéficiaire direct de la valeur créée par son travail. Une innovation de gouvernance sans équivalent sur le continent africain.
+        </div>
+      </div>
+    </section>
+
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 6 · LEADERSHIP ═══════════ -->
+    <section class="reveal">
+      <div class="grid lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-7 glass-panel au p-5 sm:p-8 space-y-4">
+          <div class="space-y-2">
+            <span class="text-xs font-mono font-bold uppercase tracking-widest text-kemetGoldBright">Direction Générale</span>
+            <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Roberto Passarella</h3>
+            <p class="text-xs font-mono text-cyberGreen">Fondateur &amp; Directeur Général</p>
+          </div>
+
+          <blockquote class="text-sm text-slate-300 font-sans italic border-l-2 border-kemetGold pl-4 leading-relaxed">
+            « Notre priorité n'est pas de gérer des déchets. Notre priorité est de <strong class="text-white not-italic">reconstruire un tissu industriel souverain</strong> qui transforme un passif continental en actif stratégique — et qui redistribue cette valeur à ceux qui la produisent sur le terrain. »
           </blockquote>
+
+          <div class="p-4 bg-black/60 rounded-xl border border-white/10 space-y-2 font-mono text-xs">
+            <div class="text-slate-400 text-[10px] uppercase tracking-wider">Serment d'intégrité industrielle :</div>
+            <p class="text-slate-300 font-sans text-[11px] leading-relaxed">
+              Aucune décision d'ingénierie, aucune clause contractuelle, aucune allocation de dividendes ne sera jamais dissociée de la sécurité physique des opérateurs et de la dignité des travailleurs de terrain.
+            </p>
+          </div>
+
+          <div class="p-3 bg-black/60 rounded-xl border border-white/10 font-mono text-xs space-y-1">
+            <div class="text-slate-400 text-[10px] uppercase tracking-wider">Siège opérationnel :</div>
+            <div class="text-white font-bold">Préfecture de Marrakech · Région Marrakech-Safi</div>
+            <div class="text-cyberGreen font-bold break-all">r.passarella@industrialillusion.ma</div>
+          </div>
         </div>
 
-        <div class="p-4 bg-black/70 rounded-2xl border border-white/10 text-xs font-mono space-y-2">
-          <div class="text-slate-400 text-[10px] uppercase tracking-wider">Siège Opérationnel :</div>
-          <div class="text-white font-bold">Préfecture de Marrakech, Région Marrakech-Safi</div>
-          <div class="text-cyberGreen pt-2 font-bold break-all">r.passarella@industrialillusion.ma</div>
+        <div class="lg:col-span-5 glass-panel g p-5 sm:p-8 space-y-4">
+          <div class="text-3xl">📜</div>
+          <h4 class="font-kemetTitle text-xl font-black text-white">Sécurité Juridique &amp; Rétention Propriétaire</h4>
+          <p class="text-xs text-slate-300 font-sans leading-relaxed">
+            Plateforme propriétaire avancée, en cours de développement et de préparation au dépôt auprès de l'<strong class="text-white">OMPIC</strong>. Les algorithmes de réconciliation P1/P2, les modèles spectraux NIR et les pipelines de notarisation font l'objet d'une rétention légale stricte.
+          </p>
+          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-[10px] space-y-1">
+            <div class="text-kemetGoldBright font-bold">Accès Data Room sous NDA :</div>
+            <div class="text-slate-300">Dossiers financiers Series A et documentation technique</div>
+          </div>
+          <a href="datalake.html" class="btn btn-au w-full text-xs !py-2.5">
+            Demander l'Accréditation Data Room →
+          </a>
         </div>
       </div>
-
     </section>
 
-    <!-- ENGAGEMENT SOCIAL & GOUVERNANCE DES ACTIONS DE CLASSE B -->
-    <section class="card p-6 sm:p-12 rounded-3xl space-y-8 border border-white/15">
-      <div class="max-w-3xl space-y-2">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">RSE & Modèle Social</span>
-        <h3 class="font-kemetTitle text-2xl sm:text-3xl font-black text-white">Gouvernance Sociale & Copropriété</h3>
-        <p class="text-sm text-slate-300 leading-relaxed font-sans">
-          Industrial Illusion s'engage à structurer la professionnalisation des acteurs du secteur tout en créant une valeur durable partagée au sein de la structure.
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- ═══════════ 7 · CTA EXÉCUTIF ═══════════ -->
+    <section class="glass-panel g p-5 sm:p-10 text-center space-y-5 reveal">
+      <div class="max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Aller Plus Loin</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">
+          Construire Ensemble la <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Souveraineté Industrielle Africaine</span>
+        </h3>
+        <p class="text-sm text-slate-300 font-sans max-w-2xl mx-auto">
+          Investisseurs institutionnels, partenaires industriels, institutions publiques : rejoignez l'écosystème Industrial Illusion.
         </p>
       </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="p-6 bg-black/50 rounded-2xl border border-white/10 space-y-3 font-mono">
-          <div class="text-2xl">🛡️</div>
-          <h4 class="font-bold text-white text-base">Intégration des Chiffonniers (Mikhala)</h4>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
-            Programme d'intégration formelle des Chiffonniers (Mikhala) garantissant des équipements de protection individuelle (EPI), des formations aux normes de sécurité, un encadrement digne et l'accès aux avantages sociaux.
-          </p>
-        </div>
-
-        <div class="p-6 bg-black/50 rounded-2xl border border-kemetGold/30 space-y-3 font-mono">
-          <div class="text-2xl">💎</div>
-          <h4 class="font-bold text-kemetGoldBright text-base">Paradigme des Actions de Classe B</h4>
-          <p class="text-xs text-slate-400 font-sans leading-relaxed">
-            La société se fonde sur le paradigme des Actions de Classe B, réglementées afin de rendre le salarié à durée indéterminée (CDI) copropriétaire de l'infrastructure dont il fait partie, lui donnant accès à un système complet de welfare, d'avantages et de dividendes.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ANCRAGE RÉGLEMENTAIRE & SOUVERAINETÉ -->
-    <section class="border-t border-white/10 pt-10 grid md:grid-cols-2 gap-6 text-center font-mono">
-      <div class="card p-6 rounded-2xl border border-white/10 space-y-1">
-        <span class="text-xs text-slate-400 font-bold uppercase block">Ancrage Territorial</span>
-        <span class="text-sm font-bold text-white">Région Marrakech-Safi, Royaume du Maroc</span>
-      </div>
-      <div class="card p-6 rounded-2xl border border-cyberGreen/30 space-y-1">
-        <span class="text-xs text-slate-400 font-bold uppercase block">Cadre Légal & Souveraineté</span>
-        <span class="text-sm font-bold text-cyberGreen">Conforme Loi 28-00 & Loi CNDP n° 09-08</span>
+      <div class="flex flex-col sm:flex-row justify-center gap-3 font-mono">
+        <a href="purkemet.html" class="btn btn-g text-xs !py-3 px-6">PurKemet B2B →</a>
+        <a href="kmeh20.html" class="btn btn-au text-xs !py-3 px-6">K-MEH-20 →</a>
+        <a href="datalake.html" class="btn btn-o text-xs !py-3 px-6">Maat Data Lake →</a>
+        <a href="carrieres.html" class="btn btn-o text-xs !py-3 px-6">Carrières →</a>
       </div>
     </section>
 
   </main>
 
-  <!-- FOOTER INSTITUTIONNEL UNIFIÉ -->
-  <footer class="border-t border-white/10 bg-obsidianCard/90 py-8">
-    <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-400 space-y-2 font-mono">
-      <p>© 2026 Industrial Illusion SARL — Deep Tech Systems. Tous droits réservés.</p>
-      <p class="text-[10px] text-slate-500">Document Officiel d'Information Institutionnelle • Marrakech, Maroc</p>
+  <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
+      <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
+      <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi 28-00 &amp; Loi CNDP n° 09-08</p>
+      <p class="text-[9px] sm:text-[10px] text-slate-600">K-MEH-20 · Maat OS · PurKemet B2B · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
     </div>
   </footer>
 
+  <!-- MODAL CONNEXION -->
+  <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeLoginModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+      <div class="border-b border-white/10 pb-2">
+        <span class="text-[10px] text-kemetGoldBright font-bold uppercase tracking-widest">Espace Membre</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Connexion à l'Écosystème</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Choisissez votre espace d'accès.</p>
+      </div>
+      <div class="space-y-2.5">
+        <a href="pwa.html" class="btn btn-g w-full !py-3 font-bold block text-center">📱 Workstation Opérateur (PWA)</a>
+        <a href="dashboard.html" class="btn btn-au w-full !py-3 font-bold block text-center">🏨 Espace Client ESG B2B</a>
+        <a href="admin.html" class="btn btn-o w-full !py-3 font-bold block text-center">👑 Control Tower Direction</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminLoginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion Super-Admin">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeAdminLoginModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+      <div class="border-b border-white/10 pb-2">
+        <span class="text-[10px] text-kemetGoldBright font-bold uppercase tracking-widest">Control Tower · Direction</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Connexion Super-Admin</h3>
+      </div>
+      <form id="adminLoginForm" onsubmit="window.handleAdminLogin(event)" class="space-y-2.5" novalidate>
+        <div>
+          <label for="adm_email" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Email *</label>
+          <input id="adm_email" type="email" name="email" required autocomplete="username" placeholder="admin@industrialillusion.ma" class="inp">
+        </div>
+        <div>
+          <label for="adm_password" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mot de passe *</label>
+          <input id="adm_password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••••••" class="inp">
+        </div>
+        <button type="submit" id="btnAdminLoginSubmit" class="btn btn-g w-full !py-2.5 font-bold mt-1">Déverrouiller 🔓</button>
+      </form>
+    </div>
+  </div>
+
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- Scripts du Kernel Maat OS & Auth Router -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
+  <script src="assets/space-canvas.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ═══════════════ YEAR ═══════════════ */
+    (function () {
+      var y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+
+    /* ═══════════════ TOAST ═══════════════ */
+    function toast(text, kind) {
+      if (window.Maat && typeof window.Maat.toast === 'function') {
+        try { return window.Maat.toast(text, kind); } catch (e) {}
+      }
+      var d = document.createElement('div');
+      d.setAttribute('role', 'status');
+      d.style.cssText =
+        'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);' +
+        'background:#0A0D10;color:' +
+        (kind === 'err' ? '#f87171' : kind === 'warn' ? '#E6CA86' : '#00FFA3') +
+        ';padding:.7rem 1.2rem;border:1px solid currentColor;border-radius:.6rem;' +
+        'font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
+      d.textContent = text;
+      document.body.appendChild(d);
+      setTimeout(function () { d.remove(); }, 4200);
+    }
+
+    /* ═══════════════ SUPABASE CLIENT ═══════════════ */
+    function getSB() {
+      try {
+        if (window.Maat) {
+          if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
+          return window.Maat.sb || null;
+        }
+      } catch (e) {}
+      return null;
+    }
+    window.ensureInit = function () { getSB(); };
+
+    /* ═══════════════ MODAL HELPERS ═══════════════ */
+    function openModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('hidden'); m.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      var fi = m.querySelector('input, select, textarea');
+      if (fi) setTimeout(function () { fi.focus(); }, 120);
+    }
+    function closeModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('hidden'); m.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    window.openLoginModal = function () { openModal('loginModal'); };
+    window.closeLoginModal = function () { closeModal('loginModal'); };
+    window.openAdminLoginModal = function () { openModal('adminLoginModal'); };
+    window.closeAdminLoginModal = function () { closeModal('adminLoginModal'); };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        window.closeLoginModal();
+        window.closeAdminLoginModal();
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.id === 'loginModal') window.closeLoginModal();
+      if (e.target && e.target.id === 'adminLoginModal') window.closeAdminLoginModal();
+    });
+
+    /* ═══════════════ ADMIN HELPERS ═══════════════ */
+    function isAdminUser(user, profileRow) {
+      if (!user) return false;
+      var appMeta = user.app_metadata || {};
+      var userMeta = user.user_metadata || {};
+      var role = (appMeta.role || userMeta.role || '').toLowerCase();
+      var email = (user.email || '').toLowerCase();
+      if (profileRow && profileRow.role === 'admin' && profileRow.status === 'ACTIVE') return true;
+      if (role === 'admin' || role === 'direction' || role === 'super_admin' || role === 'control_tower') return true;
+      if (appMeta.is_admin === true) return true;
+      if (email === 'admin@industrialillusion.ma') return true;
+      if (email === 'r.passarella@industrialillusion.ma') return true;
+      if (email.indexOf('admin@') === 0) return true;
+      return false;
+    }
+
+    window.handleAdminLogin = async function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('btnAdminLoginSubmit');
+      var original = btn.textContent;
+      var email = String(document.getElementById('adm_email').value || '').trim().toLowerCase();
+      var password = String(document.getElementById('adm_password').value || '');
+      if (!email || !password) return toast('Email et mot de passe requis.', 'warn');
+      var sb = getSB();
+      if (!sb) return toast('Service Supabase indisponible.', 'err');
+      btn.disabled = true;
+      btn.textContent = 'Authentification…';
+      try {
+        var res = await sb.auth.signInWithPassword({ email: email, password: password });
+        if (res.error || !res.data || !res.data.user) {
+          btn.disabled = false; btn.textContent = original;
+          return toast('Identifiants invalides.', 'err');
+        }
+        var user = res.data.user;
+        var profileRow = null;
+        try {
+          var p = await sb.from('profiles').select('role,status').eq('id', user.id).maybeSingle();
+          if (!p.error && p.data) profileRow = p.data;
+        } catch (pe) {}
+        if (!isAdminUser(user, profileRow)) {
+          await sb.auth.signOut();
+          btn.disabled = false; btn.textContent = original;
+          return toast('Ce compte n\'a pas les privilèges Super-Admin.', 'err');
+        }
+        window.closeAdminLoginModal();
+        toast('Session Super-Admin active. Redirection…', 'ok');
+        setTimeout(function () { window.location.href = 'admin.html'; }, 1000);
+      } catch (x) {
+        btn.disabled = false; btn.textContent = original;
+        toast('Erreur de connexion.', 'err');
+      }
+    };
+
+    (function () {
+      window.openUniversalLogin = function () {
+        document.body.style.overflow = '';
+        window.openLoginModal();
+      };
+    })();
+
+    /* ═══════════════ WEB AUDIO BEEP ═══════════════ */
+    function beep(freq, duration) {
+      try {
+        if (!window.__audioCtx) {
+          window.__audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        var ctx = window.__audioCtx;
+        if (ctx.state === 'suspended') ctx.resume();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.035, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration / 1000);
+      } catch (e) {}
+    }
+
+    var PILLAR_FREQ = {
+      maat: 440, purkemet: 523, kmeh20: 659, datalake: 784
+    };
+    window.pillarBeep = function (key) { beep(PILLAR_FREQ[key] || 440, 80); };
+
+    var CITY_FREQ = {
+      marrakech: 880, kenitra: 830, dakar: 660, abidjan: 590, nairobi: 740, caire: 700
+    };
+    window.cityBeep = function (key) { beep(CITY_FREQ[key] || 660, 100); };
+
+    /* ═══════════════ PILLAR CLICK ═══════════════ */
+    var PILLAR_LINKS = {
+      maat: 'purkemet.html',
+      purkemet: 'purkemet.html',
+      kmeh20: 'kmeh20.html',
+      datalake: 'datalake.html'
+    };
+    window.openPillar = function (key) {
+      beep(PILLAR_FREQ[key] || 440, 120);
+      var url = PILLAR_LINKS[key];
+      if (url) setTimeout(function () { window.location.href = url; }, 250);
+    };
+
+    /* ═══════════════ TIMELINE ═══════════════ */
+    var YEAR_DATA = {
+      '2026': {
+        title: 'Pilote Marrakech',
+        body: 'Déploiement du premier hub K-MEH-20 à Marrakech. Captation initiale des gisements HoReCa (hôtels, riads, restaurants). Lancement de Maat OS et du registre Data Lake. Premiers 500 contrats PurKemet signés.',
+        metric: '10 000 t/an · 200 salariés'
+      },
+      '2028': {
+        title: 'Hubs Régionaux Royaume',
+        body: 'Maillage territorial du Royaume du Maroc : Casablanca, Rabat, Tanger, Agadir. Usinage en série des modules K-MEH-20 à Kénitra Atlantic Free Zone. 20 hubs opérationnels.',
+        metric: '150 000 t/an · 1 200 salariés'
+      },
+      '2035': {
+        title: 'Corridor Ouest-Africain',
+        body: 'Expansion vers le Sénégal (Dakar) et la Côte d\'Ivoire (Abidjan). Transfert technologique et formation des équipes locales. Ouverture des bureaux régionaux.',
+        metric: '500 000 t/an · 2 500 salariés'
+      },
+      '2050': {
+        title: 'Continental · Cap 100 Hubs',
+        body: '100+ hubs K-MEH-20 déployés sur le continent africain. 2 millions de tonnes valorisées annuellement. 5 000+ salariés copropriétaires via Actions de Classe B. Le modèle marocain devient référence mondiale.',
+        metric: '2 000 000 t/an · 5 000+ salariés'
+      }
+    };
+
+    window.selectYear = function (year, btn) {
+      document.querySelectorAll('.timeline-step').forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.year === year);
+      });
+      var data = YEAR_DATA[year];
+      var box = document.getElementById('yearDetail');
+      if (!data || !box) return;
+      box.innerHTML =
+        '<div class="text-cyberGreen font-mono font-bold text-sm mb-1">' + year + ' · ' + data.title + '</div>' +
+        '<p>' + data.body + '</p>' +
+        '<div class="mt-2 font-mono text-[10px] text-kemetGoldBright">' + data.metric + '</div>';
+      beep(660 + (parseInt(year, 10) - 2026) * 15, 90);
+    };
+
+    /* ═══════════════ METRICS COUNTERS ═══════════════ */
+    function animateCounter(el, target, duration) {
+      var start = performance.now();
+      var suffix = el.dataset.suffix || '';
+      function step(now) {
+        var elapsed = now - start;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var value = Math.floor(target * eased);
+        el.textContent = value.toLocaleString('fr-FR') + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    var countersStarted = false;
+    function startCounters() {
+      if (countersStarted) return;
+      countersStarted = true;
+      document.querySelectorAll('.metric-card__value').forEach(function (el) {
+        var target = parseInt(el.dataset.target, 10);
+        if (!isNaN(target)) animateCounter(el, target, 2200);
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var metricsSection = document.querySelector('.metric-card');
+      if (metricsSection) {
+        var counterObs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              startCounters();
+              counterObs.disconnect();
+            }
+          });
+        }, { threshold: 0.3 });
+        counterObs.observe(metricsSection);
+      }
+    } else {
+      startCounters();
+    }
+
+    /* ═══════════════ TILT 3D ═══════════════ */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
+      document.querySelectorAll('.tilt-card').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width;
+          var y = (e.clientY - r.top) / r.height;
+          card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * 6) + 'deg) rotateY(' + ((x - 0.5) * -6) + 'deg) translateZ(6px)';
+        });
+        card.addEventListener('mouseleave', function () {
+          card.style.transform = '';
+        });
+      });
+    }
+
+    /* ═══════════════ SCROLL PROGRESS ═══════════════ */
+    window.addEventListener('scroll', function () {
+      var bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
+    }, { passive: true });
+
+    /* ═══════════════ REVEAL ═══════════════ */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    } else {
+      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
+    }
+
+    /* ═══════════════ MOBILE NAV ═══════════════ */
+    window.toggleMobileNav = function () {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || !btn) return;
+      var opening = nav.classList.contains('hidden');
+      nav.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    };
+    document.addEventListener('click', function (e) {
+      var nav = document.getElementById('mobileNavMenu');
+      var btn = document.getElementById('menuBtn');
+      if (!nav || nav.classList.contains('hidden')) return;
+      if (btn && btn.contains(e.target)) return;
+      if (nav.contains(e.target)) {
+        if (e.target.tagName === 'A') nav.classList.add('hidden');
+        return;
+      }
+      nav.classList.add('hidden');
+    });
+
+    /* ═══════════════ EASTER EGGS ═══════════════ */
+    /* Konami → onde dorée + turbo */
+    (function () {
+      var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      var idx = 0;
+      document.addEventListener('keydown', function (e) {
+        var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (k === konamiCode[idx]) {
+          idx++;
+          if (idx === konamiCode.length) {
+            idx = 0;
+            triggerGoldRain();
+            document.body.classList.add('ee-turbo');
+            showEeToast('🇲🇦 SOUVERAINETÉ MAROCAINE · ONDE DORÉE ACTIVÉE');
+            setTimeout(function () { document.body.classList.remove('ee-turbo'); }, 10000);
+          }
+        } else {
+          idx = (k === konamiCode[0]) ? 1 : 0;
+        }
+      });
+    })();
+
+    function triggerGoldRain() {
+      var container = document.createElement('div');
+      container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9996;overflow:hidden;';
+      document.body.appendChild(container);
+      var glyphs = ['✦','✧','★','✶','✷','◈','◆','𓂀','𓆣'];
+      for (var i = 0; i < 70; i++) {
+        var drop = document.createElement('div');
+        drop.className = 'gold-drop';
+        drop.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+        drop.style.left = (Math.random() * 100) + '%';
+        drop.style.top = '-30px';
+        drop.style.fontSize = (12 + Math.random() * 20) + 'px';
+        drop.style.opacity = (0.5 + Math.random() * 0.5);
+        drop.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+        drop.style.animationDelay = (Math.random() * 1.5) + 's';
+        container.appendChild(drop);
+      }
+      setTimeout(function () { container.remove(); }, 6500);
+    }
+
+    /* Double-clic logo → charte éthique secrète */
+    (function () {
+      var logo = document.getElementById('logoLink');
+      if (!logo) return;
+      logo.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        triggerGoldRain();
+        showEeToast('📜 CHARTE ÉTHIQUE · SCEAU D\'INTÉGRITÉ INDUSTRIELLE');
+        setTimeout(function () {
+          toast('Serment d\'intégrité : aucune décision ne sera jamais dissociée de la sécurité des opérateurs.', 'ok');
+        }, 600);
+      });
+    })();
+
+    /* 5 clics rapides sur loginBtn → easter egg */
+    (function () {
+      var loginBtn = document.getElementById('loginBtn');
+      if (!loginBtn) return;
+      var clicks = 0, timer = null;
+      window.__eeOnLoginClick = function () {
+        clicks++;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () {
+          if (clicks >= 5) {
+            showEeToast('👁️ SCEAU DE MAÂT · VERITAS APERTA');
+            triggerGoldRain();
+          }
+          clicks = 0;
+        }, 2000);
+      };
+    })();
+
+    function showEeToast(text) {
+      var existing = document.querySelector('.ee-toast');
+      if (existing) existing.remove();
+      var t = document.createElement('div');
+      t.className = 'ee-toast';
+      t.textContent = text;
+      document.body.appendChild(t);
+      setTimeout(function () {
+        t.classList.add('ee-toast-out');
+        setTimeout(function () { t.remove(); }, 400);
+      }, 2400);
+    }
+    window.showEeToast = showEeToast;
+
+    /* ═══════════════ SERVICE WORKER ═══════════════ */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      });
+    }
+
+    /* ═══════════════ BOOTSTRAP ═══════════════ */
+    function bootstrap() {
+      try { getSB(); } catch (e) {}
+      /* Année par défaut timeline */
+      var initial = document.querySelector('.timeline-step.is-active');
+      if (initial) {
+        /* déjà rendu par défaut dans le HTML */
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(bootstrap, 300); });
+    } else {
+      setTimeout(bootstrap, 300);
+    }
+
+    try {
+      console.info('%c[APROPOS] Manifeste institutionnel ready · v2.0 · space-canvas · africa-map · roadmap', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
+    } catch (e) {}
+
+  })();
+  </script>
 </body>
 </html>
