@@ -1,13 +1,12 @@
 /* ============================================================
-   MAAT OS v8.1 — Control Tower (Direction Générale)
+   MAAT OS v8.2 — Control Tower (Direction Générale)
    Industrial Illusion SARL · Projet PurKemet Phase 1
    ------------------------------------------------------------
-   Architecture consolidée :
-     - Moteur vocal d'accessibilité (Whitepaper §4.5.4)
-     - RPC PostgreSQL sécurisés (validate_contract, settle_payout, admin_delete_user)
-     - Debounce des compteurs de badge (scheduleBadges)
-     - Titres de navigation dynamiques & conformité ARIA
-     - Casts stricts Number(...) pour l'intégrité DB
+   Nouveautés v8.2 :
+     - Vue "🔐 Data Lake Accréditations" (datalake_access_requests)
+     - Badge PENDING sur l'onglet Data Lake
+     - Approbation → génération token MAAT-LK-XXXX-XXXX
+     - Rejet → motif interne
    ============================================================ */
 (function () {
   'use strict';
@@ -27,6 +26,7 @@
     ['contracts', '🤝', 'Contrats ambassadeurs'],
     ['cash', '💰', 'Caisse & virements'],
     ['factors', '🌱', 'Facteurs CO₂'],
+    ['datalake', '🔐', 'Data Lake Accréditations'],
     ['audit', '🧾', 'Journal d\'audit']
   ];
 
@@ -55,6 +55,15 @@
     ['30D', '30 derniers jours'],
     ['365D', '1 an']
   ];
+
+  var DL_CATEGORIES = {
+    FMCG_CORPORATE: 'FMCG / Packaging',
+    ESG_AUDITOR: 'Auditeur ESG',
+    INVESTOR: 'Investisseur',
+    PUBLIC_INSTITUTION: 'Institution Publique',
+    RESEARCHER: 'Chercheur',
+    OTHER: 'Autre'
+  };
 
   var BD = {
     ACTIVE: 'bd-g', ANCHORED: 'bd-g', VALIDATED: 'bd-g', DONE: 'bd-g', PAID: 'bd-g',
@@ -170,7 +179,20 @@
     });
     var el = $('view'); el.innerHTML = ''; el.appendChild(h('div', { class: 'card skel h-40' }));
     var box = h('div', { class: 'space-y-4' });
-    try { await ({ overview: vOverview, users: vUsers, clients: vClients, pickups: vPickups, weigh: vWeigh, contracts: vContracts, cash: vCash, factors: vFactors, audit: vAudit })[v](box); }
+    try {
+      await ({
+        overview: vOverview,
+        users: vUsers,
+        clients: vClients,
+        pickups: vPickups,
+        weigh: vWeigh,
+        contracts: vContracts,
+        cash: vCash,
+        factors: vFactors,
+        datalake: vDatalake,
+        audit: vAudit
+      })[v](box);
+    }
     catch (e) { box.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Erreur de chargement : ' + (e.message || e) })); }
     el.innerHTML = ''; el.appendChild(box); scheduleBadges();
   }
@@ -189,9 +211,17 @@
         c('ambassador_contracts', { status: 'SUBMITTED' }),
         c('payout_requests', { status: 'PENDING' }),
         c('collections', { status: 'DISPUTED' }),
-        c('clients', { status: 'PROSPECT' })
+        c('clients', { status: 'PROSPECT' }),
+        c('datalake_access_requests', { status: 'PENDING' })
       ]);
-      [['users', r[0]], ['contracts', r[1]], ['cash', r[2]], ['weigh', r[3]], ['clients', r[4]]].forEach(function (x) {
+      [
+        ['users', r[0]],
+        ['contracts', r[1]],
+        ['cash', r[2]],
+        ['weigh', r[3]],
+        ['clients', r[4]],
+        ['datalake', r[5]]
+      ].forEach(function (x) {
         var b = document.querySelector('[data-b="' + x[0] + '"]');
         if (b) { b.textContent = x[1].count || 0; b.classList.toggle('hidden', !x[1].count); }
       });
@@ -200,7 +230,7 @@
 
   function live() {
     if (chan) return; chan = M.sb.channel('tower');
-    ['collections', 'pickups', 'payout_requests', 'ambassador_contracts', 'profiles', 'clients'].forEach(function (t) {
+    ['collections', 'pickups', 'payout_requests', 'ambassador_contracts', 'profiles', 'clients', 'datalake_access_requests'].forEach(function (t) {
       chan.on('postgres_changes', { event: '*', schema: 'public', table: t }, function (e) {
         clearTimeout(timer);
         timer = setTimeout(function () {
@@ -732,11 +762,178 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- 9. Journal d'audit ---------- */
+  /* ---------- 9. Data Lake — Accréditations (NOUVEAU v8.2) ---------- */
+  async function vDatalake(box) {
+    var list = h('div', { class: 'card !p-2' });
+    var statsBox = h('div', { class: 'grid grid-cols-2 md:grid-cols-4 gap-3' });
+
+    function generateToken() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      function block() {
+        var s = '';
+        for (var i = 0; i < 4; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+        return s;
+      }
+      return 'MAAT-LK-' + block() + '-' + block();
+    }
+
+    function showTokenModal(req, token) {
+      var body = h('div', { class: 'space-y-3 font-mono text-xs' });
+      body.appendChild(h('p', { class: 'text-xs text-slate-300', text: 'Transmettez ce token à ' + (req.email || '—') + ' :' }));
+      body.appendChild(h('code', {
+        class: 'block p-3 bg-black/60 rounded-lg border border-cyberGreen/40 text-cyberGreen font-mono text-center text-base font-bold break-all',
+        text: token
+      }));
+      body.appendChild(h('p', { class: 'text-[10px] text-slate-500 text-center', text: 'Le demandeur se connecte sur datalake.html → "Connexion Institutionnelle".' }));
+      var copyBtn = h('button', {
+        type: 'button', class: 'btn btn-g w-full !py-2 !text-[11px]', text: '📋 Copier le token',
+        onclick: function () {
+          try { navigator.clipboard.writeText(token); M.toast('Token copié.'); }
+          catch (e) { prompt('Copiez manuellement :', token); }
+        }
+      });
+      body.appendChild(copyBtn);
+      M.modal('✓ Token généré — ' + (req.full_name || '—'), body);
+    }
+
+    function approve(req) {
+      M.form('Approuver — ' + (req.full_name || '—'), [
+        { k: 'token', label: 'Token (généré automatiquement, modifiable)', value: generateToken(), required: true },
+        { k: 'note', label: 'Note interne (optionnel)', type: 'textarea' }
+      ], 'Approuver et générer le token', async function (v) {
+        var token = String(v.token || '').trim().toUpperCase();
+        if (!/^MAAT-LK-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(token)) {
+          return 'Format attendu : MAAT-LK-XXXX-XXXX (lettres/chiffres, sans I/O/0/1).';
+        }
+        var res = await M.sb.from('datalake_access_requests').update({
+          status: 'APPROVED',
+          access_token: token,
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: A.id,
+          notes: v.note || null
+        }).eq('id', req.id);
+        if (res.error) return res.error.message;
+        M.toast('Demande approuvée · token généré.');
+        voice('Demande approuvée');
+        showTokenModal(req, token);
+        load();
+        scheduleBadges();
+      });
+    }
+
+    function reject(req) {
+      M.form('Rejeter — ' + (req.full_name || '—'), [
+        { k: 'note', label: 'Motif du rejet (visible en interne)', type: 'textarea', required: true }
+      ], 'Rejeter la demande', async function (v) {
+        var res = await M.sb.from('datalake_access_requests').update({
+          status: 'REJECTED',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: A.id,
+          notes: v.note
+        }).eq('id', req.id);
+        if (res.error) return res.error.message;
+        M.toast('Demande rejetée.');
+        load();
+        scheduleBadges();
+      });
+    }
+
+    var load = async function () {
+      // === Statistiques globales ===
+      var rStats = await M.sb.from('datalake_access_requests').select('status');
+      if (!rStats.error && rStats.data) {
+        var counts = { PENDING: 0, APPROVED: 0, REJECTED: 0 };
+        rStats.data.forEach(function (r) {
+          var s = (r.status || '').toUpperCase();
+          if (counts[s] != null) counts[s]++;
+        });
+        statsBox.innerHTML = '';
+        [
+          ['En attente', counts.PENDING, 'text-cyberGreen', 'bd-g'],
+          ['Approuvées', counts.APPROVED, 'text-kemetGoldBright', 'bd-au'],
+          ['Rejetées', counts.REJECTED, 'text-red-400', 'bd-r'],
+          ['Total', rStats.data.length, 'text-white', 'bd-n']
+        ].forEach(function (s) {
+          statsBox.appendChild(h('div', { class: 'card !p-3 text-center' },
+            h('span', { class: 'text-[9px] text-slate-400 uppercase font-mono block', text: s[0] }),
+            h('div', { class: 'font-mono text-2xl font-black mt-1 ' + s[2], text: String(s[1]) })
+          ));
+        });
+      }
+
+      // === Liste des demandes ===
+      var r = await M.sb.from('datalake_access_requests').select('*').order('created_at', { ascending: false }).limit(100);
+      if (fail(r, 'Data Lake')) return;
+      var rows = r.data || [];
+
+      list.innerHTML = '';
+      if (!rows.length) {
+        list.appendChild(h('div', { class: 'p-6 text-center text-xs font-mono text-slate-500', text: 'Aucune demande d\'accréditation reçue.' }));
+        return;
+      }
+
+      list.appendChild(tbl([
+        { t: 'Reçue le', f: function (x) { return M.fmt.dt(x.created_at); } },
+        { t: 'Demandeur', f: function (x) {
+          return h('div', null,
+            h('div', { class: 'font-bold text-white', text: x.full_name || '—' }),
+            h('div', { class: 'text-[10px] text-slate-400', text: x.organization || '—' }),
+            h('div', { class: 'text-[10px] text-cyberGreen', text: x.email || '—' }),
+            h('div', { class: 'text-[10px] text-slate-500', text: x.phone || '—' })
+          );
+        } },
+        { t: 'Catégorie', f: function (x) {
+          return h('span', { class: 'bd bd-au', text: DL_CATEGORIES[x.category] || x.category || '—' });
+        } },
+        { t: 'Motivation', f: function (x) {
+          var m = x.motivation || '—';
+          return h('div', { class: 'text-[10px] text-slate-400 max-w-xs', text: m.length > 120 ? m.slice(0, 120) + '…' : m });
+        } },
+        { t: 'NDA', f: function (x) { return x.nda_accepted ? '✓' : '✗'; } },
+        { t: 'Statut', f: function (x) { return badge(x.status); } },
+        { t: 'Token', f: function (x) {
+          if (!x.access_token) return '—';
+          return h('button', {
+            type: 'button',
+            class: 'font-mono text-[10px] text-cyberGreen hover:underline break-all text-left',
+            text: x.access_token,
+            title: 'Cliquer pour copier',
+            onclick: function () {
+              try { navigator.clipboard.writeText(x.access_token); M.toast('Token copié.'); }
+              catch (e) {}
+            }
+          });
+        } },
+        { t: 'Actions', f: function (x) {
+          if (x.status === 'PENDING') {
+            return h('div', { class: 'flex gap-1 flex-wrap' },
+              btn('✓ Approuver', function () { approve(x); }, 'btn-g'),
+              btn('✕ Rejeter', function () { reject(x); }, 'btn-r')
+            );
+          }
+          if (x.status === 'APPROVED' && x.access_token) {
+            return btn('📧 Renvoyer', function () { showTokenModal(x, x.access_token); }, 'btn-o');
+          }
+          return null;
+        } }
+      ], rows, 'Aucune demande.'));
+    };
+
+    box.appendChild(head(
+      'Data Lake — Accréditations',
+      'Contrôlez les demandes d\'accès institutionnel au registre notarié. Chaque approbation génère un token MAAT-LK-XXXX-XXXX.',
+      [ btn('⟳ Rafraîchir', function () { load(); }) ]
+    ));
+    box.appendChild(statsBox);
+    box.appendChild(list);
+    await load();
+  }
+
+  /* ---------- 10. Journal d'audit ---------- */
   async function vAudit(box) {
     var r = await M.sb.from('audit_log').select('*').order('id', { ascending: false }).limit(150);
     if (fail(r, 'Audit')) return;
-    box.appendChild(head('Journal d\'audit', 'Traçabilité des opérations sensibles (comptes, clients, ritiri, pesées, contrats, virements, wallet).', [
+    box.appendChild(head('Journal d\'audit', 'Traçabilité des opérations sensibles (comptes, clients, ritiri, pesées, contrats, virements, wallet, accréditations Data Lake).', [
       btn('⬇ CSV', function () {
         M.csv((r.data || []).map(function (a) {
           return { date: a.created_at, acteur: a.actor, action: a.action, entite: a.entity, ref: a.entity_id };
