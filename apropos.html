@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Qui Sommes-Nous | Industrial Illusion SARL — Éditeur de Logiciels Industriels Souverains</title>
-  <meta name="description" content="Industrial Illusion SARL — Deep Tech Systems. Exportation de deux modèles souverains (Track 1 K-MEH-20 · Track 0 PurKemet B2B) à travers l'Afrique et vers l'Asie. Conforme Loi 28-00 & CNDP n° 09-08.">
+  <meta name="description" content="Industrial Illusion SARL — Deep Tech Systems. Transformer le passif continental en or souverain : faire du déchet le trésor de notre siècle. Modèle marocain pour l'Afrique et l'Asie. Conforme Loi 28-00 & CNDP n° 09-08.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="index, follow">
@@ -238,61 +238,59 @@
     .pillar-card.w { color: #E2E8F0; border-color: rgba(226,232,240,0.18); }
     .pillar-card.w:hover { border-color: rgba(226,232,240,0.6); box-shadow: 0 20px 45px -15px rgba(226,232,240,0.3); }
 
-    /* WORLD MAP */
-    .world-map { width: 100%; height: auto; display: block; }
-    .world-continent-bg {
-      fill: rgba(15,22,28,0.55);
-      stroke: rgba(255,255,255,0.06);
-      stroke-width: 0.8;
+    /* ═══════════ HOLOGRAM TABS ═══════════ */
+    .holo-tabs {
+      display: flex;
+      gap: 0.4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
     }
-    .world-africa {
-      fill: rgba(20, 30, 38, 0.92);
-      stroke: rgba(0,255,163,0.55);
-      stroke-width: 1.4;
-      filter: drop-shadow(0 0 12px rgba(0,255,163,0.25));
-    }
-    .world-node {
-      fill: #00FFA3;
-      filter: drop-shadow(0 0 6px #00FFA3);
-      cursor: pointer;
-      transition: r 0.2s, filter 0.2s;
-    }
-    .world-node:hover { r: 7; filter: drop-shadow(0 0 12px #00FFA3); }
-    .world-node.gold { fill: #E8C86A; filter: drop-shadow(0 0 8px #E8C86A); }
-    .world-node.gold:hover { r: 9; filter: drop-shadow(0 0 16px #E8C86A); }
-    .world-node.asia { fill: #F472B6; filter: drop-shadow(0 0 6px #F472B6); }
-    .world-node.asia:hover { r: 7; filter: drop-shadow(0 0 12px #F472B6); }
-    .world-link {
-      fill: none;
-      stroke: rgba(0,255,163,0.4);
-      stroke-width: 1.3;
-      stroke-dasharray: 5 5;
-      animation: worldDash 4s linear infinite;
-    }
-    .world-link.gold {
-      stroke: rgba(232,200,106,0.5);
-      animation-duration: 5s;
-    }
-    .world-link.asia {
-      stroke: rgba(244,114,182,0.45);
-      stroke-dasharray: 3 7;
-      animation-duration: 6s;
-    }
-    @keyframes worldDash {
-      to { stroke-dashoffset: -40; }
-    }
-    .world-label {
-      fill: #CBD5E1;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
+    .holo-tab {
+      padding: 0.55rem 0.85rem;
+      border-radius: 0.55rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.55);
+      color: #94A3B8;
+      font: 700 0.68rem 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      pointer-events: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
     }
-    .world-label.gold { fill: #E8C86A; }
-    .world-label.asia { fill: #F472B6; }
-    .world-pulse-gold { fill: #E8C86A; opacity: 0.15; pointer-events: none; }
+    .holo-tab:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+    .holo-tab.is-active {
+      border-color: #00FFA3;
+      color: #00FFA3;
+      background: rgba(0,255,163,0.10);
+      box-shadow: 0 0 20px -5px rgba(0,255,163,0.5);
+    }
+    .holo-tab.gold.is-active {
+      border-color: #E8C86A;
+      color: #E8C86A;
+      background: rgba(232,200,106,0.10);
+      box-shadow: 0 0 20px -5px rgba(232,200,106,0.5);
+    }
+    .holo-panel { display: none; }
+    .holo-panel.is-active { display: block; animation: holoFadeIn 0.45s ease-out; }
+    @keyframes holoFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════ HOLOGRAM SVG BLUEPRINT ═══════════ */
+    .holo-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .holo-svg text {
+      font-family: 'JetBrains Mono', monospace;
+      user-select: none;
+    }
 
     /* TIMELINE */
     .timeline-track {
@@ -361,7 +359,7 @@
     .metric-card.au:hover { border-color: rgba(232,200,106,0.6); }
     .metric-card.au .metric-card__value { color: #E8C86A; }
 
-    /* TRACK CARDS (Track 0 / Track 1) */
+    /* TRACK CARDS */
     .track-card {
       position: relative;
       padding: 1.5rem;
@@ -449,7 +447,7 @@
       body { font-size: 15px; }
       footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
       .pillar-card { padding: 1rem; }
-      .world-label { font-size: 8px; }
+      .holo-tab { font-size: 0.6rem; padding: 0.45rem 0.65rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -709,172 +707,251 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════ 5 · CARTE MONDIALE + EXPANSION ═══════════ -->
+    <!-- ═══════════ 5 · TERMINAL D'EXPANSION HOLOGRAPHIQUE + ROADMAP ═══════════ -->
     <section class="reveal">
       <div class="text-center max-w-3xl mx-auto space-y-2 mb-8">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Vision 2026 – 2050</span>
         <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">Du Maroc vers l'Afrique, puis vers l'Asie</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans">Deux axes d'expansion : corridors logistiques africains, puis projection vers les mégapoles asiatiques et zones franches industrialo-portuaires.</p>
+        <p class="text-xs sm:text-sm text-slate-300 font-sans">Deux moteurs convergents, un seul destin continental.</p>
       </div>
 
       <div class="grid lg:grid-cols-12 gap-4">
-        <!-- CARTE MONDIALE -->
+
+        <!-- ═══ TERMINAL D'EXPANSION · REMPLACE LA CARTE ═══ -->
         <div class="lg:col-span-7 glass-panel p-4 sm:p-6 space-y-3 relative overflow-hidden">
           <div class="scanner-beam" aria-hidden="true"></div>
+
+          <!-- Header -->
           <div class="flex items-center justify-between border-b border-white/10 pb-2">
-            <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest">Réseau Panafricain &amp; Expansion Asiatique</span>
-            <span class="text-[10px] font-mono text-slate-500">11 nœuds · 2 axes</span>
+            <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest">Terminal d'Expansion · Double Moteur</span>
+            <span class="text-[10px] font-mono text-slate-500">2 vecteurs · 1 destin</span>
           </div>
 
-          <svg class="world-map" viewBox="0 0 1000 600" role="img" aria-label="Carte mondiale avec corridors Industrial Illusion">
-            <defs>
-              <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.7"/>
-                <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="glowGreen" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
-              </radialGradient>
-              <radialGradient id="glowPink" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#F472B6" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#F472B6" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-
-            <!-- Amériques (background, opaques) -->
-            <path class="world-continent-bg" d="M 60,80 Q 90,60 130,80 L 150,140 Q 130,180 110,220 L 90,280 Q 70,320 60,370 L 40,400 L 30,360 Q 40,300 60,240 L 50,180 Q 40,130 60,80 Z" />
-            <path class="world-continent-bg" d="M 130,180 L 190,200 L 210,280 L 190,360 L 160,420 L 130,450 L 120,400 L 140,340 L 130,260 Z" />
-
-            <!-- Europe -->
-            <path class="world-continent-bg" d="M 460,100 L 540,90 L 570,120 L 560,160 L 530,175 L 500,170 L 470,150 L 455,125 Z" />
-
-            <!-- Moyen-Orient -->
-            <path class="world-continent-bg" d="M 570,160 L 640,155 L 680,190 L 690,240 L 660,270 L 620,260 L 590,220 L 575,185 Z" />
-
-            <!-- Asie -->
-            <path class="world-continent-bg" d="M 680,90 L 820,70 L 920,90 L 950,140 L 940,200 L 900,250 L 850,270 L 810,290 L 770,280 L 730,260 L 700,220 L 680,180 L 660,140 Z" />
-            <path class="world-continent-bg" d="M 830,290 L 880,320 L 900,370 L 870,410 L 830,420 L 810,380 L 815,340 Z" />
-
-            <!-- Océanie (hint) -->
-            <path class="world-continent-bg" d="M 880,420 L 940,410 L 960,450 L 940,480 L 890,480 L 870,455 Z" />
-
-            <!-- AFRIQUE — highlight -->
-            <path class="world-africa" d="M 470,180
-              L 540,175
-              L 590,195
-              L 620,235
-              L 610,285
-              L 580,340
-              L 540,400
-              L 520,455
-              L 500,490
-              L 470,470
-              L 450,435
-              L 440,395
-              L 430,350
-              L 410,300
-              L 400,255
-              L 415,220
-              L 440,195
-              Z" />
-
-            <!-- CORRIDORS AFRICAINS -->
-            <path class="world-link gold" d="M 500,215 Q 470,250 445,290" />       <!-- Marrakech → Dakar -->
-            <path class="world-link gold" d="M 500,215 Q 500,290 490,360" />       <!-- Marrakech → Abidjan -->
-            <path class="world-link" d="M 500,215 Q 520,300 530,370" />            <!-- Marrakech → Lagos -->
-            <path class="world-link" d="M 500,215 Q 570,280 600,330" />            <!-- Marrakech → Nairobi -->
-            <path class="world-link" d="M 500,215 Q 580,215 620,220" />            <!-- Marrakech → Le Caire -->
-            <path class="world-link" d="M 500,215 Q 530,340 540,430" />            <!-- Marrakech → Luanda -->
-            <path class="world-link" d="M 500,215 Q 540,390 555,455" />            <!-- Marrakech → Le Cap -->
-
-            <!-- Route maritime Marrakech → Asie (dashed) -->
-            <path class="world-link asia" d="M 500,215 Q 660,150 740,220 Q 820,270 870,320" />  <!-- → Dubaï → Singapour -->
-
-            <!-- Nœuds Maroc (gold) -->
-            <circle cx="500" cy="215" r="26" fill="url(#glowGold)" pointer-events="none">
-              <animate attributeName="opacity" values="1;0.35;1" dur="3s" repeatCount="indefinite"/>
-            </circle>
-            <circle class="world-node gold" cx="500" cy="215" r="7" onclick="window.cityBeep('marrakech')">
-              <title>Marrakech — Naissance (2026)</title>
-            </circle>
-            <text class="world-label gold" x="512" y="210">Marrakech</text>
-
-            <circle class="world-node gold" cx="498" cy="200" r="4" onclick="window.cityBeep('kenitra')">
-              <title>Kénitra — Usinage K-MEH-20</title>
-            </circle>
-            <text class="world-label gold" x="455" y="195" text-anchor="end">Kénitra</text>
-
-            <!-- Nœuds africains -->
-            <circle class="world-node" cx="445" cy="290" r="5" onclick="window.cityBeep('dakar')">
-              <title>Dakar — Corridor Ouest (2035)</title>
-            </circle>
-            <text class="world-label" x="410" y="285">Dakar</text>
-
-            <circle class="world-node" cx="490" cy="360" r="5" onclick="window.cityBeep('abidjan')">
-              <title>Abidjan — Corridor Ouest (2035)</title>
-            </circle>
-            <text class="world-label" x="500" y="365">Abidjan</text>
-
-            <circle class="world-node" cx="530" cy="370" r="5" onclick="window.cityBeep('lagos')">
-              <title>Lagos — Corridor Golfe de Guinée (2036+)</title>
-            </circle>
-            <text class="world-label" x="540" y="375">Lagos</text>
-
-            <circle class="world-node" cx="600" cy="330" r="5" onclick="window.cityBeep('nairobi')">
-              <title>Nairobi — Corridor Est (2040+)</title>
-            </circle>
-            <text class="world-label" x="610" y="335">Nairobi</text>
-
-            <circle class="world-node" cx="620" cy="220" r="5" onclick="window.cityBeep('caire')">
-              <title>Le Caire — Corridor Nord (2038+)</title>
-            </circle>
-            <text class="world-label" x="630" y="225">Le Caire</text>
-
-            <circle class="world-node" cx="540" cy="430" r="5" onclick="window.cityBeep('luanda')">
-              <title>Luanda — Corridor Atlantique (2042+)</title>
-            </circle>
-            <text class="world-label" x="550" y="435">Luanda</text>
-
-            <circle class="world-node" cx="555" cy="455" r="5" onclick="window.cityBeep('lecap')">
-              <title>Le Cap — Corridor Sud (2044+)</title>
-            </circle>
-            <text class="world-label" x="565" y="460">Le Cap</text>
-
-            <!-- Nœuds Asie (pink) -->
-            <circle cx="740" cy="220" r="22" fill="url(#glowPink)" pointer-events="none">
-              <animate attributeName="opacity" values="1;0.35;1" dur="4s" repeatCount="indefinite"/>
-            </circle>
-            <circle class="world-node asia" cx="740" cy="220" r="6" onclick="window.cityBeep('dubai')">
-              <title>Dubaï — Corridor Golfe (2048+)</title>
-            </circle>
-            <text class="world-label asia" x="752" y="215">Dubaï</text>
-
-            <circle cx="870" cy="320" r="20" fill="url(#glowPink)" pointer-events="none">
-              <animate attributeName="opacity" values="1;0.35;1" dur="4.5s" repeatCount="indefinite"/>
-            </circle>
-            <circle class="world-node asia" cx="870" cy="320" r="6" onclick="window.cityBeep('singapore')">
-              <title>Singapour — Expansion Asie (2050+)</title>
-            </circle>
-            <text class="world-label asia" x="882" y="325">Singapour</text>
-          </svg>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2 text-[10px] font-mono text-slate-400">
-            <div><span class="text-kemetGoldBright font-bold">◉ Marrakech</span> · Hub pilote 2026</div>
-            <div><span class="text-kemetGoldBright font-bold">◉ Kénitra</span> · Usinage K-MEH-20</div>
-            <div><span class="text-cyberGreen font-bold">◉ Dakar</span> · Corridor Ouest 2035</div>
-            <div><span class="text-cyberGreen font-bold">◉ Abidjan</span> · Corridor Ouest 2035</div>
-            <div><span class="text-cyberGreen font-bold">◉ Lagos</span> · Golfe de Guinée 2036+</div>
-            <div><span class="text-cyberGreen font-bold">◉ Nairobi</span> · Corridor Est 2040+</div>
-            <div><span class="text-cyberGreen font-bold">◉ Le Caire</span> · Corridor Nord 2038+</div>
-            <div><span class="text-cyberGreen font-bold">◉ Luanda</span> · Atlantique 2042+</div>
-            <div><span class="text-cyberGreen font-bold">◉ Le Cap</span> · Corridor Sud 2044+</div>
-            <div><span class="text-pink-400 font-bold">◉ Dubaï</span> · Golfe 2048+</div>
-            <div><span class="text-pink-400 font-bold">◉ Singapour</span> · Asie 2050+</div>
+          <!-- Tabs -->
+          <div class="holo-tabs" role="tablist" aria-label="Vues du terminal d'expansion">
+            <button type="button" class="holo-tab is-active" data-tab="moteurs" role="tab" aria-selected="true">
+              ⟡ Le Double Moteur Industriel
+            </button>
+            <button type="button" class="holo-tab gold" data-tab="ubuntu" role="tab" aria-selected="false">
+              𓂀 Manifeste Ubuntu
+            </button>
           </div>
+
+          <!-- ═══ PANEL 1 · DOUBLE MOTEUR (SVG BLUEPRINT CAD) ═══ -->
+          <div class="holo-panel is-active" id="holo-panel-moteurs" role="tabpanel">
+            <svg class="holo-svg" viewBox="0 0 800 540" role="img" aria-label="Schéma industriel du double moteur d'expansion Industrial Illusion">
+              <defs>
+                <pattern id="cad-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,255,163,0.05)" stroke-width="1"/>
+                </pattern>
+                <pattern id="cad-grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(0,255,163,0.10)" stroke-width="1"/>
+                </pattern>
+                <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="pur-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.55"/>
+                  <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="kmeh-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.55"/>
+                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Grid background -->
+              <rect width="800" height="540" fill="url(#cad-grid)"/>
+              <rect width="800" height="540" fill="url(#cad-grid-major)"/>
+
+              <!-- Corner ticks (CAD blueprint feel) -->
+              <path d="M 20 20 L 60 20 M 20 20 L 20 60" stroke="#00FFA3" stroke-width="1.2" fill="none" opacity="0.5"/>
+              <path d="M 780 20 L 740 20 M 780 20 L 780 60" stroke="#00FFA3" stroke-width="1.2" fill="none" opacity="0.5"/>
+              <path d="M 20 520 L 60 520 M 20 520 L 20 480" stroke="#00FFA3" stroke-width="1.2" fill="none" opacity="0.5"/>
+              <path d="M 780 520 L 740 520 M 780 520 L 780 480" stroke="#00FFA3" stroke-width="1.2" fill="none" opacity="0.5"/>
+
+              <!-- TOP LABELS -->
+              <text x="150" y="50" fill="#00FFA3" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle">MOTEUR 0</text>
+              <text x="150" y="65" fill="#94A3B8" font-size="8" text-anchor="middle">MODÈLE LOGISTIQUE</text>
+
+              <text x="400" y="50" fill="#E8C86A" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle">PÔLE</text>
+              <text x="400" y="65" fill="#94A3B8" font-size="8" text-anchor="middle">MARRAKECH</text>
+
+              <text x="650" y="50" fill="#E8C86A" font-size="10" font-weight="700" letter-spacing="2" text-anchor="middle">MOTEUR 1</text>
+              <text x="650" y="65" fill="#94A3B8" font-size="8" text-anchor="middle">MODÈLE LOURD</text>
+
+              <!-- ═══ LEFT ENGINE · PURKEMET (logistics) ═══ -->
+              <g>
+                <circle cx="150" cy="270" r="60" fill="url(#pur-glow)">
+                  <animate attributeName="r" values="60;70;60" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="150" cy="270" r="52" fill="none" stroke="#00FFA3" stroke-width="1" opacity="0.35" stroke-dasharray="4 6"/>
+                <circle cx="150" cy="270" r="40" fill="none" stroke="#00FFA3" stroke-width="1.5" opacity="0.7"/>
+                <circle cx="150" cy="270" r="7" fill="#00FFA3"/>
+
+                <!-- Truck isometric -->
+                <g transform="translate(150 270)">
+                  <rect x="-32" y="-16" width="24" height="22" fill="rgba(0,255,163,0.08)" stroke="#00FFA3" stroke-width="1.2"/>
+                  <rect x="-8" y="-22" width="38" height="28" fill="rgba(0,255,163,0.12)" stroke="#00FFA3" stroke-width="1.2"/>
+                  <line x1="-8" y1="-22" x2="-8" y2="6" stroke="#00FFA3" stroke-width="0.8"/>
+                  <line x1="10" y1="-22" x2="10" y2="6" stroke="#00FFA3" stroke-width="0.8"/>
+                  <line x1="30" y1="-22" x2="30" y2="6" stroke="#00FFA3" stroke-width="0.8"/>
+                  <circle cx="-22" cy="8" r="4" fill="#00FFA3" opacity="0.85"/>
+                  <circle cx="18" cy="8" r="4" fill="#00FFA3" opacity="0.85"/>
+                  <!-- IoT antenna pulse -->
+                  <circle cx="34" cy="-24" r="2" fill="#00FFA3"/>
+                  <circle cx="34" cy="-24" r="5" fill="none" stroke="#00FFA3" stroke-width="0.8" opacity="0.6">
+                    <animate attributeName="r" values="5;11;5" dur="2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                </g>
+
+                <text x="150" y="360" fill="#00FFA3" font-size="10" font-weight="700" letter-spacing="1.5" text-anchor="middle">PURKEMET B2B</text>
+                <text x="150" y="376" fill="#94A3B8" font-size="8" text-anchor="middle">0 MAD · IoT BLE · PWA</text>
+                <text x="150" y="392" fill="#64748B" font-size="7" text-anchor="middle">CAPTATION DÉCENTRALISÉE</text>
+              </g>
+
+              <!-- ═══ RIGHT ENGINE · K-MEH-20 (industrial) ═══ -->
+              <g>
+                <circle cx="650" cy="270" r="60" fill="url(#kmeh-glow)">
+                  <animate attributeName="r" values="60;70;60" dur="3.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="650" cy="270" r="52" fill="none" stroke="#E8C86A" stroke-width="1" opacity="0.35" stroke-dasharray="4 6"/>
+                <circle cx="650" cy="270" r="40" fill="none" stroke="#E8C86A" stroke-width="1.5" opacity="0.7"/>
+                <circle cx="650" cy="270" r="7" fill="#E8C86A"/>
+
+                <!-- Skid ISO containers (isometric) -->
+                <g transform="translate(650 270)">
+                  <!-- Container 1 (bottom) -->
+                  <polygon points="-35,-10 -12,-16 6,-8 -17,-2" fill="rgba(232,200,106,0.15)" stroke="#E8C86A" stroke-width="1"/>
+                  <polygon points="-35,-10 -17,-2 -17,12 -35,4" fill="rgba(232,200,106,0.07)" stroke="#E8C86A" stroke-width="1"/>
+                  <polygon points="-17,-2 6,-8 6,6 -17,12" fill="rgba(232,200,106,0.11)" stroke="#E8C86A" stroke-width="1"/>
+                  <!-- Container 2 (stacked) -->
+                  <polygon points="-30,-20 -7,-26 11,-18 -12,-12" fill="rgba(232,200,106,0.15)" stroke="#E8C86A" stroke-width="1"/>
+                  <polygon points="-30,-20 -12,-12 -12,2 -30,-6" fill="rgba(232,200,106,0.07)" stroke="#E8C86A" stroke-width="1"/>
+                  <polygon points="-12,-12 11,-18 11,-4 -12,2" fill="rgba(232,200,106,0.11)" stroke="#E8C86A" stroke-width="1"/>
+                  <!-- Kemet Loop energy pulse -->
+                  <circle cx="24" cy="0" r="3" fill="#E8C86A"/>
+                  <circle cx="24" cy="0" r="8" fill="none" stroke="#E8C86A" stroke-width="0.8" opacity="0.6">
+                    <animate attributeName="r" values="8;15;8" dur="2.4s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite"/>
+                  </circle>
+                </g>
+
+                <text x="650" y="360" fill="#E8C86A" font-size="10" font-weight="700" letter-spacing="1.5" text-anchor="middle">K-MEH-20</text>
+                <text x="650" y="376" fill="#94A3B8" font-size="8" text-anchor="middle">56×56m · Kénitra AFZ</text>
+                <text x="650" y="392" fill="#64748B" font-size="7" text-anchor="middle">SKIDS ISO · KEMET LOOP</text>
+              </g>
+
+              <!-- ═══ CENTER HUB · MARRAKECH ═══ -->
+              <g>
+                <circle cx="400" cy="270" r="72" fill="url(#hub-glow)">
+                  <animate attributeName="r" values="72;82;72" dur="2.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="400" cy="270" r="34" fill="none" stroke="#E8C86A" stroke-width="1" opacity="0.4" stroke-dasharray="3 5"/>
+                <circle cx="400" cy="270" r="24" fill="rgba(232,200,106,0.08)" stroke="#E8C86A" stroke-width="1.8"/>
+                <circle cx="400" cy="270" r="7" fill="#E8C86A"/>
+                <circle cx="400" cy="270" r="14" fill="none" stroke="#E8C86A" stroke-width="0.8" opacity="0.6">
+                  <animate attributeName="r" values="14;24;14" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <text x="400" y="320" fill="#E8C86A" font-size="11" font-weight="700" letter-spacing="2" text-anchor="middle" font-family="Cinzel, serif">MARRAKECH</text>
+                <text x="400" y="335" fill="#94A3B8" font-size="7" text-anchor="middle">HUB PILOTE · 2026</text>
+              </g>
+
+              <!-- ═══ FLOW LINES · Engines → Hub ═══ -->
+              <path d="M 210 270 L 366 270" stroke="#00FFA3" stroke-width="2" fill="none" stroke-dasharray="6 4" opacity="0.75">
+                <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/>
+              </path>
+              <path d="M 590 270 L 434 270" stroke="#E8C86A" stroke-width="2" fill="none" stroke-dasharray="6 4" opacity="0.75">
+                <animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/>
+              </path>
+
+              <!-- ═══ EXPANSION BEAMS · Hub → Africa (down) ═══ -->
+              <path d="M 380 300 Q 320 400 240 470" stroke="#00FFA3" stroke-width="1.2" fill="none" stroke-dasharray="4 6" opacity="0.55">
+                <animate attributeName="stroke-dashoffset" values="0;-30" dur="2s" repeatCount="indefinite"/>
+              </path>
+              <path d="M 400 302 Q 400 400 400 470" stroke="#00FFA3" stroke-width="1.2" fill="none" stroke-dasharray="4 6" opacity="0.55">
+                <animate attributeName="stroke-dashoffset" values="0;-30" dur="2s" repeatCount="indefinite"/>
+              </path>
+              <path d="M 420 300 Q 480 400 560 470" stroke="#00FFA3" stroke-width="1.2" fill="none" stroke-dasharray="4 6" opacity="0.55">
+                <animate attributeName="stroke-dashoffset" values="0;-30" dur="2s" repeatCount="indefinite"/>
+              </path>
+
+              <!-- ═══ EXPANSION BEAMS · Hub → Asie (up-right) ═══ -->
+              <path d="M 430 245 Q 560 160 720 130" stroke="#F472B6" stroke-width="1.2" fill="none" stroke-dasharray="3 5" opacity="0.6">
+                <animate attributeName="stroke-dashoffset" values="0;-25" dur="1.8s" repeatCount="indefinite"/>
+              </path>
+              <path d="M 432 262 Q 600 210 760 210" stroke="#F472B6" stroke-width="1.2" fill="none" stroke-dasharray="3 5" opacity="0.6">
+                <animate attributeName="stroke-dashoffset" values="0;-25" dur="1.8s" repeatCount="indefinite"/>
+              </path>
+
+              <!-- ═══ AFRICA DESTINATION NODES ═══ -->
+              <circle cx="240" cy="470" r="4" fill="#00FFA3"/>
+              <text x="240" y="490" fill="#94A3B8" font-size="7" text-anchor="middle" letter-spacing="1">DAKAR</text>
+
+              <circle cx="400" cy="470" r="4" fill="#00FFA3"/>
+              <text x="400" y="490" fill="#94A3B8" font-size="7" text-anchor="middle" letter-spacing="1">LAGOS</text>
+
+              <circle cx="560" cy="470" r="4" fill="#00FFA3"/>
+              <text x="560" y="490" fill="#94A3B8" font-size="7" text-anchor="middle" letter-spacing="1">NAIROBI</text>
+
+              <!-- ═══ ASIA DESTINATION NODES ═══ -->
+              <circle cx="720" cy="130" r="4" fill="#F472B6"/>
+              <text x="720" y="118" fill="#F472B6" font-size="7" text-anchor="middle" letter-spacing="1">DUBAÏ</text>
+
+              <circle cx="760" cy="210" r="4" fill="#F472B6"/>
+              <text x="760" y="225" fill="#F472B6" font-size="7" text-anchor="middle" letter-spacing="1">SINGAPOUR</text>
+            </svg>
+          </div>
+
+          <!-- ═══ PANEL 2 · MANIFESTE UBUNTU ═══ -->
+          <div class="holo-panel" id="holo-panel-ubuntu" role="tabpanel">
+            <div class="space-y-3">
+              <!-- Slogan -->
+              <div class="p-4 bg-gradient-to-br from-kemetGold/10 via-transparent to-cyberGreen/5 rounded-xl border border-kemetGold/40 text-center">
+                <div class="text-[10px] font-mono text-kemetGoldBright uppercase tracking-widest mb-2">Slogan</div>
+                <p class="font-kemetTitle text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright leading-snug">
+                  « Métamorphoser le passif continental en or souverain : faire du déchet le trésor de notre siècle. »
+                </p>
+              </div>
+
+              <!-- Ubuntu -->
+              <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">𓂀</span>
+                  <span class="text-[10px] font-mono font-bold text-cyberGreen uppercase tracking-widest">Manifeste Ubuntu</span>
+                </div>
+                <p class="font-kemetTitle text-sm sm:text-base italic text-white text-center border-l-2 border-cyberGreen pl-4 py-1">
+                  « Je suis parce que nous sommes »
+                  <span class="block text-[10px] font-mono not-italic text-slate-400 mt-1">(Umuntu ngumuntu ngabantu)</span>
+                </p>
+                <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+                  Notre modèle économique n'est pas une mécanique extractive unilatérale. C'est une <strong class="text-cyberGreen">symbiose d'économie circulaire</strong> où l'émancipation du travailleur de terrain, la rentabilité des partenaires et la préservation territoriale sont indissociables.
+                </p>
+              </div>
+
+              <!-- Kirikou & Karabà -->
+              <div class="p-4 bg-black/60 rounded-xl border border-kemetGold/40 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🌍</span>
+                  <span class="text-[10px] font-mono font-bold text-kemetGoldBright uppercase tracking-widest">L'Épine de Karabà</span>
+                </div>
+                <p class="text-[11px] text-slate-300 font-sans leading-relaxed italic">
+                  La prolifération des déchets et l'empoisonnement des terres africaines sont comparables à <strong class="text-white not-italic">l'épine venimeuse plantée dans le dos de la sorcière Karabà</strong> — une malédiction qui tarit les sources et condamne les villages à la soif.
+                </p>
+                <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
+                  À l'image de <strong class="text-kemetGoldBright">Kirikou</strong>, dont la grandeur réside dans la lucidité et le refus de la fatalité, Industrial Illusion ne combat pas les symptômes : notre ingénierie <strong class="text-white">extrait l'épine à la racine</strong>. Le déchet cesse d'être un poison pour devenir la source d'eau vive, d'énergie et de prospérité industrielle du continent.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
+        <!-- ═══ FIN TERMINAL D'EXPANSION ═══ -->
 
-        <!-- TIMELINE -->
+        <!-- TIMELINE (inchangée) -->
         <div class="lg:col-span-5 glass-panel g p-4 sm:p-6 space-y-3">
           <div class="border-b border-white/10 pb-2">
             <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-widest">Roadmap Stratégique</span>
@@ -1268,12 +1345,6 @@
     var PILLAR_FREQ = { maat: 440, purkemet: 523, kmeh20: 659, datalake: 784 };
     window.pillarBeep = function (key) { beep(PILLAR_FREQ[key] || 440, 80); };
 
-    var CITY_FREQ = {
-      marrakech: 880, kenitra: 830, dakar: 660, abidjan: 590, lagos: 620,
-      nairobi: 740, caire: 700, luanda: 560, lecap: 540, dubai: 900, singapore: 950
-    };
-    window.cityBeep = function (key) { beep(CITY_FREQ[key] || 660, 100); };
-
     /* PILLAR CLICK */
     var PILLAR_LINKS = {
       maat: 'purkemet.html',
@@ -1286,6 +1357,24 @@
       var url = PILLAR_LINKS[key];
       if (url) setTimeout(function () { window.location.href = url; }, 250);
     };
+
+    /* ═══════════ HOLOGRAM TABS ═══════════ */
+    document.querySelectorAll('.holo-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = tab.dataset.tab;
+        document.querySelectorAll('.holo-tab').forEach(function (t) {
+          var on = t.dataset.tab === target;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        document.querySelectorAll('.holo-panel').forEach(function (p) {
+          p.classList.toggle('is-active', p.id === 'holo-panel-' + target);
+        });
+        /* Distinct tonalities */
+        if (target === 'moteurs') { beep(660, 90); }
+        else if (target === 'ubuntu') { beep(440, 140); }
+      });
+    });
 
     /* TIMELINE */
     var YEAR_DATA = {
@@ -1423,7 +1512,7 @@
       nav.classList.add('hidden');
     });
 
-    /* EASTER EGGS — Konami */
+    /* EASTER EGGS */
     (function () {
       var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
       var idx = 0;
@@ -1529,7 +1618,7 @@
     }
 
     try {
-      console.info('%c[APROPOS] v3.0 · world-map · moat · 2-tracks · roadmap', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
+      console.info('%c[APROPOS] v4.0 · holo-terminal · ubuntu-kirikou · 2-tracks · moat', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
     } catch (e) {}
 
   })();
