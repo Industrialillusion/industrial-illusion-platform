@@ -17,9 +17,6 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <!-- ============================================================
-       SCROLL RESCUE GUARD v7.4
-       ============================================================ -->
   <script>
   (function () {
     'use strict';
@@ -52,9 +49,6 @@
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
-    /* ============================================================
-       MAAT DATA LAKE · DESIGN SYSTEM v1.0
-       ============================================================ */
     html {
       background-color: #060A0D !important;
       -webkit-text-size-adjust: 100%;
@@ -76,7 +70,6 @@
       touch-action: manipulation;
     }
 
-    /* Matrix canvas — verrouillé en fond */
     #matrixCanvas {
       position: fixed !important;
       inset: 0 !important;
@@ -89,7 +82,6 @@
       -webkit-transform: translateZ(0);
     }
 
-    /* Calque ambiance — voile radial pour lisibilité */
     #dataAmbientLayer {
       position: fixed;
       inset: 0;
@@ -160,9 +152,7 @@
       border-color: rgba(0, 255, 163, 0.45) !important;
       box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.20) !important;
     }
-    .glass-panel:hover {
-      border-color: rgba(0, 255, 163, 0.6) !important;
-    }
+    .glass-panel:hover { border-color: rgba(0, 255, 163, 0.6) !important; }
 
     .inp {
       width: 100%;
@@ -208,9 +198,6 @@
     }
     @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
 
-    /* ============================================================
-       HERO · MAAT DATA LAKE
-       ============================================================ */
     .hero-datalake {
       position: relative;
       display: grid;
@@ -225,9 +212,6 @@
       }
     }
 
-    /* ============================================================
-       LIVE TELEMETRY TICKER
-       ============================================================ */
     .live-ticker {
       position: relative;
       overflow: hidden;
@@ -263,6 +247,11 @@
       white-space: nowrap;
     }
     .live-ticker__track:hover { animation-play-state: paused; }
+    .live-ticker__track.is-empty {
+      animation: none;
+      justify-content: center;
+      width: 100%;
+    }
     @keyframes tickerScroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -315,10 +304,25 @@
       background: rgba(232, 200, 106, 0.12);
       border-color: rgba(232, 200, 106, 0.35);
     }
+    .ticker-idle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .ticker-idle .badge {
+      padding: 0.15rem 0.45rem;
+      border-radius: 0.25rem;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-    /* ============================================================
-       4 DATA CARDS · KPI GRID
-       ============================================================ */
     .data-card {
       position: relative;
       padding: 1.1rem 1rem;
@@ -343,16 +347,9 @@
       box-shadow: 0 18px 40px -15px rgba(0, 255, 163, 0.25);
     }
     .data-card:hover::before { opacity: 1; }
-    .data-card.au {
-      border-color: rgba(232, 200, 106, 0.25);
-    }
-    .data-card.au::before {
-      background: linear-gradient(90deg, transparent, rgba(232, 200, 106, 0.70), transparent);
-    }
-    .data-card.au:hover {
-      border-color: rgba(232, 200, 106, 0.60);
-      box-shadow: 0 18px 40px -15px rgba(232, 200, 106, 0.22);
-    }
+    .data-card.au { border-color: rgba(232, 200, 106, 0.25); }
+    .data-card.au::before { background: linear-gradient(90deg, transparent, rgba(232, 200, 106, 0.70), transparent); }
+    .data-card.au:hover { border-color: rgba(232, 200, 106, 0.60); box-shadow: 0 18px 40px -15px rgba(232, 200, 106, 0.22); }
     .data-card__label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.62rem;
@@ -387,12 +384,9 @@
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
-      color: #00FFA3;
+      color: #64748B;
     }
 
-    /* ============================================================
-       FROSTED GATE · Blindage sections protégées
-       ============================================================ */
     .protected-section {
       position: relative;
       overflow: hidden;
@@ -422,9 +416,7 @@
       opacity: 0;
       pointer-events: none;
     }
-    .protected-section:not(.is-locked) .protected-section__overlay {
-      display: none;
-    }
+    .protected-section:not(.is-locked) .protected-section__overlay { display: none; }
     .gate-lock {
       pointer-events: auto;
       max-width: 460px;
@@ -467,9 +459,6 @@
       margin-bottom: 0.75rem;
     }
 
-    /* ============================================================
-       TERMINAL WINDOW
-       ============================================================ */
     .terminal-window {
       background: linear-gradient(180deg, rgba(6, 10, 13, 0.98), rgba(3, 6, 8, 0.99));
       border: 1px solid rgba(0, 255, 163, 0.30);
@@ -493,57 +482,6 @@
     .terminal-window__dot--y { background: #E8C86A; }
     .terminal-window__dot--g { background: #00FFA3; }
 
-    /* ============================================================
-       LEDGER ROWS (registre)
-       ============================================================ */
-    .ledger-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.4rem;
-      padding: 0.85rem;
-      border-radius: 0.75rem;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      transition: all 0.25s;
-    }
-    .ledger-row:hover {
-      border-color: rgba(0, 255, 163, 0.40);
-      background: rgba(0, 255, 163, 0.02);
-    }
-    @media (min-width: 768px) {
-      .ledger-row {
-        grid-template-columns: 8ch 24ch 1fr 8ch 8ch 10ch;
-        gap: 0.75rem;
-        align-items: center;
-      }
-    }
-    .ledger-hash {
-      color: #00FFA3;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      font-size: 0.68rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ledger-status {
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-size: 0.60rem;
-      text-align: center;
-      padding: 0.18rem 0.4rem;
-      border-radius: 0.30rem;
-      color: #00FFA3;
-      background: rgba(0, 255, 163, 0.10);
-      border: 1px solid rgba(0, 255, 163, 0.35);
-    }
-
-    /* ============================================================
-       POLYMER BARS · Ripartizione volumetrica
-       ============================================================ */
     .polymer-bar-row {
       display: grid;
       grid-template-columns: 1fr;
@@ -556,7 +494,7 @@
     .polymer-bar-row:last-child { border-bottom: none; }
     @media (min-width: 640px) {
       .polymer-bar-row {
-        grid-template-columns: 16ch 1fr 10ch;
+        grid-template-columns: 22ch 1fr 10ch;
         gap: 1rem;
         align-items: center;
       }
@@ -581,9 +519,6 @@
     .polymer-bar-fill.glass { background: linear-gradient(90deg, #334155, #94A3B8); }
     .polymer-bar-fill.org { background: linear-gradient(90deg, #065A4C, #0D9E8E); }
 
-    /* ============================================================
-       DATASET CARDS (Africa-Polymer-Dataset)
-       ============================================================ */
     .dataset-card {
       padding: 1.1rem;
       border-radius: 1rem;
@@ -596,9 +531,6 @@
       transform: translateY(-2px);
     }
 
-    /* ============================================================
-       MANIFEST ROW (comparaison)
-       ============================================================ */
     .manifest-row {
       display: grid; grid-template-columns: 1fr;
       gap: 0.75rem; padding: 1rem; border-radius: 1rem;
@@ -611,9 +543,6 @@
     }
     .manifest-row:hover { border-color: rgba(0,255,163,0.4); background: rgba(0,255,163,0.04); }
 
-    /* ============================================================
-       IMPACT CARD
-       ============================================================ */
     .impact-card {
       position: relative; padding: 1.5rem; border-radius: 1.25rem;
       background: linear-gradient(165deg, rgba(19,25,32,0.90), rgba(9,13,16,0.97));
@@ -628,9 +557,6 @@
     .impact-card:hover { transform: translateY(-3px); border-color: rgba(0,255,163,0.55); }
     .impact-card:hover::before { opacity: 1; }
 
-    /* ============================================================
-       OMPIC BADGE
-       ============================================================ */
     .ompic-badge {
       position: relative; overflow: hidden;
       background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08));
@@ -647,9 +573,6 @@
       100% { transform: translate(100%, 100%) rotate(45deg); }
     }
 
-    /* ============================================================
-       EASTER EGGS
-       ============================================================ */
     body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
     @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
@@ -713,6 +636,7 @@
       #hieroglyphOverlay { font-size: 28px; }
       .protected-section.is-locked .protected-section__content { filter: blur(6px) brightness(0.55); }
       .gate-lock { padding: 1.25rem 0.9rem; }
+      .polymer-bar-row { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -725,7 +649,8 @@
       .live-ticker__track { animation: none; }
     }
   </style>
-    <body class="min-h-screen flex flex-col justify-between">
+</head>
+<body class="min-h-screen flex flex-col justify-between">
 
   <canvas id="matrixCanvas" aria-hidden="true"></canvas>
   <div id="dataAmbientLayer" aria-hidden="true"></div>
@@ -827,7 +752,7 @@
           </h2>
 
           <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl">
-            Le <strong>nucleus de vérité immuable</strong> de l'écosystème Illusion Kemet. Ce registre unifie la collecte décentralisée B2B de <strong class="text-cyberGreen">PurKemet (Track 0)</strong> avec l'intelligence industrielle de <strong class="text-kemetGoldBright">K-MEH-20 (Track 1)</strong>, en scellant chaque kilogramme de matière valorisée dans une chaîne d'intégrité cryptographique Hyperledger Fabric v2.5, ancrée quotidiennement sur la blockchain Bitcoin via OpenTimestamps.
+            Le <strong>noyau de vérité immuable</strong> de l'écosystème Illusion Kemet. Ce registre unifie la collecte décentralisée B2B de <strong class="text-cyberGreen">PurKemet (Track 0)</strong> avec l'intelligence industrielle de <strong class="text-kemetGoldBright">K-MEH-20 (Track 1)</strong>, en scellant chaque kilogramme de matière valorisée dans une chaîne d'intégrité cryptographique Hyperledger Fabric v2.5, ancrée quotidiennement sur la blockchain Bitcoin via OpenTimestamps.
           </p>
 
           <div class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1 text-[10px] sm:text-[11px] font-mono font-bold text-slate-400 border-t border-white/10">
@@ -883,7 +808,7 @@
                 <span class="text-kemetGoldBright font-bold">Hub Sidi Ghanem</span>
                 <span class="text-[9px] px-1.5 py-0.5 rounded bg-kemetGold/10 border border-kemetGold/30 text-kemetGoldBright">PESÉE P2</span>
               </div>
-              <p class="text-slate-400 font-sans text-[10px]">Réconciliation algorithmique Δ ≤ 3% · Variance_Alert &lt; 3%</p>
+              <p class="text-slate-400 font-sans text-[10px]">Réconciliation algorithmique Δ ≤ 3% · Variance_Alert si Δ &gt; 3%</p>
             </div>
 
             <div class="flex justify-center">
@@ -902,7 +827,7 @@
           </div>
 
           <div class="pt-3 border-t border-white/10 text-center font-mono text-[10px] text-slate-500">
-            Uptime registre &gt; 99.97% · Latence scellement &lt; 800ms
+            Registre immuable · Fabric v2.5 · Ancrage Bitcoin OTS
           </div>
         </div>
 
@@ -912,7 +837,8 @@
     <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
-         LIVE TELEMETRY STREAM (TICKER)
+         LIVE TELEMETRY STREAM (TICKER) — standby par défaut
+         Le contenu réel est injecté par JS depuis Supabase
          ═══════════════════════════════════════════════════════ -->
     <section class="reveal">
       <div class="live-ticker">
@@ -924,40 +850,17 @@
           </div>
           <div class="flex items-center gap-1.5 text-[9px] font-mono text-slate-500 uppercase tracking-widest">
             <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen"></span>
-            <span>ONLINE</span>
+            <span id="tickerStatus">SYNC</span>
           </div>
         </div>
 
         <div class="live-ticker__body">
-          <div class="live-ticker__track" id="liveTickerTrack" aria-live="polite">
-            <!-- Les items sont injectés par JS · un fallback statique est présent -->
+          <div class="live-ticker__track is-empty" id="liveTickerTrack" aria-live="polite">
             <div class="ticker-item">
               <span class="ticker-item__dot"></span>
-              <span class="ticker-item__hash">0x4F8A2C…</span>
-              <span>PET</span>
-              <span>P1: 142.6 kg · P2: 140.8 kg</span>
-              <span class="ticker-item__status">ANCHORED</span>
-            </div>
-            <div class="ticker-item">
-              <span class="ticker-item__dot gold"></span>
-              <span class="ticker-item__hash">LOT-MR-0429</span>
-              <span>PE-HD</span>
-              <span>P1: 87.3 kg · P2: 86.9 kg</span>
-              <span class="ticker-item__status gold">NOTARIZED</span>
-            </div>
-            <div class="ticker-item">
-              <span class="ticker-item__dot"></span>
-              <span class="ticker-item__hash">0xA3E9D1…</span>
-              <span>Aluminium</span>
-              <span>P1: 52.4 kg · P2: 52.1 kg</span>
-              <span class="ticker-item__status">ANCHORED</span>
-            </div>
-            <div class="ticker-item">
-              <span class="ticker-item__dot"></span>
-              <span class="ticker-item__hash">SHA-256:9F2A…</span>
-              <span>Carton</span>
-              <span>P1: 210.8 kg · P2: 208.4 kg</span>
-              <span class="ticker-item__status">ANCHORED</span>
+              <span class="ticker-item__hash">NODE · HUB-MARRAKECH-01</span>
+              <span style="color:#00FFA3; font-weight:800;">[STATUS: ONLINE]</span>
+              <span style="color:#94A3B8;">— En attente des notarisations…</span>
             </div>
           </div>
         </div>
@@ -965,44 +868,51 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         4 DATA CARDS · KPI GLOBAUX
+         4 DATA CARDS · KPI GLOBAUX — valeurs "—" par défaut
+         Remplies par JS depuis la table "collections" Supabase
          ═══════════════════════════════════════════════════════ -->
     <section class="reveal">
-      <div class="border-b border-white/10 pb-4 mb-6">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Indicateurs Consolidés · Plateforme</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Métriques Globales Notarisées</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          Compteurs agrégés issus du registre immuable. Chaque unité est vérifiable par empreinte SHA-256 et ancrée quotidiennement sur Bitcoin via OpenTimestamps.
-        </p>
+      <div class="border-b border-white/10 pb-4 mb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2">
+        <div>
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Indicateurs Consolidés · Plateforme</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Métriques Globales Notarisées</h3>
+          <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
+            Compteurs agrégés issus du registre immuable. Chaque unité est vérifiable par empreinte SHA-256 et ancrée quotidiennement sur Bitcoin via OpenTimestamps.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse" id="kpiSyncDot"></span>
+          <span id="kpiSyncStatus">Synchronisation…</span>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="data-card">
           <span class="data-card__label">Tonnage Global Traité</span>
-          <div class="data-card__value" data-counter="1248736" data-format="kg">0</div>
+          <div class="data-card__value" id="kpi-tonnage">—</div>
           <span class="data-card__unit">kg notarisés</span>
-          <span class="data-card__delta">▲ <span id="kpi-total-delta">+0.42%</span> · 24h</span>
+          <span class="data-card__delta" id="kpi-tonnage-status">En attente de données</span>
         </div>
 
         <div class="data-card">
           <span class="data-card__label">Émissions CO₂e Évitées</span>
-          <div class="data-card__value" data-counter="4370576" data-format="kg">0</div>
+          <div class="data-card__value" id="kpi-co2">—</div>
           <span class="data-card__unit">kg CO₂ eq. · Verra VCS</span>
-          <span class="data-card__delta">▲ <span id="kpi-co2-delta">+0.38%</span> · 24h</span>
+          <span class="data-card__delta" id="kpi-co2-status">En attente de données</span>
         </div>
 
         <div class="data-card au">
           <span class="data-card__label">Africa-Polymer-Dataset</span>
-          <div class="data-card__value" data-counter="1864207" data-format="num">0</div>
+          <div class="data-card__value" id="kpi-dataset">—</div>
           <span class="data-card__unit">signatures NIR archivées</span>
-          <span class="data-card__delta" style="color:#E8C86A;">▲ <span id="kpi-dataset-delta">+0.61%</span> · 24h</span>
+          <span class="data-card__delta" id="kpi-dataset-status" style="color:#64748B;">En attente de données</span>
         </div>
 
         <div class="data-card au">
           <span class="data-card__label">Transactions Scellées</span>
-          <div class="data-card__value" data-counter="92471" data-format="num">0</div>
+          <div class="data-card__value" id="kpi-tx">—</div>
           <span class="data-card__unit">Fabric v2.5 · OTS Bitcoin</span>
-          <span class="data-card__delta" style="color:#E8C86A;">▲ <span id="kpi-tx-delta">+0.29%</span> · 24h</span>
+          <span class="data-card__delta" id="kpi-tx-status" style="color:#64748B;">En attente de données</span>
         </div>
       </div>
     </section>
@@ -1011,6 +921,7 @@
 
     <!-- ═══════════════════════════════════════════════════════
          GATE TEASER · TERMINAL ANALYTIQUE SÉCURISÉ
+         AUCUN bouton "Démo" — uniquement accréditation réelle
          ═══════════════════════════════════════════════════════ -->
     <section class="reveal">
       <div class="glass-panel g p-6 sm:p-10 space-y-6 text-center relative overflow-hidden">
@@ -1041,9 +952,6 @@
             <button type="button" onclick="window.openLoginModal()" class="btn btn-au w-full sm:w-auto text-xs !py-3.5 px-6">
               Connexion Institutionnelle
             </button>
-            <button type="button" onclick="window.unlockDemo && window.unlockDemo()" class="btn btn-o w-full sm:w-auto text-xs !py-3.5 px-6">
-              🔓 Aperçu Démo
-            </button>
           </div>
 
           <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto pt-2">
@@ -1052,12 +960,11 @@
         </div>
       </div>
     </section>
-</head>
-          <div class="animated-divider" aria-hidden="true"></div>
+        <div class="animated-divider" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION A · PROTOCOLE DE RÉCONCILIATION DOUBLE PESÉE
-         Statut : PROTÉGÉ (frosted gate)
+         Statut : PROTÉGÉ · Gate réel Supabase
          ═══════════════════════════════════════════════════════ -->
     <section id="section-a" class="protected-section is-locked reveal" data-gate="A">
       <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
@@ -1065,7 +972,7 @@
           <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section A · Protocole Anti-Fraude</span>
           <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Réconciliation de Double Pesée (Sidi Ghanem Hub)</h3>
           <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-            Protocole de contrôle physique en deux temps pour éliminer tout risque de fraude, d'ammanco ou de coulage de matière entre l'enlèvement client et l'arrivée au hub logistique.
+            Protocole de contrôle physique en deux temps pour éliminer tout risque de fraude, de coulage de matière ou d'anomalie de pesée entre l'enlèvement client et l'arrivée au hub logistique.
           </p>
         </div>
 
@@ -1109,7 +1016,7 @@
               <path d="M12 2 L20 6 L20 12 C20 17 16 20 12 22 C8 20 4 17 4 12 L4 6 Z" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
               <path d="M8 12 L11 15 L16 9" stroke="#00FFA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span class="text-cyberGreen font-mono font-bold text-sm uppercase tracking-widest">Algorithme de Varianza Δ</span>
+            <span class="text-cyberGreen font-mono font-bold text-sm uppercase tracking-widest">Algorithme de Variance Volumétrique Δ</span>
           </div>
           <div class="p-4 bg-black/80 rounded-lg border border-white/10 font-mono text-xs text-slate-300 text-center space-y-1">
             <div class="text-base">Δ = | P1 − P2 | / P1</div>
@@ -1117,7 +1024,7 @@
             <div class="text-2xl font-black text-cyberGreen">Δ ≤ 3%</div>
           </div>
           <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
-            <strong class="text-white">En cas de dépassement (Δ &gt; 3%) :</strong> le système bloque automatiquement l'accréditation du lot, génère un <strong class="text-red-400">Variance_Alert</strong> et congèle la transaction pour vérification ispectionnelle. Aucun poids non réconcilié ne peut être notarisé.
+            <strong class="text-white">En cas de dépassement (Δ &gt; 3%) :</strong> le système bloque automatiquement l'accréditation du lot, génère un <strong class="text-red-400">Variance_Alert</strong> et congèle la transaction pour vérification inspectionnelle. Aucun poids non réconcilié ne peut être notarisé.
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 font-mono text-[10px]">
             <div class="p-2 bg-black/50 rounded border border-cyberGreen/30 text-center">
@@ -1162,7 +1069,7 @@
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION B · MODÈLE DE DONNÉES POLYMÉRIQUE
-         Statut : PROTÉGÉ (frosted gate)
+         Statut : PROTÉGÉ · Gate réel Supabase
          ═══════════════════════════════════════════════════════ -->
     <section id="section-b" class="protected-section is-locked reveal" data-gate="B">
       <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
@@ -1182,32 +1089,32 @@
 
           <div class="space-y-0">
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">PET Chiaro</span>
+              <span class="text-white font-bold">PET Transparent Grade-A</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill pet" style="width:31%"></div></div>
               <span class="text-cyberGreen text-right font-bold">31%</span>
             </div>
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">Cartone Ondulato</span>
+              <span class="text-white font-bold">Carton Ondulé d'Emballage</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill card" style="width:26%"></div></div>
               <span class="text-kemetGold text-right font-bold">26%</span>
             </div>
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">PE-HD Rigido</span>
+              <span class="text-white font-bold">PE-HD Rigide Industriel</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill hd" style="width:18%"></div></div>
               <span class="text-emerald-400 text-right font-bold">18%</span>
             </div>
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">Vetro Bianco</span>
+              <span class="text-white font-bold">Verre Silico-Calcique Blanc</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill glass" style="width:11%"></div></div>
               <span class="text-slate-300 text-right font-bold">11%</span>
             </div>
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">Alluminio 3004/6061</span>
+              <span class="text-white font-bold">Alliage Aluminium 3004/6061</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill alu" style="width:8%"></div></div>
               <span class="text-kemetGoldBright text-right font-bold">8%</span>
             </div>
             <div class="polymer-bar-row">
-              <span class="text-white font-bold">Frazione Organica</span>
+              <span class="text-white font-bold">Fraction Fermentescible Organique</span>
               <div class="polymer-bar-track"><div class="polymer-bar-fill org" style="width:6%"></div></div>
               <span class="text-cyberGreen text-right font-bold">6%</span>
             </div>
@@ -1217,42 +1124,42 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 font-mono">
           <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-cyberGreen font-bold text-xs">PET Chiaro</span>
+              <span class="text-cyberGreen font-bold text-xs">PET Transparent Grade-A</span>
               <span class="text-cyberGreen font-black text-sm">6,50 DH/kg</span>
             </div>
             <p class="text-[10px] text-slate-400 font-sans">Bouteilles eau/soda · Densité 1,38 g/cm³ · Fusion 260°C</p>
           </div>
           <div class="p-3 bg-black/60 rounded-xl border border-emerald-500/30 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-emerald-400 font-bold text-xs">PE-HD Rigide</span>
+              <span class="text-emerald-400 font-bold text-xs">PE-HD Rigide Industriel</span>
               <span class="text-emerald-400 font-black text-sm">7,20 DH/kg</span>
             </div>
             <p class="text-[10px] text-slate-400 font-sans">Flacons détergents · Densité 0,95 g/cm³ · Fusion 135°C</p>
           </div>
           <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/40 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-kemetGoldBright font-bold text-xs">Alluminio</span>
+              <span class="text-kemetGoldBright font-bold text-xs">Alliage Aluminium 3004/6061</span>
               <span class="text-kemetGoldBright font-black text-sm">17,50 DH/kg</span>
             </div>
-            <p class="text-[10px] text-slate-400 font-sans">3004/6061 · Économie énergétique 95% vs. primaire</p>
+            <p class="text-[10px] text-slate-400 font-sans">Économie énergétique 95 % vs. aluminium primaire</p>
           </div>
           <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-kemetGold font-bold text-xs">Cartone Ondulato</span>
+              <span class="text-kemetGold font-bold text-xs">Carton Ondulé d'Emballage</span>
               <span class="text-kemetGold font-black text-sm">0,95 DH/kg</span>
             </div>
-            <p class="text-[10px] text-slate-400 font-sans">Fibres cellulosiques · Humidité &lt; 14% · 0,95 kg CO₂/kg</p>
+            <p class="text-[10px] text-slate-400 font-sans">Fibres cellulosiques · Humidité &lt; 14 % · 0,95 kg CO₂/kg</p>
           </div>
           <div class="p-3 bg-black/60 rounded-xl border border-white/20 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-white font-bold text-xs">Vetro Bianco</span>
+              <span class="text-white font-bold text-xs">Verre Silico-Calcique Blanc</span>
               <span class="text-white font-black text-sm">1,80 DH/kg</span>
             </div>
-            <p class="text-[10px] text-slate-400 font-sans">Cullet 100% recyclable · 0,67 kg CO₂/kg</p>
+            <p class="text-[10px] text-slate-400 font-sans">Calcin 100 % recyclable · 0,67 kg CO₂/kg</p>
           </div>
           <div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/20 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-cyberGreen font-bold text-xs">Frazione Organica</span>
+              <span class="text-cyberGreen font-bold text-xs">Fraction Fermentescible</span>
               <span class="text-cyberGreen font-black text-sm">Substrat</span>
             </div>
             <p class="text-[10px] text-slate-400 font-sans">Biométhanisation Kemet Loop · Digestat amendement sols</p>
@@ -1285,13 +1192,13 @@
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION C · SOUVERAINETÉ NUMÉRIQUE & CRYPTOGRAPHIE
-         Statut : PROTÉGÉ (frosted gate)
+         Statut : PROTÉGÉ · Gate réel Supabase
          ═══════════════════════════════════════════════════════ -->
     <section id="section-c" class="protected-section is-locked reveal" data-gate="C">
       <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
           <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section C · Souveraineté Digitale</span>
-          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Privacy, Crittografia &amp; Conformità CNDP n° 09-08</h3>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Confidentialité, Cryptographie &amp; Conformité CNDP n° 09-08</h3>
           <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
             Architecture à deux niveaux de notarisation, conforme aux exigences de la Commission Nationale de contrôle de la protection des Données à caractère Personnel (CNDP) et au secret industriel marocain.
           </p>
@@ -1300,27 +1207,27 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-5 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-cyberGreen font-mono font-bold text-sm uppercase">Level 1 · Ledger Opératif</span>
+              <span class="text-cyberGreen font-mono font-bold text-sm uppercase">Niveau 1 · Registre Opératif</span>
               <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">PRIVÉ</span>
             </div>
             <h4 class="text-white font-bold text-sm font-sans">Hyperledger Fabric v2.5</h4>
             <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
               <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Consensus Raft · &gt; 2 000 TPS</span></li>
-              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Private Data Collections (PDC) pour pseudonymisation SHA-256</span></li>
-              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>HSM matériel pour signature cryptographique</span></li>
-              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Audit trail immuable · 100% des accès journalisés</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Collections de Données Privées (PDC) pour pseudonymisation SHA-256</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Module HSM matériel pour signature cryptographique</span></li>
+              <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold">▸</span><span>Piste d'audit immuable · 100 % des accès journalisés</span></li>
             </ul>
           </div>
 
           <div class="p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-kemetGoldBright font-mono font-bold text-sm uppercase">Level 2 · Ancrage Public</span>
+              <span class="text-kemetGoldBright font-mono font-bold text-sm uppercase">Niveau 2 · Ancrage Public</span>
               <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">PUBLIC</span>
             </div>
             <h4 class="text-white font-bold text-sm font-sans">Bitcoin OpenTimestamps (OTS)</h4>
             <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
-              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Ancrage quotidien de la Merkle Root sur blockchain Bitcoin</span></li>
-              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>OP_RETURN · coût zéro de gas</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Ancrage quotidien de la Racine de Merkle sur blockchain Bitcoin</span></li>
+              <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>OP_RETURN · coût zéro de frais de réseau</span></li>
               <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Opposabilité légale &amp; fiscale internationale</span></li>
               <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold">▸</span><span>Vérification indépendante sans tiers de confiance</span></li>
             </ul>
@@ -1330,7 +1237,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/20 space-y-2">
             <div class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">Infrastructure Souveraine</div>
-            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Serveurs physiques Tier-3/4 situés sur territoire marocain (Casablanca, Rabat). Aucun transfert transfrontalier non autorisé.</p>
+            <p class="text-[11px] text-slate-300 font-sans leading-relaxed">Serveurs physiques Tier-3/4 situés sur le territoire marocain (Casablanca, Rabat). Aucun transfert transfrontalier non autorisé.</p>
           </div>
           <div class="p-4 bg-black/60 rounded-xl border border-kemetGold/30 space-y-2">
             <div class="text-kemetGoldBright font-mono font-bold text-[11px] uppercase tracking-widest">Pseudonymisation PDC</div>
@@ -1368,15 +1275,15 @@
 
     <!-- ═══════════════════════════════════════════════════════
          SECTION D · MONÉTISATION B2B / B2G
-         Statut : PROTÉGÉ (frosted gate)
+         Statut : PROTÉGÉ · Gate réel Supabase
          ═══════════════════════════════════════════════════════ -->
     <section id="section-d" class="protected-section is-locked reveal" data-gate="D">
       <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
-          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section D · Monetizzazione Dati</span>
-          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Modello B2B &amp; B2G · Corporate Analytics</h3>
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section D · Monétisation des Datasets Stratégiques</span>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Modèle B2B &amp; B2G · Analyses Corporate</h3>
           <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-            Quatre canaux de monétisation des datasets consolidés. Chaque flux est structurellement scalable et adossé à des contrats-cadres pluriannuels.
+            Quatre canaux de monétisation des jeux de données consolidés. Chaque flux est structurellement scalable et adossé à des contrats-cadres pluriannuels.
           </p>
         </div>
 
@@ -1386,11 +1293,11 @@
               <span class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">B2B · FMCG</span>
               <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">API</span>
             </div>
-            <h4 class="text-white font-bold text-sm font-sans">Corporate Analytics</h4>
+            <h4 class="text-white font-bold text-sm font-sans">Analyses Corporate</h4>
             <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
-              Vente d'API et de datasets de consommation aux multinationales du packaging pour les obligations de <strong class="text-white">Responsabilité Élargie du Producteur (EPR)</strong> et les rapports CSRD.
+              Vente d'API et de jeux de données de consommation aux multinationales du packaging pour les obligations de <strong class="text-white">Responsabilité Élargie du Producteur (REP)</strong> et les rapports CSRD.
             </p>
-            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-cyberGreen">Marges &gt; 95%</div>
+            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-cyberGreen">Marges &gt; 95 %</div>
           </div>
 
           <div class="dataset-card space-y-3">
@@ -1400,19 +1307,19 @@
             </div>
             <h4 class="text-white font-bold text-sm font-sans">Africa-Polymer-Dataset</h4>
             <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
-              Base continentale de signatures optiques et spectrales NIR utilisée pour entraîner les modèles de Computer Vision (YOLOv8 / Swin Transformer) des futurs hubs K-MEH-20.
+              Base continentale de signatures optiques et spectrales NIR utilisée pour entraîner les modèles de vision par ordinateur (YOLOv8 / Swin Transformer) des futurs hubs K-MEH-20.
             </p>
-            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-kemetGoldBright">Licence per-seat + API</div>
+            <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-kemetGoldBright">Licence par siège + API</div>
           </div>
 
           <div class="dataset-card space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-white font-mono font-bold text-[11px] uppercase tracking-widest">B2G · État</span>
-              <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 font-mono">READ-ONLY</span>
+              <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 font-mono">LECTURE SEULE</span>
             </div>
-            <h4 class="text-white font-bold text-sm font-sans">Compliance Portal</h4>
+            <h4 class="text-white font-bold text-sm font-sans">Portail de Conformité</h4>
             <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
-              Accès inpectionnel en lecture seule pour la <strong class="text-white">Wilaya de Marrakech-Safi</strong> et la <strong class="text-white">Direction Générale des Impôts (DGI)</strong> pour la vérification de la Loi n° 28-00 et la défiscalisation des grands producteurs.
+              Accès inspectionnel en lecture seule pour la <strong class="text-white">Wilaya de Marrakech-Safi</strong> et la <strong class="text-white">Direction Générale des Impôts (DGI)</strong> pour la vérification de la Loi n° 28-00 et la défiscalisation des grands producteurs.
             </p>
             <div class="pt-2 border-t border-white/10 text-[10px] font-mono text-white">Contrat-cadre pluriannuel</div>
           </div>
@@ -1498,6 +1405,7 @@
 
   <!-- ═══════════════════════════════════════════════════════════
        MODAL · ACCRÉDITATION INSTITUTIONNELLE
+       POST → Supabase datalake_access_requests
        ═══════════════════════════════════════════════════════════ -->
   <div id="accreditModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Demande d'accréditation Data Lake">
     <div class="glass-panel g max-w-lg w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
@@ -1506,7 +1414,7 @@
       <div class="border-b border-white/10 pb-2">
         <span class="lbl au">Dossier Restreint · Data Lake</span>
         <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Demande d'Accréditation Institutionnelle</h3>
-        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Réservé aux FMCG, auditeurs ESG accrédités, investisseurs qualifiés et institutions publiques. Traitement sous 48h.</p>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Réservé aux FMCG, auditeurs ESG accrédités, investisseurs qualifiés et institutions publiques. Examen sous 48h par la Control Tower.</p>
       </div>
 
       <form id="accreditForm" onsubmit="window.handleAccreditSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
@@ -1546,7 +1454,7 @@
 
         <div>
           <label class="lbl block mb-1" for="ac_motivation">Motif de la Demande d'Accès *</label>
-          <textarea id="ac_motivation" name="motivation" required placeholder="Précisez le cadre d'évaluation (due diligence, audit EPR, recherche, conformité Loi 28-00...)" class="inp h-16"></textarea>
+          <textarea id="ac_motivation" name="motivation" required placeholder="Précisez le cadre d'évaluation (due diligence, audit REP, recherche, conformité Loi 28-00...)" class="inp h-16"></textarea>
         </div>
 
         <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 text-[10px] text-slate-400 space-y-1 font-sans">
@@ -1568,7 +1476,8 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════
-       MODAL · LOGIN TERMINAL ANALYTIQUE
+       MODAL · CONNEXION TERMINAL (vérification réelle du token)
+       GET → Supabase datalake_access_requests (status=APPROVED)
        ═══════════════════════════════════════════════════════════ -->
   <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion Terminal Analytique">
     <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
@@ -1577,26 +1486,17 @@
       <div class="border-b border-white/10 pb-2">
         <span class="lbl au">Terminal Analytique Sécurisé</span>
         <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Connexion Institutionnelle</h3>
-        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Le token d'accès vous est communiqué après signature du NDA et validation d'éligibilité.</p>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Le token d'accès vous est communiqué après signature du NDA et validation d'éligibilité par la Control Tower.</p>
       </div>
 
       <form id="loginForm" onsubmit="window.handleLoginSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
         <div>
           <label class="lbl block mb-1" for="lg_token">Token d'Accès Institutionnel *</label>
-          <input id="lg_token" type="text" name="token" required autocomplete="off" placeholder="ex: MAAT-XXXX-XXXX ou DEMO" class="inp tracking-widest font-mono">
+          <input id="lg_token" type="text" name="token" required autocomplete="off" placeholder="MAAT-LK-XXXX-XXXX" class="inp tracking-widest font-mono uppercase">
         </div>
 
         <button type="submit" id="btnLoginSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
           Accéder au Terminal 🔓
-        </button>
-
-        <div class="relative flex items-center justify-center py-1">
-          <div class="absolute inset-x-0 h-px bg-white/10"></div>
-          <span class="relative bg-black/80 px-3 text-[9px] font-mono text-slate-500 uppercase tracking-widest">ou</span>
-        </div>
-
-        <button type="button" onclick="window.unlockDemo()" class="btn btn-o w-full !py-2.5 font-bold">
-          🔓 Aperçu Démo (Sans NDA)
         </button>
 
         <div class="relative flex items-center justify-center py-1">
@@ -1625,7 +1525,7 @@
   <script src="assets/matrix-canvas.js"></script>
 
   <!-- ═══════════════════════════════════════════════════════════
-       SCRIPT INLINE
+       SCRIPT INLINE — LOGIQUE RÉELLE (ZÉRO DÉMO, ZÉRO FAKE)
        ═══════════════════════════════════════════════════════════ -->
   <script>
   (function () {
@@ -1640,7 +1540,7 @@
     })();
 
     /* ============================================================
-       TOAST ROBUSTE
+       TOAST
        ============================================================ */
     function toast(text, kind) {
       if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
@@ -1654,8 +1554,24 @@
         'font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
       d.textContent = text;
       document.body.appendChild(d);
-      setTimeout(function () { d.remove(); }, 4000);
+      setTimeout(function () { d.remove(); }, 4200);
     }
+
+    /* ============================================================
+       SUPABASE CLIENT (lazy)
+       ============================================================ */
+    function getSB() {
+      try {
+        if (window.Maat) {
+          if (!window.Maat.sb && typeof window.Maat.init === 'function') {
+            window.Maat.init();
+          }
+          return window.Maat.sb || null;
+        }
+      } catch (e) {}
+      return null;
+    }
+    window.ensureInit = function () { getSB(); };
 
     /* ============================================================
        MODAL HELPERS
@@ -1692,168 +1608,304 @@
     });
 
     /* ============================================================
-       LIVE TELEMETRY TICKER
+       AUTODÉTECTION ADMIN / CONTROL TOWER
+       → Déverrouillage automatique si session admin détectée
        ============================================================ */
-    var POLYMERS = ['PET', 'PE-HD', 'Aluminium', 'Carton', 'Verre', 'Organique'];
+    async function checkAdminSession() {
+      var sb = getSB();
+      if (!sb) return false;
 
-    function randomHash(len) {
-      len = len || 6;
-      var s = '';
-      var hex = '0123456789ABCDEF';
-      for (var i = 0; i < len; i++) s += hex[Math.floor(Math.random() * 16)];
-      return s;
-    }
+      try {
+        var res = await sb.auth.getSession();
+        var session = res && res.data && res.data.session;
+        if (!session || !session.user) return false;
 
-    function buildTicker() {
-      var track = document.getElementById('liveTickerTrack');
-      if (!track) return;
+        var u = session.user;
+        var appMeta = u.app_metadata || {};
+        var userMeta = u.user_metadata || {};
+        var role = (appMeta.role || userMeta.role || '').toLowerCase();
+        var email = (u.email || '').toLowerCase();
 
-      var items = [];
-      for (var i = 0; i < 8; i++) {
-        var p1 = (Math.random() * 220 + 15);
-        var p2 = p1 * (0.965 + Math.random() * 0.035);
-        var poly = POLYMERS[i % POLYMERS.length];
-        var gold = Math.random() < 0.25;
-        var prefix = gold ? 'LOT-MR-' : '0x';
-        items.push({
-          hash: prefix + randomHash(gold ? 4 : 6),
-          poly: poly,
-          p1: p1.toFixed(1),
-          p2: p2.toFixed(1),
-          gold: gold
-        });
-      }
+        var isAdmin = (
+          role === 'admin' ||
+          role === 'direction' ||
+          role === 'super_admin' ||
+          role === 'control_tower' ||
+          email.indexOf('admin@') === 0 ||
+          appMeta.is_admin === true
+        );
 
-      var html = '';
-      for (var j = 0; j < items.length; j++) {
-        var it = items[j];
-        html +=
-          '<div class="ticker-item">' +
-            '<span class="ticker-item__dot' + (it.gold ? ' gold' : '') + '"></span>' +
-            '<span class="ticker-item__hash">' + it.hash + '…</span>' +
-            '<span>' + it.poly + '</span>' +
-            '<span>P1: ' + it.p1 + ' kg · P2: ' + it.p2 + ' kg</span>' +
-            '<span class="ticker-item__status' + (it.gold ? ' gold' : '') + '">' + (it.gold ? 'NOTARIZED' : 'ANCHORED') + '</span>' +
-          '</div>';
-      }
-      // Duplication pour boucle continue
-      track.innerHTML = html + html;
-    }
-
-    function startTickerRefresh() {
-      // Régénération partielle des hashs toutes les 15s pour simuler des nouveaux blocs
-      setInterval(function () {
-        var hashes = document.querySelectorAll('.ticker-item__hash');
-        hashes.forEach(function (el) {
-          if (Math.random() < 0.35) {
-            var isGold = el.parentElement.querySelector('.ticker-item__status.gold') !== null;
-            var prefix = isGold ? 'LOT-MR-' : '0x';
-            el.textContent = prefix + randomHash(isGold ? 4 : 6) + '…';
-          }
-        });
-      }, 15000);
-    }
-
-    /* ============================================================
-       KPI COUNTERS ANIMÉS
-       ============================================================ */
-    function animateCounter(el) {
-      var target = parseFloat(el.getAttribute('data-counter')) || 0;
-      var format = el.getAttribute('data-format') || 'num';
-      var duration = 2000;
-      var start = performance.now();
-      var startVal = 0;
-
-      function tick(now) {
-        var t = Math.min(1, (now - start) / duration);
-        var eased = 1 - Math.pow(1 - t, 3);
-        var val = Math.round(startVal + (target - startVal) * eased);
-        if (format === 'kg') {
-          el.textContent = val.toLocaleString('fr-FR') + ' kg';
-        } else {
-          el.textContent = val.toLocaleString('fr-FR');
+        if (isAdmin) {
+          autoUnlockAll('admin_session');
+          return true;
         }
-        if (t < 1) requestAnimationFrame(tick);
+      } catch (e) {
+        console.warn('[MAAT] admin check failed', e);
       }
-      requestAnimationFrame(tick);
-    }
-
-    function initKPICounters() {
-      var els = document.querySelectorAll('[data-counter]');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach(animateCounter);
-        return;
-      }
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            animateCounter(e.target);
-            obs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.3 });
-      els.forEach(function (el) { obs.observe(el); });
-    }
-
-    function startKPIDeltas() {
-      // Petites variations random pour simuler un flux temps réel
-      setInterval(function () {
-        ['kpi-total-delta', 'kpi-co2-delta', 'kpi-dataset-delta', 'kpi-tx-delta'].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (!el) return;
-          var base = 0.25 + Math.random() * 0.55;
-          el.textContent = '+' + base.toFixed(2) + '%';
-        });
-      }, 6000);
+      return false;
     }
 
     /* ============================================================
-       GATE UNLOCK · MODE DÉMO
+       VERIFICATION TOKEN (via datalake_access_requests)
        ============================================================ */
-    window.unlockDemo = function () {
+    async function verifyAccessToken(token) {
+      var sb = getSB();
+      if (!sb) return { ok: false, reason: 'SERVICE_UNAVAILABLE' };
+
+      try {
+        var res = await sb
+          .from('datalake_access_requests')
+          .select('id, access_token, status, email, organization, reviewed_at')
+          .eq('access_token', token)
+          .eq('status', 'APPROVED')
+          .maybeSingle();
+
+        if (res.error) {
+          // Fallback : la table peut ne pas exister encore
+          console.warn('[MAAT] token verify error:', res.error);
+          return { ok: false, reason: 'QUERY_ERROR' };
+        }
+        if (!res.data) return { ok: false, reason: 'INVALID_TOKEN' };
+
+        return { ok: true, record: res.data };
+      } catch (e) {
+        console.warn('[MAAT] token verify exception', e);
+        return { ok: false, reason: 'EXCEPTION' };
+      }
+    }
+
+    /* ============================================================
+       AUTO UNLOCK / LOCK SECTIONS
+       ============================================================ */
+    function autoUnlockAll(source) {
       var sections = document.querySelectorAll('.protected-section');
       sections.forEach(function (el) {
         el.classList.remove('is-locked');
         el.classList.add('is-unlocked');
       });
-      showDemoBadge();
-      if (window.Maat && window.Maat.buzz) window.Maat.buzz(120);
-      toast('Mode démo déverrouillé · accès temporaire accordé', 'ok');
-      // Scroll jusqu'à la première section protégée
-      var first = document.getElementById('section-a');
-      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    function showDemoBadge() {
-      if (document.getElementById('demoBadge')) return;
-      var b = document.createElement('div');
-      b.id = 'demoBadge';
-      b.style.cssText =
-        'position:fixed;top:80px;right:16px;z-index:100;padding:8px 14px;' +
-        'background:linear-gradient(135deg,#E8C86A,#C5A059);color:#1a1405;' +
-        'font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;' +
-        'letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;' +
-        'box-shadow:0 8px 25px rgba(232,200,106,0.4);cursor:pointer;';
-      b.textContent = 'MODE DÉMO · ACCÈS DÉBLOQUÉ ✕';
-      b.title = 'Cliquez pour re-verrouiller';
-      b.onclick = function () {
-        document.querySelectorAll('.protected-section').forEach(function (el) {
-          el.classList.add('is-locked');
-          el.classList.remove('is-unlocked');
-        });
-        b.remove();
-        toast('Accès re-verrouillé', 'warn');
-      };
-      document.body.appendChild(b);
+      // Bandeau informatif permanent
+      if (!document.getElementById('sessionBadge')) {
+        var badge = document.createElement('div');
+        badge.id = 'sessionBadge';
+        badge.style.cssText =
+          'position:fixed;top:80px;right:16px;z-index:100;padding:8px 14px;' +
+          'background:linear-gradient(135deg,#00FFA3,#00B871);color:#001a10;' +
+          'font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;' +
+          'letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;' +
+          'box-shadow:0 8px 25px rgba(0,255,163,0.35);';
+        badge.textContent = source === 'admin_session'
+          ? 'SESSION ADMIN · ACCÈS TOTAL'
+          : 'TOKEN VALIDE · ACCÈS DÉBLOQUÉ';
+        document.body.appendChild(badge);
+      }
+      if (window.Maat && window.Maat.buzz) window.Maat.buzz(60);
+      toast('Terminal analytique déverrouillé.', 'ok');
     }
 
-    // Auto-unlock via URL ?access=granted
-    if (location.search.indexOf('access=granted') >= 0) {
-      setTimeout(window.unlockDemo, 600);
+    function lockAll() {
+      var sections = document.querySelectorAll('.protected-section');
+      sections.forEach(function (el) {
+        el.classList.add('is-locked');
+        el.classList.remove('is-unlocked');
+      });
+      var b = document.getElementById('sessionBadge');
+      if (b) b.remove();
+      try { sessionStorage.removeItem('maat_access_token'); } catch (e) {}
+    }
+    window.__maatLockAll = lockAll;
+
+    /* ============================================================
+       RESTAURATION DE SESSION (token validé dans sessionStorage)
+       ============================================================ */
+    async function restoreSession() {
+      var savedToken = null;
+      try { savedToken = sessionStorage.getItem('maat_access_token'); } catch (e) {}
+      if (!savedToken) return false;
+
+      var res = await verifyAccessToken(savedToken);
+      if (res.ok) {
+        autoUnlockAll('token_restored');
+        return true;
+      }
+      try { sessionStorage.removeItem('maat_access_token'); } catch (e) {}
+      return false;
     }
 
     /* ============================================================
-       FORM · ACCRÉDITATION
+       LIVE TELEMETRY TICKER · données réelles Supabase
+       ============================================================ */
+    function tickerStandby(track, msg) {
+      track.classList.add('is-empty');
+      track.innerHTML =
+        '<div class="ticker-item">' +
+          '<span class="ticker-item__dot"></span>' +
+          '<span class="ticker-item__hash">NODE · HUB-MARRAKECH-01</span>' +
+          '<span style="color:#00FFA3;font-weight:800;">[STATUS: ONLINE]</span>' +
+          '<span style="color:#94A3B8;">' + (msg || '— En attente des notarisations…') + '</span>' +
+        '</div>';
+      var st = document.getElementById('tickerStatus');
+      if (st) st.textContent = 'STANDBY';
+    }
+
+    function shortHash(str) {
+      if (!str) return '—';
+      str = String(str);
+      if (str.length <= 14) return str;
+      return str.slice(0, 6) + '…' + str.slice(-4);
+    }
+
+    function buildTickerItemFromRow(row) {
+      var hash = row.tx_hash || row.block_hash || row.hash || row.id || '—';
+      var polymer = row.polymer_type || row.polymer || row.material || 'Matière';
+      var p1 = row.p1_kg != null ? Number(row.p1_kg) : (row.weight_kg != null ? Number(row.weight_kg) : null);
+      var p2 = row.p2_kg != null ? Number(row.p2_kg) : null;
+      var isGold = (row.status || '').toUpperCase() === 'NOTARIZED' || row.notarized === true;
+      var statusLabel = isGold ? 'NOTARIZED' : 'ANCHORED';
+
+      var weightStr = '';
+      if (p1 != null && p2 != null) {
+        weightStr = 'P1: ' + p1.toFixed(1) + ' kg · P2: ' + p2.toFixed(1) + ' kg';
+      } else if (p1 != null) {
+        weightStr = p1.toFixed(1) + ' kg';
+      } else {
+        weightStr = '—';
+      }
+
+      return (
+        '<div class="ticker-item">' +
+          '<span class="ticker-item__dot' + (isGold ? ' gold' : '') + '"></span>' +
+          '<span class="ticker-item__hash">' + shortHash(hash) + '</span>' +
+          '<span>' + polymer + '</span>' +
+          '<span>' + weightStr + '</span>' +
+          '<span class="ticker-item__status' + (isGold ? ' gold' : '') + '">' + statusLabel + '</span>' +
+        '</div>'
+      );
+    }
+
+    async function loadTickerFromSupabase() {
+      var track = document.getElementById('liveTickerTrack');
+      if (!track) return;
+
+      var sb = getSB();
+      if (!sb) {
+        tickerStandby(track, '— Service Data Lake non initialisé');
+        return;
+      }
+
+      try {
+        var res = await sb
+          .from('collections')
+          .select('*')
+          .eq('status', 'ANCHORED')
+          .order('created_at', { ascending: false })
+          .limit(8);
+
+        if (res.error) {
+          tickerStandby(track, '— Table collections inaccessible');
+          return;
+        }
+        if (!res.data || res.data.length === 0) {
+          tickerStandby(track, '— Aucune notarisation enregistrée');
+          return;
+        }
+
+        var html = res.data.map(buildTickerItemFromRow).join('');
+        // Duplication pour boucle CSS continue
+        track.classList.remove('is-empty');
+        track.innerHTML = html + html;
+
+        var st = document.getElementById('tickerStatus');
+        if (st) st.textContent = 'LIVE · ' + res.data.length + ' blocs';
+
+      } catch (e) {
+        console.warn('[MAAT] ticker load failed', e);
+        tickerStandby(track, '— Erreur de synchronisation');
+      }
+    }
+
+    /* ============================================================
+       4 KPI CARDS · données réelles Supabase
+       ============================================================ */
+    function setKPIStatus(id, text, color) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = text;
+      el.style.color = color || '#64748B';
+    }
+
+    function setKPIsEmpty(reason) {
+      document.getElementById('kpi-tonnage').textContent = '—';
+      document.getElementById('kpi-co2').textContent = '—';
+      document.getElementById('kpi-dataset').textContent = '—';
+      document.getElementById('kpi-tx').textContent = '—';
+      setKPIStatus('kpi-tonnage-status', reason, '#64748B');
+      setKPIStatus('kpi-co2-status', reason, '#64748B');
+      setKPIStatus('kpi-dataset-status', reason, '#64748B');
+      setKPIStatus('kpi-tx-status', reason, '#64748B');
+
+      var dot = document.getElementById('kpiSyncDot');
+      if (dot) { dot.style.background = '#94A3B8'; dot.style.boxShadow = 'none'; }
+      var st = document.getElementById('kpiSyncStatus');
+      if (st) st.textContent = 'Hors ligne';
+    }
+
+    function syncKPIsOK(tonnage, co2, dataset, tx) {
+      document.getElementById('kpi-tonnage').textContent = Number(tonnage).toLocaleString('fr-FR') + ' kg';
+      document.getElementById('kpi-co2').textContent = Number(co2).toLocaleString('fr-FR') + ' kg';
+      document.getElementById('kpi-dataset').textContent = dataset > 0 ? Number(dataset).toLocaleString('fr-FR') : '—';
+      document.getElementById('kpi-tx').textContent = Number(tx).toLocaleString('fr-FR');
+
+      setKPIStatus('kpi-tonnage-status', '▲ Synchronisé', '#00FFA3');
+      setKPIStatus('kpi-co2-status', '▲ Synchronisé', '#00FFA3');
+      setKPIStatus('kpi-dataset-status', dataset > 0 ? '▲ Synchronisé' : '— Aucune signature', dataset > 0 ? '#E8C86A' : '#64748B');
+      setKPIStatus('kpi-tx-status', '▲ Synchronisé', '#E8C86A');
+
+      var dot = document.getElementById('kpiSyncDot');
+      if (dot) { dot.style.background = '#00FFA3'; dot.style.boxShadow = '0 0 8px #00FFA3'; }
+      var st = document.getElementById('kpiSyncStatus');
+      if (st) st.textContent = 'Synchronisé';
+    }
+
+    async function loadKPIsFromSupabase() {
+      var sb = getSB();
+      if (!sb) { setKPIsEmpty('Service indisponible'); return; }
+
+      try {
+        var res = await sb
+          .from('collections')
+          .select('p1_kg, p2_kg, weight_kg, co2_saved_kg, nir_signatures, status, polymer_type')
+          .eq('status', 'ANCHORED');
+
+        if (res.error) { setKPIsEmpty('Table collections inaccessible'); return; }
+        if (!res.data || res.data.length === 0) { setKPIsEmpty('Aucune donnée notarisée'); return; }
+
+        var tonnage = 0, co2 = 0, dataset = 0, tx = 0;
+
+        for (var i = 0; i < res.data.length; i++) {
+          var row = res.data[i];
+          var w = Number(row.p2_kg != null ? row.p2_kg : (row.p1_kg != null ? row.p1_kg : (row.weight_kg || 0)));
+          if (!isFinite(w)) w = 0;
+          tonnage += w;
+
+          var c = Number(row.co2_saved_kg);
+          if (!isFinite(c) || c <= 0) c = w * 3.5;
+          co2 += c;
+
+          var nir = Number(row.nir_signatures || 0);
+          if (isFinite(nir) && nir > 0) dataset += nir;
+
+          tx += 1;
+        }
+
+        syncKPIsOK(tonnage, co2, dataset, tx);
+      } catch (e) {
+        console.warn('[MAAT] KPI load failed', e);
+        setKPIsEmpty('Erreur de synchronisation');
+      }
+    }
+
+    /* ============================================================
+       FORM · ACCRÉDITATION (POST Supabase datalake_access_requests)
        ============================================================ */
     window.handleAccreditSubmit = async function (e) {
       e.preventDefault();
@@ -1871,14 +1923,15 @@
         email: String(fd.get('email') || '').toLowerCase().trim(),
         phone: String(fd.get('phone') || '').trim() || null,
         motivation: String(fd.get('motivation') || '').trim(),
-        nda_agreement: fd.get('nda_agreement') === 'on'
+        nda_accepted: fd.get('nda_agreement') === 'on',
+        status: 'PENDING'
       };
 
       if (!payload.full_name || !payload.organization || !payload.category || !payload.email || !payload.phone || !payload.motivation) {
         btn.disabled = false; btn.textContent = original;
         return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
       }
-      if (!payload.nda_agreement) {
+      if (!payload.nda_accepted) {
         btn.disabled = false; btn.textContent = original;
         return toast('Veuillez accepter l\'accord de non-divulgation (NDA).', 'warn');
       }
@@ -1887,34 +1940,32 @@
         return toast('Adresse email invalide.', 'warn');
       }
 
-      if (window.ensureInit) window.ensureInit();
-      var sb = window.Maat && window.Maat.sb;
+      var sb = getSB();
       var saved = false;
+      var savedIn = null;
 
       if (sb) {
+        // Tentative 1 : table dédiée
         try {
-          var r1 = await sb.from('market_study_leads').insert([{
-            full_name: payload.full_name,
-            organization: payload.organization,
-            role_title: '[' + payload.category + '] DATA LAKE ACCREDITATION',
-            email: payload.email,
-            phone: payload.phone
-          }]);
-          if (!r1.error) saved = true;
-        } catch (err) {
+          var r1 = await sb.from('datalake_access_requests').insert([payload]);
+          if (!r1.error) { saved = true; savedIn = 'dedicated'; }
+        } catch (e) {}
+
+        // Tentative 2 : fallback field_notes
+        if (!saved) {
           try {
             var r2 = await sb.from('field_notes').insert([{
               note_type: 'GENERAL',
               content: 'ACCRÉDITATION DATA LAKE : ' + payload.full_name + ' (' + payload.category + ' @ ' + payload.organization + ') - Email: ' + payload.email + ' - Tél: ' + payload.phone + ' - Motif: ' + payload.motivation,
               operator_email: payload.email
             }]);
-            if (!r2.error) saved = true;
+            if (!r2.error) { saved = true; savedIn = 'fallback'; }
           } catch (x) {}
         }
       }
 
       if (saved) {
-        toast('Demande d\'accréditation transmise. Protocole NDA sous 48h.');
+        toast('Demande transmise à la Direction. Examen sous 48h par la Control Tower.', 'ok');
         if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
         form.reset();
         btn.textContent = '✓ Demande Enregistrée';
@@ -1922,7 +1973,10 @@
           window.closeAccreditModal();
           btn.textContent = original;
           btn.disabled = false;
-        }, 2200);
+        }, 2400);
+        if (savedIn === 'fallback') {
+          console.warn('[MAAT] accréditation enregistrée en fallback field_notes (table dédiée indisponible)');
+        }
       } else {
         btn.disabled = false;
         btn.textContent = original;
@@ -1931,42 +1985,47 @@
     };
 
     /* ============================================================
-       FORM · LOGIN TERMINAL
+       FORM · LOGIN (vérification réelle du token)
        ============================================================ */
-    window.handleLoginSubmit = function (e) {
+    window.handleLoginSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
       var btn = document.getElementById('btnLoginSubmit');
       var original = btn.textContent;
       var token = String(new FormData(form).get('token') || '').trim().toUpperCase();
 
-      if (!token) {
-        return toast('Veuillez saisir un token d\'accès.', 'warn');
-      }
+      if (!token) return toast('Veuillez saisir un token d\'accès.', 'warn');
 
       btn.disabled = true;
       btn.textContent = 'Vérification cryptographique…';
 
-      setTimeout(function () {
-        if (token === 'DEMO' || token === 'DEMO2026' || token === 'MAAT') {
-          window.closeLoginModal();
-          window.unlockDemo();
-          btn.textContent = '✓ Accès Accordé';
-          setTimeout(function () {
-            btn.textContent = original;
-            btn.disabled = false;
-            form.reset();
-          }, 1200);
-        } else {
-          btn.disabled = false;
+      var res = await verifyAccessToken(token);
+
+      if (res.ok) {
+        try { sessionStorage.setItem('maat_access_token', token); } catch (e) {}
+        window.closeLoginModal();
+        autoUnlockAll('token_valid');
+        btn.textContent = '✓ Accès Accordé';
+        setTimeout(function () {
           btn.textContent = original;
-          toast('Token invalide · demande d\'accréditation requise.', 'err');
+          btn.disabled = false;
+          form.reset();
+        }, 1200);
+      } else {
+        btn.disabled = false;
+        btn.textContent = original;
+        if (res.reason === 'INVALID_TOKEN') {
+          toast('Token invalide ou non approuvé. Demande d\'accréditation requise.', 'err');
+        } else if (res.reason === 'SERVICE_UNAVAILABLE') {
+          toast('Service d\'authentification indisponible. Réessayez.', 'err');
+        } else {
+          toast('Vérification impossible. Contactez la Control Tower.', 'err');
         }
-      }, 900);
+      }
     };
 
     /* ============================================================
-       LOGIN UNIVERSEL (header)
+       LOGIN UNIVERSEL (header) · conservé
        ============================================================ */
     (function () {
       var _origOpenLogin = window.openUniversalLogin;
@@ -1979,52 +2038,15 @@
         var b = document.getElementById('loginBtn');
         if (b) { b.disabled = false; b.style.pointerEvents = 'auto'; }
       }
-      function findLoginModal() {
-        return document.getElementById('universalLoginModal') ||
-               document.getElementById('loginModal') ||
-               document.querySelector('.universal-login-modal') ||
-               document.querySelector('[data-login-modal]');
-      }
-      function bindCloseHandlers(m) {
-        if (!m || m._hasCleanClose) return;
-        m._hasCleanClose = true;
-        function closeCleanly() {
-          m.classList.add('hidden');
-          m.classList.remove('flex');
-          m.style.display = 'none';
-          resetLoginFlags();
-          try { if (m.parentNode) m.parentNode.removeChild(m); } catch (e) {}
-        }
-        m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close').forEach(function (btn) {
-          btn.addEventListener('click', closeCleanly);
-        });
-        m.addEventListener('click', function (e) {
-          if (e.target === m || e.target.classList.contains('backdrop')) closeCleanly();
-        });
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape' && document.body.contains(m) && m.style.display !== 'none' && !m.classList.contains('hidden')) closeCleanly();
-        });
-      }
       window.openUniversalLogin = function () {
         resetLoginFlags();
-        var stale = findLoginModal();
-        if (stale && stale.parentNode) { try { stale.parentNode.removeChild(stale); } catch (e) {} }
-        if (typeof _origOpenLogin === 'function') { try { _origOpenLogin(); } catch (err) {} }
-        setTimeout(function () {
-          var m = findLoginModal();
-          if (m) {
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-            m.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            bindCloseHandlers(m);
-          }
-        }, 30);
+        // Redirige vers la vraie modal token institutionnel
+        window.openLoginModal();
       };
     })();
 
     /* ============================================================
-       EASTER EGGS
+       EASTER EGGS NON-SÉCURITAIRES (aucun unlock)
        ============================================================ */
     (function () {
       var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
@@ -2089,7 +2111,7 @@
       });
     })();
 
-    // Easter egg "maat" : tape les 4 lettres sur le clavier
+    // "maat" → NE déverrouille PAS (sécurité) · simple toast symbolique
     (function () {
       var seq = ['m','a','a','t'];
       var idx = 0;
@@ -2102,7 +2124,7 @@
           if (idx === seq.length) {
             idx = 0;
             showEasterEggToast('⚖️ MAÂT · VERITAS APERTA');
-            if (window.unlockDemo) window.unlockDemo();
+            window.openLoginModal();
           }
         } else {
           idx = (k === seq[0]) ? 1 : 0;
@@ -2110,6 +2132,7 @@
       });
     })();
 
+    // 5 clicks login → ouvre modal token (pas d'unlock)
     (function () {
       var loginBtn = document.getElementById('loginBtn');
       if (!loginBtn) return;
@@ -2119,9 +2142,8 @@
         if (loginTimer) clearTimeout(loginTimer);
         loginTimer = setTimeout(function () {
           if (loginClicks >= 5) {
-            showEasterEggToast('👁️ CODE SECRET DÉBLOQUÉ · SCEAU DE MAAT');
-            if (window.unlockDemo) window.unlockDemo();
-            if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
+            showEasterEggToast('👁️ ACCÈS TOKEN · SCEAU DE MAAT');
+            window.openLoginModal();
           }
           loginClicks = 0;
         }, 2000);
@@ -2131,13 +2153,13 @@
     function showEasterEggToast(text) {
       var existing = document.querySelector('.ee-toast');
       if (existing) existing.remove();
-      var toast = document.createElement('div');
-      toast.className = 'ee-toast';
-      toast.textContent = text;
-      document.body.appendChild(toast);
+      var t = document.createElement('div');
+      t.className = 'ee-toast';
+      t.textContent = text;
+      document.body.appendChild(t);
       setTimeout(function () {
-        toast.classList.add('ee-toast-out');
-        setTimeout(function () { toast.remove(); }, 400);
+        t.classList.add('ee-toast-out');
+        setTimeout(function () { t.remove(); }, 400);
       }, 2200);
     }
     window.showEasterEggToast = showEasterEggToast;
@@ -2180,16 +2202,6 @@
     }
 
     /* ============================================================
-       ENSURE INIT (Supabase)
-       ============================================================ */
-    window.ensureInit = function () {
-      try {
-        if (!window.Maat) return;
-        if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
-      } catch (e) {}
-    };
-
-    /* ============================================================
        MOBILE NAV
        ============================================================ */
     window.toggleMobileNav = function () {
@@ -2222,15 +2234,38 @@
     }
 
     /* ============================================================
-       BOOTSTRAP
+       BOOTSTRAP · séquence réelle
        ============================================================ */
-    buildTicker();
-    startTickerRefresh();
-    initKPICounters();
-    startKPIDeltas();
+    async function bootstrap() {
+      // 1. Tenter autodétection admin (Control Tower)
+      var isAdmin = await checkAdminSession();
+
+      // 2. Si pas admin, tenter restauration d'un token validé
+      if (!isAdmin) {
+        await restoreSession();
+      }
+
+      // 3. Charger les données réelles
+      await loadTickerFromSupabase();
+      await loadKPIsFromSupabase();
+
+      // 4. Rafraîchissement périodique du ticker (toutes 60s)
+      setInterval(loadTickerFromSupabase, 60000);
+      // 5. Rafraîchissement KPI (toutes 120s)
+      setInterval(loadKPIsFromSupabase, 120000);
+    }
+
+    // Lancer après un court délai (laisse le temps à Maat.init)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(bootstrap, 300);
+      });
+    } else {
+      setTimeout(bootstrap, 300);
+    }
 
     try {
-      console.info('%c[MAAT DATA LAKE] Portal ready · v1.0', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
+      console.info('%c[MAAT DATA LAKE] Portal ready · v2.0 · zéro démo · Supabase-backed', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
     } catch (e) {}
 
   })();
