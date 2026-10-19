@@ -57,7 +57,6 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
-
     body {
       background-color: transparent !important;
       background-image: none !important;
@@ -69,109 +68,58 @@
       -moz-osx-font-smoothing: grayscale;
       touch-action: manipulation;
     }
-
     #matrixCanvas {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 0 !important;
-      pointer-events: none !important;
+      position: fixed !important; inset: 0 !important;
+      width: 100vw !important; height: 100vh !important;
+      z-index: 0 !important; pointer-events: none !important;
       display: block !important;
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
+      transform: translateZ(0); -webkit-transform: translateZ(0);
     }
-
     #dataAmbientLayer {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.55;
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.55;
       background-image:
         radial-gradient(ellipse at 20% 10%, rgba(6, 10, 13, 0.85) 0%, transparent 55%),
         radial-gradient(ellipse at 80% 90%, rgba(6, 10, 13, 0.80) 0%, transparent 55%),
         radial-gradient(circle at 50% 50%, rgba(0, 255, 163, 0.03) 0%, transparent 65%);
     }
-
     main, footer { position: relative; z-index: 10; }
     header { z-index: 50; }
-
     input, select, textarea, .inp { font-size: 16px !important; }
-    @media (min-width: 640px) {
-      input, select, textarea, .inp { font-size: 0.8rem !important; }
-    }
-
+    @media (min-width: 640px) { input, select, textarea, .inp { font-size: 0.8rem !important; } }
     .btn, button, .step-tab, .data-card, .level-card { min-height: 44px; min-width: 44px; }
-
-    .cta-inline {
-      width: auto !important; max-width: 100%;
-      display: inline-flex !important; align-items: center; justify-content: center;
-      gap: 0.4rem; white-space: nowrap; min-height: 44px;
-    }
+    .cta-inline { width: auto !important; max-width: 100%; display: inline-flex !important; align-items: center; justify-content: center; gap: 0.4rem; white-space: nowrap; min-height: 44px; }
     .cta-inline:hover { transform: translateY(-1px); }
-
     #scrollProgress {
-      position: fixed; top: 0; left: 0;
-      height: 3px; width: 0%;
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
       background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
       z-index: 9999;
       box-shadow: 0 0 12px rgba(0, 255, 163, .6);
-      transition: width .1s ease-out;
-      pointer-events: none;
+      transition: width .1s ease-out; pointer-events: none;
     }
-
-    .reveal {
-      opacity: 0; transform: translateY(35px);
-      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
-    }
+    .reveal { opacity: 0; transform: translateY(35px); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-
     .tilt-card { transform-style: preserve-3d; transition: transform .3s ease-out, box-shadow .3s; will-change: transform; }
     .tilt-card:hover { box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3); }
-
-    .animated-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
-      animation: dividerPulse 3s ease-in-out infinite;
-      margin: 2.5rem auto; max-width: 60%;
-    }
+    .animated-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent); animation: dividerPulse 3s ease-in-out infinite; margin: 2.5rem auto; max-width: 60%; }
     @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
-
     .glass-panel {
       background: linear-gradient(165deg, rgba(19, 25, 32, 0.90), rgba(9, 13, 16, 0.97)) !important;
       border: 1px solid rgba(197, 160, 89, 0.35) !important;
       border-radius: 1.25rem !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85) !important;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
-    .glass-panel.g {
-      border-color: rgba(0, 255, 163, 0.45) !important;
-      box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.20) !important;
-    }
+    .glass-panel.g { border-color: rgba(0, 255, 163, 0.45) !important; box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.20) !important; }
     .glass-panel:hover { border-color: rgba(0, 255, 163, 0.6) !important; }
-
-    .inp {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.65) !important;
-      border: 1px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 0.75rem !important;
-      padding: 0.75rem !important;
-      color: #fff !important;
-      outline: none;
-      transition: border-color .2s;
-    }
+    .inp { width: 100%; background: rgba(0, 0, 0, 0.65) !important; border: 1px solid rgba(255, 255, 255, 0.14) !important; border-radius: 0.75rem !important; padding: 0.75rem !important; color: #fff !important; outline: none; transition: border-color .2s; }
     .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
-
     .btn {
       padding: 0.85rem; border-radius: 0.8rem;
       font: 800 0.72rem 'JetBrains Mono', monospace;
       letter-spacing: 0.06em; text-transform: uppercase;
-      transition: all 0.2s;
-      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center;
       text-align: center; cursor: pointer; border: none;
     }
     .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
@@ -181,450 +129,147 @@
     .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
     .btn-o:hover { border-color: #00FFA3 !important; }
     .btn-o.is-active { background: rgba(0, 255, 163, 0.15) !important; border-color: #00FFA3 !important; box-shadow: 0 0 18px -3px rgba(0, 255, 163, 0.5); }
-
     @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
     @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
     .anim-orbit { animation: orbitSpin 16s linear infinite; transform-origin: 60px 60px; }
     .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
     .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
-
     .scanner-beam {
       position: absolute; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, #00FFA3, transparent);
-      box-shadow: 0 0 14px #00FFA3;
-      animation: scanLine 3.8s ease-in-out infinite;
+      box-shadow: 0 0 14px #00FFA3; animation: scanLine 3.8s ease-in-out infinite;
       pointer-events: none;
     }
     @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
-
-    .hero-datalake {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      align-items: center;
-    }
-    @media (min-width: 1024px) {
-      .hero-datalake {
-        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-        gap: 2.5rem;
-      }
-    }
-
+    .hero-datalake { position: relative; display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+    @media (min-width: 1024px) { .hero-datalake { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 2.5rem; } }
     .live-ticker {
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
       background: rgba(0, 0, 0, 0.85);
       border: 1px solid rgba(0, 255, 163, 0.35);
       border-radius: 0.85rem;
       box-shadow: inset 0 0 25px rgba(0, 255, 163, 0.08), 0 8px 25px -10px rgba(0, 0, 0, 0.9);
     }
     .live-ticker__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.55rem 0.9rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 0.5rem; padding: 0.55rem 0.9rem;
       border-bottom: 1px solid rgba(0, 255, 163, 0.20);
       background: linear-gradient(180deg, rgba(0, 255, 163, 0.06), transparent);
     }
     .live-ticker__body {
-      display: flex;
-      align-items: center;
-      height: 44px;
-      overflow: hidden;
+      display: flex; align-items: center; height: 44px; overflow: hidden;
       position: relative;
       mask-image: linear-gradient(90deg, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
       -webkit-mask-image: linear-gradient(90deg, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
     }
-    .live-ticker__track {
-      display: flex;
-      gap: 2rem;
-      padding-left: 1rem;
-      animation: tickerScroll 60s linear infinite;
-      will-change: transform;
-      white-space: nowrap;
-    }
+    .live-ticker__track { display: flex; gap: 2rem; padding-left: 1rem; animation: tickerScroll 60s linear infinite; will-change: transform; white-space: nowrap; }
     .live-ticker__track:hover { animation-play-state: paused; }
-    .live-ticker__track.is-empty {
-      animation: none;
-      justify-content: center;
-      width: 100%;
-    }
-    @keyframes tickerScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: #94A3B8;
-      white-space: nowrap;
-    }
-    .ticker-item__hash {
-      color: #00FFA3;
-      font-weight: 700;
-    }
-    .ticker-item__dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #00FFA3;
-      box-shadow: 0 0 8px #00FFA3;
-      flex-shrink: 0;
-      animation: dotPulse 2s ease-in-out infinite;
-    }
-    .ticker-item__dot.gold {
-      background: #E8C86A;
-      box-shadow: 0 0 8px #E8C86A;
-    }
-    @keyframes dotPulse {
-      0%, 100% { opacity: 0.4; transform: scale(0.85); }
-      50% { opacity: 1; transform: scale(1.1); }
-    }
-    .ticker-item__status {
-      color: #00FFA3;
-      font-weight: 800;
-      text-transform: uppercase;
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      padding: 0.1rem 0.35rem;
-      border-radius: 0.25rem;
-      background: rgba(0, 255, 163, 0.12);
-      border: 1px solid rgba(0, 255, 163, 0.30);
-    }
-    .ticker-item__status.gold {
-      color: #E8C86A;
-      background: rgba(232, 200, 106, 0.12);
-      border-color: rgba(232, 200, 106, 0.35);
-    }
-    .ticker-idle {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: #94A3B8;
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-    }
-    .ticker-idle .badge {
-      padding: 0.15rem 0.45rem;
-      border-radius: 0.25rem;
-      font-size: 0.6rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
+    .live-ticker__track.is-empty { animation: none; justify-content: center; width: 100%; }
+    @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: inline-flex; align-items: center; gap: 0.55rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: #94A3B8; white-space: nowrap; }
+    .ticker-item__hash { color: #00FFA3; font-weight: 700; }
+    .ticker-item__dot { width: 6px; height: 6px; border-radius: 50%; background: #00FFA3; box-shadow: 0 0 8px #00FFA3; flex-shrink: 0; animation: dotPulse 2s ease-in-out infinite; }
+    .ticker-item__dot.gold { background: #E8C86A; box-shadow: 0 0 8px #E8C86A; }
+    @keyframes dotPulse { 0%, 100% { opacity: 0.4; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
+    .ticker-item__status { color: #00FFA3; font-weight: 800; text-transform: uppercase; font-size: 0.62rem; letter-spacing: 0.08em; padding: 0.1rem 0.35rem; border-radius: 0.25rem; background: rgba(0, 255, 163, 0.12); border: 1px solid rgba(0, 255, 163, 0.30); }
+    .ticker-item__status.gold { color: #E8C86A; background: rgba(232, 200, 106, 0.12); border-color: rgba(232, 200, 106, 0.35); }
+    .ticker-idle { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: #94A3B8; display: flex; align-items: center; gap: 0.55rem; }
+    .ticker-idle .badge { padding: 0.15rem 0.45rem; border-radius: 0.25rem; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
     .data-card {
-      position: relative;
-      padding: 1.1rem 1rem;
-      border-radius: 1rem;
+      position: relative; padding: 1.1rem 1rem; border-radius: 1rem;
       background: linear-gradient(160deg, rgba(15, 22, 28, 0.92), rgba(9, 13, 16, 0.98));
       border: 1px solid rgba(0, 255, 163, 0.20);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
     }
-    .data-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, 0.60), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .data-card:hover {
-      border-color: rgba(0, 255, 163, 0.55);
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px -15px rgba(0, 255, 163, 0.25);
-    }
+    .data-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(0, 255, 163, 0.60), transparent); opacity: 0; transition: opacity 0.3s; }
+    .data-card:hover { border-color: rgba(0, 255, 163, 0.55); transform: translateY(-2px); box-shadow: 0 18px 40px -15px rgba(0, 255, 163, 0.25); }
     .data-card:hover::before { opacity: 1; }
     .data-card.au { border-color: rgba(232, 200, 106, 0.25); }
     .data-card.au::before { background: linear-gradient(90deg, transparent, rgba(232, 200, 106, 0.70), transparent); }
     .data-card.au:hover { border-color: rgba(232, 200, 106, 0.60); box-shadow: 0 18px 40px -15px rgba(232, 200, 106, 0.22); }
-    .data-card__label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: #94A3B8;
-    }
-    .data-card__value {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-top: 0.4rem;
-      color: #00FFA3;
-      letter-spacing: 0.02em;
-    }
+    .data-card__label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: #94A3B8; }
+    .data-card__value { font-family: 'Cinzel', serif; font-size: clamp(1.35rem, 2.4vw, 1.85rem); font-weight: 800; line-height: 1.1; margin-top: 0.4rem; color: #00FFA3; letter-spacing: 0.02em; }
     .data-card.au .data-card__value { color: #E8C86A; }
-    .data-card__unit {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: #64748B;
-      margin-top: 0.25rem;
-      display: block;
-    }
-    .data-card__delta {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      font-weight: 700;
-      margin-top: 0.5rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      color: #64748B;
-    }
-
-    .protected-section {
-      position: relative;
-      overflow: hidden;
-      border-radius: 1.5rem;
-    }
-    .protected-section__content {
-      transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
-    }
-    .protected-section.is-locked .protected-section__content {
-      filter: blur(9px) brightness(0.55) saturate(0.7);
-      opacity: 0.55;
-      pointer-events: none;
-      user-select: none;
-    }
-    .protected-section__overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      z-index: 5;
-      pointer-events: none;
-      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .protected-section.is-unlocked .protected-section__overlay {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .data-card__unit { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; color: #64748B; margin-top: 0.25rem; display: block; }
+    .data-card__delta { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700; margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.25rem; color: #64748B; }
+    .protected-section { position: relative; overflow: hidden; border-radius: 1.5rem; }
+    .protected-section__content { transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s; }
+    .protected-section.is-locked .protected-section__content { filter: blur(9px) brightness(0.55) saturate(0.7); opacity: 0.55; pointer-events: none; user-select: none; }
+    .protected-section__overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 5; pointer-events: none; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .protected-section.is-unlocked .protected-section__overlay { opacity: 0; pointer-events: none; }
     .protected-section:not(.is-locked) .protected-section__overlay { display: none; }
     .gate-lock {
-      pointer-events: auto;
-      max-width: 460px;
-      text-align: center;
-      padding: 1.5rem 1.25rem;
+      pointer-events: auto; max-width: 460px; text-align: center; padding: 1.5rem 1.25rem;
       border-radius: 1rem;
       background: linear-gradient(165deg, rgba(10, 13, 16, 0.96), rgba(6, 10, 13, 0.98));
       border: 1px solid rgba(232, 200, 106, 0.45);
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 45px -10px rgba(232, 200, 106, 0.20);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     }
     .gate-lock__icon {
-      width: 52px;
-      height: 52px;
-      margin: 0 auto 0.85rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 52px; height: 52px; margin: 0 auto 0.85rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       background: radial-gradient(circle at 50% 30%, rgba(232, 200, 106, 0.25), rgba(232, 200, 106, 0.05));
       border: 1px solid rgba(232, 200, 106, 0.55);
       animation: gatePulse 3s ease-in-out infinite;
     }
-    @keyframes gatePulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(232, 200, 106, 0.35); }
-      50% { box-shadow: 0 0 0 12px rgba(232, 200, 106, 0); }
-    }
+    @keyframes gatePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(232, 200, 106, 0.35); } 50% { box-shadow: 0 0 0 12px rgba(232, 200, 106, 0); } }
     .gate-lock__badge {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.58rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      color: #E8C86A;
-      background: rgba(232, 200, 106, 0.10);
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em;
+      color: #E8C86A; background: rgba(232, 200, 106, 0.10);
       border: 1px solid rgba(232, 200, 106, 0.40);
-      padding: 0.25rem 0.55rem;
-      border-radius: 0.35rem;
-      margin-bottom: 0.75rem;
+      padding: 0.25rem 0.55rem; border-radius: 0.35rem; margin-bottom: 0.75rem;
     }
-
-    .terminal-window {
-      background: linear-gradient(180deg, rgba(6, 10, 13, 0.98), rgba(3, 6, 8, 0.99));
-      border: 1px solid rgba(0, 255, 163, 0.30);
-      border-radius: 0.85rem;
-      overflow: hidden;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 255, 163, 0.04);
-    }
-    .terminal-window__bar {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.8rem;
-      border-bottom: 1px solid rgba(0, 255, 163, 0.20);
-      background: linear-gradient(180deg, rgba(0, 255, 163, 0.06), transparent);
-    }
-    .terminal-window__dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .terminal-window { background: linear-gradient(180deg, rgba(6, 10, 13, 0.98), rgba(3, 6, 8, 0.99)); border: 1px solid rgba(0, 255, 163, 0.30); border-radius: 0.85rem; overflow: hidden; box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 255, 163, 0.04); }
+    .terminal-window__bar { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.8rem; border-bottom: 1px solid rgba(0, 255, 163, 0.20); background: linear-gradient(180deg, rgba(0, 255, 163, 0.06), transparent); }
+    .terminal-window__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .terminal-window__dot--r { background: #F87171; }
     .terminal-window__dot--y { background: #E8C86A; }
     .terminal-window__dot--g { background: #00FFA3; }
-
-    .polymer-bar-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      padding: 0.85rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-    }
+    .polymer-bar-row { display: grid; grid-template-columns: 1fr; gap: 0.5rem; padding: 0.85rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; }
     .polymer-bar-row:last-child { border-bottom: none; }
-    @media (min-width: 640px) {
-      .polymer-bar-row {
-        grid-template-columns: 22ch 1fr 10ch;
-        gap: 1rem;
-        align-items: center;
-      }
-    }
-    .polymer-bar-track {
-      height: 8px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.06);
-      overflow: hidden;
-      position: relative;
-    }
-    .polymer-bar-fill {
-      height: 100%;
-      border-radius: 99px;
-      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 12px rgba(0, 255, 163, 0.35);
-    }
+    @media (min-width: 640px) { .polymer-bar-row { grid-template-columns: 22ch 1fr 10ch; gap: 1rem; align-items: center; } }
+    .polymer-bar-track { height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.06); overflow: hidden; position: relative; }
+    .polymer-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 12px rgba(0, 255, 163, 0.35); }
     .polymer-bar-fill.pet { background: linear-gradient(90deg, #00B871, #00FFA3); }
     .polymer-bar-fill.hd { background: linear-gradient(90deg, #0D9E8E, #7FFFD4); }
     .polymer-bar-fill.alu { background: linear-gradient(90deg, #C5A059, #F6E4A0); }
     .polymer-bar-fill.card { background: linear-gradient(90deg, #8B6F2A, #C5A059); }
     .polymer-bar-fill.glass { background: linear-gradient(90deg, #334155, #94A3B8); }
     .polymer-bar-fill.org { background: linear-gradient(90deg, #065A4C, #0D9E8E); }
-
-    .dataset-card {
-      padding: 1.1rem;
-      border-radius: 1rem;
-      background: linear-gradient(160deg, rgba(15, 22, 28, 0.94), rgba(9, 13, 16, 0.98));
-      border: 1px solid rgba(0, 255, 163, 0.18);
-      transition: all 0.3s;
-    }
-    .dataset-card:hover {
-      border-color: rgba(0, 255, 163, 0.50);
-      transform: translateY(-2px);
-    }
-
-    .manifest-row {
-      display: grid; grid-template-columns: 1fr;
-      gap: 0.75rem; padding: 1rem; border-radius: 1rem;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: all 0.3s;
-    }
-    @media (min-width: 768px) {
-      .manifest-row { grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; align-items: center; }
-    }
+    .dataset-card { padding: 1.1rem; border-radius: 1rem; background: linear-gradient(160deg, rgba(15, 22, 28, 0.94), rgba(9, 13, 16, 0.98)); border: 1px solid rgba(0, 255, 163, 0.18); transition: all 0.3s; }
+    .dataset-card:hover { border-color: rgba(0, 255, 163, 0.50); transform: translateY(-2px); }
+    .manifest-row { display: grid; grid-template-columns: 1fr; gap: 0.75rem; padding: 1rem; border-radius: 1rem; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; }
+    @media (min-width: 768px) { .manifest-row { grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; align-items: center; } }
     .manifest-row:hover { border-color: rgba(0,255,163,0.4); background: rgba(0,255,163,0.04); }
-
-    .impact-card {
-      position: relative; padding: 1.5rem; border-radius: 1.25rem;
-      background: linear-gradient(165deg, rgba(19,25,32,0.90), rgba(9,13,16,0.97));
-      border: 1px solid rgba(197,160,89,0.35);
-      overflow: hidden; transition: all 0.35s;
-    }
-    .impact-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(0,255,163,0.06) 0%, transparent 60%);
-      opacity: 0; transition: opacity 0.4s; pointer-events: none;
-    }
+    .impact-card { position: relative; padding: 1.5rem; border-radius: 1.25rem; background: linear-gradient(165deg, rgba(19,25,32,0.90), rgba(9,13,16,0.97)); border: 1px solid rgba(197,160,89,0.35); overflow: hidden; transition: all 0.35s; }
+    .impact-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(0,255,163,0.06) 0%, transparent 60%); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
     .impact-card:hover { transform: translateY(-3px); border-color: rgba(0,255,163,0.55); }
     .impact-card:hover::before { opacity: 1; }
-
-    .ompic-badge {
-      position: relative; overflow: hidden;
-      background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08));
-      border: 1px solid rgba(232,200,106,0.45);
-    }
-    .ompic-badge::after {
-      content: ''; position: absolute; top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: linear-gradient(45deg, transparent 30%, rgba(232,200,106,0.15) 50%, transparent 70%);
-      animation: ompicShimmer 4s linear infinite; pointer-events: none;
-    }
-    @keyframes ompicShimmer {
-      0% { transform: translate(-100%, -100%) rotate(45deg); }
-      100% { transform: translate(100%, 100%) rotate(45deg); }
-    }
-
+    .ompic-badge { position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08)); border: 1px solid rgba(232,200,106,0.45); }
+    .ompic-badge::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 30%, rgba(232,200,106,0.15) 50%, transparent 70%); animation: ompicShimmer 4s linear infinite; pointer-events: none; }
+    @keyframes ompicShimmer { 0% { transform: translate(-100%, -100%) rotate(45deg); } 100% { transform: translate(100%, 100%) rotate(45deg); } }
     body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
     @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
     body.ee-pharaonic { background: radial-gradient(circle at 50% 50%, rgba(232, 200, 106, 0.15), transparent 70%) !important; }
     body.ee-pharaonic .font-kemetTitle { text-shadow: 0 0 20px rgba(232, 200, 106, 0.6); }
-    body.ee-kemet::after {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(232, 200, 106, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.12) 0%, transparent 25%);
-      animation: kemetPulse 6s ease-in-out infinite;
-    }
+    body.ee-kemet::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998; background-image: radial-gradient(circle at 10% 20%, rgba(232, 200, 106, 0.15) 0%, transparent 25%), radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.12) 0%, transparent 25%); animation: kemetPulse 6s ease-in-out infinite; }
     @keyframes kemetPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
-    #hieroglyphOverlay {
-      position: fixed; inset: 0; pointer-events: none; z-index: 9997;
-      display: none; font-family: 'Cinzel', serif;
-      color: rgba(232, 200, 106, 0.15);
-      font-size: 48px; line-height: 1.2; overflow: hidden; padding: 2rem;
-      text-shadow: 0 0 20px rgba(232, 200, 106, 0.3);
-    }
+    #hieroglyphOverlay { position: fixed; inset: 0; pointer-events: none; z-index: 9997; display: none; font-family: 'Cinzel', serif; color: rgba(232, 200, 106, 0.15); font-size: 48px; line-height: 1.2; overflow: hidden; padding: 2rem; text-shadow: 0 0 20px rgba(232, 200, 106, 0.3); }
     #hieroglyphOverlay.active { display: block; }
-    #hieroglyphOverlay .glyph-row {
-      display: flex; justify-content: space-around; margin-bottom: 1rem;
-      animation: glyphFloat 8s ease-in-out infinite;
-    }
+    #hieroglyphOverlay .glyph-row { display: flex; justify-content: space-around; margin-bottom: 1rem; animation: glyphFloat 8s ease-in-out infinite; }
     #hieroglyphOverlay .glyph-row:nth-child(2) { animation-delay: 1s; }
     #hieroglyphOverlay .glyph-row:nth-child(3) { animation-delay: 2s; }
     #hieroglyphOverlay .glyph-row:nth-child(4) { animation-delay: 3s; }
     @keyframes glyphFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    .ee-toast {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95));
-      color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem;
-      font: 800 14px 'JetBrains Mono', monospace;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
-      animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      text-align: center; pointer-events: none; max-width: 90vw;
-    }
-    @keyframes eeToastIn {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); }
-      100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    }
+    .ee-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95)); color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem; font: 800 14px 'JetBrains Mono', monospace; letter-spacing: 0.05em; text-transform: uppercase; z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5); animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; text-align: center; pointer-events: none; max-width: 90vw; }
+    @keyframes eeToastIn { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); } }
     .ee-toast.ee-toast-out { animation: eeToastOut 0.4s ease-in forwards; }
-    @keyframes eeToastOut {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    }
-
+    @keyframes eeToastOut { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } }
     .safe-top { padding-top: env(safe-area-inset-top); }
-
     @media (max-width: 640px) {
       .cta-inline { white-space: normal !important; }
       .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -638,14 +283,8 @@
       .gate-lock { padding: 1.25rem 0.9rem; }
       .polymer-bar-row { grid-template-columns: 1fr; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
       .live-ticker__track { animation: none; }
     }
   </style>
@@ -657,9 +296,6 @@
   <div id="hieroglyphOverlay" aria-hidden="true"></div>
   <div id="scrollProgress" aria-hidden="true"></div>
 
-  <!-- ============================================================
-       HEADER — BRANDING UNIFIÉ (NO [ I² ])
-       ============================================================ -->
   <header class="border-b border-kemetGold/30 bg-obsidian/95 backdrop-blur-xl fixed top-0 w-full z-50 safe-top">
     <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-3">
       <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
@@ -704,6 +340,13 @@
       </nav>
 
       <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button type="button" id="adminShortcutBtn"
+                onclick="if (window.openAdminLoginModal) window.openAdminLoginModal();"
+                aria-label="Connexion Super-Admin (Email / Mot de passe)"
+                title="Connexion Super-Admin · Email / Mot de passe"
+                class="hidden sm:inline-flex btn btn-au !py-1.5 sm:!py-2 !px-2 sm:!px-3 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
+          👑 Admin
+        </button>
         <button type="button" id="loginBtn"
                 onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin(); if (window.__eeOnLoginClick) window.__eeOnLoginClick();"
                 aria-label="Connexion à l'espace membre"
@@ -724,23 +367,18 @@
       <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-2">Carrières</a>
       <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-2">À Propos</a>
       <hr class="border-white/10 my-2">
+      <button type="button" onclick="if (window.openAdminLoginModal) window.openAdminLoginModal(); document.getElementById('mobileNavMenu').classList.add('hidden');" class="block w-full text-left text-kemetGoldBright py-2 font-bold">👑 Connexion Super-Admin</button>
       <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
       <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
       <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
     </nav>
   </header>
 
-  <!-- ============================================================
-       MAIN
-       ============================================================ -->
   <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
 
-    <!-- ═══════════════════════════════════════════════════════
-         HERO · MAAT DATA LAKE
-         ═══════════════════════════════════════════════════════ -->
+    <!-- HERO -->
     <section class="pt-2 sm:pt-4">
       <div class="hero-datalake">
-
         <div class="space-y-5 sm:space-y-6">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
             <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
@@ -777,7 +415,7 @@
           </div>
         </div>
 
-        <!-- Panneau latéral · Architecture du flux -->
+        <!-- Panneau architecture -->
         <div class="glass-panel g p-5 sm:p-7 space-y-4 relative overflow-hidden">
           <div class="scanner-beam" aria-hidden="true"></div>
           <div class="flex items-center justify-between border-b border-white/10 pb-3 font-mono text-xs">
@@ -790,9 +428,9 @@
 
           <div class="space-y-3 font-mono text-[11px]">
             <div class="p-3 bg-black/60 rounded-lg border border-cyberGreen/30 space-y-1">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between gap-2">
                 <span class="text-cyberGreen font-bold">Track 0 · PurKemet</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen">TERRAIN</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen shrink-0">TERRAIN</span>
               </div>
               <p class="text-slate-400 font-sans text-[10px]">Collecte décentralisée HoReCa — Pesée P1 certifiée BLE Bluetooth</p>
             </div>
@@ -804,9 +442,9 @@
             </div>
 
             <div class="p-3 bg-black/60 rounded-lg border border-kemetGold/40 space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="text-kemetGoldBright font-bold">Hub Sidi Ghanem</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-kemetGold/10 border border-kemetGold/30 text-kemetGoldBright">PESÉE P2</span>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-kemetGoldBright font-bold leading-tight">Hub Logistique Industrial Illusion</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-kemetGold/10 border border-kemetGold/30 text-kemetGoldBright shrink-0">PESÉE P2</span>
               </div>
               <p class="text-slate-400 font-sans text-[10px]">Réconciliation algorithmique Δ ≤ 3% · Variance_Alert si Δ &gt; 3%</p>
             </div>
@@ -818,9 +456,9 @@
             </div>
 
             <div class="p-3 bg-black/60 rounded-lg border border-white/15 space-y-1">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between gap-2">
                 <span class="text-white font-bold">Maat Data Lake</span>
-                <span class="text-[9px] px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white">REGISTRE</span>
+                <span class="text-[9px] px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-white shrink-0">REGISTRE</span>
               </div>
               <p class="text-slate-400 font-sans text-[10px]">Scellement SHA-256 · Fabric v2.5 · Ancrage Bitcoin OTS</p>
             </div>
@@ -830,16 +468,12 @@
             Registre immuable · Fabric v2.5 · Ancrage Bitcoin OTS
           </div>
         </div>
-
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         LIVE TELEMETRY STREAM (TICKER) — standby par défaut
-         Le contenu réel est injecté par JS depuis Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <!-- TICKER -->
     <section class="reveal">
       <div class="live-ticker">
         <div class="live-ticker__header">
@@ -853,24 +487,20 @@
             <span id="tickerStatus">SYNC</span>
           </div>
         </div>
-
         <div class="live-ticker__body">
           <div class="live-ticker__track is-empty" id="liveTickerTrack" aria-live="polite">
             <div class="ticker-item">
               <span class="ticker-item__dot"></span>
               <span class="ticker-item__hash">NODE · HUB-MARRAKECH-01</span>
               <span style="color:#00FFA3; font-weight:800;">[STATUS: ONLINE]</span>
-              <span style="color:#94A3B8;">— En attente des notarisations…</span>
+              <span style="color:#94A3B8;">— En attente des premières notarisations…</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════
-         4 DATA CARDS · KPI GLOBAUX — valeurs "—" par défaut
-         Remplies par JS depuis la table "collections" Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <!-- KPI -->
     <section class="reveal">
       <div class="border-b border-white/10 pb-4 mb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2">
         <div>
@@ -893,21 +523,18 @@
           <span class="data-card__unit">kg notarisés</span>
           <span class="data-card__delta" id="kpi-tonnage-status">En attente de données</span>
         </div>
-
         <div class="data-card">
           <span class="data-card__label">Émissions CO₂e Évitées</span>
           <div class="data-card__value" id="kpi-co2">—</div>
           <span class="data-card__unit">kg CO₂ eq. · Verra VCS</span>
           <span class="data-card__delta" id="kpi-co2-status">En attente de données</span>
         </div>
-
         <div class="data-card au">
           <span class="data-card__label">Africa-Polymer-Dataset</span>
           <div class="data-card__value" id="kpi-dataset">—</div>
           <span class="data-card__unit">signatures NIR archivées</span>
           <span class="data-card__delta" id="kpi-dataset-status" style="color:#64748B;">En attente de données</span>
         </div>
-
         <div class="data-card au">
           <span class="data-card__label">Transactions Scellées</span>
           <div class="data-card__value" id="kpi-tx">—</div>
@@ -919,32 +546,24 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         GATE TEASER · TERMINAL ANALYTIQUE SÉCURISÉ
-         AUCUN bouton "Démo" — uniquement accréditation réelle
-         ═══════════════════════════════════════════════════════ -->
+    <!-- GATE TEASER -->
     <section class="reveal">
       <div class="glass-panel g p-6 sm:p-10 space-y-6 text-center relative overflow-hidden">
         <div class="scanner-beam" aria-hidden="true"></div>
-
         <div class="max-w-3xl mx-auto space-y-4">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-kemetGold/10 border border-kemetGold/40 text-kemetGoldBright text-[10px] font-mono font-bold tracking-wider uppercase">
             <span class="w-1.5 h-1.5 rounded-full bg-kemetGoldBright"></span>
             <span>Asset Stratégique · Accès Restreint</span>
           </div>
-
           <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white leading-tight">
             Terminal Analytique <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">Sécurisé</span>
           </h3>
-
           <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
             Le Maat Data Lake est un <strong class="text-white">actif stratégique propriétaire à haute valeur commerciale</strong>. L'intégralité des jeux de données analytiques — décomposition polymérique fine, registres de réconciliation P1/P2, catalogues spectraux NIR et bilans carbone certifiés — est protégée par accréditation institutionnelle.
           </p>
-
           <p class="text-xs sm:text-sm text-slate-400 font-sans">
             L'accès est réservé aux <strong class="text-white">multinationales FMCG, fonds d'investissement, auditeurs ESG accrédités, institutions étatiques (Wilaya de Marrakech-Safi, DGI)</strong> et partenaires industriels liés par NDA.
           </p>
-
           <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2 font-mono">
             <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3.5 px-6 shadow-xl">
               Demander une Accréditation 🔒
@@ -953,26 +572,23 @@
               Connexion Institutionnelle
             </button>
           </div>
-
           <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto pt-2">
             Conformité stricte Loi CNDP n° 09-08. Aucun transfert transfrontalier non autorisé. Journalisation complète des accès (audit trail immuable).
           </p>
         </div>
       </div>
     </section>
-        <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         SECTION A · PROTOCOLE DE RÉCONCILIATION DOUBLE PESÉE
-         Statut : PROTÉGÉ · Gate réel Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- SECTION A -->
     <section id="section-a" class="protected-section is-locked reveal" data-gate="A">
       <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
           <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Section A · Protocole Anti-Fraude</span>
-          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Réconciliation de Double Pesée (Sidi Ghanem Hub)</h3>
+          <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Réconciliation de Double Pesée (Hub Logistique Industrial Illusion)</h3>
           <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-            Protocole de contrôle physique en deux temps pour éliminer tout risque de fraude, de coulage de matière ou d'anomalie de pesée entre l'enlèvement client et l'arrivée au hub logistique.
+            Protocole de contrôle physique en deux temps pour éliminer tout risque de fraude, de coulage de matière ou d'anomalie de pesée entre l'enlèvement client et l'arrivée au Dépôt Central Industrial Illusion (Marrakech).
           </p>
         </div>
 
@@ -998,9 +614,9 @@
               <span class="text-kemetGoldBright font-mono font-bold text-sm">PESÉE #2 · P2</span>
               <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">HUB</span>
             </div>
-            <h4 class="text-white font-bold text-sm font-sans">Arrivée au Hub Sidi Ghanem</h4>
+            <h4 class="text-white font-bold text-sm font-sans">Arrivée au Dépôt Central Industrial Illusion (Marrakech)</h4>
             <p class="text-[11px] text-slate-300 font-sans leading-relaxed">
-              À l'arrivée au Hub logistique de Sidi Ghanem (Marrakech), chaque lot fait l'objet d'une <strong>seconde pesée de contrôle</strong> sur pont-bascule étalonné. La mesure est automatiquement réconciliée avec P1 par l'algorithme Maat OS.
+              À l'arrivée au Dépôt Central Industrial Illusion (Marrakech), chaque lot fait l'objet d'une <strong>seconde pesée de contrôle</strong> sur pont-bascule étalonné. La mesure est automatiquement réconciliée avec P1 par l'algorithme Maat OS.
             </p>
             <div class="p-2.5 bg-black/50 rounded-lg border border-white/5 text-[10px] font-mono text-slate-400 space-y-1">
               <div>→ Pont-bascule certifié (étalonnage annuel)</div>
@@ -1043,7 +659,6 @@
         </div>
       </div>
 
-      <!-- Overlay verrouillé -->
       <div class="protected-section__overlay">
         <div class="gate-lock">
           <div class="gate-lock__icon">
@@ -1067,10 +682,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         SECTION B · MODÈLE DE DONNÉES POLYMÉRIQUE
-         Statut : PROTÉGÉ · Gate réel Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <!-- SECTION B -->
     <section id="section-b" class="protected-section is-locked reveal" data-gate="B">
       <div class="protected-section__content glass-panel p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
@@ -1086,7 +698,6 @@
             <span class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">Répartition Volumétrique Globale</span>
             <span class="text-[10px] font-mono text-slate-500">Source : registre immuable · MAJ 24h</span>
           </div>
-
           <div class="space-y-0">
             <div class="polymer-bar-row">
               <span class="text-white font-bold">PET Transparent Grade-A</span>
@@ -1190,10 +801,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         SECTION C · SOUVERAINETÉ NUMÉRIQUE & CRYPTOGRAPHIE
-         Statut : PROTÉGÉ · Gate réel Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <!-- SECTION C -->
     <section id="section-c" class="protected-section is-locked reveal" data-gate="C">
       <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
@@ -1273,10 +881,7 @@
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         SECTION D · MONÉTISATION B2B / B2G
-         Statut : PROTÉGÉ · Gate réel Supabase
-         ═══════════════════════════════════════════════════════ -->
+    <!-- SECTION D -->
     <section id="section-d" class="protected-section is-locked reveal" data-gate="D">
       <div class="protected-section__content glass-panel g p-5 sm:p-8 lg:p-10 space-y-6">
         <div class="border-b border-white/10 pb-4">
@@ -1350,11 +955,10 @@
         </div>
       </div>
     </section>
-        <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         CTA · SERIES A & ACCÈS DATA ROOM
-         ═══════════════════════════════════════════════════════ -->
+    <div class="animated-divider" aria-hidden="true"></div>
+
+    <!-- CTA SERIES A -->
     <section class="glass-panel g p-5 sm:p-8 lg:p-12 space-y-6 reveal">
       <div class="max-w-3xl mx-auto text-center space-y-3">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Series A · Round d'Investissement Institutionnel</span>
@@ -1392,9 +996,6 @@
 
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════════════════════════ -->
   <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
       <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
@@ -1403,10 +1004,7 @@
     </div>
   </footer>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       MODAL · ACCRÉDITATION INSTITUTIONNELLE
-       POST → Supabase datalake_access_requests
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL ACCRÉDITATION -->
   <div id="accreditModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Demande d'accréditation Data Lake">
     <div class="glass-panel g max-w-lg w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
       <button type="button" onclick="window.closeAccreditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
@@ -1475,10 +1073,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       MODAL · CONNEXION TERMINAL (vérification réelle du token)
-       GET → Supabase datalake_access_requests (status=APPROVED)
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL CONNEXION (Token + bouton Super-Admin) -->
   <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion Terminal Analytique">
     <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
       <button type="button" onclick="window.closeLoginModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
@@ -1501,10 +1096,19 @@
 
         <div class="relative flex items-center justify-center py-1">
           <div class="absolute inset-x-0 h-px bg-white/10"></div>
+          <span class="relative bg-black/80 px-3 text-[9px] font-mono text-slate-500 uppercase tracking-widest">ou</span>
+        </div>
+
+        <button type="button" onclick="window.closeLoginModal(); window.openAdminLoginModal();" class="btn btn-au w-full !py-2.5 font-bold">
+          👑 Connexion Super-Admin (Email / Mot de passe)
+        </button>
+
+        <div class="relative flex items-center justify-center py-1">
+          <div class="absolute inset-x-0 h-px bg-white/10"></div>
           <span class="relative bg-black/80 px-3 text-[9px] font-mono text-slate-500 uppercase tracking-widest">pas encore accrédité ?</span>
         </div>
 
-        <button type="button" onclick="window.closeLoginModal(); window.openAccreditModal();" class="btn btn-au w-full !py-2.5 font-bold">
+        <button type="button" onclick="window.closeLoginModal(); window.openAccreditModal();" class="btn btn-o w-full !py-2.5 font-bold">
           Demander l'Accréditation Institutionnelle
         </button>
 
@@ -1515,33 +1119,55 @@
     </div>
   </div>
 
+  <!-- MODAL SUPER-ADMIN (nouvelle voie) -->
+  <div id="adminLoginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Connexion Super-Admin">
+    <div class="glass-panel g max-w-md w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
+      <button type="button" onclick="window.closeAdminLoginModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+
+      <div class="border-b border-white/10 pb-2">
+        <span class="lbl au">Control Tower · Direction Générale</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Connexion Super-Admin</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Accès réservé à Roberto Passarella &amp; Direction. Authentification Supabase Auth native.</p>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="window.handleAdminLogin(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+        <div>
+          <label class="lbl block mb-1" for="adm_email">Email Super-Admin *</label>
+          <input id="adm_email" type="email" name="email" required autocomplete="username" placeholder="admin@industrialillusion.ma" class="inp">
+        </div>
+        <div>
+          <label class="lbl block mb-1" for="adm_password">Mot de passe *</label>
+          <input id="adm_password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••••••" class="inp">
+        </div>
+
+        <button type="submit" id="btnAdminLoginSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+          Déverrouiller le Terminal 🔓
+        </button>
+
+        <p class="text-[9px] text-slate-500 leading-relaxed text-center font-sans">
+          Authentification native Supabase Auth. Toutes les tentatives sont journalisées côté serveur.
+        </p>
+      </form>
+    </div>
+  </div>
+
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SCRIPTS EXTERNES
-       ═══════════════════════════════════════════════════════════ -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
   <script src="assets/matrix-canvas.js"></script>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SCRIPT INLINE — LOGIQUE RÉELLE (ZÉRO DÉMO, ZÉRO FAKE)
-       ═══════════════════════════════════════════════════════════ -->
   <script>
   (function () {
     'use strict';
 
-    /* ============================================================
-       YEAR
-       ============================================================ */
+    /* YEAR */
     (function () {
       var y = document.getElementById('year');
       if (y) y.textContent = String(new Date().getFullYear());
     })();
 
-    /* ============================================================
-       TOAST
-       ============================================================ */
+    /* TOAST */
     function toast(text, kind) {
       if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
       var d = document.createElement('div');
@@ -1557,15 +1183,11 @@
       setTimeout(function () { d.remove(); }, 4200);
     }
 
-    /* ============================================================
-       SUPABASE CLIENT (lazy)
-       ============================================================ */
+    /* SUPABASE CLIENT */
     function getSB() {
       try {
         if (window.Maat) {
-          if (!window.Maat.sb && typeof window.Maat.init === 'function') {
-            window.Maat.init();
-          }
+          if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
           return window.Maat.sb || null;
         }
       } catch (e) {}
@@ -1573,9 +1195,7 @@
     }
     window.ensureInit = function () { getSB(); };
 
-    /* ============================================================
-       MODAL HELPERS
-       ============================================================ */
+    /* MODAL HELPERS */
     function openModal(id) {
       var m = document.getElementById(id);
       if (!m) return;
@@ -1595,47 +1215,49 @@
     window.closeAccreditModal = function () { closeModal('accreditModal'); };
     window.openLoginModal = function () { openModal('loginModal'); };
     window.closeLoginModal = function () { closeModal('loginModal'); };
+    window.openAdminLoginModal = function () { openModal('adminLoginModal'); };
+    window.closeAdminLoginModal = function () { closeModal('adminLoginModal'); };
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         window.closeAccreditModal();
         window.closeLoginModal();
+        window.closeAdminLoginModal();
       }
     });
     document.addEventListener('click', function (e) {
       if (e.target && e.target.id === 'accreditModal') window.closeAccreditModal();
       if (e.target && e.target.id === 'loginModal') window.closeLoginModal();
+      if (e.target && e.target.id === 'adminLoginModal') window.closeAdminLoginModal();
     });
 
-    /* ============================================================
-       AUTODÉTECTION ADMIN / CONTROL TOWER
-       → Déverrouillage automatique si session admin détectée
-       ============================================================ */
+    /* HELPERS · ADMIN */
+    function isAdminUser(user) {
+      if (!user) return false;
+      var appMeta = user.app_metadata || {};
+      var userMeta = user.user_metadata || {};
+      var role = (appMeta.role || userMeta.role || '').toLowerCase();
+      var email = (user.email || '').toLowerCase();
+      return (
+        role === 'admin' ||
+        role === 'direction' ||
+        role === 'super_admin' ||
+        role === 'control_tower' ||
+        email === 'admin@industrialillusion.ma' ||
+        email.indexOf('admin@') === 0 ||
+        appMeta.is_admin === true
+      );
+    }
+
+    /* AUTODÉTECTION ADMIN */
     async function checkAdminSession() {
       var sb = getSB();
       if (!sb) return false;
-
       try {
         var res = await sb.auth.getSession();
         var session = res && res.data && res.data.session;
         if (!session || !session.user) return false;
-
-        var u = session.user;
-        var appMeta = u.app_metadata || {};
-        var userMeta = u.user_metadata || {};
-        var role = (appMeta.role || userMeta.role || '').toLowerCase();
-        var email = (u.email || '').toLowerCase();
-
-        var isAdmin = (
-          role === 'admin' ||
-          role === 'direction' ||
-          role === 'super_admin' ||
-          role === 'control_tower' ||
-          email.indexOf('admin@') === 0 ||
-          appMeta.is_admin === true
-        );
-
-        if (isAdmin) {
+        if (isAdminUser(session.user)) {
           autoUnlockAll('admin_session');
           return true;
         }
@@ -1645,66 +1267,68 @@
       return false;
     }
 
-    /* ============================================================
-       VERIFICATION TOKEN (via datalake_access_requests)
-       ============================================================ */
+    /* VÉRIFICATION TOKEN (RPC SECURITY DEFINER · fallback direct query) */
     async function verifyAccessToken(token) {
       var sb = getSB();
       if (!sb) return { ok: false, reason: 'SERVICE_UNAVAILABLE' };
 
+      // 1) RPC (sécurisé)
       try {
-        var res = await sb
+        var rpc = await sb.rpc('verify_datalake_token', { p_token: token });
+        if (!rpc.error) {
+          var rows = rpc.data || [];
+          var row = Array.isArray(rows) ? rows[0] : rows;
+          if (!row || !row.is_valid) return { ok: false, reason: 'INVALID_TOKEN' };
+          return { ok: true, record: row };
+        }
+        console.warn('[MAAT] RPC verify failed, fallback:', rpc.error);
+      } catch (e) {
+        console.warn('[MAAT] RPC exception, fallback:', e);
+      }
+
+      // 2) Fallback (RLS SELECT authenticated ou policy publique dédiée)
+      try {
+        var r2 = await sb
           .from('datalake_access_requests')
           .select('id, access_token, status, email, organization, reviewed_at')
           .eq('access_token', token)
           .eq('status', 'APPROVED')
           .maybeSingle();
-
-        if (res.error) {
-          // Fallback : la table peut ne pas exister encore
-          console.warn('[MAAT] token verify error:', res.error);
-          return { ok: false, reason: 'QUERY_ERROR' };
-        }
-        if (!res.data) return { ok: false, reason: 'INVALID_TOKEN' };
-
-        return { ok: true, record: res.data };
+        if (r2.error) return { ok: false, reason: 'QUERY_ERROR' };
+        if (!r2.data) return { ok: false, reason: 'INVALID_TOKEN' };
+        return { ok: true, record: r2.data };
       } catch (e) {
-        console.warn('[MAAT] token verify exception', e);
         return { ok: false, reason: 'EXCEPTION' };
       }
     }
 
-    /* ============================================================
-       AUTO UNLOCK / LOCK SECTIONS
-       ============================================================ */
+    /* UNLOCK / LOCK */
     function autoUnlockAll(source) {
       var sections = document.querySelectorAll('.protected-section');
       sections.forEach(function (el) {
         el.classList.remove('is-locked');
         el.classList.add('is-unlocked');
       });
-      // Bandeau informatif permanent
-      if (!document.getElementById('sessionBadge')) {
-        var badge = document.createElement('div');
-        badge.id = 'sessionBadge';
-        badge.style.cssText =
-          'position:fixed;top:80px;right:16px;z-index:100;padding:8px 14px;' +
-          'background:linear-gradient(135deg,#00FFA3,#00B871);color:#001a10;' +
-          'font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;' +
-          'letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;' +
-          'box-shadow:0 8px 25px rgba(0,255,163,0.35);';
-        badge.textContent = source === 'admin_session'
-          ? 'SESSION ADMIN · ACCÈS TOTAL'
-          : 'TOKEN VALIDE · ACCÈS DÉBLOQUÉ';
-        document.body.appendChild(badge);
-      }
+      var existing = document.getElementById('sessionBadge');
+      if (existing) existing.remove();
+      var badge = document.createElement('div');
+      badge.id = 'sessionBadge';
+      badge.style.cssText =
+        'position:fixed;top:80px;right:16px;z-index:100;padding:8px 14px;' +
+        'background:linear-gradient(135deg,#00FFA3,#00B871);color:#001a10;' +
+        'font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;' +
+        'letter-spacing:0.1em;text-transform:uppercase;border-radius:8px;' +
+        'box-shadow:0 8px 25px rgba(0,255,163,0.35);';
+      badge.textContent = source === 'admin_session'
+        ? 'SESSION ADMIN · ACCÈS TOTAL'
+        : 'TOKEN VALIDE · ACCÈS DÉBLOQUÉ';
+      document.body.appendChild(badge);
       if (window.Maat && window.Maat.buzz) window.Maat.buzz(60);
       toast('Terminal analytique déverrouillé.', 'ok');
     }
 
     function lockAll() {
-      var sections = document.querySelectorAll('.protected-section');
-      sections.forEach(function (el) {
+      document.querySelectorAll('.protected-section').forEach(function (el) {
         el.classList.add('is-locked');
         el.classList.remove('is-unlocked');
       });
@@ -1714,26 +1338,17 @@
     }
     window.__maatLockAll = lockAll;
 
-    /* ============================================================
-       RESTAURATION DE SESSION (token validé dans sessionStorage)
-       ============================================================ */
     async function restoreSession() {
       var savedToken = null;
       try { savedToken = sessionStorage.getItem('maat_access_token'); } catch (e) {}
       if (!savedToken) return false;
-
       var res = await verifyAccessToken(savedToken);
-      if (res.ok) {
-        autoUnlockAll('token_restored');
-        return true;
-      }
+      if (res.ok) { autoUnlockAll('token_restored'); return true; }
       try { sessionStorage.removeItem('maat_access_token'); } catch (e) {}
       return false;
     }
 
-    /* ============================================================
-       LIVE TELEMETRY TICKER · données réelles Supabase
-       ============================================================ */
+    /* TICKER */
     function tickerStandby(track, msg) {
       track.classList.add('is-empty');
       track.innerHTML =
@@ -1741,7 +1356,7 @@
           '<span class="ticker-item__dot"></span>' +
           '<span class="ticker-item__hash">NODE · HUB-MARRAKECH-01</span>' +
           '<span style="color:#00FFA3;font-weight:800;">[STATUS: ONLINE]</span>' +
-          '<span style="color:#94A3B8;">' + (msg || '— En attente des notarisations…') + '</span>' +
+          '<span style="color:#94A3B8;">' + (msg || '— En attente des premières notarisations…') + '</span>' +
         '</div>';
       var st = document.getElementById('tickerStatus');
       if (st) st.textContent = 'STANDBY';
@@ -1763,13 +1378,9 @@
       var statusLabel = isGold ? 'NOTARIZED' : 'ANCHORED';
 
       var weightStr = '';
-      if (p1 != null && p2 != null) {
-        weightStr = 'P1: ' + p1.toFixed(1) + ' kg · P2: ' + p2.toFixed(1) + ' kg';
-      } else if (p1 != null) {
-        weightStr = p1.toFixed(1) + ' kg';
-      } else {
-        weightStr = '—';
-      }
+      if (p1 != null && p2 != null) weightStr = 'P1: ' + p1.toFixed(1) + ' kg · P2: ' + p2.toFixed(1) + ' kg';
+      else if (p1 != null) weightStr = p1.toFixed(1) + ' kg';
+      else weightStr = '—';
 
       return (
         '<div class="ticker-item">' +
@@ -1785,47 +1396,32 @@
     async function loadTickerFromSupabase() {
       var track = document.getElementById('liveTickerTrack');
       if (!track) return;
-
       var sb = getSB();
-      if (!sb) {
-        tickerStandby(track, '— Service Data Lake non initialisé');
-        return;
-      }
+      if (!sb) { tickerStandby(track, '— Service Data Lake non initialisé'); return; }
 
       try {
-        var res = await sb
-          .from('collections')
+        var res = await sb.from('collections')
           .select('*')
           .eq('status', 'ANCHORED')
           .order('created_at', { ascending: false })
           .limit(8);
 
-        if (res.error) {
-          tickerStandby(track, '— Table collections inaccessible');
-          return;
-        }
-        if (!res.data || res.data.length === 0) {
-          tickerStandby(track, '— Aucune notarisation enregistrée');
-          return;
-        }
+        if (res.error) { tickerStandby(track, '— Table collections inaccessible'); return; }
+        if (!res.data || res.data.length === 0) { tickerStandby(track, '— Aucune notarisation enregistrée'); return; }
 
         var html = res.data.map(buildTickerItemFromRow).join('');
-        // Duplication pour boucle CSS continue
         track.classList.remove('is-empty');
         track.innerHTML = html + html;
 
         var st = document.getElementById('tickerStatus');
         if (st) st.textContent = 'LIVE · ' + res.data.length + ' blocs';
-
       } catch (e) {
         console.warn('[MAAT] ticker load failed', e);
         tickerStandby(track, '— Erreur de synchronisation');
       }
     }
 
-    /* ============================================================
-       4 KPI CARDS · données réelles Supabase
-       ============================================================ */
+    /* KPI */
     function setKPIStatus(id, text, color) {
       var el = document.getElementById(id);
       if (!el) return;
@@ -1834,15 +1430,13 @@
     }
 
     function setKPIsEmpty(reason) {
-      document.getElementById('kpi-tonnage').textContent = '—';
-      document.getElementById('kpi-co2').textContent = '—';
-      document.getElementById('kpi-dataset').textContent = '—';
-      document.getElementById('kpi-tx').textContent = '—';
-      setKPIStatus('kpi-tonnage-status', reason, '#64748B');
-      setKPIStatus('kpi-co2-status', reason, '#64748B');
-      setKPIStatus('kpi-dataset-status', reason, '#64748B');
-      setKPIStatus('kpi-tx-status', reason, '#64748B');
-
+      ['kpi-tonnage','kpi-co2','kpi-dataset','kpi-tx'].forEach(function (id) {
+        var el = document.getElementById(id); if (el) el.textContent = '—';
+      });
+      setKPIStatus('kpi-tonnage-status', reason);
+      setKPIStatus('kpi-co2-status', reason);
+      setKPIStatus('kpi-dataset-status', reason);
+      setKPIStatus('kpi-tx-status', reason);
       var dot = document.getElementById('kpiSyncDot');
       if (dot) { dot.style.background = '#94A3B8'; dot.style.boxShadow = 'none'; }
       var st = document.getElementById('kpiSyncStatus');
@@ -1869,10 +1463,8 @@
     async function loadKPIsFromSupabase() {
       var sb = getSB();
       if (!sb) { setKPIsEmpty('Service indisponible'); return; }
-
       try {
-        var res = await sb
-          .from('collections')
+        var res = await sb.from('collections')
           .select('p1_kg, p2_kg, weight_kg, co2_saved_kg, nir_signatures, status, polymer_type')
           .eq('status', 'ANCHORED');
 
@@ -1880,23 +1472,18 @@
         if (!res.data || res.data.length === 0) { setKPIsEmpty('Aucune donnée notarisée'); return; }
 
         var tonnage = 0, co2 = 0, dataset = 0, tx = 0;
-
         for (var i = 0; i < res.data.length; i++) {
           var row = res.data[i];
           var w = Number(row.p2_kg != null ? row.p2_kg : (row.p1_kg != null ? row.p1_kg : (row.weight_kg || 0)));
           if (!isFinite(w)) w = 0;
           tonnage += w;
-
           var c = Number(row.co2_saved_kg);
           if (!isFinite(c) || c <= 0) c = w * 3.5;
           co2 += c;
-
           var nir = Number(row.nir_signatures || 0);
           if (isFinite(nir) && nir > 0) dataset += nir;
-
           tx += 1;
         }
-
         syncKPIsOK(tonnage, co2, dataset, tx);
       } catch (e) {
         console.warn('[MAAT] KPI load failed', e);
@@ -1904,9 +1491,7 @@
       }
     }
 
-    /* ============================================================
-       FORM · ACCRÉDITATION (POST Supabase datalake_access_requests)
-       ============================================================ */
+    /* FORM · ACCRÉDITATION */
     window.handleAccreditSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -1941,30 +1526,19 @@
       }
 
       var sb = getSB();
-      var saved = false;
-      var savedIn = null;
-
-      if (sb) {
-        // Tentative 1 : table dédiée
-        try {
-          var r1 = await sb.from('datalake_access_requests').insert([payload]);
-          if (!r1.error) { saved = true; savedIn = 'dedicated'; }
-        } catch (e) {}
-
-        // Tentative 2 : fallback field_notes
-        if (!saved) {
-          try {
-            var r2 = await sb.from('field_notes').insert([{
-              note_type: 'GENERAL',
-              content: 'ACCRÉDITATION DATA LAKE : ' + payload.full_name + ' (' + payload.category + ' @ ' + payload.organization + ') - Email: ' + payload.email + ' - Tél: ' + payload.phone + ' - Motif: ' + payload.motivation,
-              operator_email: payload.email
-            }]);
-            if (!r2.error) { saved = true; savedIn = 'fallback'; }
-          } catch (x) {}
-        }
+      if (!sb) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Service Supabase indisponible.', 'err');
       }
 
-      if (saved) {
+      try {
+        var r = await sb.from('datalake_access_requests').insert([payload]);
+        if (r.error) {
+          console.error('[MAAT] insert error:', r.error);
+          btn.disabled = false; btn.textContent = original;
+          return toast('Transmission impossible. Vérifiez la migration SQL.', 'err');
+        }
+
         toast('Demande transmise à la Direction. Examen sous 48h par la Control Tower.', 'ok');
         if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
         form.reset();
@@ -1974,19 +1548,14 @@
           btn.textContent = original;
           btn.disabled = false;
         }, 2400);
-        if (savedIn === 'fallback') {
-          console.warn('[MAAT] accréditation enregistrée en fallback field_notes (table dédiée indisponible)');
-        }
-      } else {
-        btn.disabled = false;
-        btn.textContent = original;
-        toast('Service temporairement indisponible. Veuillez réessayer.', 'err');
+      } catch (e) {
+        console.error('[MAAT] insert exception', e);
+        btn.disabled = false; btn.textContent = original;
+        toast('Erreur inattendue.', 'err');
       }
     };
 
-    /* ============================================================
-       FORM · LOGIN (vérification réelle du token)
-       ============================================================ */
+    /* FORM · TOKEN */
     window.handleLoginSubmit = async function (e) {
       e.preventDefault();
       var form = e.target;
@@ -2014,21 +1583,55 @@
       } else {
         btn.disabled = false;
         btn.textContent = original;
-        if (res.reason === 'INVALID_TOKEN') {
-          toast('Token invalide ou non approuvé. Demande d\'accréditation requise.', 'err');
-        } else if (res.reason === 'SERVICE_UNAVAILABLE') {
-          toast('Service d\'authentification indisponible. Réessayez.', 'err');
-        } else {
-          toast('Vérification impossible. Contactez la Control Tower.', 'err');
-        }
+        if (res.reason === 'INVALID_TOKEN') toast('Token invalide ou non approuvé. Demande d\'accréditation requise.', 'err');
+        else if (res.reason === 'SERVICE_UNAVAILABLE') toast('Service d\'authentification indisponible.', 'err');
+        else toast('Vérification impossible. Contactez la Control Tower.', 'err');
       }
     };
 
-    /* ============================================================
-       LOGIN UNIVERSEL (header) · conservé
-       ============================================================ */
+    /* FORM · SUPER-ADMIN */
+    window.handleAdminLogin = async function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('btnAdminLoginSubmit');
+      var original = btn.textContent;
+      var email = String(document.getElementById('adm_email').value || '').trim().toLowerCase();
+      var password = String(document.getElementById('adm_password').value || '');
+
+      if (!email || !password) return toast('Email et mot de passe requis.', 'warn');
+
+      var sb = getSB();
+      if (!sb) return toast('Service Supabase indisponible.', 'err');
+
+      btn.disabled = true;
+      btn.textContent = 'Authentification en cours…';
+
+      try {
+        var res = await sb.auth.signInWithPassword({ email: email, password: password });
+        if (res.error || !res.data || !res.data.user) {
+          btn.disabled = false; btn.textContent = original;
+          return toast('Identifiants invalides. Accès refusé.', 'err');
+        }
+
+        if (!isAdminUser(res.data.user)) {
+          await sb.auth.signOut();
+          btn.disabled = false; btn.textContent = original;
+          return toast('Ce compte n\'a pas les privilèges Super-Admin.', 'err');
+        }
+
+        window.closeAdminLoginModal();
+        autoUnlockAll('admin_session');
+        btn.textContent = '✓ Session Super-Admin active';
+        document.getElementById('adminLoginForm').reset();
+        setTimeout(function () { btn.disabled = false; btn.textContent = original; }, 1500);
+      } catch (x) {
+        console.warn('[MAAT] admin login exception', x);
+        btn.disabled = false; btn.textContent = original;
+        toast('Erreur de connexion. Réessayez.', 'err');
+      }
+    };
+
+    /* LOGIN UNIVERSEL (header) */
     (function () {
-      var _origOpenLogin = window.openUniversalLogin;
       function resetLoginFlags() {
         window.__loginModalOpen = false;
         window.__isLoginOpen = false;
@@ -2040,14 +1643,11 @@
       }
       window.openUniversalLogin = function () {
         resetLoginFlags();
-        // Redirige vers la vraie modal token institutionnel
         window.openLoginModal();
       };
     })();
 
-    /* ============================================================
-       EASTER EGGS NON-SÉCURITAIRES (aucun unlock)
-       ============================================================ */
+    /* EASTER EGGS */
     (function () {
       var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
       var konamiIndex = 0;
@@ -2075,14 +1675,8 @@
       logoLink.addEventListener('dblclick', function (e) {
         e.preventDefault();
         var isActive = document.body.classList.contains('ee-kemet');
-        if (isActive) {
-          document.body.classList.remove('ee-kemet');
-          showEasterEggToast('🔓 MODE KEMET · DÉSACTIVÉ');
-        } else {
-          document.body.classList.add('ee-kemet');
-          showEasterEggToast('👁️ MODE KEMET · ACTIVÉ');
-          if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
-        }
+        if (isActive) { document.body.classList.remove('ee-kemet'); showEasterEggToast('🔓 MODE KEMET · DÉSACTIVÉ'); }
+        else { document.body.classList.add('ee-kemet'); showEasterEggToast('👁️ MODE KEMET · ACTIVÉ'); if (window.Maat && window.Maat.buzz) window.Maat.buzz(100); }
       });
     })();
 
@@ -2095,7 +1689,7 @@
       for (var r = 0; r < 6; r++) {
         rowsHTML += '<div class="glyph-row">';
         for (var c = 0; c < 8; c++) {
-          rowsHTML += '<span>' + glyphs[Math.floor(Math.random() * glyphs.length)] + '</span>';
+          rowsHTML += '<span>' + glyphs[(r * 8 + c) % glyphs.length] + '</span>';
         }
         rowsHTML += '</div>';
       }
@@ -2111,7 +1705,6 @@
       });
     })();
 
-    // "maat" → NE déverrouille PAS (sécurité) · simple toast symbolique
     (function () {
       var seq = ['m','a','a','t'];
       var idx = 0;
@@ -2126,13 +1719,10 @@
             showEasterEggToast('⚖️ MAÂT · VERITAS APERTA');
             window.openLoginModal();
           }
-        } else {
-          idx = (k === seq[0]) ? 1 : 0;
-        }
+        } else { idx = (k === seq[0]) ? 1 : 0; }
       });
     })();
 
-    // 5 clicks login → ouvre modal token (pas d'unlock)
     (function () {
       var loginBtn = document.getElementById('loginBtn');
       if (!loginBtn) return;
@@ -2164,9 +1754,7 @@
     }
     window.showEasterEggToast = showEasterEggToast;
 
-    /* ============================================================
-       SCROLL PROGRESS
-       ============================================================ */
+    /* SCROLL */
     window.addEventListener('scroll', function () {
       var bar = document.getElementById('scrollProgress');
       if (!bar) return;
@@ -2174,9 +1762,6 @@
       bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
     }, { passive: true });
 
-    /* ============================================================
-       REVEAL ON SCROLL
-       ============================================================ */
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
@@ -2186,24 +1771,7 @@
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
     }
 
-    /* ============================================================
-       TILT 3D
-       ============================================================ */
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
-      document.querySelectorAll('.tilt-card').forEach(function (card) {
-        card.addEventListener('mousemove', function (e) {
-          var r = card.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width;
-          var y = (e.clientY - r.top) / r.height;
-          card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * 6) + 'deg) rotateY(' + ((x - 0.5) * -6) + 'deg) translateZ(6px)';
-        });
-        card.addEventListener('mouseleave', function () { card.style.transform = ''; });
-      });
-    }
-
-    /* ============================================================
-       MOBILE NAV
-       ============================================================ */
+    /* MOBILE NAV */
     window.toggleMobileNav = function () {
       var nav = document.getElementById('mobileNavMenu');
       var btn = document.getElementById('menuBtn');
@@ -2224,48 +1792,31 @@
       nav.classList.add('hidden');
     });
 
-    /* ============================================================
-       SERVICE WORKER
-       ============================================================ */
+    /* SERVICE WORKER */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js').catch(function () {});
       });
     }
 
-    /* ============================================================
-       BOOTSTRAP · séquence réelle
-       ============================================================ */
+    /* BOOTSTRAP */
     async function bootstrap() {
-      // 1. Tenter autodétection admin (Control Tower)
       var isAdmin = await checkAdminSession();
-
-      // 2. Si pas admin, tenter restauration d'un token validé
-      if (!isAdmin) {
-        await restoreSession();
-      }
-
-      // 3. Charger les données réelles
+      if (!isAdmin) await restoreSession();
       await loadTickerFromSupabase();
       await loadKPIsFromSupabase();
-
-      // 4. Rafraîchissement périodique du ticker (toutes 60s)
       setInterval(loadTickerFromSupabase, 60000);
-      // 5. Rafraîchissement KPI (toutes 120s)
       setInterval(loadKPIsFromSupabase, 120000);
     }
 
-    // Lancer après un court délai (laisse le temps à Maat.init)
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(bootstrap, 300);
-      });
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(bootstrap, 300); });
     } else {
       setTimeout(bootstrap, 300);
     }
 
     try {
-      console.info('%c[MAAT DATA LAKE] Portal ready · v2.0 · zéro démo · Supabase-backed', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
+      console.info('%c[MAAT DATA LAKE] Portal ready · v2.1 · admin-session · RPC-verify · zéro démo', 'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;');
     } catch (e) {}
 
   })();
