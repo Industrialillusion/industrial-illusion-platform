@@ -1,12 +1,11 @@
 /* ============================================================
-   MAAT OS v8.2 — Control Tower (Direction Générale)
+   MAAT OS v8.2.1 — Control Tower (Direction Générale)
    Industrial Illusion SARL · Projet PurKemet Phase 1
    ------------------------------------------------------------
-   Nouveautés v8.2 :
-     - Vue "🔐 Data Lake Accréditations" (datalake_access_requests)
-     - Badge PENDING sur l'onglet Data Lake
-     - Approbation → génération token MAAT-LK-XXXX-XXXX
-     - Rejet → motif interne
+   Nouveautés v8.2.1 :
+     - generateToken() : CSPRNG (crypto.getRandomValues) + fallback
+     - Colonne notes supportée (SQL v1.1)
+     - Toutes les autres fonctions inchangées vs v8.2
    ============================================================ */
 (function () {
   'use strict';
@@ -762,19 +761,26 @@
     box.appendChild(list); await load();
   }
 
-  /* ---------- 9. Data Lake — Accréditations (NOUVEAU v8.2) ---------- */
+  /* ---------- 9. Data Lake — Accréditations (v8.2.1) ---------- */
   async function vDatalake(box) {
     var list = h('div', { class: 'card !p-2' });
     var statsBox = h('div', { class: 'grid grid-cols-2 md:grid-cols-4 gap-3' });
 
+    /* ── Génération token CSPRNG (crypto.getRandomValues) ─────────────── */
     function generateToken() {
       var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      function block() {
+      var rand = new Uint8Array(8);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(rand);
+      } else {
+        for (var k = 0; k < 8; k++) rand[k] = Math.floor(Math.random() * 256);
+      }
+      function block(offset) {
         var s = '';
-        for (var i = 0; i < 4; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+        for (var i = 0; i < 4; i++) s += chars.charAt(rand[offset + i] % chars.length);
         return s;
       }
-      return 'MAAT-LK-' + block() + '-' + block();
+      return 'MAAT-LK-' + block(0) + '-' + block(4);
     }
 
     function showTokenModal(req, token) {
