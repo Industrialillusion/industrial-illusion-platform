@@ -1,11 +1,11 @@
 /* ============================================================
-   MAAT · MONITORING v1.0
+   MAAT · MONITORING v1.1
    Sentry integration · zero-config · fail-silent
    ─────────────────────────────────────────────────────────────
-   - Reads DSN from window.II_CONFIG (fallback: MAAT_CONFIG)
-   - Attaches user context after auth
-   - Enriches events with page/path/viewport
-   - Silent fallback if DSN missing (local dev)
+   v1.1 (2026-10-21) — Fix Sentry v8 API :
+     - new BrowserTracing() → browserTracingIntegration()
+     - tracePropagationTargets spostato in init()
+     - fallback sicuro se integration mancante
    ============================================================ */
 (function () {
   'use strict';
@@ -47,28 +47,39 @@
 
   /* ─── 4. Initialisation ─── */
   function initSentry() {
-    if (!window.Sentry) {
+    if (!window.Sentry || typeof window.Sentry.init !== 'function') {
       console.warn('[MONITORING] SDK Sentry non disponible après chargement.');
       return;
     }
 
     try {
+      /* Construire les integrations de façon sûre (v8+ API) */
+      var integrations = [];
+      try {
+        if (typeof window.Sentry.browserTracingIntegration === 'function') {
+          integrations.push(window.Sentry.browserTracingIntegration());
+        } else if (typeof window.Sentry.replayIntegration === 'function') {
+          /* v8 minimal fallback : pas de tracing si indisponible */
+        }
+      } catch (intErr) {
+        console.warn('[MONITORING] Integration Sentry ignorée:', intErr && intErr.message);
+      }
+
       window.Sentry.init({
         dsn: SENTRY_DSN,
         environment: ENVIRONMENT,
         release: RELEASE,
 
-        integrations: [
-          new window.Sentry.BrowserTracing({
-            tracePropagationTargets: [
-              'localhost',
-              /^https:\/\/[a-z0-9-]+\.supabase\.co/,
-              window.location.host
-            ]
-          })
+        integrations: integrations,
+
+        /* Tracing & propagation */
+        tracesSampleRate: 0.1,
+        tracePropagationTargets: [
+          'localhost',
+          /^https:\/\/[a-z0-9-]+\.supabase\.co/,
+          window.location.host
         ],
 
-        tracesSampleRate: 0.1,
         attachStacktrace: true,
 
         ignoreErrors: [
