@@ -1,0 +1,262 @@
+/* ==========================================================================
+ *  assets/admin-mfa.css
+ *  Phase 1 · MFA Gate overlay — Control Tower
+ *  Design system: Obsidian / CyberGreen / KemetGold
+ * ========================================================================== */
+
+/* Blocco visivo del contenuto sottostante */
+body.mfa-locked { overflow: hidden; }
+body.mfa-locked > *:not(#mfa-gate):not(script) {
+  filter: blur(4px) brightness(.5);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ─── Overlay full-screen ──────────────────────────────────────────────── */
+.mfa-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(0, 255, 163, .05) 0%, transparent 60%),
+    rgba(6, 10, 13, .94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow-y: auto;
+}
+
+/* ─── Card centrale ─────────────────────────────────────────────────────── */
+.mfa-gate__card {
+  width: 100%;
+  max-width: 460px;
+  padding: 28px 24px;
+  border-radius: 18px;
+  background: linear-gradient(165deg, rgba(19, 25, 32, .96), rgba(9, 13, 16, .99));
+  border: 1px solid rgba(212, 175, 55, .45);
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, .9),
+    0 0 45px -10px rgba(0, 255, 163, .15);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #E2E8F0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────── */
+.mfa-gate__header { text-align: center; margin-bottom: 4px; }
+
+.mfa-gate__logo {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #00FFA3;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px rgba(0, 255, 163, .5);
+}
+
+.mfa-gate__title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: .03em;
+  margin: 0;
+}
+
+.mfa-gate__subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: #D4AF37;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: 4px 0 0;
+}
+
+/* ─── Body / Testo ──────────────────────────────────────────────────────── */
+.mfa-gate__body { display: flex; flex-direction: column; gap: 12px; }
+
+.mfa-gate__text {
+  font-size: .85rem;
+  color: #CBD5E1;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.mfa-gate__text--dim {
+  color: #94A3B8;
+  font-style: italic;
+  font-size: .8rem;
+}
+
+/* ─── QR code ───────────────────────────────────────────────────────────── */
+.mfa-gate__qr {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.mfa-gate__qr svg,
+.mfa-gate__qr img {
+  width: 200px;
+  height: 200px;
+  display: block;
+}
+
+/* ─── Chiave manuale ────────────────────────────────────────────────────── */
+.mfa-gate__secret {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, .6);
+  border: 1px solid rgba(212, 175, 55, .3);
+}
+
+.mfa-gate__secret-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.mfa-gate__secret-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: #D4AF37;
+  word-break: break-all;
+  letter-spacing: .05em;
+}
+
+/* ─── Form / Input ──────────────────────────────────────────────────────── */
+.mfa-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mfa-gate__input {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: .3em;
+  color: #00FFA3;
+  background: rgba(0, 0, 0, .7);
+  border: 1px solid rgba(0, 255, 163, .4);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.mfa-gate__input:focus {
+  border-color: #00FFA3;
+  box-shadow: 0 0 0 3px rgba(0, 255, 163, .15);
+}
+
+.mfa-gate__input--wide {
+  font-size: 1rem;
+  letter-spacing: .1em;
+}
+
+/* ─── Bottoni ───────────────────────────────────────────────────────────── */
+.mfa-gate__btn {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #001a10;
+  background: linear-gradient(135deg, #00B871, #00FFA3);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: filter .15s, transform .1s;
+}
+
+.mfa-gate__btn:hover { filter: brightness(1.1); }
+.mfa-gate__btn:active { transform: scale(.98); }
+.mfa-gate__btn[disabled] { opacity: .5; cursor: wait; }
+
+.mfa-gate__btn--ghost {
+  background: rgba(0, 0, 0, .6);
+  color: #00FFA3;
+  border: 1px solid rgba(0, 255, 163, .4);
+}
+
+/* ─── Link secondari ────────────────────────────────────────────────────── */
+.mfa-gate__link {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: .78rem;
+  color: #94A3B8;
+  text-decoration: underline;
+  padding: 6px;
+  align-self: center;
+}
+
+.mfa-gate__link:hover { color: #D4AF37; }
+
+/* ─── Griglia recovery codes ────────────────────────────────────────────── */
+.mfa-gate__codes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .7);
+  border: 1px solid rgba(212, 175, 55, .3);
+}
+
+.mfa-gate__code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  color: #D4AF37;
+  text-align: center;
+  padding: 4px;
+  border-bottom: 1px dashed rgba(212, 175, 55, .25);
+}
+
+.mfa-gate__code:last-child { border-bottom: none; }
+
+/* ─── Errore ────────────────────────────────────────────────────────────── */
+.mfa-gate__err {
+  color: #FF3B3B;
+  font-size: .82rem;
+  text-align: center;
+  padding: 8px;
+  background: rgba(255, 59, 59, .1);
+  border: 1px solid rgba(255, 59, 59, .3);
+  border-radius: 8px;
+}
+
+/* ─── Mobile ────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .mfa-gate__card {
+    padding: 22px 16px;
+    border-radius: 14px;
+  }
+  .mfa-gate__qr svg,
+  .mfa-gate__qr img {
+    width: 160px;
+    height: 160px;
+  }
+  .mfa-gate__input {
+    font-size: 1.2rem;
+    padding: 12px;
+  }
+}
