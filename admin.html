@@ -20,9 +20,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/maat.css">
+    <link rel="stylesheet" href="assets/admin-variance.css">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="assets/tw-config.js"></script>
     <script src="assets/config.js"></script>
+    <script src="assets/monitoring.js" defer></script>
+    <script src="assets/rate-limiter.js" defer></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
     <style>
         html { background-color: #060A0D !important; }
@@ -91,6 +94,21 @@
 
     <!-- APPLICATION CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow">
+
+        <!-- ═══ Phase 🅲 · Control Tower — Doppia Pesata Atomica ═══ -->
+        <section id="variance-tower" class="variance-tower" aria-live="assertive" hidden>
+            <header class="variance-tower__head">
+                <h2 class="variance-tower__title">
+                    Allerte Doppia Pesata
+                    <span id="variance-badge" class="variance-badge" hidden>0</span>
+                </h2>
+                <button id="variance-refresh" type="button" class="variance-btn variance-btn--ghost">
+                    Aggiorna
+                </button>
+            </header>
+            <div id="variance-alert-stack" class="variance-stack"></div>
+        </section>
+
         <div id="root"></div>
     </main>
 
@@ -104,6 +122,6 @@
 
     <script src="assets/core.js"></script>
     <script src="assets/admin.js"></script>
-    <script src="assets/monitoring.js"></script>
+    <script src="assets/admin-variance.js" defer></script>
 </body>
 </html>
