@@ -1,0 +1,90 @@
+/* ==========================================================================
+ *  assets/admin-variance.css
+ *  Phase 🅲 · Control Tower — Doppia Pesata Atomica
+ *  Design system: Obsidian / CyberGreen / KemetGold
+ * ========================================================================== */
+.variance-tower {
+  margin: 0 0 28px; padding: 18px 20px;
+  border: 1px solid rgba(255, 59, 59, .38); border-radius: 14px;
+  background: rgba(22, 8, 8, .72);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.variance-tower__head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; gap: 12px; flex-wrap: wrap;
+}
+.variance-tower__title {
+  font-size: .95rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--kemet-gold, #D4AF37); margin: 0;
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.variance-badge {
+  min-width: 24px; height: 24px; padding: 0 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; background: #FF3B3B; color: #0B0F0E;
+  font-size: .78rem; font-weight: 700;
+  animation: variance-pulse 1.6s ease-in-out infinite;
+}
+@keyframes variance-pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
+
+.variance-stack { display: flex; flex-direction: column; gap: 10px; }
+
+.variance-card {
+  border-radius: 10px; padding: 12px 14px;
+  background: rgba(255, 59, 59, .06);
+  border-left: 3px solid #FF3B3B;
+  transition: background .2s ease;
+}
+.variance-card--critical        { border-left-color: #FF7A1A; background: rgba(255,122,26,.07); }
+.variance-card--fraud_suspected { border-left-color: #FF3B3B; background: rgba(255,59,59,.12); }
+
+.variance-card__head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px;
+}
+.variance-card__bag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem; color: #E6FFF6; letter-spacing: .04em;
+}
+.variance-card__delta {
+  margin-left: auto; font-weight: 700; font-size: 1.05rem; color: #FF3B3B;
+  font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', monospace;
+}
+.variance-pill {
+  font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px;
+  border: 1px solid currentColor; color: #FF7A1A;
+  font-family: 'JetBrains Mono', monospace;
+}
+.variance-pill--fraud_suspected { color: #FF3B3B; }
+.variance-pill--warning         { color: #D4AF37; }
+
+.variance-card__meta {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  font-size: .82rem; color: #9FB3AC; font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', monospace;
+}
+.variance-card__thr  { color: #6B7F78; }
+.variance-card__time { margin-left: auto; color: #6B7F78; }
+.variance-card__state {
+  font-size: .78rem; color: #D4AF37; margin: 6px 0 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.variance-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.variance-btn {
+  font: inherit; font-size: .78rem; cursor: pointer;
+  padding: 6px 12px; border-radius: 8px;
+  border: 1px solid rgba(0, 255, 163, .35);
+  background: rgba(0, 255, 163, .08); color: #00FFA3;
+  transition: background .15s ease, transform .1s ease;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+}
+.variance-btn:hover   { background: rgba(0, 255, 163, .18); }
+.variance-btn:active  { transform: scale(.97); }
+.variance-btn[disabled]{ opacity: .45; cursor: wait; }
+.variance-btn--ghost  { border-color: rgba(212, 175, 55, .4); color: #D4AF37;
+                        background: rgba(212, 175, 55, .06); }
+.variance-btn--ghost:hover { background: rgba(212, 175, 55, .16); }
+
+@media (prefers-reduced-motion: reduce) { .variance-badge { animation: none; } }
