@@ -1,15 +1,19 @@
 -- ============================================================================
---  PHASE 3 · QR INFRASTRUCTURE · Blocco 1
---  Industrial Illusion SARL · Maat OS · Supabase / PostgreSQL 15+
+--  PHASE 3 · QR INFRASTRUCTURE · Blocco 1 (REV 2)
 --  RPC: assign_bag_to_client + validate_and_claim_bag
 --  Idempotente.
 -- ============================================================================
 
 begin;
 
--- ─── 1 · RPC · assign_bag_to_client ────────────────────────────────────────
--- Crea un sacco "vuoto" assegnato a un cliente (pre-pesata).
--- Chiamabile solo da admin/direction.
+-- ─── 1 · Schema fixes (idempotente) ────────────────────────────────────────
+alter table public.collections alter column weight_collect_kg drop not null;
+alter table public.collections drop constraint if exists collections_status_check;
+alter table public.collections add constraint collections_status_check
+  check (status in ('ASSIGNED','IN_TRANSIT','ANCHORED','DISCREPANCY'));
+alter table public.collections alter column status set default 'ASSIGNED';
+
+-- ─── 2 · RPC · assign_bag_to_client ────────────────────────────────────────
 create or replace function public.assign_bag_to_client(
   p_bag_qr_id     text,
   p_client_id     uuid default null,
@@ -29,8 +33,7 @@ begin
   end if;
 
   if p_bag_qr_id is null or length(trim(p_bag_qr_id)) < 5 then
-    raise exception 'INVALID_QR_ID: minimo 5 caratteri'
-      using errcode = '22023';
+    raise exception 'INVALID_QR_ID: minimo 5 caratteri' using errcode = '22023';
   end if;
 
   if exists (select 1 from public.collections where bag_qr_id = p_bag_qr_id) then
@@ -39,7 +42,7 @@ begin
   end if;
 
   insert into public.collections (bag_qr_id, client_id, material_type, status)
-  values (p_bag_qr_id, p_client_id, p_material_type, null)
+  values (p_bag_qr_id, p_client_id, p_material_type, 'ASSIGNED')
   returning * into v_row;
 
   insert into public.audit_log (actor, action, entity, entity_id, detail)
@@ -51,9 +54,7 @@ begin
   return v_row;
 end $$;
 
--- ─── 2 · RPC · validate_and_claim_bag ──────────────────────────────────────
--- L'autista scansiona un sacco e registra P1 (peso + GPS + operator).
--- Idempotente: rifiuta se già pesato (anti-frode).
+-- ─── 3 · RPC · validate_and_claim_bag ──────────────────────────────────────
 create or replace function public.validate_and_claim_bag(
   p_bag_qr_id text,
   p_vector_id uuid,
@@ -71,7 +72,6 @@ declare
   v_gps_text  text;
   v_caller    uuid;
 begin
-  -- Bypass per SQL Editor / backend job
   if current_user in ('postgres','service_role') then
     v_caller := coalesce(p_vector_id, '00000000-0000-0000-0000-000000000000'::uuid);
   elsif auth.uid() is null then
@@ -85,26 +85,22 @@ begin
       using errcode = '22023';
   end if;
 
-  -- Lock atomico sulla riga
-  select * into v_row
-  from public.collections
-  where bag_qr_id = p_bag_qr_id
-  for update;
+  select * into v_row from public.collections
+   where bag_qr_id = p_bag_qr_id
+   for update;
 
   if v_row.id is null then
-    raise exception 'BAG_NOT_FOUND: QR % non assegnato a nessun cliente', p_bag_qr_id
+    raise exception 'BAG_NOT_FOUND: QR % non assegnato', p_bag_qr_id
       using errcode = 'P0001';
   end if;
 
   if v_row.weight_collect_kg is not null then
-    raise exception 'BAG_ALREADY_COLLECTED: QR % già pesato P1 (% kg il %)',
-      p_bag_qr_id, v_row.weight_collect_kg, v_row.created_at
-      using errcode = 'P0001';
+    raise exception 'BAG_ALREADY_COLLECTED: QR % già pesato P1 (% kg)',
+      p_bag_qr_id, v_row.weight_collect_kg using errcode = 'P0001';
   end if;
 
-  if v_row.status = 'ANCHORED' or v_row.status = 'DISCREPANCY' then
-    raise exception 'BAG_IN_FINAL_STATE: QR % in stato % non ri-pesabile', 
-      p_bag_qr_id, v_row.status
+  if v_row.status in ('ANCHORED','DISCREPANCY') then
+    raise exception 'BAG_IN_FINAL_STATE: QR % in stato %', p_bag_qr_id, v_row.status
       using errcode = 'P0001';
   end if;
 
@@ -124,16 +120,15 @@ begin
   insert into public.audit_log (actor, action, entity, entity_id, detail)
   values (v_caller, 'validate_and_claim_bag', 'collections', v_row.id::text,
           jsonb_build_object('qr_code', p_bag_qr_id,
-                             'p1_kg', p_weight_p1,
-                             'gps', v_gps_text));
+                             'p1_kg', p_weight_p1, 'gps', v_gps_text));
 
   return v_row;
 end $$;
 
--- ─── 3 · Grant ─────────────────────────────────────────────────────────────
-revoke all on function public.assign_bag_to_client(text, uuid, text)             from public, anon;
+-- ─── 4 · Grant ─────────────────────────────────────────────────────────────
+revoke all on function public.assign_bag_to_client(text, uuid, text) from public, anon;
 revoke all on function public.validate_and_claim_bag(text, uuid, numeric, numeric, numeric) from public, anon;
-grant execute on function public.assign_bag_to_client(text, uuid, text)             to authenticated;
+grant execute on function public.assign_bag_to_client(text, uuid, text) to authenticated;
 grant execute on function public.validate_and_claim_bag(text, uuid, numeric, numeric, numeric) to authenticated;
 
 commit;
