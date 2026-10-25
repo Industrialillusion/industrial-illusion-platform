@@ -2,6 +2,7 @@
  *  assets/admin-mfa.css
  *  Phase 1 · MFA Gate overlay — Control Tower
  *  Design system: Obsidian / CyberGreen / KemetGold
+ *  REV 2 · QR contrast fix for scan reliability
  * ========================================================================== */
 
 /* Blocco visivo del contenuto sottostante */
@@ -94,20 +95,40 @@ body.mfa-locked > *:not(#mfa-gate):not(script) {
   font-size: .8rem;
 }
 
-/* ─── QR code ───────────────────────────────────────────────────────────── */
+/* ─── QR code · FORCED HIGH CONTRAST ────────────────────────────────────── */
 .mfa-gate__qr {
-  display: flex;
-  justify-content: center;
-  padding: 12px;
-  border-radius: 12px;
-  background: #fff;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 20px !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  margin: 0 auto 12px !important;
+  width: fit-content !important;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 4px #FFFFFF !important;
+  filter: none !important;
+  opacity: 1 !important;
 }
 
 .mfa-gate__qr svg,
 .mfa-gate__qr img {
-  width: 200px;
-  height: 200px;
-  display: block;
+  display: block !important;
+  width: 240px !important;
+  height: 240px !important;
+  background: #FFFFFF !important;
+  filter: none !important;
+  opacity: 1 !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  -ms-interpolation-mode: nearest-neighbor !important;
+}
+
+/* Assicura che i path interni dell'SVG siano neri su bianco */
+.mfa-gate__qr svg path,
+.mfa-gate__qr svg rect {
+  fill: #000000 !important;
 }
 
 /* ─── Chiave manuale ────────────────────────────────────────────────────── */
@@ -252,8 +273,11 @@ body.mfa-locked > *:not(#mfa-gate):not(script) {
   }
   .mfa-gate__qr svg,
   .mfa-gate__qr img {
-    width: 160px;
-    height: 160px;
+    width: 200px !important;
+    height: 200px !important;
+  }
+  .mfa-gate__qr {
+    padding: 16px !important;
   }
   .mfa-gate__input {
     font-size: 1.2rem;
