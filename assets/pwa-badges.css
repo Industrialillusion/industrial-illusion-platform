@@ -1,0 +1,577 @@
+/* ==========================================================================
+ *  assets/pwa-badges.css
+ *  Maat OS · Badge Phygital (Papiro + Circuiti Neon)
+ *  CR-80 · 85.6mm × 53.98mm · Print-ready
+ * ========================================================================== */
+
+/* ─── FAB (Floating Action Button) ────────────────────────────────────── */
+#maat-badge-fab {
+  position: fixed;
+  bottom: 100px;
+  right: 16px;
+  z-index: 60;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00B871, #00FFA3);
+  color: #001a10;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 255, 163, 0.35),
+    0 0 20px rgba(0, 255, 163, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: maatBadgeFabPulse 3s ease-in-out infinite;
+}
+#maat-badge-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(0, 255, 163, 0.55);
+}
+#maat-badge-fab:active { transform: scale(0.95); }
+#maat-badge-fab[hidden] { display: none !important; }
+
+@keyframes maatBadgeFabPulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0,255,163,0.35), 0 0 0 0 rgba(0,255,163,0.4); }
+  50%      { box-shadow: 0 8px 24px rgba(0,255,163,0.35), 0 0 0 12px rgba(0,255,163,0); }
+}
+
+/* ─── Overlay ─────────────────────────────────────────────────────────── */
+.maat-badge-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 10, 13, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 70;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 16px max(20px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  animation: maatBadgeFadeIn 0.25s ease-out;
+}
+.maat-badge-overlay[hidden] { display: none !important; }
+
+@keyframes maatBadgeFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Panel ───────────────────────────────────────────────────────────── */
+.maat-badge-panel {
+  width: 100%;
+  max-width: 540px;
+  background: #0A0D10;
+  border: 1px solid rgba(0, 255, 163, 0.2);
+  border-radius: 18px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: auto;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+.maat-badge-panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.maat-badge-panel__title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #00FFA3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.maat-badge-panel__title::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00FFA3;
+  box-shadow: 0 0 10px #00FFA3;
+}
+.maat-badge-panel__close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+  font-size: 1.4rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+.maat-badge-panel__close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* ─── BADGE CARD ──────────────────────────────────────────────────────── */
+.badge-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 85.6 / 53.98;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(0, 255, 163, 0.08);
+  font-family: 'JetBrains Mono', monospace;
+  color: #1A1208;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+/* Papiro base: gradient + texture SVG inline */
+.badge-card__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(232, 210, 170, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(200, 175, 130, 0.75) 0%, transparent 60%),
+    linear-gradient(135deg, #D9C09C 0%, #C9AE7F 40%, #B8A070 100%);
+  z-index: 0;
+}
+
+/* Texture fibre di papiro via SVG feTurbulence */
+.badge-card__texture {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PGRlZnM+PGZpbHRlciBpZD0iaGYiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjAwOCAwLjMiIG51bU9jdGF2ZXM9IjMiIHNlZWQ9IjciLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC40IDAgMCAwIDAgMC4yOCAwIDAgMCAwLjE0IDAgMCAwIDAuNSAwIi8+PC9maWx0ZXI+PGZpbHRlciBpZD0idmYiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjMgMC4wMDgiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjMiLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9IjAgMCAwIDAgMC4zNSAwIDAgMCAwIDAuMjIgMCAwIDAgMCAwLjEgMCAwIDAgMC4zIDAgIi8+PC9maWx0ZXI+PGZpbHRlciBpZD0ibm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjYiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjExIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDAuNSAwIDAgMCAwIDAuMyAwIDAgMCAwIDAuMTUgMCAwIDAgMC4xOCAwIi8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjaGYpIi8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCN2ZikiLz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsdGVyPSJ1cmwoI25vaXNlKSIvPjwvc3ZnPg==");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Circuiti neon overlay */
+.badge-card__circuits {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border: 1.5px solid rgba(0, 255, 163, 0.35);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 30px rgba(0, 255, 163, 0.12),
+    inset 0 0 6px rgba(0, 255, 163, 0.25);
+  margin: 3px;
+}
+
+/* Angoli circuiti */
+.badge-card__circuits::before,
+.badge-card__circuits::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #00FFA3;
+  filter: drop-shadow(0 0 3px rgba(0, 255, 163, 0.8));
+}
+.badge-card__circuits::before {
+  top: 4px; left: 4px;
+  border-right: none;
+  border-bottom: none;
+}
+.badge-card__circuits::after {
+  bottom: 4px; right: 4px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Content layout */
+.badge-card__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 3.2cqw 3.6cqw;
+  display: grid;
+  grid-template-columns: 42% 58%;
+  grid-template-rows: auto 1fr auto;
+  gap: 2cqw 3cqw;
+}
+
+/* HEADER spanning */
+.badge-card__header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  padding-bottom: 1.4cqw;
+  border-bottom: 1px solid rgba(0, 100, 60, 0.35);
+}
+.badge-card__logo {
+  width: 10cqw;
+  height: 10cqw;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 3px rgba(0, 255, 163, 0.7));
+}
+.badge-card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.badge-card__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+.badge-card__brand-name {
+  font-family: 'Cinzel', serif;
+  font-size: 3.2cqw;
+  font-weight: 900;
+  color: #006A3E;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: 0 0 2px rgba(0, 255, 163, 0.4);
+}
+.badge-card__brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5cqw;
+  font-weight: 800;
+  color: #00B871;
+  letter-spacing: 0.15em;
+  margin-top: 0.6cqw;
+  text-shadow: 0 0 2px rgba(0, 255, 163, 0.5);
+}
+
+/* LEFT column: photo + name + serial */
+.badge-card__left {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5cqw;
+}
+
+.badge-card__photo {
+  width: 60%;
+  aspect-ratio: 3/4;
+  border: 1.5px solid #00B871;
+  border-radius: 1.2cqw;
+  overflow: hidden;
+  background: rgba(10, 13, 16, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 6px rgba(0, 255, 163, 0.5),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.badge-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.badge-card__photo-placeholder {
+  color: #00FFA3;
+  font-size: 6cqw;
+  opacity: 0.4;
+}
+
+.badge-card__name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2cqw;
+  font-weight: 900;
+  color: #0A0D10;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.badge-card__role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4cqw;
+  font-weight: 800;
+  color: #006A3E;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 0 2px rgba(0, 255, 163, 0.35);
+}
+
+/* RIGHT column: QR + serial */
+.badge-card__right {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5cqw;
+}
+
+.badge-card__qr {
+  width: 65%;
+  max-width: 40cqw;
+  aspect-ratio: 1;
+  background: #FFFFFF;
+  border-radius: 1cqw;
+  padding: 0.8cqw;
+  box-shadow:
+    0 0 8px rgba(0, 255, 163, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.badge-card__qr svg,
+.badge-card__qr img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.badge-card__serial-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2cqw;
+  font-weight: 700;
+  color: #4A3A1A;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.5cqw;
+}
+.badge-card__serial {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.1cqw;
+  font-weight: 900;
+  color: #006A3E;
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 0 4px rgba(0, 255, 163, 0.6),
+    0 0 8px rgba(0, 255, 163, 0.3);
+}
+
+.badge-card__token {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95cqw;
+  color: #6B5A3A;
+  letter-spacing: 0.04em;
+  word-break: break-all;
+  text-align: center;
+  margin-top: 0.3cqw;
+  opacity: 0.7;
+}
+
+/* FOOTER */
+.badge-card__footer {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1cqw;
+  text-align: center;
+  color: #4A3A1A;
+  letter-spacing: 0.12em;
+  padding-top: 1.2cqw;
+  border-top: 1px solid rgba(0, 100, 60, 0.3);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ─── Azioni (sotto il badge) ─────────────────────────────────────────── */
+.maat-badge-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.maat-badge-btn {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 163, 0.4);
+  background: rgba(0, 255, 163, 0.06);
+  color: #00FFA3;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+}
+.maat-badge-btn:hover:not(:disabled) { background: rgba(0, 255, 163, 0.16); }
+.maat-badge-btn:disabled { opacity: 0.5; cursor: wait; }
+
+.maat-badge-btn--primary {
+  background: linear-gradient(135deg, #00B871, #00FFA3);
+  color: #001a10;
+  border: none;
+  grid-column: 1 / -1;
+  font-weight: 800;
+}
+.maat-badge-btn--primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 163, 0.4);
+}
+
+.maat-badge-btn--gold {
+  border-color: rgba(232, 200, 106, 0.4);
+  background: rgba(232, 200, 106, 0.06);
+  color: #E8C86A;
+}
+.maat-badge-btn--gold:hover:not(:disabled) {
+  background: rgba(232, 200, 106, 0.16);
+}
+
+/* ─── Upload foto ─────────────────────────────────────────────────────── */
+.maat-badge-upload-hint {
+  text-align: center;
+  padding: 10px;
+  border: 2px dashed rgba(0, 255, 163, 0.3);
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.maat-badge-upload-hint:hover {
+  border-color: rgba(0, 255, 163, 0.6);
+  color: #00FFA3;
+}
+.maat-badge-upload-hint input { display: none; }
+
+/* ─── Messaggi errore/success ─────────────────────────────────────────── */
+.maat-badge-msg {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-align: center;
+}
+.maat-badge-msg--err {
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+.maat-badge-msg--ok {
+  color: #00FFA3;
+  background: rgba(0, 255, 163, 0.1);
+  border: 1px solid rgba(0, 255, 163, 0.3);
+}
+
+/* ─── PRINT CR-80 ─────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: 85.6mm 53.98mm landscape;
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FFF !important;
+  }
+
+  body > * {
+    display: none !important;
+  }
+
+  .maat-badge-overlay {
+    display: block !important;
+    position: static !important;
+    background: #FFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .maat-badge-overlay > *:not(.maat-badge-panel) {
+    display: none !important;
+  }
+
+  .maat-badge-panel {
+    display: block !important;
+    background: #FFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 85.6mm !important;
+    height: 53.98mm !important;
+    max-width: 85.6mm !important;
+  }
+
+  .maat-badge-panel__head,
+  .maat-badge-actions,
+  .maat-badge-upload-hint,
+  .maat-badge-msg {
+    display: none !important;
+  }
+
+  .badge-card {
+    position: relative !important;
+    width: 85.6mm !important;
+    height: 53.98mm !important;
+    aspect-ratio: auto !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    /* Guide di taglio */
+    outline: 0.3mm dashed rgba(0, 0, 0, 0.35);
+    outline-offset: -0.15mm;
+  }
+
+  /* Forza colori esatti */
+  .badge-card,
+  .badge-card * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Nasconde il badge extra (struttura) se presente, stampa solo il primo */
+  .maat-badge-extra-wrapper { display: none !important; }
+}
+
+/* ─── Mobile adjustments ──────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  #maat-badge-fab {
+    bottom: 90px;
+    right: 12px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+  .maat-badge-panel { padding: 16px 12px; }
+  .maat-badge-panel__title { font-size: 0.75rem; }
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #maat-badge-fab,
+  .maat-badge-overlay,
+  .badge-card {
+    animation: none !important;
+  }
+}
