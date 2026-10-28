@@ -1,0 +1,21 @@
+{
+  "name": "Maat Workstation · PurKemet",
+  "short_name": "Maat WS",
+  "description": "Workstation mobile offline-first pour vettori PurKemet — scan QR, pesée P1, réception dépôt",
+  "start_url": "/pwa.html",
+  "scope": "/pwa.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060A0D",
+  "theme_color": "#00FFA3",
+  "lang": "fr",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
