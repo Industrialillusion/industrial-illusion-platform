@@ -1,15 +1,18 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.0
+ *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone)
  *
  *  Strategie:
- *  - App shell (pwa.html + asset core) → pre-cache all'install
+ *  - App shell → pre-cache all'install
  *  - HTML → network-first con fallback cache
- *  - Asset statici (CSS/JS/IMG) → cache-first
- *  - Supabase API → bypass totale (no cache)
+ *  - Asset statici → cache-first
+ *  - Supabase API → bypass totale
+ *
+ *  FIX v1.0.1: clonare la Response PRIMA di restituirla al browser,
+ *  altrimenti il body viene consumato dal chiamante e clone() fallisce.
  * ========================================================================== */
 
-const VERSION      = 'maat-v1.0.0-pre-pwa';
+const VERSION      = 'maat-v1.0.1-pre-pwa';
 const SHELL_CACHE  = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -21,6 +24,7 @@ const SHELL_URLS = [
   '/assets/config.js',
   '/assets/core.js',
   '/assets/monitoring.js',
+  '/assets/pwa.js',
   '/assets/qr-generator.js',
   '/assets/qr-scanner.js'
 ];
@@ -73,7 +77,7 @@ self.addEventListener('fetch', function (event) {
   }
 
   // Static assets
-  if (/\.(css|js|png|jpg|jpeg|svg|webp|woff2?|ico)$/i.test(url.pathname)) {
+  if (/\.(css|js|png|jpg|jpeg|svg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname)) {
     event.respondWith(cacheFirst(req));
     return;
   }
@@ -81,12 +85,16 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(staleWhileRevalidate(req));
 });
 
-/* ─── Strategie ──────────────────────────────────────────────────────── */
+/* ─── Strategia: network-first per HTML ─────────────────────────────── */
 function networkFirstHTML(req) {
   return fetch(req).then(function (fresh) {
+    // FIX: clona SUBITO, prima di restituire al browser
     if (fresh && fresh.ok) {
+      var clone = fresh.clone();
       caches.open(RUNTIME_CACHE).then(function (cache) {
-        cache.put(req, fresh.clone());
+        cache.put(req, clone).catch(function (e) {
+          console.warn('[SW] cache.put HTML failed:', e.message);
+        });
       });
     }
     return fresh;
@@ -104,13 +112,18 @@ function networkFirstHTML(req) {
   });
 }
 
+/* ─── Strategia: cache-first per asset ──────────────────────────────── */
 function cacheFirst(req) {
   return caches.match(req).then(function (cached) {
     if (cached) return cached;
     return fetch(req).then(function (fresh) {
+      // FIX: clona SUBITO
       if (fresh && fresh.ok) {
+        var clone = fresh.clone();
         caches.open(SHELL_CACHE).then(function (cache) {
-          cache.put(req, fresh.clone());
+          cache.put(req, clone).catch(function (e) {
+            console.warn('[SW] cache.put asset failed:', e.message);
+          });
         });
       }
       return fresh;
@@ -120,16 +133,22 @@ function cacheFirst(req) {
   });
 }
 
+/* ─── Strategia: stale-while-revalidate ─────────────────────────────── */
 function staleWhileRevalidate(req) {
   return caches.match(req).then(function (cached) {
     var networkPromise = fetch(req).then(function (fresh) {
+      // FIX: clona SUBITO
       if (fresh && fresh.ok) {
+        var clone = fresh.clone();
         caches.open(RUNTIME_CACHE).then(function (cache) {
-          cache.put(req, fresh.clone());
+          cache.put(req, clone).catch(function (e) {
+            console.warn('[SW] cache.put runtime failed:', e.message);
+          });
         });
       }
       return fresh;
     }).catch(function () { return cached; });
+
     return cached || networkPromise;
   });
 }
