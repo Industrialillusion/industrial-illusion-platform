@@ -13,18 +13,43 @@
     return n;
   }
 
-  function buildOverlay(wrapper) {
-    const target = wrapper.querySelector('.shielded-content');
-    if (!target) {
-      console.warn('[Shielded] .shielded-content non trovato');
-      return;
+  /* ─── Matrix rain dentro il wrapper ────────────────────────────────── */
+  function startMatrixRain(wrapper) {
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0.25';
+    wrapper.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let cols, drops;
+    function resize() {
+      canvas.width = wrapper.offsetWidth || 800;
+      canvas.height = wrapper.offsetHeight || 600;
+      cols = Math.floor(canvas.width / 14);
+      drops = Array(cols).fill(1);
     }
+    resize();
+    window.addEventListener('resize', resize);
+    const charsArr = '01AF3E7BC9D258'.split('');
+    setInterval(() => {
+      if (!document.body.contains(canvas)) return;
+      ctx.fillStyle = 'rgba(9, 13, 16, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00FFA3';
+      ctx.font = '14px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const ch = charsArr[Math.floor(Math.random() * charsArr.length)];
+        ctx.fillText(ch, i * 14, drops[i] * 14);
+        if (drops[i] * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }, 60);
+  }
 
-    // Overlay
+  function buildOverlay(wrapper) {
+    startMatrixRain(wrapper);
+
     const overlay = el('div', 'shielded-overlay');
     const card = el('div', 'shielded-card');
 
-    // Logo SVG (occhio stilizzato — identico a index.html)
     const logo = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     logo.setAttribute('viewBox', '0 0 120 120');
     logo.setAttribute('fill', 'none');
@@ -33,8 +58,6 @@
       <path d="M22 60 Q60 38 98 60 Q60 82 22 60 Z" stroke="#00FFA3" stroke-width="2.2" fill="#0A0D10"/>
       <circle cx="60" cy="60" r="14" stroke="#C5A059" stroke-width="1.8" fill="#11161C"/>
       <circle cx="60" cy="60" r="7" fill="#00FFA3"/>
-      <path d="M60 74 L58 90" stroke="#00FFA3" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M60 78 L64 92" stroke="#C5A059" stroke-width="1.6" stroke-linecap="round"/>
     `;
     card.appendChild(logo);
 
@@ -50,8 +73,8 @@
       'Solliciter une Accréditation Industrielle');
     btnAccredit.type = 'button';
     btnAccredit.addEventListener('click', () => {
-      if (window.openKmeh20AccreditModal) window.openKmeh20AccreditModal();
-      else console.warn('[Shielded] Modale accreditamento non montata');
+      if (window.openKmeh20AccessModal) window.openKmeh20AccessModal();
+      else console.warn('[Shielded] Modale non montata');
     });
     actions.appendChild(btnAccredit);
 
@@ -65,32 +88,22 @@
     actions.appendChild(btnLogin);
 
     card.appendChild(actions);
-
     card.appendChild(el('p', 'shielded-card__footnote',
       'Conformité Loi 28-00 & CNDP n° 09-08 · Traitement confidentiel · Dossier OMPIC en préparation'));
 
     overlay.appendChild(card);
     wrapper.appendChild(overlay);
-
-    // Lock
     wrapper.classList.add('is-locked');
-    log('shielded terminal locked');
+    log('locked');
   }
 
   function init() {
-    const wrappers = document.querySelectorAll('.shielded-wrapper');
-    if (!wrappers.length) {
-      log('nessun .shielded-wrapper trovato');
-      return;
-    }
-    wrappers.forEach(buildOverlay);
+    document.querySelectorAll('.shielded-wrapper').forEach(buildOverlay);
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once: true });
-  } else {
-    init();
-  }
+  } else { init(); }
 
   window.MaatShielded = {
     unlock: () => {
