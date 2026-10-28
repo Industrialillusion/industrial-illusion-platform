@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/maat.css">
     <link rel="stylesheet" href="assets/admin-variance.css">
     <link rel="stylesheet" href="assets/admin-mfa.css">
+    <link rel="stylesheet" href="assets/admin-accredits.css">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="assets/tw-config.js"></script>
     <script src="assets/config.js"></script>
@@ -99,6 +100,42 @@
     <!-- APPLICATION CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow">
 
+        <!-- ═══ UNIFIED ACCREDITATIONS · Data Lake + K-MEH-20 ═══ -->
+        <section id="admin-accredits" class="admin-accredits" aria-live="polite" hidden>
+            <header class="admin-accredits__head">
+                <h2 class="admin-accredits__title">
+                    🏛 Accréditations Institutionnelles
+                    <span id="admin-accredits-badge" class="admin-accredits__badge" hidden>0</span>
+                </h2>
+            </header>
+
+            <div class="admin-accredits__controls">
+                <div class="admin-accredits__tabs" role="tablist" aria-label="Sorgenti accreditamenti">
+                    <button type="button" class="admin-accredits__tab is-active" data-source="datalake" role="tab" aria-selected="true">
+                        Maat Data Lake
+                    </button>
+                    <button type="button" class="admin-accredits__tab admin-accredits__tab--kmeh20" data-source="kmeh20" role="tab" aria-selected="false">
+                        K-MEH-20
+                    </button>
+                </div>
+
+                <select id="admin-accredits-status" class="admin-accredits__status-filter" aria-label="Filtrer par statut">
+                    <option value="PENDING">In attesa</option>
+                    <option value="APPROVED">Approvati</option>
+                    <option value="REJECTED">Rifiutati</option>
+                    <option value="ALL">Tutti</option>
+                </select>
+
+                <button type="button" id="admin-accredits-refresh" class="admin-accredits__refresh">
+                    ⟳ Aggiorna
+                </button>
+            </div>
+
+            <div id="admin-accredits-list" class="admin-accredits__list">
+                <div class="admin-accredits__loading">Caricamento…</div>
+            </div>
+        </section>
+
         <!-- ═══ Phase 🅲 · Control Tower — Doppia Pesata Atomica ═══ -->
         <section id="variance-tower" class="variance-tower" aria-live="assertive" hidden>
             <header class="variance-tower__head">
@@ -128,5 +165,6 @@
     <script src="assets/admin.js"></script>
     <script src="assets/admin-variance.js" defer></script>
     <script src="assets/admin-mfa.js" defer></script>
+    <script src="assets/admin-accredits.js" defer></script>
 </body>
 </html>
