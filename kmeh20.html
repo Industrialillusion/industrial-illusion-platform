@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>K-MEH-20 | Industrial Illusion SARL — L'Usine Vivante de l'Industrie 5.0</title>
-  <meta name="description" content="Kemet Modular Eco Hub 20 (K-MEH-20) : hub industrial cyber-physique tronqué 56×56 m, 45 m, 20 000 t/an. Assemblage par 8 modules Skid ISO 6,0×2,3×2,6 m. Technologie propriétaire en préparation de dépôt OMPIC — Industrial Illusion SARL.">
+  <title>K-MEH-20 | Industrial Illusion SARL — Vision Industrielle 2030</title>
+  <meta name="description" content="Kemet Modular Eco Hub 20 (K-MEH-20) : une technologie marocaine pour l'Afrique et le monde. Hardware industriel qui réinvente l'architecture des fabriques contemporaines. Objectif : modules Skid opérationnels d'ici 2030.">
   <meta name="theme-color" content="#090D10">
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="index, follow">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="K-MEH-20 Hub">
+  <meta name="apple-mobile-web-app-title" content="K-MEH-20 Vision">
 
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -45,143 +45,40 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="assets/tw-config.js"></script>
   <script src="assets/config.js"></script>
+  <script src="assets/monitoring.js" defer></script>
+  <script src="assets/rate-limiter.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
-    html {
-      background-color: #060A0D !important;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-      -webkit-tap-highlight-color: transparent;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: transparent !important;
-      background-image: none !important;
-      color: #F1F5F9 !important;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      touch-action: manipulation;
-    }
-
-    #spaceCanvas {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 0 !important;
-      pointer-events: none !important;
-      display: block !important;
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
-    }
-
-    #kmehAmbientLayer {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.35;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(0, 255, 163, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(232, 200, 106, 0.06) 0%, transparent 45%),
-        radial-gradient(circle at 50% 100%, rgba(197, 160, 89, 0.05) 0%, transparent 50%);
-      animation: ambientDrift 40s ease-in-out infinite alternate;
-    }
-    @keyframes ambientDrift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-2%, -1%) scale(1.05); }
-    }
-
+    html { background-color: #060A0D !important; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; overflow-x: hidden; scroll-behavior: smooth; }
+    body { background-color: transparent !important; background-image: none !important; color: #F1F5F9 !important; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; touch-action: manipulation; }
+    #spaceCanvas { position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 0 !important; pointer-events: none !important; display: block !important; transform: translateZ(0); -webkit-transform: translateZ(0); }
+    #kmehAmbientLayer { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.35; background-image: radial-gradient(circle at 20% 30%, rgba(0, 255, 163, 0.08) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(232, 200, 106, 0.06) 0%, transparent 45%); animation: ambientDrift 40s ease-in-out infinite alternate; }
+    @keyframes ambientDrift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-2%, -1%) scale(1.05); } }
     main, footer { position: relative; z-index: 10; }
     header { z-index: 50; }
-
     input, select, textarea, .inp { font-size: 16px !important; }
-    @media (min-width: 640px) {
-      input, select, textarea, .inp { font-size: 0.8rem !important; }
-    }
-
-    .btn, button, .step-tab, .level-card { min-height: 44px; min-width: 44px; }
-
-    .cta-inline {
-      width: auto !important; max-width: 100%;
-      display: inline-flex !important; align-items: center; justify-content: center;
-      gap: 0.4rem; white-space: nowrap; min-height: 44px;
-    }
-    .cta-inline:hover { transform: translateY(-1px); }
-
-    #scrollProgress {
-      position: fixed; top: 0; left: 0;
-      height: 3px; width: 0%;
-      background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059);
-      z-index: 9999;
-      box-shadow: 0 0 12px rgba(0, 255, 163, .6);
-      transition: width .1s ease-out;
-      pointer-events: none;
-    }
-
-    .reveal {
-      opacity: 0; transform: translateY(35px);
-      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
-    }
+    @media (min-width: 640px) { input, select, textarea, .inp { font-size: 0.8rem !important; } }
+    .btn, button { min-height: 44px; min-width: 44px; }
+    #scrollProgress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #00B871, #00FFA3, #E8C86A, #C5A059); z-index: 9999; box-shadow: 0 0 12px rgba(0, 255, 163, .6); transition: width .1s ease-out; pointer-events: none; }
+    .reveal { opacity: 0; transform: translateY(35px); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    .tilt-card { transform-style: preserve-3d; transition: transform .3s ease-out, box-shadow .3s; will-change: transform; }
-    .tilt-card:hover { box-shadow: 0 25px 50px -15px rgba(0, 255, 163, .3); }
-
-    .animated-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent);
-      animation: dividerPulse 3s ease-in-out infinite;
-      margin: 2.5rem auto; max-width: 60%;
-    }
+    .animated-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0, 255, 163, .5), transparent); animation: dividerPulse 3s ease-in-out infinite; margin: 2.5rem auto; max-width: 60%; }
     @keyframes dividerPulse { 0%, 100% { opacity: .3; transform: scaleX(.7); } 50% { opacity: 1; transform: scaleX(1); } }
-
-    .glass-panel {
-      background: linear-gradient(165deg, rgba(19, 25, 32, 0.88), rgba(9, 13, 16, 0.96)) !important;
-      border: 1px solid rgba(197, 160, 89, 0.35) !important;
-      border-radius: 1.25rem !important;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important;
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .glass-panel { background: linear-gradient(165deg, rgba(19, 25, 32, 0.88), rgba(9, 13, 16, 0.96)) !important; border: 1px solid rgba(197, 160, 89, 0.35) !important; border-radius: 1.25rem !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
     @media (min-width: 640px) { .glass-panel { border-radius: 1.5rem !important; } }
     .glass-panel.g { border-color: rgba(0, 255, 163, 0.45) !important; box-shadow: 0 0 35px -8px rgba(0, 255, 163, 0.18) !important; }
     .glass-panel:hover { transform: translateY(-3px); border-color: rgba(0, 255, 163, 0.6) !important; }
-
-    .inp {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.65) !important;
-      border: 1px solid rgba(255, 255, 255, 0.14) !important;
-      border-radius: 0.75rem !important;
-      padding: 0.75rem !important;
-      color: #fff !important; outline: none; transition: border-color .2s;
-    }
+    .inp { width: 100%; background: rgba(0, 0, 0, 0.65) !important; border: 1px solid rgba(255, 255, 255, 0.14) !important; border-radius: 0.75rem !important; padding: 0.75rem !important; color: #fff !important; outline: none; transition: border-color .2s; }
     .inp:focus { border-color: #00FFA3 !important; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
-
-    .btn {
-      padding: 0.85rem; border-radius: 0.8rem;
-      font: 800 0.72rem 'JetBrains Mono', monospace;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      transition: all 0.2s;
-      display: inline-flex; align-items: center; justify-content: center;
-      text-align: center; cursor: pointer; border: none;
-    }
+    .btn { padding: 0.85rem; border-radius: 0.8rem; font: 800 0.72rem 'JetBrains Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; border: none; }
     .btn-g { background: linear-gradient(135deg, #00B871, #059669) !important; color: #000 !important; }
     .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(0, 255, 163, 0.35); }
     .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059) !important; color: #1a1405 !important; }
     .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 25px rgba(197, 160, 89, 0.3); }
     .btn-o { background: rgba(0, 0, 0, 0.8) !important; border: 1px solid rgba(0, 255, 163, 0.5) !important; color: #00FFA3 !important; }
     .btn-o:hover { border-color: #00FFA3 !important; }
-    .btn-o.is-active { background: rgba(0, 255, 163, 0.15) !important; border-color: #00FFA3 !important; box-shadow: 0 0 18px -3px rgba(0, 255, 163, 0.5); }
-
     @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes orbitRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
     @keyframes pupilPulse { 0%, 100% { r: 6.8; opacity: 1; } 50% { r: 8.6; opacity: .82; } }
@@ -189,455 +86,182 @@
     .anim-counter-orbit { animation: orbitRev 11s linear infinite; transform-origin: 60px 60px; }
     .anim-pupil { animation: pupilPulse 2.4s ease-in-out infinite; }
 
-    .scanner-beam {
-      position: absolute; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, #00FFA3, transparent);
-      box-shadow: 0 0 14px #00FFA3;
-      animation: scanLine 3.8s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes scanLine { 0% { top: 0%; opacity: .85; } 50% { opacity: 1; } 100% { top: 100%; opacity: .2; } }
-
-    /* HERO K-MEH-20 v6.0 */
-    .hero-kmeh {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      align-items: center;
-    }
-    @media (min-width: 1024px) {
-      .hero-kmeh {
-        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-        gap: 2.5rem;
-        min-height: calc(100vh - 100px);
-      }
-    }
-
+    /* HERO layout */
+    .hero-kmeh { position: relative; display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+    @media (min-width: 1024px) { .hero-kmeh { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 3rem; min-height: calc(100vh - 100px); } }
     .hero-text { position: relative; z-index: 2; }
 
-    .hero-pyramid {
+    /* Motto glow animé */
+    .motto-glow {
+      background: linear-gradient(90deg, #00FFA3, #7FFFD4, #E8C86A, #00FFA3);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: mottoFlow 5s linear infinite;
+    }
+    @keyframes mottoFlow {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* ═════════ HERO CYBER-HOLOGRAM (piramide révolutionnaire) ═════════ */
+    .hero-cyber {
       position: relative;
       width: 100%;
-      min-width: 280px;
-      min-height: 66vh;
-      height: 66vh;
-      z-index: 1;
-    }
-    @media (min-width: 1024px) {
-      .hero-pyramid { min-height: 82vh; height: 82vh; }
-    }
-    @media (min-width: 1440px) {
-      .hero-pyramid { min-height: 86vh; height: 86vh; }
-    }
-
-    .hero-pyramid::before {
-      content: '';
-      position: absolute;
-      inset: -8%;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(0, 255, 163, 0.12) 0%,
-        rgba(232, 200, 106, 0.06) 40%,
-        transparent 70%
-      );
-      pointer-events: none;
-      z-index: 0;
-      animation: heroHaloPulse 8s ease-in-out infinite;
-    }
-    @keyframes heroHaloPulse {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50%      { opacity: 0.9; transform: scale(1.04); }
-    }
-
-    .pyramid-svg-wrap {
-      position: absolute;
-      inset: 0;
+      min-height: 70vh;
+      height: 70vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1;
-      pointer-events: none;
+      perspective: 1200px;
     }
-    .pyramid-svg {
+    @media (min-width: 1024px) {
+      .hero-cyber { min-height: 90vh; height: 90vh; }
+    }
+
+    /* Grille perspective sous la pyramide */
+    .hero-cyber::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 255, 163, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 163, 0.12) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center bottom;
+      transform: perspective(600px) rotateX(60deg);
+      transform-origin: center bottom;
+      mask-image: radial-gradient(ellipse at center bottom, black 0%, transparent 65%);
+      -webkit-mask-image: radial-gradient(ellipse at center bottom, black 0%, transparent 65%);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+      animation: cyberGridDrift 20s linear infinite;
+    }
+    @keyframes cyberGridDrift {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 40px 40px, 40px 40px; }
+    }
+
+    /* Halo radial pulsé */
+    .hero-cyber::after {
+      content: '';
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(ellipse at center,
+        rgba(0, 255, 163, 0.15) 0%,
+        rgba(232, 200, 106, 0.08) 35%,
+        transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+      animation: cyberHaloPulse 6s ease-in-out infinite;
+    }
+    @keyframes cyberHaloPulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%      { opacity: 0.95; transform: scale(1.08); }
+    }
+
+    /* Piramide SVG principale */
+    .cyber-pyramid {
+      position: relative;
+      z-index: 2;
       width: 100%;
       height: 100%;
       max-width: 100%;
       max-height: 100%;
-      display: block;
-      overflow: visible;
-      pointer-events: auto;
-      cursor: grab;
-      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
-      animation: pyramidFloat 8s ease-in-out infinite;
+      filter: drop-shadow(0 30px 80px rgba(0, 255, 163, 0.4));
+      animation: cyberFloat 8s ease-in-out infinite;
     }
-    .pyramid-svg:active { cursor: grabbing; }
-    body.kmeh-auto-off .pyramid-svg { animation: none; }
-    @keyframes pyramidFloat {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-8px); }
+    @keyframes cyberFloat {
+      0%, 100% { transform: translateY(0) rotateZ(0deg); }
+      50%      { transform: translateY(-15px) rotateZ(0.5deg); }
     }
 
-    /* SVG LAYERS v6.0 */
-    .kmeh-layer {
-      transition: transform 0.95s cubic-bezier(0.34, 1.26, 0.64, 1), filter 0.35s ease-out;
-      transform-origin: 400px 620px;
-      cursor: pointer;
-      will-change: transform;
-    }
-    .kmeh-layer:hover .face-left,
-    .kmeh-layer:hover .face-right {
-      filter: brightness(1.18) saturate(1.15);
-    }
-    .kmeh-layer.is-active .face-left,
-    .kmeh-layer.is-active .face-right {
-      filter: brightness(1.35) saturate(1.3) drop-shadow(0 0 20px rgba(0, 255, 163, 0.6));
-    }
-    .kmeh-layer.is-active .face-top {
-      filter: brightness(1.4) drop-shadow(0 0 24px rgba(232, 200, 106, 0.7));
-    }
-
-    body.kmeh-exploded .kmeh-layer--2 { transform: translateY(-72px); }
-    body.kmeh-exploded .kmeh-layer--3 { transform: translateY(-148px); }
-    body.kmeh-exploded .kmeh-layer--4 { transform: translateY(-225px); }
-
-    .kmeh-explosion-line {
-      opacity: 0;
-      transition: opacity 0.7s ease-out 0.15s;
+    /* Scan line horizontale */
+    .cyber-scanline {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      top: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00FFA3, #7FFFD4, #00FFA3, transparent);
+      box-shadow: 0 0 20px #00FFA3, 0 0 40px rgba(0, 255, 163, 0.5);
+      z-index: 3;
       pointer-events: none;
+      animation: cyberScanMove 4s ease-in-out infinite;
     }
-    body.kmeh-exploded .kmeh-explosion-line { opacity: 1; }
-
-    @keyframes busbarFlow {
-      from { stroke-dashoffset: 0; }
-      to { stroke-dashoffset: -60; }
-    }
-    .kmeh-busbar-flow { animation: busbarFlow 2.4s linear infinite; }
-
-    .kmeh-core {
-      opacity: 0;
-      transition: opacity 0.7s ease-out 0.3s;
-      pointer-events: none;
-    }
-    body.kmeh-exploded .kmeh-core { opacity: 1; }
-
-    .kmeh-core-particle {
-      animation: coreRise 3.6s ease-in infinite;
-      transform-origin: center;
-    }
-    .kmeh-core-particle--1  { animation-delay: 0s; }
-    .kmeh-core-particle--2  { animation-delay: 0.3s; }
-    .kmeh-core-particle--3  { animation-delay: 0.6s; }
-    .kmeh-core-particle--4  { animation-delay: 0.9s; }
-    .kmeh-core-particle--5  { animation-delay: 1.2s; }
-    .kmeh-core-particle--6  { animation-delay: 1.5s; }
-    .kmeh-core-particle--7  { animation-delay: 1.8s; }
-    .kmeh-core-particle--8  { animation-delay: 2.1s; }
-    .kmeh-core-particle--9  { animation-delay: 2.4s; }
-    .kmeh-core-particle--10 { animation-delay: 2.7s; }
-    .kmeh-core-particle--11 { animation-delay: 3.0s; }
-    .kmeh-core-particle--12 { animation-delay: 3.3s; }
-
-    @keyframes coreRise {
-      0%   { transform: translateY(0);       opacity: 0; }
+    @keyframes cyberScanMove {
+      0%   { top: 10%; opacity: 0; }
       10%  { opacity: 1; }
       90%  { opacity: 1; }
-      100% { transform: translateY(-330px);  opacity: 0; }
+      100% { top: 90%; opacity: 0; }
     }
 
-    @keyframes skidLedBlink {
-      0%, 42%, 58%, 100% { opacity: 0.95; }
-      46%, 54% { opacity: 0.15; }
+    /* Edge glow animé */
+    @keyframes edgePulse {
+      0%, 100% { stroke-opacity: 0.6; filter: drop-shadow(0 0 4px currentColor); }
+      50%      { stroke-opacity: 1; filter: drop-shadow(0 0 12px currentColor); }
     }
-    .kmeh-skid-led { animation: skidLedBlink 2.4s ease-in-out infinite; }
-    .kmeh-skid-led--1 { animation-delay: 0s; }
-    .kmeh-skid-led--2 { animation-delay: 0.3s; }
-    .kmeh-skid-led--3 { animation-delay: 0.6s; }
-    .kmeh-skid-led--4 { animation-delay: 0.9s; }
-    .kmeh-skid-led--5 { animation-delay: 1.2s; }
-    .kmeh-skid-led--6 { animation-delay: 1.5s; }
-    .kmeh-skid-led--7 { animation-delay: 1.8s; }
-    .kmeh-skid-led--8 { animation-delay: 2.1s; }
+    .cyber-edge-g { animation: edgePulse 3s ease-in-out infinite; }
+    .cyber-edge-a { animation: edgePulse 3s ease-in-out infinite 1.5s; }
 
-    @keyframes conveyorFlow {
-      from { stroke-dashoffset: 0; }
-      to { stroke-dashoffset: -80; }
+    /* Particules orbitales */
+    @keyframes cyberParticle {
+      0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1.2); opacity: 0; }
     }
-    .kmeh-conveyor-flow { animation: conveyorFlow 2.8s linear infinite; }
-    .kmeh-conveyor-flow--rev { animation: conveyorFlow 2.8s linear infinite reverse; }
-
-    @keyframes dataFlowDown {
-      from { stroke-dashoffset: 0; }
-      to { stroke-dashoffset: 60; }
-    }
-    .kmeh-data-flow { animation: dataFlowDown 3.2s linear infinite; }
-
-    @keyframes reactorBubble {
-      0%, 100% { opacity: 0.25; transform: translateY(0); }
-      50% { opacity: 0.75; transform: translateY(-3px); }
-    }
-    .kmeh-reactor-bubble { animation: reactorBubble 4s ease-in-out infinite; }
-    .kmeh-reactor-bubble--2 { animation-delay: 1.3s; }
-    .kmeh-reactor-bubble--3 { animation-delay: 2.6s; }
-
-    @keyframes beaconPulse {
-      0%, 100% { opacity: 0.18; }
-      50% { opacity: 0.42; }
-    }
-    .kmeh-beacon-beam { animation: beaconPulse 3.5s ease-in-out infinite; }
-
-    .kmeh-horus-eye {
-      animation: horusGlow 3.4s ease-in-out infinite;
-    }
-    @keyframes horusGlow {
-      0%, 100% { filter: drop-shadow(0 0 12px rgba(232, 200, 106, 0.75)); }
-      50%      { filter: drop-shadow(0 0 24px rgba(232, 200, 106, 1)); }
-    }
-    .kmeh-horus-orbit {
-      animation: horusOrbitSpin 14s linear infinite;
-      transform-box: fill-box;
+    .cyber-particle {
+      animation: cyberParticle var(--dur, 6s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
       transform-origin: center;
-    }
-    .kmeh-horus-orbit-rev {
-      animation: horusOrbitSpinRev 9s linear infinite;
       transform-box: fill-box;
-      transform-origin: center;
-    }
-    @keyframes horusOrbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes horusOrbitSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-
-    @keyframes serverBlink {
-      0%, 40%, 60%, 100% { opacity: 0.85; }
-      45%, 55% { opacity: 0.2; }
-    }
-    .kmeh-server-led { animation: serverBlink 1.8s linear infinite; }
-    .kmeh-server-led--a { animation-delay: 0s; }
-    .kmeh-server-led--b { animation-delay: 0.4s; }
-    .kmeh-server-led--c { animation-delay: 0.8s; }
-    .kmeh-server-led--d { animation-delay: 1.2s; }
-
-    /* Contrôles flottants */
-    .pyramid-controls {
-      position: absolute;
-      bottom: 0.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-wrap: wrap;
-      gap: 0.5rem; justify-content: center;
-      z-index: 5; pointer-events: auto;
-      max-width: calc(100% - 1rem);
-    }
-    .pyramid-controls .btn {
-      font-size: 0.62rem;
-      padding: 0.55rem 0.9rem;
-      white-space: nowrap;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
     }
 
-    .pyramid-hint {
-      position: absolute;
-      top: 0.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font: 700 9px 'JetBrains Mono', monospace;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(241,245,249,0.55);
-      background: rgba(9,13,16,0.7);
-      border: 1px solid rgba(0,255,163,0.25);
-      padding: 5px 11px;
-      border-radius: 999px;
-      pointer-events: none;
-      animation: pyramidHintPulse 3s ease-in-out infinite;
-      white-space: nowrap;
-      z-index: 4;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    @keyframes pyramidHintPulse {
-      0%, 100% { opacity: 0.45; }
-      50% { opacity: 0.95; }
-    }
-
-    .level-card {
-      position: relative;
-      cursor: pointer;
-      padding: 1rem;
-      border-radius: 1rem;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      text-align: left;
-      display: block;
-      width: 100%;
-    }
-    .level-card:hover { border-color: rgba(0,255,163,0.5); background: rgba(0,255,163,0.06); }
-    .level-card.active {
-      border-color: #00FFA3 !important;
-      background: rgba(0,255,163,0.12) !important;
-      box-shadow: 0 0 24px -6px rgba(0,255,163,0.35);
-      transform: translateY(-2px);
-    }
-    .level-card.active .level-dot { box-shadow: 0 0 12px currentColor; }
-    .level-dot {
-      display: inline-block; width: 10px; height: 10px;
-      border-radius: 50%; margin-right: 6px; vertical-align: middle;
-      transition: box-shadow 0.3s;
-    }
-
-    .skid-card {
-      position: relative;
-      padding: 1rem;
-      border-radius: 1rem;
-      background: linear-gradient(160deg, rgba(15, 22, 28, 0.92), rgba(9, 13, 16, 0.98));
-      border: 1px solid rgba(0, 255, 163, 0.18);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .skid-card:hover {
-      border-color: rgba(0, 255, 163, 0.55);
-      transform: translateY(-3px);
-      box-shadow: 0 18px 40px -15px rgba(0, 255, 163, 0.25);
-    }
-    .skid-code {
-      display: inline-block;
+    /* Labels holographiques */
+    .cyber-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
+      fill: #00FFA3;
       font-weight: 800;
-      letter-spacing: 0.08em;
-      padding: 0.2rem 0.55rem;
-      border-radius: 0.35rem;
-      background: rgba(0, 255, 163, 0.12);
-      color: #00FFA3;
-      border: 1px solid rgba(0, 255, 163, 0.35);
+      letter-spacing: 0.15em;
+      animation: labelBlink 3s ease-in-out infinite;
     }
-    .skid-code.au {
-      background: rgba(232, 200, 106, 0.12);
-      color: #E8C86A;
-      border-color: rgba(232, 200, 106, 0.4);
+    @keyframes labelBlink {
+      0%, 100% { opacity: 0.4; }
+      50%      { opacity: 1; }
     }
 
-    .manifest-row {
-      display: grid; grid-template-columns: 1fr;
-      gap: 0.75rem; padding: 1rem; border-radius: 1rem;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: all 0.3s;
-    }
-    @media (min-width: 768px) {
-      .manifest-row { grid-template-columns: 1.2fr 1fr 1fr; gap: 1.5rem; align-items: center; }
-    }
-    .manifest-row:hover { border-color: rgba(0,255,163,0.4); background: rgba(0,255,163,0.04); }
+    /* Pillar cards */
+    .pillar-card { position: relative; padding: 1.5rem; border-radius: 1.25rem; background: linear-gradient(160deg, rgba(15,22,28,0.95), rgba(9,13,16,0.99)); border: 1px solid rgba(255,255,255,0.10); transition: all 0.35s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
+    .pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, currentColor, transparent); opacity: 0; transition: opacity 0.3s; }
+    .pillar-card:hover::before { opacity: 1; }
+    .pillar-card.g { color: #00FFA3; border-color: rgba(0,255,163,0.25); }
+    .pillar-card.g:hover { border-color: rgba(0,255,163,0.75); box-shadow: 0 20px 45px -15px rgba(0,255,163,0.35); transform: translateY(-4px); }
+    .pillar-card.au { color: #E8C86A; border-color: rgba(232,200,106,0.25); }
+    .pillar-card.au:hover { border-color: rgba(232,200,106,0.75); box-shadow: 0 20px 45px -15px rgba(232,200,106,0.35); transform: translateY(-4px); }
+    .pillar-card.w { color: #E2E8F0; border-color: rgba(226,232,240,0.18); }
+    .pillar-card.w:hover { border-color: rgba(226,232,240,0.6); box-shadow: 0 20px 45px -15px rgba(226,232,240,0.3); transform: translateY(-4px); }
 
-    .impact-card {
-      position: relative; padding: 1.5rem; border-radius: 1.25rem;
-      background: linear-gradient(165deg, rgba(19,25,32,0.88), rgba(9,13,16,0.96));
-      border: 1px solid rgba(197,160,89,0.35);
-      overflow: hidden; transition: all 0.35s;
-    }
-    .impact-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 20% 20%, rgba(0,255,163,0.06) 0%, transparent 60%);
-      opacity: 0; transition: opacity 0.4s; pointer-events: none;
-    }
-    .impact-card:hover { transform: translateY(-3px); border-color: rgba(0,255,163,0.55); }
-    .impact-card:hover::before { opacity: 1; }
-
-    .ompic-badge {
-      position: relative; overflow: hidden;
-      background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(232,200,106,0.08));
-      border: 1px solid rgba(232,200,106,0.45);
-    }
-    .ompic-badge::after {
-      content: ''; position: absolute; top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: linear-gradient(45deg, transparent 30%, rgba(232,200,106,0.15) 50%, transparent 70%);
-      animation: ompicShimmer 4s linear infinite; pointer-events: none;
-    }
-    @keyframes ompicShimmer {
-      0% { transform: translate(-100%, -100%) rotate(45deg); }
-      100% { transform: translate(100%, 100%) rotate(45deg); }
-    }
-
-    body.ee-turbo { animation: eeTurboHue 8s linear infinite; }
-    @keyframes eeTurboHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-    body.ee-turbo .glass-panel { border-color: rgba(255, 100, 200, 0.6) !important; box-shadow: 0 0 45px -8px rgba(255, 100, 200, 0.4) !important; }
-    body.ee-pharaonic { background: radial-gradient(circle at 50% 50%, rgba(232, 200, 106, 0.15), transparent 70%) !important; }
-    body.ee-pharaonic .font-kemetTitle { text-shadow: 0 0 20px rgba(232, 200, 106, 0.6); }
-    body.ee-kemet::after {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9998;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(232, 200, 106, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 90% 80%, rgba(0, 255, 163, 0.12) 0%, transparent 25%);
-      animation: kemetPulse 6s ease-in-out infinite;
-    }
-    @keyframes kemetPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
-    #hieroglyphOverlay {
-      position: fixed; inset: 0; pointer-events: none; z-index: 9997;
-      display: none; font-family: 'Cinzel', serif;
-      color: rgba(232, 200, 106, 0.15);
-      font-size: 48px; line-height: 1.2; overflow: hidden; padding: 2rem;
-      text-shadow: 0 0 20px rgba(232, 200, 106, 0.3);
-    }
-    #hieroglyphOverlay.active { display: block; }
-    #hieroglyphOverlay .glyph-row {
-      display: flex; justify-content: space-around; margin-bottom: 1rem;
-      animation: glyphFloat 8s ease-in-out infinite;
-    }
-    #hieroglyphOverlay .glyph-row:nth-child(2) { animation-delay: 1s; }
-    #hieroglyphOverlay .glyph-row:nth-child(3) { animation-delay: 2s; }
-    #hieroglyphOverlay .glyph-row:nth-child(4) { animation-delay: 3s; }
-    @keyframes glyphFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    .ee-toast {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: linear-gradient(135deg, rgba(232, 200, 106, 0.95), rgba(197, 160, 89, 0.95));
-      color: #1a1405; padding: 1.5rem 2.5rem; border-radius: 1rem;
-      font: 800 14px 'JetBrains Mono', monospace;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      z-index: 10000; box-shadow: 0 20px 60px rgba(232, 200, 106, 0.5);
-      animation: eeToastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      text-align: center; pointer-events: none; max-width: 90vw;
-    }
-    @keyframes eeToastIn {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(-5deg); }
-      100% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    }
-    .ee-toast.ee-toast-out { animation: eeToastOut 0.4s ease-in forwards; }
-    @keyframes eeToastOut {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-    }
+    /* Timeline */
+    .timeline-step { position: relative; padding-left: 2.5rem; padding-bottom: 2rem; }
+    .timeline-step::before { content: ''; position: absolute; left: 11px; top: 30px; bottom: -10px; width: 2px; background: linear-gradient(180deg, rgba(0,255,163,0.6), rgba(0,255,163,0.05)); }
+    .timeline-step:last-child::before { display: none; }
+    .timeline-dot { position: absolute; left: 0; top: 6px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; }
+    .timeline-dot.g { background: rgba(0,255,163,0.15); border: 2px solid #00FFA3; color: #00FFA3; box-shadow: 0 0 20px rgba(0,255,163,0.4); }
+    .timeline-dot.au { background: rgba(232,200,106,0.15); border: 2px solid #E8C86A; color: #E8C86A; box-shadow: 0 0 20px rgba(232,200,106,0.4); }
+    .timeline-dot.w { background: rgba(226,232,240,0.15); border: 2px solid #E2E8F0; color: #E2E8F0; box-shadow: 0 0 20px rgba(226,232,240,0.4); }
 
     .safe-top { padding-top: env(safe-area-inset-top); }
-
-    @media (max-width: 640px) {
-      .cta-inline { white-space: normal !important; }
-      .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-      .tilt-card:hover, .glass-panel:hover { transform: none; box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8) !important; }
-      body { font-size: 15px; }
-      footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
-      .hero-pyramid { min-height: 60vh; height: 60vh; }
-      .pyramid-controls { bottom: 0.25rem; }
-      .pyramid-controls .btn { font-size: 0.55rem; padding: 0.45rem 0.7rem; }
-      #hieroglyphOverlay { font-size: 28px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
+    @media (max-width: 640px) { .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); } body { font-size: 15px; } footer { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); } .hero-cyber { min-height: 55vh; height: 55vh; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
   <canvas id="spaceCanvas" aria-hidden="true"></canvas>
   <div id="kmehAmbientLayer" aria-hidden="true"></div>
-  <div id="hieroglyphOverlay" aria-hidden="true"></div>
   <div id="scrollProgress" aria-hidden="true"></div>
 
   <!-- HEADER -->
@@ -646,20 +270,8 @@
       <a href="index.html" id="logoLink" class="flex items-center space-x-2 sm:space-x-3 shrink min-w-0 group" aria-label="Industrial Illusion SARL — Accueil">
         <div class="relative w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
           <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-            <g class="anim-orbit">
-              <ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/>
-              <circle cx="60" cy="6" r="2.2" fill="#00FFA3"/>
-              <circle cx="114" cy="60" r="2.2" fill="#00FFA3"/>
-              <circle cx="60" cy="114" r="2.2" fill="#00FFA3"/>
-              <circle cx="6" cy="60" r="2.2" fill="#00FFA3"/>
-            </g>
-            <g class="anim-counter-orbit">
-              <ellipse cx="60" cy="60" rx="45" ry="45" stroke="#00FFA3" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.45"/>
-              <circle cx="60" cy="15" r="1.6" fill="#E8C86A"/>
-              <circle cx="105" cy="60" r="1.6" fill="#E8C86A"/>
-              <circle cx="60" cy="105" r="1.6" fill="#E8C86A"/>
-              <circle cx="15" cy="60" r="1.6" fill="#E8C86A"/>
-            </g>
+            <g class="anim-orbit"><ellipse cx="60" cy="60" rx="54" ry="54" stroke="#C5A059" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.6"/><circle cx="60" cy="6" r="2.2" fill="#00FFA3"/><circle cx="114" cy="60" r="2.2" fill="#00FFA3"/><circle cx="60" cy="114" r="2.2" fill="#00FFA3"/><circle cx="6" cy="60" r="2.2" fill="#00FFA3"/></g>
+            <g class="anim-counter-orbit"><ellipse cx="60" cy="60" rx="45" ry="45" stroke="#00FFA3" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.45"/><circle cx="60" cy="15" r="1.6" fill="#E8C86A"/><circle cx="105" cy="60" r="1.6" fill="#E8C86A"/><circle cx="60" cy="105" r="1.6" fill="#E8C86A"/><circle cx="15" cy="60" r="1.6" fill="#E8C86A"/></g>
             <path d="M20 54 Q32 44 46 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
             <path d="M100 54 Q88 44 74 42" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
             <path d="M22 60 Q60 38 98 60 Q60 82 22 60 Z" stroke="#00FFA3" stroke-width="2.2" fill="#0A0D10"/>
@@ -674,7 +286,6 @@
           <p class="text-[7px] sm:text-[9px] font-mono tracking-[0.2em] sm:tracking-[0.28em] text-cyberGreen font-extrabold uppercase mt-0.5 truncate">DEEP TECH SYSTEMS</p>
         </div>
       </a>
-
       <nav class="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase text-slate-300" aria-label="Navigation principale">
         <a href="index.html" class="hover:text-cyberGreen transition-colors">Accueil</a>
         <a href="purkemet.html" class="hover:text-cyberGreen transition-colors">PurKemet B2B</a>
@@ -683,82 +294,69 @@
         <a href="carrieres.html" class="hover:text-cyberGreen transition-colors">Carrières</a>
         <a href="apropos.html" class="hover:text-cyberGreen transition-colors">À Propos</a>
       </nav>
-
       <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-        <button type="button" id="loginBtn"
-                onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin(); if (window.__eeOnLoginClick) window.__eeOnLoginClick();"
-                aria-label="Connexion à l'espace membre"
-                class="btn btn-g !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">
-          Connexion 🔒
-        </button>
-        <button type="button" id="menuBtn" onclick="window.toggleMobileNav()"
-                class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0"
-                aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobileNavMenu">☰</button>
+        <button type="button" id="loginBtn" onclick="if (window.ensureInit) window.ensureInit(); if (window.openUniversalLogin) window.openUniversalLogin();" aria-label="Connexion" class="btn btn-g !py-1.5 sm:!py-2 !px-2.5 sm:!px-4 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-lg">Connexion 🔒</button>
+        <button type="button" id="menuBtn" onclick="window.toggleMobileNav()" class="lg:hidden p-1.5 sm:p-2 text-slate-300 hover:text-white rounded-lg border border-white/10 text-sm shrink-0" aria-expanded="false" aria-controls="mobileNavMenu">☰</button>
       </div>
     </div>
-
     <nav id="mobileNavMenu" class="hidden lg:hidden border-t border-white/10 bg-obsidianCard/98 backdrop-blur-xl px-5 py-4 space-y-3 font-mono text-xs uppercase tracking-wider" aria-label="Navigation mobile">
       <a href="index.html" class="block text-slate-300 hover:text-cyberGreen py-2">Accueil</a>
-      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-2">PurKemet B2B (Hôtels)</a>
-      <a href="kmeh20.html" class="block text-cyberGreen font-bold py-2">Architecture K-MEH-20</a>
-      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-2">Maat Data Lake</a>
+      <a href="purkemet.html" class="block text-slate-300 hover:text-cyberGreen py-2">PurKemet B2B</a>
+      <a href="kmeh20.html" class="block text-cyberGreen font-bold py-2">K-MEH-20</a>
+      <a href="datalake.html" class="block text-slate-300 hover:text-cyberGreen py-2">Data Lake</a>
       <a href="carrieres.html" class="block text-slate-300 hover:text-cyberGreen py-2">Carrières</a>
       <a href="apropos.html" class="block text-slate-300 hover:text-cyberGreen py-2">À Propos</a>
       <hr class="border-white/10 my-2">
-      <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 Workstation Opérateur (PWA)</a>
+      <a href="pwa.html" class="block text-cyberGreen py-2 font-bold">📱 PWA Opérateur</a>
       <a href="dashboard.html" class="block text-kemetGoldBright py-2">🏨 Espace Client ESG</a>
       <a href="admin.html" class="block text-slate-400 hover:text-white py-2">👑 Control Tower DG</a>
     </nav>
   </header>
 
-  <!-- MAIN -->
-  <main class="mt-24 sm:mt-28 space-y-16 sm:space-y-24 lg:space-y-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1">
+  <main class="mt-24 sm:mt-28 mb-20 max-w-7xl mx-auto px-3.5 sm:px-6 flex-1 space-y-16 sm:space-y-24">
 
-    <!-- ═══════════════════════════════════════════════════════
-         HERO · SVG ARCHITECTURAL BLUEPRINT v6.0
-         8 Skids · Conveyors animés · Réacteurs bubbling
-         Racks LED · Busbars · Verrière · Beacon pulsant
-         Plasma 12 particules · Horus eye · Cotes dimensionnelles
-         ═══════════════════════════════════════════════════════ -->
+    <!-- HERO -->
     <section class="pt-2 sm:pt-4">
       <div class="hero-kmeh">
-
         <div class="hero-text space-y-5 sm:space-y-6">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase max-w-full">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0" aria-hidden="true"></span>
-            <span>🇲🇦 DeepTech &amp; Industrie 5.0 · Souveraineté Industrielle du Royaume</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-cyberGreen animate-pulse shrink-0"></span>
+            <span>🇲🇦 Vision 2030 · Souveraineté Industrielle du Royaume</span>
           </div>
 
           <h2 class="font-kemetTitle text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.02]">
-            K-MEH-20 : <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">L'Usine Vivante</span> de l'Industrie 5.0
+            <span class="motto-glow">Une Technologie Marocaine</span><br>
+            <span class="text-white">pour l'Afrique</span>
+            <span class="text-slate-500"> et </span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberGreen via-emerald-300 to-kemetGoldBright">le Monde</span>
           </h2>
 
           <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-2xl">
-            <strong>Kemet Modular Eco Hub 20</strong> — L'infrastructure cyber-physique monumentale : <strong>hub industriel tronqué de 56 m × 56 m, 45 m de hauteur</strong>, 3 136 m² d'emprise au sol et <strong>20 000 tonnes/an</strong> de capacité de valorisation. Un organisme biomimétique conçu pour la stabilité physique, l'efficience thermodynamique et la symbiose homme-machine.
+            <strong class="text-white">K-MEH-20 (Kemet Modular Eco Hub 20)</strong> n'est pas une simple usine. C'est un <strong class="text-cyberGreen">hardware industriel qui réinvente le concept architectural même des usines contemporaines</strong> : une infrastructure biomimétique en forme de pyramide tronquée, conçue pour métamorphoser le passif environnemental africain en actif stratégique. Notre objectif : <strong class="text-kemetGoldBright">modules Skid opérationnels d'ici 2030</strong>.
           </p>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono">
             <div class="p-2.5 bg-black/60 rounded-lg border border-cyberGreen/30 text-center">
-              <div class="text-base sm:text-lg font-black text-cyberGreen">56×56</div>
-              <div class="text-[9px] uppercase text-slate-400 tracking-wider">m · base</div>
-            </div>
-            <div class="p-2.5 bg-black/60 rounded-lg border border-kemetGold/30 text-center">
-              <div class="text-base sm:text-lg font-black text-kemetGoldBright">45 m</div>
-              <div class="text-[9px] uppercase text-slate-400 tracking-wider">hauteur</div>
-            </div>
-            <div class="p-2.5 bg-black/60 rounded-lg border border-white/15 text-center">
-              <div class="text-base sm:text-lg font-black text-white">3 136 m²</div>
-              <div class="text-[9px] uppercase text-slate-400 tracking-wider">emprise</div>
+              <div class="text-base sm:text-lg font-black text-cyberGreen">2030</div>
+              <div class="text-[9px] uppercase text-slate-400 tracking-wider">Objectif Skids</div>
             </div>
             <div class="p-2.5 bg-black/60 rounded-lg border border-kemetGold/30 text-center">
               <div class="text-base sm:text-lg font-black text-kemetGoldBright">20 000 t</div>
-              <div class="text-[9px] uppercase text-slate-400 tracking-wider">traitement/an</div>
+              <div class="text-[9px] uppercase text-slate-400 tracking-wider">Capacité/an</div>
+            </div>
+            <div class="p-2.5 bg-black/60 rounded-lg border border-white/15 text-center">
+              <div class="text-base sm:text-lg font-black text-white">2050</div>
+              <div class="text-[9px] uppercase text-slate-400 tracking-wider">100+ Hubs</div>
+            </div>
+            <div class="p-2.5 bg-black/60 rounded-lg border border-kemetGold/30 text-center">
+              <div class="text-base sm:text-lg font-black text-kemetGoldBright">🇲🇦</div>
+              <div class="text-[9px] uppercase text-slate-400 tracking-wider">Souverain</div>
             </div>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 pt-1 font-mono">
-            <button type="button" onclick="window.openDataRoomModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
-              Accéder à la Data Room (NDA) 🔒
+            <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6 shadow-xl">
+              Demander l'Accréditation Industrielle 🔒
             </button>
             <a href="purkemet.html" class="btn btn-au w-full sm:w-auto text-xs !py-3 sm:!py-3.5 px-6">
               Découvrir PurKemet (Track 0) →
@@ -766,1070 +364,292 @@
           </div>
 
           <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 text-[10px] font-mono text-slate-400 leading-relaxed max-w-xl">
-            <strong class="text-kemetGoldBright">Statut Légal &amp; PI :</strong> Technologie propriétaire avancée, en cours de développement et de préparation au dépôt de brevets d'invention auprès de l'<strong class="text-white">OMPIC</strong>. Les rendements thermochimiques, bilans de masse et diagrammes P&amp;ID font l'objet d'une rétention légale stricte et sont consultables exclusivement en <strong class="text-white">Virtual Data Room</strong> après signature d'un accord de non-divulgation (NDA).
+            <strong class="text-kemetGoldBright">Statut Légal & PI :</strong> Technologie propriétaire avancée, en cours de développement et de préparation au dépôt de brevets auprès de l'<strong class="text-white">OMPIC</strong>. Les spécifications techniques complètes, bilans thermodynamiques et schémas d'ingénierie sont consultables uniquement en <strong class="text-white">Virtual Data Room</strong>, sous NDA et accréditation préalable.
           </div>
         </div>
 
-        <!-- ═════════ PIRAMIDE SVG v6.0 — BLUEPRINT INDUSTRIEL ═════════ -->
-        <div class="hero-pyramid" aria-label="Blueprint assonométrique interactif du hub K-MEH-20">
+        <!-- HERO CYBER-HOLOGRAM -->
+        <div class="hero-cyber" aria-label="Représentation holographique du hub K-MEH-20">
+          <div class="cyber-scanline" aria-hidden="true"></div>
 
-          <div class="pyramid-svg-wrap">
-            <svg class="pyramid-svg" id="kmehPyramidSvg" viewBox="0 0 800 750" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Blueprint assonométrique K-MEH-20 — hub tronqué 56×56m, 45m, 4 niveaux fonctionnels">
+          <svg class="cyber-pyramid" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Piramide tronquée holographique — hub industriel K-MEH-20">
+            <defs>
+              <radialGradient id="coreHalo" cx="50%" cy="55%" r="50%">
+                <stop offset="0%" stop-color="#00FFA3" stop-opacity="0.5"/>
+                <stop offset="45%" stop-color="#E8C86A" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="faceLG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0D4A35" stop-opacity="0.92"/>
+                <stop offset="50%" stop-color="#00B871" stop-opacity="0.88"/>
+                <stop offset="100%" stop-color="#052E1F" stop-opacity="0.98"/>
+              </linearGradient>
+              <linearGradient id="faceRG" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#052E1F" stop-opacity="0.98"/>
+                <stop offset="50%" stop-color="#00B871" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#0D4A35" stop-opacity="0.92"/>
+              </linearGradient>
+              <linearGradient id="topFaceG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F8E8B0" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#C5A059" stop-opacity="0.85"/>
+              </linearGradient>
+              <linearGradient id="beaconG" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#F6E4A0" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0"/>
+              </linearGradient>
+              <pattern id="cyberPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(0,255,163,0.25)" stroke-width="0.5"/>
+              </pattern>
+              <filter id="cyberGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="cyberGlowBig" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="7" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
 
-              <defs>
-                <linearGradient id="gradL1L" x1="0" y1="0" x2="0.7" y2="1">
-                  <stop offset="0%" stop-color="#0E8C5F" stop-opacity="0.96"/>
-                  <stop offset="45%" stop-color="#00B871" stop-opacity="0.90"/>
-                  <stop offset="100%" stop-color="#00FFA3" stop-opacity="0.82"/>
-                </linearGradient>
-                <linearGradient id="gradL1R" x1="0.3" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#00B871" stop-opacity="0.90"/>
-                  <stop offset="100%" stop-color="#046A44" stop-opacity="0.78"/>
-                </linearGradient>
-                <linearGradient id="gradL2L" x1="0" y1="0" x2="0.7" y2="1">
-                  <stop offset="0%" stop-color="#0A5B52" stop-opacity="0.97"/>
-                  <stop offset="100%" stop-color="#0D9E8E" stop-opacity="0.92"/>
-                </linearGradient>
-                <linearGradient id="gradL2R" x1="0.3" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#0D9E8E" stop-opacity="0.92"/>
-                  <stop offset="100%" stop-color="#054D42" stop-opacity="0.84"/>
-                </linearGradient>
-                <linearGradient id="gradL3L" x1="0" y1="0" x2="0.7" y2="1">
-                  <stop offset="0%" stop-color="#7A5E22" stop-opacity="0.97"/>
-                  <stop offset="100%" stop-color="#C5A059" stop-opacity="0.94"/>
-                </linearGradient>
-                <linearGradient id="gradL3R" x1="0.3" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#C5A059" stop-opacity="0.94"/>
-                  <stop offset="100%" stop-color="#6A4F1B" stop-opacity="0.88"/>
-                </linearGradient>
-                <linearGradient id="gradL4L" x1="0" y1="0" x2="0.7" y2="1">
-                  <stop offset="0%" stop-color="#B8952F" stop-opacity="0.99"/>
-                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.97"/>
-                </linearGradient>
-                <linearGradient id="gradL4R" x1="0.3" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#E8C86A" stop-opacity="0.97"/>
-                  <stop offset="100%" stop-color="#997A30" stop-opacity="0.95"/>
-                </linearGradient>
-                <linearGradient id="gradTop" x1="0" y1="0" x2="0.5" y2="1">
-                  <stop offset="0%" stop-color="#F8E8B0" stop-opacity="0.99"/>
-                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0.95"/>
-                </linearGradient>
+            <ellipse cx="300" cy="330" rx="300" ry="300" fill="url(#coreHalo)"/>
 
-                <linearGradient id="gradSkid" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#0F2219" stop-opacity="0.97"/>
-                  <stop offset="100%" stop-color="#071A12" stop-opacity="0.99"/>
-                </linearGradient>
-                <linearGradient id="gradSkidTop" x1="0" y1="0" x2="0.6" y2="1">
-                  <stop offset="0%" stop-color="#1A3A2A" stop-opacity="0.95"/>
-                  <stop offset="100%" stop-color="#0A2016" stop-opacity="0.98"/>
-                </linearGradient>
-                <linearGradient id="gradReactor" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#085346" stop-opacity="0.95"/>
-                  <stop offset="35%" stop-color="#0D9E8E" stop-opacity="0.92"/>
-                  <stop offset="55%" stop-color="#7FFFD4" stop-opacity="0.70"/>
-                  <stop offset="100%" stop-color="#043D33" stop-opacity="0.92"/>
-                </linearGradient>
+            <g opacity="0.55">
+              <polygon points="300,460 130,370 170,260 300,320" fill="url(#cyberPattern)"/>
+              <polygon points="300,460 470,370 430,260 300,320" fill="url(#cyberPattern)"/>
+            </g>
 
-                <linearGradient id="gradPlasma" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%"   stop-color="#00FFA3" stop-opacity="0.08"/>
-                  <stop offset="25%"  stop-color="#00FFA3" stop-opacity="0.60"/>
-                  <stop offset="55%"  stop-color="#7FFFD4" stop-opacity="0.88"/>
-                  <stop offset="80%"  stop-color="#E8C86A" stop-opacity="0.78"/>
-                  <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0.35"/>
-                </linearGradient>
-                <radialGradient id="gradCoreHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%"   stop-color="#E8C86A" stop-opacity="0.70"/>
-                  <stop offset="50%"  stop-color="#00FFA3" stop-opacity="0.28"/>
-                  <stop offset="100%" stop-color="#00FFA3" stop-opacity="0"/>
-                </radialGradient>
-                <radialGradient id="gradHorusHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%"   stop-color="#F6E4A0" stop-opacity="0.80"/>
-                  <stop offset="45%"  stop-color="#E8C86A" stop-opacity="0.40"/>
-                  <stop offset="100%" stop-color="#E8C86A" stop-opacity="0"/>
-                </radialGradient>
-                <linearGradient id="gradBeacon" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%"   stop-color="#F6E4A0" stop-opacity="0.55"/>
-                  <stop offset="100%" stop-color="#F6E4A0" stop-opacity="0"/>
-                </linearGradient>
+            <g filter="url(#cyberGlow)">
+              <circle class="cyber-particle" cx="300" cy="100" r="3" fill="#00FFA3" style="--dx: 30px; --dy: -15px; --dur: 5s; --delay: 0s;"/>
+              <circle class="cyber-particle" cx="500" cy="300" r="3" fill="#E8C86A" style="--dx: -20px; --dy: 25px; --dur: 6s; --delay: 1s;"/>
+              <circle class="cyber-particle" cx="300" cy="500" r="3" fill="#00FFA3" style="--dx: -30px; --dy: 15px; --dur: 5.5s; --delay: 2s;"/>
+              <circle class="cyber-particle" cx="100" cy="300" r="3" fill="#E8C86A" style="--dx: 20px; --dy: -25px; --dur: 6.5s; --delay: 3s;"/>
+              <circle class="cyber-particle" cx="200" cy="180" r="2" fill="#7FFFD4" style="--dx: 35px; --dy: 20px; --dur: 7s; --delay: 0.5s;"/>
+              <circle class="cyber-particle" cx="400" cy="420" r="2" fill="#F6E4A0" style="--dx: -25px; --dy: -20px; --dur: 6.8s; --delay: 1.5s;"/>
+              <circle class="cyber-particle" cx="450" cy="200" r="2" fill="#00FFA3" style="--dx: -30px; --dy: 30px; --dur: 7.5s; --delay: 2.5s;"/>
+              <circle class="cyber-particle" cx="150" cy="400" r="2" fill="#E8C86A" style="--dx: 30px; --dy: -30px; --dur: 6.2s; --delay: 4s;"/>
+            </g>
 
-                <filter id="glowG" x="-80%" y="-80%" width="260%" height="260%">
-                  <feGaussianBlur stdDeviation="3.5" result="b"/>
-                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-                <filter id="glowA" x="-80%" y="-80%" width="260%" height="260%">
-                  <feGaussianBlur stdDeviation="4.5" result="b"/>
-                  <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-                <filter id="glowCore" x="-100%" y="-100%" width="300%" height="300%">
-                  <feGaussianBlur stdDeviation="7" result="b"/>
-                  <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
+            <ellipse cx="300" cy="330" rx="260" ry="100" fill="none" stroke="#00FFA3" stroke-width="1" stroke-dasharray="4 10" opacity="0.4" transform="rotate(-15 300 330)"/>
+            <ellipse cx="300" cy="330" rx="220" ry="85" fill="none" stroke="#E8C86A" stroke-width="0.8" stroke-dasharray="2 8" opacity="0.3" transform="rotate(25 300 330)"/>
 
-                <pattern id="patHeb" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="0.65"/>
-                </pattern>
-                <pattern id="patFaraday" x="0" y="0" width="7" height="7" patternUnits="userSpaceOnUse">
-                  <path d="M 0 0 L 7 0 L 7 7 L 0 7 Z" fill="none" stroke="rgba(0,255,163,0.32)" stroke-width="0.45"/>
-                  <circle cx="3.5" cy="3.5" r="0.85" fill="rgba(0,255,163,0.65)"/>
-                </pattern>
-                <pattern id="patServer" x="0" y="0" width="15" height="8" patternUnits="userSpaceOnUse">
-                  <rect x="0.5" y="0.5" width="14" height="7" fill="none" stroke="rgba(232,200,106,0.60)" stroke-width="0.45"/>
-                  <circle cx="3" cy="4" r="0.8" fill="#00FFA3"/>
-                </pattern>
-                <pattern id="patGlass" x="0" y="0" width="28" height="14" patternUnits="userSpaceOnUse">
-                  <path d="M 0 7 L 28 7 M 14 0 L 14 14" fill="none" stroke="rgba(106,74,26,0.60)" stroke-width="0.55"/>
-                </pattern>
+            <g filter="url(#cyberGlowBig)">
+              <polygon points="300,460 130,370 170,260 300,320" fill="url(#faceLG)" stroke="#00FFA3" stroke-width="2" stroke-linejoin="round" class="cyber-edge-g"/>
+              <polygon points="300,460 470,370 430,260 300,320" fill="url(#faceRG)" stroke="#00FFA3" stroke-width="2" stroke-linejoin="round" class="cyber-edge-g"/>
+              <polygon points="300,320 170,260 300,200 430,260" fill="url(#topFaceG)" stroke="#E8C86A" stroke-width="2.5" stroke-linejoin="round" class="cyber-edge-a"/>
+            </g>
 
-                <clipPath id="clipL1L"><polygon points="400,700 100,614 150,531 400,567"/></clipPath>
-                <clipPath id="clipL1R"><polygon points="400,700 700,614 650,531 400,567"/></clipPath>
-                <clipPath id="clipL1T"><polygon points="400,567 150,531 400,495 650,531"/></clipPath>
-                <clipPath id="clipL2L"><polygon points="400,567 150,531 184,447 400,478"/></clipPath>
-                <clipPath id="clipL2R"><polygon points="400,567 650,531 616,447 400,478"/></clipPath>
-                <clipPath id="clipL2T"><polygon points="400,478 184,447 400,415 616,447"/></clipPath>
-                <clipPath id="clipL3L"><polygon points="400,478 184,447 217,363 400,389"/></clipPath>
-                <clipPath id="clipL3R"><polygon points="400,478 616,447 583,363 400,389"/></clipPath>
-                <clipPath id="clipL3T"><polygon points="400,389 217,363 400,336 583,363"/></clipPath>
-                <clipPath id="clipL4L"><polygon points="400,389 217,363 250,278 400,300"/></clipPath>
-                <clipPath id="clipL4R"><polygon points="400,389 583,363 550,278 400,300"/></clipPath>
-                <clipPath id="clipL4T"><polygon points="400,300 250,278 400,256 550,278"/></clipPath>
-              </defs>
+            <polygon points="300,320 170,260 300,200 430,260" fill="none" stroke="#F6E4A0" stroke-width="1.5" opacity="0.7" filter="url(#cyberGlow)"/>
 
-              <!-- ─── SOL · grille perspective ─── -->
-              <ellipse cx="400" cy="700" rx="340" ry="100" fill="url(#gradCoreHalo)" opacity="0.32"/>
-              <polygon points="400,700 100,614 400,528 700,614" fill="none" stroke="#00FFA3" stroke-width="0.9" opacity="0.32" stroke-dasharray="5 7"/>
-              <g opacity="0.20">
-                <line x1="160" y1="628" x2="640" y2="628" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="220" y1="656" x2="580" y2="656" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="220" y1="600" x2="580" y2="600" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="280" y1="572" x2="520" y2="572" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="150" y1="608" x2="250" y2="695" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="280" y1="558" x2="380" y2="698" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="400" y1="528" x2="400" y2="700" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="520" y1="558" x2="420" y2="698" stroke="#00FFA3" stroke-width="0.5"/>
-                <line x1="650" y1="608" x2="550" y2="695" stroke="#00FFA3" stroke-width="0.5"/>
-              </g>
+            <g stroke="#00FFA3" stroke-width="1" opacity="0.35">
+              <line x1="215" y1="315" x2="235" y2="290"/>
+              <line x1="265" y1="340" x2="265" y2="310"/>
+              <line x1="300" y1="360" x2="300" y2="320"/>
+              <line x1="335" y1="340" x2="335" y2="310"/>
+              <line x1="385" y1="315" x2="365" y2="290"/>
+            </g>
 
-              <!-- ─── COTES DIMENSIONNELLES ─── -->
-              <g stroke="#94A3B8" stroke-width="0.8" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">
-                <line x1="70" y1="728" x2="730" y2="728" opacity="0.6"/>
-                <polygon points="70,728 80,724 80,732" fill="#94A3B8"/>
-                <polygon points="730,728 720,724 720,732" fill="#94A3B8"/>
-                <rect x="384" y="720" width="32" height="16" fill="#0A0D10" opacity="0.85" rx="2"/>
-                <text x="400" y="732" text-anchor="middle" fill="#94A3B8" opacity="0.95">56 m</text>
-              </g>
-              <g stroke="#94A3B8" stroke-width="0.8" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="9" font-weight="600">
-                <line x1="752" y1="700" x2="752" y2="256" opacity="0.6"/>
-                <polygon points="752,700 748,710 756,710" fill="#94A3B8"/>
-                <polygon points="752,256 748,266 756,266" fill="#94A3B8"/>
-                <line x1="744" y1="700" x2="760" y2="700" opacity="0.7"/>
-                <line x1="744" y1="567" x2="760" y2="567" opacity="0.7"/>
-                <line x1="744" y1="478" x2="760" y2="478" opacity="0.7"/>
-                <line x1="744" y1="389" x2="760" y2="389" opacity="0.7"/>
-                <line x1="744" y1="278" x2="760" y2="278" opacity="0.7"/>
-                <text x="770" y="490" text-anchor="middle" transform="rotate(-90 770 490)" fill="#94A3B8" opacity="0.95">45 m · 4 niveaux</text>
-              </g>
+            <rect x="298" y="200" width="4" height="200" fill="url(#beaconG)" filter="url(#cyberGlow)"/>
 
-              <!-- ─── BEACON DE MAAT ─── -->
-              <rect class="kmeh-beacon-beam" x="394" y="130" width="12" height="130" fill="url(#gradBeacon)" filter="url(#glowA)"/>
+            <g filter="url(#cyberGlowBig)">
+              <ellipse cx="300" cy="260" rx="38" ry="14" fill="none" stroke="#00FFA3" stroke-width="2.2"/>
+              <circle cx="300" cy="260" r="8" fill="#00FFA3"/>
+              <circle cx="297" cy="257" r="2.8" fill="#FFFFFF"/>
+              <path d="M300 274 L296 290" stroke="#E8C86A" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M300 274 L305 288" stroke="#C5A059" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
 
-              <!-- ─── KEMET LOOP CORE ─── -->
-              <g class="kmeh-core">
-                <ellipse cx="400" cy="490" rx="170" ry="250" fill="url(#gradCoreHalo)" opacity="0.60"/>
-                <rect x="386" y="256" width="28" height="444" fill="url(#gradPlasma)" filter="url(#glowCore)"/>
-                <rect x="392" y="256" width="16" height="444" fill="#7FFFD4" opacity="0.40"/>
-                <line x1="400" y1="700" x2="400" y2="256" stroke="#F6E4A0" stroke-width="1.8" opacity="0.85" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--1"  cx="394" cy="690" r="4"   fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--2"  cx="406" cy="690" r="2.5" fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--3"  cx="400" cy="690" r="3.2" fill="#7FFFD4" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--4"  cx="396" cy="690" r="2.2" fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--5"  cx="408" cy="690" r="3"   fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--6"  cx="402" cy="690" r="2.8" fill="#F6E4A0" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--7"  cx="392" cy="690" r="2.5" fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--8"  cx="404" cy="690" r="3"   fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--9"  cx="398" cy="690" r="2.2" fill="#7FFFD4" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--10" cx="410" cy="690" r="2.8" fill="#E8C86A" filter="url(#glowA)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--11" cx="390" cy="690" r="3"   fill="#00FFA3" filter="url(#glowG)"/>
-                <circle class="kmeh-core-particle kmeh-core-particle--12" cx="400" cy="690" r="2.5" fill="#F6E4A0" filter="url(#glowA)"/>
-              </g>
+            <g font-family="JetBrains Mono, monospace" font-weight="800">
+              <text class="cyber-label" x="300" y="540" text-anchor="middle" font-size="13" style="animation-delay: 0s;">VISION 2030</text>
+              <text class="cyber-label" x="300" y="562" text-anchor="middle" font-size="9" fill="#94A3B8" style="animation-delay: 1s;">MODULES SKIDS · KÉNITRA AFZ</text>
+            </g>
 
-              <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 1 · BASE · HAL · 8 SKIDS + CONVEYORS
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-layer kmeh-layer--1" data-layer="1" tabindex="0" role="button" aria-label="Niveau 1 — Base · Réception matière (HAL)">
-                <polygon class="face-left" points="400,700 100,614 150,531 400,567" fill="url(#gradL1L)" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon class="face-right" points="400,700 700,614 650,531 400,567" fill="url(#gradL1R)" stroke="#00FFA3" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon class="face-top" points="400,567 150,531 400,495 650,531" fill="url(#gradTop)" stroke="#7FFFD4" stroke-width="1.4" opacity="0.55"/>
-
-                <!-- Châssis HEB + arêtes IPN -->
-                <g clip-path="url(#clipL1L)">
-                  <rect x="100" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.45"/>
-                  <line x1="155" y1="611" x2="175" y2="539" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                  <line x1="225" y1="626" x2="230" y2="546" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                  <line x1="295" y1="641" x2="285" y2="554" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                </g>
-                <g clip-path="url(#clipL1R)">
-                  <rect x="400" y="531" width="300" height="170" fill="url(#patHeb)" opacity="0.45"/>
-                  <line x1="505" y1="641" x2="515" y2="554" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                  <line x1="575" y1="626" x2="570" y2="546" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                  <line x1="645" y1="611" x2="625" y2="539" stroke="#00FFA3" stroke-width="0.7" opacity="0.50"/>
-                </g>
-
-                <!-- Conveyors animés -->
-                <line class="kmeh-conveyor-flow" x1="130" y1="565" x2="395" y2="622" stroke="#00FFA3" stroke-width="1.4" stroke-dasharray="8 12" opacity="0.85"/>
-                <line class="kmeh-conveyor-flow--rev" x1="115" y1="600" x2="395" y2="668" stroke="#7FFFD4" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.75"/>
-                <line class="kmeh-conveyor-flow--rev" x1="405" y1="622" x2="670" y2="565" stroke="#00FFA3" stroke-width="1.4" stroke-dasharray="8 12" opacity="0.85"/>
-                <line class="kmeh-conveyor-flow" x1="405" y1="668" x2="685" y2="600" stroke="#7FFFD4" stroke-width="1.2" stroke-dasharray="6 10" opacity="0.75"/>
-
-                <!-- ── 8 SKIDS — Face gauche S1-S4 ── -->
-                <!-- S1 -->
-                <g>
-                  <polygon points="155,570 190,578 180,605 142,596" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="155,570 190,578 190,573 155,565" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="167" y1="574" x2="160" y2="602" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--1" cx="165" cy="587" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="165" y="593" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S1</text>
-                </g>
-                <!-- S2 -->
-                <g>
-                  <polygon points="210,582 245,590 236,620 198,610" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="210,582 245,590 245,585 210,577" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="222" y1="586" x2="216" y2="616" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--2" cx="220" cy="601" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="220" y="607" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S2</text>
-                </g>
-                <!-- S3 -->
-                <g>
-                  <polygon points="264,594 299,601 293,633 254,623" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="264,594 299,601 299,596 264,589" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="277" y1="598" x2="273" y2="629" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--3" cx="276" cy="614" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="276" y="620" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S3</text>
-                </g>
-                <!-- S4 -->
-                <g>
-                  <polygon points="318,605 353,613 349,647 311,637" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="318,605 353,613 353,608 318,600" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="331" y1="609" x2="330" y2="643" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--4" cx="331" cy="626" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="331" y="632" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S4</text>
-                </g>
-
-                <!-- ── 8 SKIDS — Face droite S5-S8 ── -->
-                <!-- S5 -->
-                <g>
-                  <polygon points="422,613 457,605 465,637 428,647" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="422,613 457,605 457,600 422,608" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="440" y1="608" x2="445" y2="640" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--5" cx="442" cy="626" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="442" y="632" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S5</text>
-                </g>
-                <!-- S6 -->
-                <g>
-                  <polygon points="476,601 511,593 519,622 482,632" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="476,601 511,593 511,588 476,596" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="494" y1="596" x2="499" y2="625" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--6" cx="496" cy="612" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="496" y="618" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S6</text>
-                </g>
-                <!-- S7 -->
-                <g>
-                  <polygon points="530,588 566,581 574,607 537,617" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="530,588 566,581 566,576 530,583" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="549" y1="583" x2="554" y2="611" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--7" cx="551" cy="597" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="551" y="603" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S7</text>
-                </g>
-                <!-- S8 -->
-                <g>
-                  <polygon points="585,575 620,568 628,591 592,601" fill="url(#gradSkid)" stroke="#00FFA3" stroke-width="1.1"/>
-                  <polygon points="585,575 620,568 620,563 585,570" fill="url(#gradSkidTop)" stroke="#00FFA3" stroke-width="0.8" opacity="0.9"/>
-                  <line x1="603" y1="570" x2="608" y2="595" stroke="#00FFA3" stroke-width="0.6" opacity="0.65"/>
-                  <circle class="kmeh-skid-led kmeh-skid-led--8" cx="605" cy="583" r="1.7" fill="#00FFA3" filter="url(#glowG)"/>
-                  <text x="605" y="589" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" font-weight="800" fill="#00FFA3" opacity="0.95" pointer-events="none">S8</text>
-                </g>
-
-                <!-- Labels -->
-                <text x="400" y="660" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="800" fill="#FFFFFF" opacity="0.9" letter-spacing="0.14em" pointer-events="none">NIVEAU 1 · 0-15 m</text>
-                <text x="400" y="678" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#00FFA3" letter-spacing="0.1em" pointer-events="none">HAL · RÉCEPTION · 8 SKIDS ISO</text>
-              </g>
-
-              <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 2 · CENTRE · FARADAY + RÉACTEURS BUBBLING
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-layer kmeh-layer--2" data-layer="2" tabindex="0" role="button" aria-label="Niveau 2 — Centre · Crypto Core (Cage Faraday)">
-                <polygon class="face-left" points="400,567 150,531 184,447 400,478" fill="url(#gradL2L)" stroke="#0D9E8E" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon class="face-right" points="400,567 650,531 616,447 400,478" fill="url(#gradL2R)" stroke="#0D9E8E" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon points="400,478 184,447 400,415 616,447" fill="#0D9E8E" fill-opacity="0.22" stroke="#7FFFD4" stroke-width="1.2" opacity="0.85"/>
-
-                <!-- Cage Faraday -->
-                <g clip-path="url(#clipL2L)">
-                  <rect x="150" y="447" width="250" height="120" fill="url(#patFaraday)" opacity="0.95"/>
-                </g>
-                <g clip-path="url(#clipL2R)">
-                  <rect x="400" y="447" width="250" height="120" fill="url(#patFaraday)" opacity="0.95"/>
-                  <!-- Réacteur 1 -->
-                  <ellipse cx="490" cy="485" rx="22" ry="7.5" fill="#0D9E8E" opacity="0.85" stroke="#7FFFD4" stroke-width="0.9"/>
-                  <rect x="468" y="485" width="44" height="26" fill="url(#gradReactor)" stroke="#7FFFD4" stroke-width="0.9" opacity="0.95"/>
-                  <ellipse cx="490" cy="511" rx="22" ry="7.5" fill="#065A4C" opacity="0.9" stroke="#7FFFD4" stroke-width="0.9"/>
-                  <!-- Bubbles réacteur 1 -->
-                  <circle class="kmeh-reactor-bubble" cx="484" cy="500" r="1.4" fill="#7FFFD4" opacity="0.6"/>
-                  <circle class="kmeh-reactor-bubble--2" cx="496" cy="496" r="1.1" fill="#7FFFD4" opacity="0.6"/>
-                  <circle class="kmeh-reactor-bubble--3" cx="490" cy="503" r="1.3" fill="#7FFFD4" opacity="0.6"/>
-                  <!-- Réacteur 2 -->
-                  <ellipse cx="558" cy="482" rx="20" ry="7" fill="#0D9E8E" opacity="0.85" stroke="#7FFFD4" stroke-width="0.9"/>
-                  <rect x="538" y="482" width="40" height="24" fill="url(#gradReactor)" stroke="#7FFFD4" stroke-width="0.9" opacity="0.95"/>
-                  <ellipse cx="558" cy="506" rx="20" ry="7" fill="#065A4C" opacity="0.9" stroke="#7FFFD4" stroke-width="0.9"/>
-                  <circle class="kmeh-reactor-bubble--2" cx="553" cy="496" r="1.2" fill="#7FFFD4" opacity="0.6"/>
-                  <circle class="kmeh-reactor-bubble" cx="562" cy="492" r="1.3" fill="#7FFFD4" opacity="0.6"/>
-                  <circle class="kmeh-reactor-bubble--3" cx="556" cy="499" r="1" fill="#7FFFD4" opacity="0.6"/>
-                </g>
-
-                <!-- Volets d-HVAC -->
-                <g clip-path="url(#clipL2T)">
-                  <rect x="240" y="443" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 240 443)"/>
-                  <rect x="330" y="437" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 330 437)"/>
-                  <rect x="420" y="431" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 420 431)"/>
-                  <rect x="510" y="425" width="60" height="8" fill="#7FFFD4" opacity="0.55" transform="rotate(-9 510 425)"/>
-                </g>
-
-                <text x="400" y="550" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="800" fill="#FFFFFF" opacity="0.92" letter-spacing="0.14em" pointer-events="none">NIVEAU 2 · 15-25 m</text>
-                <text x="400" y="564" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#7FFFD4" letter-spacing="0.1em" pointer-events="none">CRYPTO CORE · FARADAY · RÉACTEURS · d-HVAC</text>
-              </g>
-
-              <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 3 · ÉLÉVATION · RACKS LED + BUSBARS + DATA FLOW
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-layer kmeh-layer--3" data-layer="3" tabindex="0" role="button" aria-label="Niveau 3 — Élévation · Governance Engine (Maat OS)">
-                <polygon class="face-left" points="400,478 184,447 217,363 400,389" fill="url(#gradL3L)" stroke="#C5A059" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon class="face-right" points="400,478 616,447 583,363 400,389" fill="url(#gradL3R)" stroke="#C5A059" stroke-width="1.8" stroke-linejoin="round"/>
-                <polygon points="400,389 217,363 400,336 583,363" fill="#C5A059" fill-opacity="0.20" stroke="#E8C86A" stroke-width="1.2" opacity="0.85"/>
-
-                <!-- Racks serveurs — Face gauche -->
-                <g clip-path="url(#clipL3L)">
-                  <rect x="235" y="378" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <rect x="300" y="374" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <rect x="365" y="370" width="35" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <!-- LEDs rack 1 -->
-                  <circle class="kmeh-server-led kmeh-server-led--a" cx="242" cy="384" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
-                  <circle class="kmeh-server-led kmeh-server-led--b" cx="242" cy="392" r="1.2" fill="#E8C86A"/>
-                  <circle class="kmeh-server-led kmeh-server-led--c" cx="242" cy="400" r="1.2" fill="#00FFA3"/>
-                  <!-- LEDs rack 2 -->
-                  <circle class="kmeh-server-led kmeh-server-led--b" cx="307" cy="380" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
-                  <circle class="kmeh-server-led kmeh-server-led--c" cx="307" cy="388" r="1.2" fill="#E8C86A"/>
-                  <circle class="kmeh-server-led kmeh-server-led--d" cx="307" cy="396" r="1.2" fill="#00FFA3"/>
-                </g>
-                <!-- Racks serveurs — Face droite -->
-                <g clip-path="url(#clipL3R)">
-                  <rect x="400" y="370" width="35" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <rect x="445" y="374" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <rect x="510" y="378" width="55" height="42" fill="url(#patServer)" opacity="0.92"/>
-                  <circle class="kmeh-server-led kmeh-server-led--c" cx="452" cy="380" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
-                  <circle class="kmeh-server-led kmeh-server-led--d" cx="452" cy="388" r="1.2" fill="#E8C86A"/>
-                  <circle class="kmeh-server-led kmeh-server-led--a" cx="452" cy="396" r="1.2" fill="#00FFA3"/>
-                  <circle class="kmeh-server-led kmeh-server-led--b" cx="517" cy="384" r="1.2" fill="#00FFA3" filter="url(#glowG)"/>
-                  <circle class="kmeh-server-led kmeh-server-led--c" cx="517" cy="392" r="1.2" fill="#E8C86A"/>
-                  <circle class="kmeh-server-led kmeh-server-led--d" cx="517" cy="400" r="1.2" fill="#00FFA3"/>
-                </g>
-
-                <!-- Busbars dorées -->
-                <line x1="230" y1="430" x2="570" y2="405" stroke="#E8C86A" stroke-width="0.9" opacity="0.70"/>
-                <line x1="230" y1="410" x2="570" y2="385" stroke="#E8C86A" stroke-width="0.9" opacity="0.60"/>
-
-                <!-- Data flow vertical -->
-                <line class="kmeh-data-flow" x1="400" y1="470" x2="400" y2="390" stroke="#00FFA3" stroke-width="1.1" stroke-dasharray="3 8" opacity="0.85"/>
-                <line class="kmeh-data-flow" x1="360" y1="462" x2="370" y2="385" stroke="#7FFFD4" stroke-width="0.7" stroke-dasharray="2 6" opacity="0.60"/>
-                <line class="kmeh-data-flow" x1="440" y1="462" x2="430" y2="385" stroke="#7FFFD4" stroke-width="0.7" stroke-dasharray="2 6" opacity="0.60"/>
-
-                <text x="400" y="462" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="800" fill="#FFFFFF" opacity="0.95" letter-spacing="0.14em" pointer-events="none">NIVEAU 3 · 25-35 m</text>
-                <text x="400" y="476" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#E8C86A" letter-spacing="0.1em" pointer-events="none">GOVERNANCE ENGINE · IA · MAAT DATA LAKE</text>
-              </g>
-
-              <!-- ═══════════════════════════════════════════════════
-                   NIVEAU 4 · SOMMET · VERRIÈRE + SCADA
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-layer kmeh-layer--4" data-layer="4" tabindex="0" role="button" aria-label="Niveau 4 — Sommet · UI/UX (Phare de Maat)">
-                <polygon class="face-left" points="400,389 217,363 250,278 400,300" fill="url(#gradL4L)" stroke="#E8C86A" stroke-width="2" stroke-linejoin="round"/>
-                <polygon class="face-right" points="400,389 583,363 550,278 400,300" fill="url(#gradL4R)" stroke="#E8C86A" stroke-width="2" stroke-linejoin="round"/>
-
-                <!-- Verrière avec mullions -->
-                <polygon points="400,300 250,278 400,256 550,278" fill="url(#gradTop)" stroke="#F6E4A0" stroke-width="2" stroke-linejoin="round" filter="url(#glowA)"/>
-                <g clip-path="url(#clipL4T)">
-                  <rect x="250" y="256" width="300" height="50" fill="url(#patGlass)" opacity="0.65"/>
-                </g>
-
-                <!-- Fenêtres SCADA -->
-                <g clip-path="url(#clipL4L)">
-                  <rect x="278" y="338" width="32" height="14" fill="#F6E4A0" opacity="0.72" stroke="#6A4F1B" stroke-width="0.5"/>
-                  <rect x="320" y="332" width="32" height="14" fill="#00FFA3" opacity="0.72" stroke="#7FFFD4" stroke-width="0.5"/>
-                </g>
-                <g clip-path="url(#clipL4R)">
-                  <rect x="448" y="332" width="32" height="14" fill="#00FFA3" opacity="0.72" stroke="#7FFFD4" stroke-width="0.5"/>
-                  <rect x="490" y="338" width="32" height="14" fill="#F6E4A0" opacity="0.72" stroke="#6A4F1B" stroke-width="0.5"/>
-                </g>
-
-                <text x="400" y="372" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="800" fill="#FFFFFF" opacity="0.98" letter-spacing="0.14em" pointer-events="none">NIVEAU 4 · 35-45 m</text>
-                <text x="400" y="385" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" fill="#F6E4A0" letter-spacing="0.1em" pointer-events="none">CONTROL ROOM · VERRIÈRE 360°</text>
-              </g>
-
-              <!-- ═══════════════════════════════════════════════════
-                   LIGNES D'EXPLOSION + BUSBARS D'INTERCONNEXION
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-explosion-line" stroke="#00FFA3" stroke-width="0.9" stroke-dasharray="3 4" opacity="0">
-                <line x1="400" y1="567" x2="400" y2="497"/>
-                <line x1="150" y1="531" x2="184" y2="447" opacity="0.55"/>
-                <line x1="650" y1="531" x2="616" y2="447" opacity="0.55"/>
-                <line x1="400" y1="478" x2="400" y2="419"/>
-                <line x1="184" y1="447" x2="217" y2="363" opacity="0.55"/>
-                <line x1="616" y1="447" x2="583" y2="363" opacity="0.55"/>
-                <line x1="400" y1="389" x2="400" y2="340"/>
-                <line x1="217" y1="363" x2="250" y2="278" opacity="0.55"/>
-                <line x1="583" y1="363" x2="550" y2="278" opacity="0.55"/>
-              </g>
-              <g class="kmeh-explosion-line">
-                <line class="kmeh-busbar-flow" x1="220" y1="520" x2="220" y2="460" stroke="#E8C86A" stroke-width="1" stroke-dasharray="4 8" opacity="0.75"/>
-                <line class="kmeh-busbar-flow" x1="580" y1="520" x2="580" y2="460" stroke="#E8C86A" stroke-width="1" stroke-dasharray="4 8" opacity="0.75"/>
-                <line class="kmeh-busbar-flow" x1="260" y1="430" x2="260" y2="375" stroke="#7FFFD4" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.65"/>
-                <line class="kmeh-busbar-flow" x1="540" y1="430" x2="540" y2="375" stroke="#7FFFD4" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.65"/>
-              </g>
-
-              <!-- ═══════════════════════════════════════════════════
-                   ŒIL D'HORUS HOLOGRAPHIQUE · sommet
-                   ═══════════════════════════════════════════════════ -->
-              <g class="kmeh-horus-eye" transform="translate(400, 210)">
-                <circle cx="0" cy="0" r="58" fill="url(#gradHorusHalo)" opacity="0.60"/>
-                <ellipse class="kmeh-horus-orbit" cx="0" cy="0" rx="58" ry="18" fill="none" stroke="#E8C86A" stroke-width="1.4" stroke-dasharray="3 5" opacity="0.88"/>
-                <ellipse class="kmeh-horus-orbit-rev" cx="0" cy="0" rx="44" ry="13" fill="none" stroke="#00FFA3" stroke-width="1.1" stroke-dasharray="2 4" opacity="0.78"/>
-
-                <g filter="url(#glowA)">
-                  <path d="M-36 0 Q-18 -16 0 -16 Q18 -16 36 0 Q18 16 0 16 Q-18 16 -36 0 Z" fill="#0A0D10" stroke="#00FFA3" stroke-width="2.4"/>
-                  <circle cx="0" cy="0" r="8" fill="#00FFA3"/>
-                  <circle cx="-2.5" cy="-2.5" r="2.4" fill="#FFFFFF" opacity="0.95"/>
-                  <path d="M0 16 L-4 32" stroke="#E8C86A" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M0 16 L5 30" stroke="#C5A059" stroke-width="1.8" stroke-linecap="round"/>
-                </g>
-
-                <circle cx="58" cy="0" r="3" fill="#E8C86A" filter="url(#glowA)"/>
-                <circle cx="-58" cy="0" r="3" fill="#00FFA3" filter="url(#glowG)"/>
-              </g>
-
-            </svg>
-          </div>
-
-          <div class="pyramid-hint">🖱️ Cliquer sur un niveau · Boutons ci-dessous</div>
-          <div class="pyramid-controls">
-            <button type="button" id="btnExplosion" onclick="window.kmehToggleExplosion && window.kmehToggleExplosion()" class="btn btn-o" aria-pressed="false">
-              ⟡ Vue Modulaire Éclatée
-            </button>
-            <button type="button" id="btnAutoRotate" onclick="window.kmehToggleAutoRotate && window.kmehToggleAutoRotate()" class="btn btn-o is-active" aria-pressed="true">
-              ⟳ Auto-flottement
-            </button>
-            <button type="button" id="btnResetView" onclick="window.kmehResetView && window.kmehResetView()" class="btn btn-o">
-              ↺ Réinitialiser
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </section>
-        <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         4 NIVEAUX VOLUMÉTRIQUES
-         ═══════════════════════════════════════════════════════ -->
-    <section id="niveaux" class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Ingénierie Modulaire Propriétaire</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Les 4 Niveaux Volumétriques — Miroir des 4 Layers Maat OS</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">
-          Chaque strate fonctionnelle du hub correspond à un layer algorithmique de Maat OS. Sélectionnez une strate (dans le blueprint ou sur une carte ci-dessous) pour synchroniser l'information technique.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5 font-mono text-xs">
-        <button type="button" onclick="window.kmehSelectLevel && window.kmehSelectLevel(1)" data-level="1" class="level-card active">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-cyberGreen font-bold text-[12px]">
-              <span class="level-dot" style="background:#00FFA3;color:#00FFA3"></span>N1 · Base
-            </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30">0-15 m</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed"><strong class="text-cyberGreen">Layer 0 · HAL</strong> — Réception pesée, trémies, ligne sèche robotisée, AR-Sorting, presses à balles.</p>
-          <p class="text-[9px] text-slate-500 mt-1 font-mono">3 136 m²</p>
-        </button>
-
-        <button type="button" onclick="window.kmehSelectLevel && window.kmehSelectLevel(2)" data-level="2" class="level-card">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-emerald-400 font-bold text-[12px]">
-              <span class="level-dot" style="background:#0D9E8E;color:#0D9E8E"></span>N2 · Centre
-            </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">15-25 m</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed"><strong class="text-emerald-400">Layer 1 · Crypto Core</strong> — Cage de Faraday MIL-STD-188-125-1, Hyperledger Fabric v2.5, d-HVAC, réacteurs anaérobies.</p>
-          <p class="text-[9px] text-slate-500 mt-1 font-mono">1 400 m²</p>
-        </button>
-
-        <button type="button" onclick="window.kmehSelectLevel && window.kmehSelectLevel(3)" data-level="3" class="level-card">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-kemetGold font-bold text-[12px]">
-              <span class="level-dot" style="background:#C5A059;color:#C5A059"></span>N3 · Élévation
-            </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGold border border-kemetGold/30">25-35 m</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed"><strong class="text-kemetGold">Layer 2 · Governance Engine</strong> — IA/ML YOLOv8 &amp; Swin Transformer, Maat Data Lake, Africa-Polymer-Dataset.</p>
-          <p class="text-[9px] text-slate-500 mt-1 font-mono">600 m²</p>
-        </button>
-
-        <button type="button" onclick="window.kmehSelectLevel && window.kmehSelectLevel(4)" data-level="4" class="level-card">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="text-kemetGoldBright font-bold text-[12px]">
-              <span class="level-dot" style="background:#E8C86A;color:#E8C86A"></span>N4 · Sommet
-            </span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGoldBright/30">35-45 m</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed"><strong class="text-kemetGoldBright">Layer 3 · UI/UX</strong> — Control Room principale, observatoire panoramique, verrière, Phare de Maat.</p>
-          <p class="text-[9px] text-slate-500 mt-1 font-mono">150 m²</p>
-        </button>
-      </div>
-
-      <div id="kmehLevelPanel" class="p-5 sm:p-7 bg-black/75 rounded-2xl border border-cyberGreen/30 space-y-3 font-mono text-xs" aria-live="polite">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
-          <span id="kmehLevelTitle" class="text-sm font-bold text-cyberGreen uppercase">Niveau 1 (Base · 0–15 m · 3 136 m²) — Layer 0 HAL</span>
-          <span id="kmehLevelBadge" class="px-2 py-0.5 rounded bg-cyberGreen/10 border border-cyberGreen/30 text-[9px] text-cyberGreen font-bold">RÉCEPTION &amp; MATIÈRE</span>
-        </div>
-        <p id="kmehLevelDescription" class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          Quai d'alimentation étanche en dépression d'air, trémies de réception primaires, ligne sèche robotisée avec tri optoélectronique proche infrarouge (NIR) à haute cadence, presses automatiques de compactage haute densité.
-        </p>
-        <div id="kmehLevelSpecs" class="p-3 bg-obsidianCard/60 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1">
-          <div><strong class="text-white">Capacité nominale :</strong> 20 000 t/an en régime continu (extensible à 30 000 t/an sur le modèle MEH-30).</div>
-          <div><strong class="text-white">Architecture Skids :</strong> Modules ISO 6,0 × 2,3 × 2,6 m, pré-testés en usine (FAT), masse sèche M_dry ≤ 8 500 kg.</div>
+            <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#64748B" opacity="0.85">
+              <line x1="90" y1="430" x2="510" y2="430" stroke="#64748B" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.5"/>
+              <text x="90" y="450" text-anchor="start">56 m</text>
+              <text x="510" y="450" text-anchor="end">56 m</text>
+              <line x1="540" y1="260" x2="540" y2="460" stroke="#64748B" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.5"/>
+              <text x="558" y="365" text-anchor="middle" transform="rotate(90 558 365)">45 m</text>
+            </g>
+          </svg>
         </div>
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         8 MODULES SKID
-         ═══════════════════════════════════════════════════════ -->
-    <section id="skids" class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Ingénierie des Skids Modulaires</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">8 Modules Skid — Assemblage LEGO Industriel</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          Le hub K-MEH-20 n'est pas érigé en chantier. Il est <strong>assemblé en série</strong> à partir de 8 modules Skid standardisés <strong>ISO 6,0 m × 2,3 m × 2,6 m</strong>, pré-câblés et testés en usine (FAT — Factory Acceptance Test). Résultat : <strong>−80 % des risques opérationnels et délais de chantier</strong>, production jusqu'à 20 hubs K-MEH-20 par an dans le pôle industriel de Kénitra.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code">SKD-01</span>
-            <span class="text-[9px] font-mono text-slate-500 uppercase">Utilités</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Module Utilités</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Centrale de distribution fluidique, compresseurs industriels à vis, pompes centrifuges et armoires de régulation pneumatique. Cœur hydraulique et pneumatique de l'installation.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code au">SKD-02</span>
-            <span class="text-[9px] font-mono text-kemetGoldBright uppercase">Kemet Loop</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Module Noyau Biologique</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Réacteurs de biométhanisation anaérobie modulaires (<strong class="text-kemetGoldBright">600 m³</strong> de volume utile), échangeurs thermiques hydroniques d-HVAC à 37 °C et colonnes d'épuration du biogaz. Moteur biologique du Kemet Loop.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code">SKD-03</span>
-            <span class="text-[9px] font-mono text-cyberGreen uppercase">Tri Optique</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Ligne Sèche &amp; Tri Optique</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Convoyeurs continus NBR antistatiques haute cadence, matrice de spectromètres <strong class="text-cyberGreen">proche infrarouge (NIR)</strong>, projecteurs laser de guidage optique AR-Sorting (latence &lt; 20 ms) et rampe d'éjection pneumatique à 128 buses piézoélectriques.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code au">SKD-04</span>
-            <span class="text-[9px] font-mono text-kemetGoldBright uppercase">K-WATER</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Traitement Eaux &amp; Thermique</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Unité d'osmose inverse à 3 étages <strong class="text-kemetGoldBright">K-WATER</strong> (taux de récupération des eaux industrielles &gt; 92 %, boucle ZLD à rejet liquide nul) et séparateurs hydrocarbures en acier Super Duplex.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code">SKD-05</span>
-            <span class="text-[9px] font-mono text-cyberGreen uppercase">Énergie</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Énergie &amp; Cogénération</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Unité de cogénération biogaz CHP (<strong class="text-cyberGreen">100 kWe / 150 kWth</strong>), système de stockage stationnaire BESS LiFePO₄ (250 kWh) et architecture Smart Grid bidirectionnelle.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code">SKD-06</span>
-            <span class="text-[9px] font-mono text-cyberGreen uppercase">Calcul</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Calcul &amp; SCADA</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Baies serveurs durcies Edge L2, modules HSM de scellement cryptographique matériel, diodes de données à isolation galvanique et commutateurs PTP v2. Ossature de la blockchain Hyperledger Fabric.</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code au">SKD-07</span>
-            <span class="text-[9px] font-mono text-kemetGoldBright uppercase">Salle de Contrôle</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Salle de Contrôle</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Pupitres de supervision SCADA, interfaces holographiques HMI et télémétrie de bord sécurisée en temps réel. Le cerveau humain du hub (Phare de Maat).</p>
-        </div>
-
-        <div class="skid-card space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="skid-code">SKD-08</span>
-            <span class="text-[9px] font-mono text-cyberGreen uppercase">Électrique</span>
-          </div>
-          <h4 class="font-bold text-white text-[13px] font-mono">Appareillage Électrique</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Tableaux généraux basse tension (TGBT) 380V, filtres actifs d'harmoniques et onduleurs modulaires industriels. Interface avec le réseau électrique public et le Kemet Loop interne.</p>
-        </div>
-      </div>
-
-      <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 text-[10px] text-slate-400 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Normes de référence (FAT / SAT) :</strong> chaque module Skid est testé en usine avant expédition. Les dimensions ISO 6,0 × 2,3 × 2,6 m et la masse sèche M_dry ≤ 8 500 kg permettent un transport conteneurisé standard et un assemblage de chantier en moins de 12 semaines. <strong class="text-white">Kénitra Atlantic Free Zone · capacité productive 20 hubs K-MEH-20 par an.</strong>
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         CONCEPT
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
+    <!-- RENAISSANCE 2030 -->
+    <section class="reveal">
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-8">
         <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Rupture Technologique</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Non une simple usine. Un Organisme Cyber-Physique Biomimétique.</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          L'Industrie 4.0 a réduit l'usine à un hangar inerte et assourdissant, conçu exclusivement autour de la machine. K-MEH-20 inverse cette logique en déployant une infrastructure dotée d'un véritable métabolisme industriel — un organisme biomimétique dont chaque strate remplit une fonction vitale.
-        </p>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">La Renaissance Industrielle Africaine</h3>
+        <p class="text-sm text-slate-300 font-sans">Trois principes fondateurs qui différencient K-MEH-20 des infrastructures héritées de l'Industrie 4.0.</p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="w-9 h-9 rounded-xl bg-cyberGreen/10 border border-cyberGreen/30 flex items-center justify-center font-bold text-cyberGreen text-sm">01</div>
-          <h4 class="font-bold text-white text-sm">Autonomie Métabolique</h4>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">K-MEH-20 ingère les flux urbains et les régénère en matières premières secondaires de haute pureté (Grade A ≥ 98,5 %) et en vecteurs d'énergie décentralisés, dans un cycle fermé ZLD (Zero Liquid Discharge).</p>
-        </div>
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="w-9 h-9 rounded-xl bg-kemetGold/10 border border-kemetGold/30 flex items-center justify-center font-bold text-kemetGoldBright text-sm">02</div>
-          <h4 class="font-bold text-white text-sm">Géométrie Protectrice</h4>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">Le hub tronqué 56×56×45 m optimise la convection thermique naturelle (effet cheminée passif), dissipe les ondes sismiques par sa base large et minimise l'emprise foncière — 3 136 m² au sol pour 20 000 t/an.</p>
-        </div>
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center font-bold text-white text-sm">03</div>
-          <h4 class="font-bold text-white text-sm">Symbiose Homme-Machine</h4>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">Maat OS, via Kemet Pulse et les cycles SIL-3, ralentit automatiquement la cadence de ligne en cas de fatigue détectée de l'opérateur. Aucune pénalité salariale. L'opérateur est un pilote protégé, jamais une ressource exécutante.</p>
-        </div>
-      </div>
-
-      <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 text-xs text-slate-300 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Écosystème Illusion Kemet :</strong> K-MEH-20 n'est pas isolé. Il constitue le <strong>Track 1</strong> d'une architecture à deux étages : <strong class="text-cyberGreen">PurKemet (Track 0)</strong> capture la matière sur le terrain B2B, <strong class="text-kemetGoldBright">Maat OS</strong> orchestre l'ensemble, <strong class="text-white">K-MEH-20 (Track 1)</strong> matérialise le hub industriel, et le <strong class="text-white">Maat Data Lake</strong> capitalise la donnée pour l'ensemble du continent.
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         MANIFESTE
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Manifeste Architectonique</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Le Hub contre le Hangar : La Rupture Géométrique</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">La géométrie pyramidale tronquée n'est pas un choix esthétique. C'est une réponse structurelle mesurable aux six limites fondamentales des hangars industriels héritées de l'Industrie 4.0.</p>
-      </div>
-
-      <div class="space-y-3 font-mono text-xs">
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Empreinte au sol</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Linéaire 120×80 m minimum · 9 600 m²</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Emprise tronquée 56×56 m · 3 136 m² — <strong>−67 %</strong></div>
-        </div>
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Ratio volume / empreinte</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Référence 1,0× · m³ perdus sous toiture</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Ratio <strong>×1,7</strong> à production équivalente</div>
-        </div>
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Convection thermique</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>HVAC forcé permanent, consommation continue</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Effet cheminée passif — <strong>−28 % HVAC</strong></div>
-        </div>
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Résilience sismique</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Structure rigide, concentrations de contraintes</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Base large, dissipation d'ondes optimale</div>
-        </div>
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Modularité</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Chantier fixe · 18 à 24 mois</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>8 Skids FAT · <strong>installation &lt; 12 semaines</strong></div>
-        </div>
-        <div class="manifest-row">
-          <div class="text-white font-bold text-sm">Scalabilité continentale</div>
-          <div class="text-slate-400"><span class="text-[9px] uppercase text-red-400 block mb-1">Hangar 4.0</span>Extension = nouveau hangar à construire</div>
-          <div class="text-cyberGreen font-bold"><span class="text-[9px] uppercase text-cyberGreen block mb-1">K-MEH-20</span>Duplication modulaire à l'identique (Kénitra)</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         KEMET LOOP
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Thermodynamique &amp; Économie Circulaire</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Kemet Loop : Boucle Énergétique Fermée</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          Le module SKD-02 Noyau Biologique anime le cœur de la biométhanisation anaérobie. Les flux organiques produisent du biogaz ; le biogaz alimente les cogénérateurs CHP du module SKD-05 Énergie ; l'énergie thermique et électrique est réinjectée dans les modules opérationnels. Zéro rejet liquide (ZLD), dépendance externe réduite au seuil résiduel en régime permanent.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div class="space-y-4 text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          <p>Le cœur du <strong>Kemet Loop</strong> repose sur la valorisation conjointe de plusieurs familles de flux internes : biomasse anaérobie, matière sèche non recyclable mécaniquement, chaleur résiduelle des procédés. Les trois voies de conversion convergent vers une micro-grille interne unique.</p>
-          <p>L'énergie produite alimente en priorité les modules opérationnels (SKD-03 Tri Optique, SKD-05 Cogénération, SKD-06 Calcul). L'excédent est stocké dans le BESS LiFePO₄ 250 kWh pour la couverture nocturne. La dépendance au réseau électrique conventionnel tombe sous le seuil résiduel.</p>
-          <div class="p-3 bg-black/60 rounded-xl border border-kemetGold/30 font-mono text-[11px] text-slate-400 leading-relaxed">
-            🔒 <strong class="text-kemetGoldBright">Secret Industriel :</strong> Les rendements enthalpiques précis, les spécifications thermochimiques et les schémas de procédé (P&amp;ID) font l'objet d'une rétention légale stricte et ne sont consultables qu'en Virtual Data Room, après signature d'un accord de non-divulgation.
-          </div>
-        </div>
-
-        <div class="p-5 bg-black/70 rounded-2xl border border-cyberGreen/30 space-y-3 font-mono text-xs">
-          <span class="text-cyberGreen font-bold block uppercase text-[11px]">Vecteurs de Sortie Qualifiés — Kemet Loop</span>
-          <div class="space-y-2">
-            <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-white font-bold block">1. Matières Premières Secondaires</span>
-              <p class="text-[11px] text-slate-400 font-sans">Fractions calibrées et certifiées Grade A ≥ 98,5 % — PET, PE-HD, Aluminium, Carton ondulé.</p>
-            </div>
-            <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-cyberGreen font-bold block">2. Énergie Décentralisée</span>
-              <p class="text-[11px] text-slate-400 font-sans">Cogénération biogaz CHP 100 kWe / 150 kWth, stockage BESS LiFePO₄ 250 kWh, Smart Grid bidirectionnelle.</p>
-            </div>
-            <div class="p-2.5 bg-black/50 rounded-xl border border-white/5">
-              <span class="text-kemetGoldBright font-bold block">3. Amendement pour Sols</span>
-              <p class="text-[11px] text-slate-400 font-sans">Co-produits digestat destinés aux programmes de régénération des sols agricoles du Royaume.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         MAAT OS
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel g p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Système Nerveux Central</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Maat OS : Le Cerveau Unifié entre PurKemet et K-MEH-20</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          Comme iOS transforme un composant matériel en smartphone, <strong class="text-cyberGreen">Maat OS</strong> transforme le hub K-MEH-20 en organisme vivant et en centre d'émancipation sociale. C'est le même système d'exploitation qui opère sur le terrain (Track 0) et dans l'infrastructure (Track 1).
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div class="p-5 bg-black/60 rounded-2xl border border-cyberGreen/30 space-y-3">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-cyberGreen animate-pulse"></span>
-            <span class="text-cyberGreen font-mono font-bold text-[11px] uppercase tracking-widest">Track 0 · PurKemet (Terrain B2B)</span>
-          </div>
-          <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans leading-relaxed">
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">▸</span><span>Collecte décentralisée HoReCa à <strong class="text-white">coût zéro d'enlèvement (0 MAD)</strong></span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">▸</span><span>Pesée certifiée IoT Bluetooth et PWA offline-first</span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">▸</span><span>Attestations ESG notariales mensuelles</span></li>
-            <li class="flex items-start gap-2"><span class="text-cyberGreen font-bold shrink-0">▸</span><span>Alimente l'<strong class="text-cyberGreen">Africa-Polymer-Dataset</strong> par millions de signatures spectrales polymériques</span></li>
-          </ul>
-        </div>
-
-        <div class="p-5 bg-black/60 rounded-2xl border border-kemetGold/30 space-y-3">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-kemetGoldBright animate-pulse"></span>
-            <span class="text-kemetGoldBright font-mono font-bold text-[11px] uppercase tracking-widest">Track 1 · K-MEH-20 (Hub Industriel)</span>
-          </div>
-          <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans leading-relaxed">
-            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Tri optique robotisé par IA (<strong class="text-white">98,5 %</strong>)</span></li>
-            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Autonomie énergétique Kemet Loop</span></li>
-            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Sécurité SIL-3 et wearable Kemet Pulse</span></li>
-            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Exécution de contrats intelligents (Smart Contracts) et Kemet Wallet</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 text-xs text-slate-300 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Continuité algorithmique :</strong> les données accumulées par PurKemet (signatures spectrales NIR) entraînent directement l'IA de K-MEH-20 (Computer Vision YOLOv8 / Swin Transformer). Dès la mise en service du hub, Maat OS pilote les robots de tri avec une pureté <strong class="text-white">Grade A ≥ 98,5 % dès le premier jour</strong> — aucun temps de rodage.
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         INDUSTRIE 5.0
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Humanisme Technologique</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">L'Ingénierie de Protection : L'Homme au Centre de la Machine</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          L'Industrie 5.0 chez Industrial Illusion SARL subordonne la cadence industrielle à la santé, la sécurité et la dignité des opérateurs. La technologie est un bouclier, jamais une contrainte.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-cyberGreen font-bold text-sm block">Kemet Pulse &amp; SIL-3</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 shrink-0">BIOMÉTRIE</span>
-          </div>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">Chaque opérateur porte le wearable <strong>Kemet Pulse</strong>. En cas de pic de fatigue ou de stress thermique détecté, le cycle SIL-3 ralentit automatiquement la ligne. Aucune pénalité salariale, aucune pression à la productivité.</p>
-        </div>
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-kemetGoldBright font-bold text-sm block">AR-Sorting &amp; Assistance</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 shrink-0">COGNITIF</span>
-          </div>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">Les projecteurs laser de guidage AR-Sorting (latence &lt; 20 ms) projettent directement sur les flux convoyés les repères de tri. Guidage millimétrique, charge cognitive réduite, erreurs de sélection quasi nulles.</p>
-        </div>
-        <div class="p-5 bg-black/60 rounded-2xl border border-white/10 space-y-3 tilt-card">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-            <span class="text-white font-bold text-sm block">Algorithme de Mérite (AMM)</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 shrink-0">ÉQUITÉ</span>
-          </div>
-          <p class="text-slate-300 text-[11px] font-sans leading-relaxed">Les travailleurs du tri (ex-collecteurs informels formalisés en CDI) sont directement associés à la valeur de l'infrastructure via l'<strong>Algorithme de Mérite AMM</strong> : dividendes versés sur le Kemet Wallet personnel, calculs transparents et auditables.</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="animated-divider" aria-hidden="true"></div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         KÉNITRA
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Souveraineté Industrielle · Kénitra Atlantic Free Zone</span>
-        <h3 class="font-kemetTitle text-xl sm:text-3xl font-black text-white mt-1">Kénitra — La Vallée de l'Humanisme Industriel</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1 max-w-3xl">
-          Le pôle productif de Kénitra (<strong class="text-cyberGreen">Atlantic Free Zone</strong>) est le cœur battant de la stratégie panafricaine. Une NewCo de droit marocain — <strong class="text-white">Illusion Kemet Manufacturing Maroc SA</strong> — y assemble, teste et exporte les modules Skid vers l'ensemble du continent.
-        </p>
-      </div>
-
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="impact-card space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-cyberGreen font-mono font-bold text-sm uppercase tracking-wider">Capacité</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 font-mono">20 / AN</span>
-          </div>
-          <p class="text-xs text-slate-300 font-sans leading-relaxed">Le site de Kénitra peut produire <strong class="text-white">jusqu'à 20 hubs K-MEH-20 par an</strong>, avec un délai de production (lead time) compressé de 165 à <strong class="text-white">105–150 jours</strong> grâce à l'assemblage industriel modulaire (Loi de Wright : −15 % sur les coûts à chaque doublement de la production cumulée).</p>
+        <div class="pillar-card g">
+          <div class="text-3xl mb-3">♻️</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white mb-2">Métabolisme Circulaire</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Chaque flux entrant devient une ressource : matière première secondaire, énergie, amendement pour les sols. Aucun rejet liquide, aucune perte thermique significative. La circularité n'est pas un slogan, c'est une architecture physique.</p>
         </div>
-        <div class="impact-card space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-kemetGoldBright font-mono font-bold text-sm uppercase tracking-wider">Feuille de Route 2026–2050</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-kemetGold/10 text-kemetGoldBright border border-kemetGold/30 font-mono">100+ HUBS</span>
-          </div>
-          <p class="text-xs text-slate-300 font-sans leading-relaxed">Marrakech (nœud pilote) → Agadir → Tanger → Rabat → Casablanca → réplication continentale. Plus de <strong class="text-white">100 hubs K-MEH-20 en Afrique d'ici 2050</strong>, 2 millions de tonnes par an traitées, plus de 5 000 emplois hautement qualifiés.</p>
+        <div class="pillar-card au">
+          <div class="text-3xl mb-3">🏛️</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white mb-2">Souveraineté Technologique</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Conçu au Maroc, assemblé au Maroc, exporté depuis le Maroc. Modules Skid pré-testés en usine, propriété intellectuelle protégée par dépôt OMPIC en préparation. Le continent africain devient fournisseur — pas client — de sa propre infrastructure lourde.</p>
         </div>
-        <div class="impact-card space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-white font-mono font-bold text-sm uppercase tracking-wider">Souveraineté</span>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-white/10 text-white border border-white/20 font-mono">AFRIQUE</span>
-          </div>
-          <p class="text-xs text-slate-300 font-sans leading-relaxed">Le Maroc devient le <strong class="text-white">fournisseur matériel souverain de l'ensemble du continent africain</strong>. Les hubs sont assemblés localement à partir de modules Skid pré-testés à Kénitra, garantissant la maîtrise de la chaîne de valeur sans transfert de technologie propriétaire.</p>
+        <div class="pillar-card w">
+          <div class="text-3xl mb-3">👤</div>
+          <h4 class="font-kemetTitle text-lg font-black text-white mb-2">Humanisme Industriel</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">L'opérateur est un pilote protégé, pas une ressource exécutante. Wearables biométriques, cycles ralentis automatiquement en cas de fatigue, redistribution de la valeur via Actions de Classe B. L'Industrie 5.0 subordonne la cadence à la dignité.</p>
         </div>
-      </div>
-
-      <div class="p-4 bg-black/50 rounded-xl border border-kemetGold/30 text-xs text-slate-300 font-sans leading-relaxed">
-        <strong class="text-kemetGoldBright font-mono">Positionnement marocain :</strong> le Royaume se positionne comme <strong class="text-white">plateforme souveraine d'exportation de technologie industrielle lourde</strong>, en combinant les corridors logistiques existants (Tanger Med, Casablanca, Kénitra AFZ) avec une maîtrise locale complète de la chaîne d'assemblage modulaire.
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         COMPARATIF
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel p-5 sm:p-8 lg:p-10 space-y-6 reveal">
-      <div class="border-b border-white/10 pb-4">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Matrice Comparative</span>
-        <h3 class="font-kemetTitle text-xl sm:text-2xl font-black text-white mt-1">Industrie 4.0 vs K-MEH-20 · Industrie 5.0</h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans mt-1">Confrontation des fondements techniques, philosophiques et économiques.</p>
+    <!-- FEUILLE DE ROUTE 2030 -->
+    <section class="reveal">
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-8">
+        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Feuille de Route · 2026 → 2050</span>
+        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">De la Vision à l'Industrialisation</h3>
+        <p class="text-sm text-slate-300 font-sans">Un plan par étapes, mesurable, aligné sur la stratégie continentale de Kemet Modular Eco Hub.</p>
       </div>
-
-      <div class="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
-        <table class="w-full text-left font-mono text-xs min-w-[720px]">
-          <thead>
-            <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
-              <th class="py-3 px-3">Paramètre</th>
-              <th class="py-3 px-3 text-slate-400">Usine Traditionnelle (Industrie 4.0)</th>
-              <th class="py-3 px-3 text-cyberGreen font-bold bg-cyberGreen/5 rounded-t-lg">Kemet Modular Eco Hub 20 (Industrie 5.0)</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-white/5 text-slate-300">
-            <tr><td class="py-3.5 px-3 font-bold text-white">Philosophie</td><td class="py-3.5 px-3 text-slate-400">Rendement unilatéral centré sur la machine</td><td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Équilibre cyber-physique Homme-Machine-Ressource</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Rôle de l'Opérateur</td><td class="py-3.5 px-3 text-red-400">Ressource exécutante subordonnée au rythme machine</td><td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Pilote protégé et copropriétaire (AMM, Kemet Wallet)</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Infrastructure</td><td class="py-3.5 px-3 text-slate-400">Hangar métallique générique, 9 600 m²</td><td class="py-3.5 px-3 font-bold text-white bg-cyberGreen/5">Hub tronqué bioclimatique 56×56×45 m, 3 136 m²</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Bilan Énergétique</td><td class="py-3.5 px-3 text-red-400">Forte dépendance au réseau externe</td><td class="py-3.5 px-3 font-bold text-kemetGoldBright bg-cyberGreen/5">Kemet Loop : autonomie, ZLD, BESS 250 kWh</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Pureté Matière</td><td class="py-3.5 px-3 text-slate-400">60–75 %, variable selon opérateur</td><td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Tri IA NIR · Grade A ≥ 98,5 % certifié</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Traçabilité</td><td class="py-3.5 px-3 text-slate-400">Registres papier déclaratifs non opposables</td><td class="py-3.5 px-3 font-bold text-cyberGreen bg-cyberGreen/5">Hyperledger Fabric + HSM + Data Diode</td></tr>
-            <tr><td class="py-3.5 px-3 font-bold text-white">Statut de la PI</td><td class="py-3.5 px-3 text-slate-400">Intégration d'équipements tiers</td><td class="py-3.5 px-3 font-bold text-kemetGoldBright bg-cyberGreen/5">Technologie propriétaire · OMPIC en préparation</td></tr>
-          </tbody>
-        </table>
+      <div class="max-w-3xl mx-auto glass-panel p-6 sm:p-8 space-y-6">
+        <div class="timeline-step">
+          <div class="timeline-dot g">1</div>
+          <span class="text-xs font-mono font-bold text-cyberGreen uppercase tracking-wider">2026 · Phase de Consolidation</span>
+          <h4 class="font-kemetTitle text-lg font-black text-white mt-1 mb-1">Track 0 PurKemet Opérationnel</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Déploiement du réseau logistique HoReCa à Marrakech. Captation initiale des gisements matière. Maat OS opérationnel, Data Lake actif. Alimentation de l'Africa-Polymer-Dataset par millions de signatures NIR.</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot au">2</div>
+          <span class="text-xs font-mono font-bold text-kemetGoldBright uppercase tracking-wider">2028–2030 · Prototypage Modulaire</span>
+          <h4 class="font-kemetTitle text-lg font-black text-white mt-1 mb-1">Modules Skid Opérationnels · Objectif Central</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Conception, fabrication et test des 8 modules Skid ISO. Assemblage du premier hub pilote à Kénitra Atlantic Free Zone. Validation des cycles thermodynamiques Kemet Loop. <strong class="text-kemetGoldBright">C'est notre horizon : modules fonctionnels d'ici 2030.</strong></p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot w">3</div>
+          <span class="text-xs font-mono font-bold text-white uppercase tracking-wider">2032–2040 · Déploiement Régional</span>
+          <h4 class="font-kemetTitle text-lg font-black text-white mt-1 mb-1">Maillage Territorial Marocain</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Hubs K-MEH-20 dans les principales métropoles du Royaume : Marrakech, Casablanca, Rabat, Tanger, Agadir. Production sérielle à Kénitra. Formation des équipes locales. Réplication du modèle à l'échelle nationale.</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot au">4</div>
+          <span class="text-xs font-mono font-bold text-kemetGoldBright uppercase tracking-wider">2040–2050 · Expansion Continentale</span>
+          <h4 class="font-kemetTitle text-lg font-black text-white mt-1 mb-1">Corridors Africains & Asie</h4>
+          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Déploiement le long des corridors Dakar, Abidjan, Lagos, Nairobi, Le Caire. Export de la technologie vers les grands hubs urbains asiatiques. Le modèle marocain devient référence mondiale de l'industrie souveraine et circulaire.</p>
+        </div>
       </div>
     </section>
 
     <div class="animated-divider" aria-hidden="true"></div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         CTA · SERIES A INVESTISSEMENT
-         ═══════════════════════════════════════════════════════ -->
-    <section class="glass-panel g p-5 sm:p-8 lg:p-12 space-y-6 reveal">
-      <div class="max-w-3xl mx-auto text-center space-y-3">
-        <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Series A · Round d'Investissement Institutionnel</span>
-        <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">
-          Du Terrain au Hub Industriel : L'Investissement DeepTech Souverain
-        </h3>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          K-MEH-20 combine l'<strong class="text-white">utilité des infrastructures physiques</strong> et les <strong class="text-white">marginalités scalables du logiciel</strong>. Quatre flux de revenus hybrides, un actif industriel protégé par dépôt OMPIC, un marché continental de 100+ unités d'ici 2050.
+    <!-- CTA ACCREDITATION -->
+    <section class="reveal">
+      <div class="glass-panel g p-6 sm:p-10 lg:p-12 space-y-6">
+        <div class="max-w-3xl mx-auto text-center space-y-3">
+          <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Accès Institutionnel · Rétention Propriétaire</span>
+          <h3 class="font-kemetTitle text-2xl sm:text-4xl font-black text-white">
+            Spécifications Techniques Complètes · Accès sur Accréditation
+          </h3>
+          <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+            Les bilans thermodynamiques du Kemet Loop, les plans d'assemblage des 8 modules Skid, les schémas d'ingénierie et la roadmap technique détaillée sont protégés par rétention propriétaire (dépôt OMPIC en préparation). L'accès est réservé aux <strong class="text-white">fonds d'investissement qualifiés, banques de développement, partenaires industriels et institutions étatiques</strong>, après signature d'un NDA et validation d'éligibilité par la Direction Générale.
+          </p>
+        </div>
+        <div class="max-w-3xl mx-auto p-4 sm:p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-2.5">
+          <div class="flex items-center gap-2 font-mono">
+            <span class="w-2 h-2 rounded-full bg-kemetGoldBright animate-pulse"></span>
+            <span class="text-kemetGoldBright font-bold uppercase text-[11px] tracking-widest">Procédure d'Accréditation</span>
+          </div>
+          <ul class="space-y-1.5 text-[11px] text-slate-300 font-sans">
+            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Soumission du formulaire de demande d'accréditation industrielle</span></li>
+            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Examen d'éligibilité par la Direction Générale (48h)</span></li>
+            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Signature préalable d'un accord de non-divulgation (NDA)</span></li>
+            <li class="flex items-start gap-2"><span class="text-kemetGoldBright font-bold shrink-0">▸</span><span>Réception d'un token d'accès unique pour la Virtual Data Room</span></li>
+          </ul>
+        </div>
+        <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2 font-mono">
+          <button type="button" onclick="window.openAccreditModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3.5 px-8 shadow-xl">
+            Solliciter une Accréditation Industrielle 🔒
+          </button>
+          <a href="datalake.html" class="btn btn-au w-full sm:w-auto text-xs !py-3.5 px-8">
+            Voir le Maat Data Lake →
+          </a>
+        </div>
+        <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto text-center">
+          Accès strictement restreint. Toute demande est soumise à vérification d'éligibilité, signature NDA préalable et journalisation complète (audit trail immuable).
         </p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-2">
-          <span class="text-cyberGreen font-mono font-bold text-[10px] uppercase tracking-widest">Flux 01</span>
-          <h4 class="text-white font-bold text-sm">Opérations de Valorisation</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Utility — Vente de matière première secondaire Grade A, redevances d'accès municipales (Gate Fees) et biométhane injecté au réseau.</p>
-          <div class="text-[9px] font-mono text-cyberGreen">PET 6,50 DH/kg · Alu 17,50 DH/kg</div>
-        </div>
-        <div class="p-4 bg-black/60 rounded-xl border border-cyberGreen/30 space-y-2">
-          <span class="text-cyberGreen font-mono font-bold text-[10px] uppercase tracking-widest">Flux 02</span>
-          <h4 class="text-white font-bold text-sm">Licences Logicielles</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Holding — Licence annuelle Maat OS par module opérationnel, incluant mises à jour, supervision et support industrialisé.</p>
-          <div class="text-[9px] font-mono text-cyberGreen">Marges 85–95 %</div>
-        </div>
-        <div class="p-4 bg-black/60 rounded-xl border border-kemetGold/30 space-y-2">
-          <span class="text-kemetGoldBright font-mono font-bold text-[10px] uppercase tracking-widest">Flux 03</span>
-          <h4 class="text-white font-bold text-sm">Monétisation des Données</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Maat Data Lake — Rapports prédictifs B2B aux groupes FMCG, API spectrales pour l'entraînement de modèles IA tiers.</p>
-          <div class="text-[9px] font-mono text-kemetGoldBright">Marges &gt; 95 %</div>
-        </div>
-        <div class="p-4 bg-black/60 rounded-xl border border-kemetGold/30 space-y-2">
-          <span class="text-kemetGoldBright font-mono font-bold text-[10px] uppercase tracking-widest">Flux 04</span>
-          <h4 class="text-white font-bold text-sm">Tokenisation RWA</h4>
-          <p class="text-[11px] text-slate-400 font-sans leading-relaxed">Crédits carbone certifiés (normes Verra VCS / Gold Standard), actifs infrastructurels tokenisés et distribués.</p>
-          <div class="text-[9px] font-mono text-kemetGoldBright">Scalable · Africa-wide</div>
-        </div>
-      </div>
-
-      <div class="max-w-3xl mx-auto p-4 sm:p-5 bg-black/60 rounded-2xl border border-kemetGold/40 space-y-2.5">
-        <div class="flex items-center gap-2 font-mono">
-          <span class="w-2 h-2 rounded-full bg-kemetGoldBright animate-pulse"></span>
-          <span class="text-kemetGoldBright font-bold uppercase text-[11px] tracking-widest">Round Institutionnel · Ouverture Imminente</span>
-        </div>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          Dans le cadre de la réalisation des <strong class="text-white">premiers hubs territoriaux K-MEH-20</strong>, Industrial Illusion SARL anticipe l'ouverture imminente d'un <strong class="text-white">round institutionnel</strong> réservé aux fonds d'infrastructure, banques de développement (CDG, AMDIE, Attijariwafa Bank) et investisseurs qualifiés.
-        </p>
-        <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-          Le dossier financier et technique intégral — incluant hypothèses de rendement, scénarios de déploiement régional et analyse de marché — est accessible uniquement sur accréditation préalable en <strong class="text-kemetGoldBright">Virtual Data Room</strong> (170+ documents), sous accord de confidentialité (NDA).
-        </p>
-      </div>
-
-      <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2 font-mono">
-        <button type="button" onclick="window.openDataRoomModal()" class="btn btn-g w-full sm:w-auto text-xs !py-3.5 px-8 shadow-xl">
-          Demander l'Accès Virtual Data Room (170+ Docs) 🔒
-        </button>
-        <a href="purkemet.html" class="btn btn-au w-full sm:w-auto text-xs !py-3.5 px-8">
-          Explorer le Service B2B PurKemet →
-        </a>
-      </div>
-
-      <p class="text-[10px] text-slate-500 font-mono max-w-xl mx-auto text-center">
-        Accès strictement restreint aux investisseurs qualifiés, institutions publiques et directions régionales. Toute demande est soumise à vérification d'éligibilité et signature NDA préalable.
-      </p>
     </section>
 
   </main>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- FOOTER -->
   <footer class="border-t border-white/10 py-6 sm:py-8 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 space-y-2 font-mono">
       <p>© <span id="year">2026</span> Industrial Illusion SARL — Deep Tech Systems · Éditeur de logiciels industriels souverains. Tous droits réservés.</p>
-      <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 &amp; Loi n° 28-00</p>
+      <p class="text-[9px] sm:text-[10px]">Siège social : Préfecture de Marrakech, Région Marrakech-Safi, Royaume du Maroc · Conforme Loi CNDP n° 09-08 & Loi n° 28-00</p>
       <p class="text-[9px] sm:text-[10px] text-slate-600">K-MEH-20 · Maat OS · PurKemet B2B · Maat Data Lake — Propriété intellectuelle exclusive de la société.</p>
     </div>
   </footer>
- 
-  <!-- ═══════════════════════════════════════════════════════════
-       MODAL DATA ROOM (NDA)
-       ═══════════════════════════════════════════════════════════ -->
-  <div id="dataRoomModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Accès Virtual Data Room K-MEH-20">
+
+  <!-- MODAL ACCREDITATION -->
+  <div id="accreditModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3.5 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Demande d'accréditation K-MEH-20">
     <div class="glass-panel g max-w-lg w-full p-4 sm:p-6 space-y-3.5 text-left font-mono text-xs relative my-6 sm:my-8">
-      <button type="button" onclick="window.closeDataRoomModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
+      <button type="button" onclick="window.closeAccreditModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-white text-xl font-bold w-11 h-11 flex items-center justify-center" aria-label="Fermer">×</button>
 
       <div class="border-b border-white/10 pb-2">
-        <span class="lbl au">Dossier Industriel Restreint</span>
-        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Accréditation Virtual Data Room K-MEH-20</h3>
-        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Réservé aux fonds d'investissement, banques de développement et partenaires étatiques. 170+ documents techniques et financiers.</p>
+        <span class="lbl au">Dossier Industriel Restreint · OMPIC</span>
+        <h3 class="font-kemetTitle text-sm sm:text-base font-bold text-white mt-1">Demande d'Accréditation Industrielle</h3>
+        <p class="text-[10px] text-slate-400 font-sans mt-0.5">Accès aux spécifications techniques K-MEH-20. Examen sous 48h par la Direction Générale.</p>
       </div>
 
-      <form id="dataRoomForm" onsubmit="window.handleDataRoomSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
+      <p class="text-[10px] text-slate-300 font-sans leading-relaxed p-2.5 bg-cyberGreen/5 border border-cyberGreen/30 rounded-lg">
+        L'accès aux spécifications techniques détaillées, à la roadmap d'ingénierie et à notre propriété intellectuelle est soumis à une procédure d'accréditation stricte. Cette mesure est essentielle pour garantir la protection de nos secrets industriels et de notre souveraineté technologique.
+      </p>
+
+      <form id="accreditForm" onsubmit="window.handleAccreditSubmit(event)" class="space-y-2.5 sm:space-y-3" novalidate>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="lbl block mb-1" for="dr_name">Nom &amp; Prénom *</label>
-            <input id="dr_name" type="text" name="full_name" required autocomplete="name" placeholder="ex: Mehdi Benjelloun" class="inp">
+            <label class="lbl block mb-1" for="ac_first">Prénom *</label>
+            <input id="ac_first" type="text" name="first_name" required autocomplete="given-name" placeholder="ex: Mehdi" class="inp">
           </div>
           <div>
-            <label class="lbl block mb-1" for="dr_org">Organisation / Institution *</label>
-            <input id="dr_org" type="text" name="organization" required autocomplete="organization" placeholder="ex: Fonds Souverain / Banque" class="inp">
+            <label class="lbl block mb-1" for="ac_last">Nom de famille *</label>
+            <input id="ac_last" type="text" name="last_name" required autocomplete="family-name" placeholder="ex: Benjelloun" class="inp">
           </div>
         </div>
-
+        <div>
+          <label class="lbl block mb-1" for="ac_entity">Entreprise / Fonds / Institution *</label>
+          <input id="ac_entity" type="text" name="entity_name" required autocomplete="organization" placeholder="ex: Fonds Souverain / Banque / Ministère" class="inp">
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="lbl block mb-1" for="dr_role">Fonction / Titre *</label>
-            <input id="dr_role" type="text" name="role_title" required placeholder="ex: Directeur des Investissements" class="inp">
+            <label class="lbl block mb-1" for="ac_role">Fonction / Rôle *</label>
+            <input id="ac_role" type="text" name="role_title" required placeholder="ex: Directeur Investissements" class="inp">
           </div>
           <div>
-            <label class="lbl block mb-1" for="dr_phone">Téléphone / WhatsApp *</label>
-            <input id="dr_phone" type="tel" name="phone" required autocomplete="tel" placeholder="+212 6..." class="inp">
+            <label class="lbl block mb-1" for="ac_phone">Téléphone / WhatsApp *</label>
+            <input id="ac_phone" type="tel" name="phone" required autocomplete="tel" placeholder="+212 6..." class="inp">
           </div>
         </div>
-
         <div>
-          <label class="lbl block mb-1" for="dr_email">Email Professionnel / Institutionnel *</label>
-          <input id="dr_email" type="email" name="email" required autocomplete="email" placeholder="m.benjelloun@institution.ma" class="inp">
+          <label class="lbl block mb-1" for="ac_email">Email professionnel *</label>
+          <input id="ac_email" type="email" name="email" required autocomplete="email" placeholder="m.benjelloun@institution.ma" class="inp">
+          <p class="text-[9px] text-slate-500 mt-1 font-sans">Domaines génériques (@gmail.com, @yahoo.com, etc.) non acceptés.</p>
         </div>
-
         <div>
-          <label class="lbl block mb-1" for="dr_motivation">Motif de la demande d'accès *</label>
-          <textarea id="dr_motivation" name="motivation" required placeholder="Précisez le cadre de l'évaluation industrielle ou financière..." class="inp h-16"></textarea>
+          <label class="lbl block mb-1" for="ac_motivation">Motivations et intérêt d'investissement *</label>
+          <textarea id="ac_motivation" name="motivation" required placeholder="Cadre d'évaluation, type de partenariat envisagé, échéances..." class="inp h-20"></textarea>
         </div>
-
         <div class="p-2.5 bg-black/60 rounded-xl border border-white/10 text-[10px] text-slate-400 space-y-1 font-sans">
           <label class="flex items-start gap-2 cursor-pointer">
-            <input type="checkbox" id="dr_nda" name="nda_agreement" required class="mt-1 w-4 h-4 shrink-0 rounded border-white/20 text-cyberGreen focus:ring-0">
+            <input type="checkbox" id="ac_nda" name="nda_agreement" required class="mt-1 w-4 h-4 shrink-0 rounded border-white/20 text-cyberGreen focus:ring-0">
             <span class="leading-relaxed">Je confirme agir au nom de mon institution et accepte la signature préalable d'un accord de non-divulgation (NDA) avant ouverture des accès techniques.</span>
           </label>
         </div>
-
-        <button type="submit" id="btnDataRoomSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
+        <button type="submit" id="btnAccreditSubmit" class="btn btn-g w-full !py-2.5 sm:!py-3 font-bold mt-1">
           Transmettre la Demande d'Accréditation 🔒
         </button>
-
         <p class="text-[9px] text-slate-500 leading-relaxed text-center font-sans">
-          Conformité stricte Loi CNDP n° 09-08. Traitement confidentiel par la Direction Générale.
+          Conformité stricte Loi CNDP n° 09-08 · Traitement confidentiel par la Direction Générale.
         </p>
       </form>
     </div>
@@ -1837,168 +657,21 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SCRIPTS EXTERNES
-       ═══════════════════════════════════════════════════════════ -->
   <script src="assets/core.js"></script>
   <script src="assets/site.js"></script>
   <script src="assets/space-canvas.js"></script>
-  <script src="assets/monitoring.js"></script>
-  <!-- NOTE : assets/kmeh-pyramid.js supprimé · pyramide 100 % SVG inline -->
 
   <script>
   (function () {
     'use strict';
 
-    /* ============================================================
-       YEAR
-       ============================================================ */
+    /* YEAR */
     (function () {
       var y = document.getElementById('year');
       if (y) y.textContent = String(new Date().getFullYear());
     })();
 
-    /* ============================================================
-       PIRAMIDE SVG v6.0 — API PUBLIQUE
-       ============================================================ */
-    var SVG_STATE = { exploded: false, autoRotate: true, activeLevel: 1 };
-
-    window.kmehToggleExplosion = function () {
-      SVG_STATE.exploded = !SVG_STATE.exploded;
-      if (SVG_STATE.exploded) document.body.classList.add('kmeh-exploded');
-      else document.body.classList.remove('kmeh-exploded');
-      syncExplosionButton();
-      if (window.Maat && window.Maat.buzz) window.Maat.buzz(30);
-      return SVG_STATE.exploded;
-    };
-
-    window.kmehToggleAutoRotate = function () {
-      SVG_STATE.autoRotate = !SVG_STATE.autoRotate;
-      if (SVG_STATE.autoRotate) document.body.classList.remove('kmeh-auto-off');
-      else document.body.classList.add('kmeh-auto-off');
-      syncAutoRotateButton();
-      return SVG_STATE.autoRotate;
-    };
-
-    window.kmehResetView = function () {
-      SVG_STATE.exploded = false;
-      SVG_STATE.autoRotate = true;
-      SVG_STATE.activeLevel = 1;
-      document.body.classList.remove('kmeh-exploded');
-      document.body.classList.remove('kmeh-auto-off');
-      syncExplosionButton();
-      syncAutoRotateButton();
-      selectLevel(1);
-    };
-
-    function syncExplosionButton() {
-      var b = document.getElementById('btnExplosion');
-      if (!b) return;
-      b.classList.toggle('is-active', SVG_STATE.exploded);
-      b.setAttribute('aria-pressed', SVG_STATE.exploded ? 'true' : 'false');
-    }
-
-    function syncAutoRotateButton() {
-      var b = document.getElementById('btnAutoRotate');
-      if (!b) return;
-      b.classList.toggle('is-active', SVG_STATE.autoRotate);
-      b.setAttribute('aria-pressed', SVG_STATE.autoRotate ? 'true' : 'false');
-    }
-
-    /* ============================================================
-       NIVEAUX — DONNÉES & SYNCHRONISATION
-       ============================================================ */
-    var LEVELS_DATA = {
-      1: {
-        title: "Niveau 1 (Base · 0–15 m · 3 136 m²) — Layer 0 HAL",
-        badge: "RÉCEPTION & MATIÈRE",
-        color: "#00FFA3",
-        description: "Quai d'alimentation étanche en dépression d'air, trémies de réception primaires, ligne sèche robotisée avec tri optoélectronique proche infrarouge (NIR) à haute cadence, presses automatiques de compactage haute densité.",
-        k1: "Capacité nominale", v1: "20 000 t/an en régime continu (extensible à 30 000 t/an sur le modèle MEH-30).",
-        k2: "Architecture Skids", v2: "Modules ISO 6,0 × 2,3 × 2,6 m, pré-testés en usine (FAT), masse sèche M_dry ≤ 8 500 kg."
-      },
-      2: {
-        title: "Niveau 2 (Centre · 15–25 m · 1 400 m²) — Layer 1 Crypto Core",
-        badge: "SYSTÈMES & FLUIDES",
-        color: "#0D9E8E",
-        description: "Centre névralgique de régulation fluidique et climatique : salle serveurs blindée en cage de Faraday (norme MIL-STD-188-125-1), nœuds blockchain Hyperledger Fabric v2.5, modules d-HVAC à récupération enthalpique, réacteurs de biométhanisation anaérobie.",
-        k1: "Infrastructure", v1: "Nœuds Hyperledger Fabric v2.5, baies télécoms sécurisées, d-HVAC enthalpique.",
-        k2: "Sécurité", v2: "Cage de Faraday MIL-STD-188-125-1, contrôle d'accès biométrique, détection incendie inertielle."
-      },
-      3: {
-        title: "Niveau 3 (Élévation · 25–35 m · 600 m²) — Layer 2 Governance Engine",
-        badge: "INTELLIGENCE & DONNÉES",
-        color: "#C5A059",
-        description: "Cluster de calcul dédié à l'exécution en temps réel de Maat OS. IA/ML (YOLOv8, Swin Transformer), Africa-Polymer-Dataset, passerelle de notarisation blockchain, busbars et conduits de fibre optique.",
-        k1: "Logiciel", v1: "Kernel Maat OS, IA/ML YOLOv8 + Swin Transformer, pipeline temps réel.",
-        k2: "Rôle", v2: "Pilotage des robots de tri optique avec pureté Grade A ≥ 98,5 %, calcul des bilans ESG."
-      },
-      4: {
-        title: "Niveau 4 (Sommet · 35–45 m · 150 m²) — Layer 3 UI/UX",
-        badge: "VISION & COMMANDEMENT",
-        color: "#E8C86A",
-        description: "Control Room principale, observatoire panoramique à 360°, Phare de Maat. Pupitres de supervision SCADA, interfaces holographiques HMI et liaison satellitaire continue avec la Direction Générale et les partenaires publics.",
-        k1: "Supervision", v1: "Écrans SCADA holographiques, console d'urgence, liaison satellite.",
-        k2: "Gouvernance", v2: "Observatoire 360°, certifications d'audit régionales, Phare de Maat."
-      }
-    };
-
-    function selectLevel(idx) {
-      if (!LEVELS_DATA[idx]) return;
-      SVG_STATE.activeLevel = idx;
-
-      document.querySelectorAll('.kmeh-layer').forEach(function (layer) {
-        var n = parseInt(layer.getAttribute('data-layer'), 10);
-        layer.classList.toggle('is-active', n === idx);
-      });
-
-      document.querySelectorAll('.level-card').forEach(function (card) {
-        var n = parseInt(card.getAttribute('data-level'), 10);
-        card.classList.toggle('active', n === idx);
-      });
-
-      var data = LEVELS_DATA[idx];
-      var titleEl = document.getElementById('kmehLevelTitle');
-      var badgeEl = document.getElementById('kmehLevelBadge');
-      var descEl = document.getElementById('kmehLevelDescription');
-      var specsEl = document.getElementById('kmehLevelSpecs');
-      if (titleEl) titleEl.textContent = data.title;
-      if (badgeEl) {
-        badgeEl.textContent = data.badge;
-        badgeEl.style.color = data.color;
-        badgeEl.style.borderColor = data.color;
-        badgeEl.style.background = data.color + '1a';
-      }
-      if (descEl) descEl.textContent = data.description;
-      if (specsEl) {
-        specsEl.innerHTML =
-          '<div><strong class="text-white">' + data.k1 + ' : </strong>' + data.v1 + '</div>' +
-          '<div><strong class="text-white">' + data.k2 + ' : </strong>' + data.v2 + '</div>';
-      }
-    }
-
-    window.kmehSelectLevel = selectLevel;
-
-    document.querySelectorAll('.kmeh-layer').forEach(function (layer) {
-      layer.addEventListener('click', function () {
-        var n = parseInt(layer.getAttribute('data-layer'), 10);
-        selectLevel(n);
-        if (window.Maat && window.Maat.buzz) window.Maat.buzz(20);
-      });
-      layer.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          var n = parseInt(layer.getAttribute('data-layer'), 10);
-          selectLevel(n);
-        }
-      });
-    });
-
-    setTimeout(function () { selectLevel(1); }, 100);
-
-    /* ============================================================
-       MODAL DATA ROOM
-       ============================================================ */
+    /* MODAL HELPERS */
     function openModal(id) {
       var m = document.getElementById(id);
       if (!m) return;
@@ -2013,262 +686,115 @@
       m.classList.add('hidden'); m.classList.remove('flex');
       document.body.style.overflow = '';
     }
-    window.openDataRoomModal = function () { openModal('dataRoomModal'); };
-    window.closeDataRoomModal = function () { closeModal('dataRoomModal'); };
+
+    window.openAccreditModal = function () { openModal('accreditModal'); };
+    window.closeAccreditModal = function () { closeModal('accreditModal'); };
+
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') window.closeDataRoomModal();
+      if (e.key === 'Escape') window.closeAccreditModal();
     });
     document.addEventListener('click', function (e) {
-      if (e.target && e.target.id === 'dataRoomModal') window.closeDataRoomModal();
+      if (e.target && e.target.id === 'accreditModal') window.closeAccreditModal();
     });
 
-    /* ============================================================
-       LOGIN MULTI-CLIC
-       ============================================================ */
-    (function () {
-      var _origOpenLogin = window.openUniversalLogin;
-      function resetLoginFlags() {
-        window.__loginModalOpen = false;
-        window.__isLoginOpen = false;
-        window.__loginOpening = false;
-        if (window.Maat) { window.Maat.__loginModalOpen = false; window.Maat.isLoginOpen = false; }
-        document.body.style.overflow = '';
-        var b = document.getElementById('loginBtn');
-        if (b) { b.disabled = false; b.style.pointerEvents = 'auto'; }
-      }
-      function findLoginModal() {
-        return document.getElementById('universalLoginModal') ||
-               document.getElementById('loginModal') ||
-               document.querySelector('.universal-login-modal') ||
-               document.querySelector('[data-login-modal]');
-      }
-      function bindCloseHandlers(m) {
-        if (!m || m._hasCleanClose) return;
-        m._hasCleanClose = true;
-        function closeCleanly() {
-          m.classList.add('hidden');
-          m.classList.remove('flex');
-          m.style.display = 'none';
-          resetLoginFlags();
-          try { if (m.parentNode) m.parentNode.removeChild(m); } catch (e) {}
-        }
-        m.querySelectorAll('button[aria-label="Fermer"], .close-modal, .modal-close, [data-close], button.close').forEach(function (btn) {
-          btn.addEventListener('click', closeCleanly);
-        });
-        m.addEventListener('click', function (e) {
-          if (e.target === m || e.target.classList.contains('backdrop')) closeCleanly();
-        });
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape' && document.body.contains(m) && m.style.display !== 'none' && !m.classList.contains('hidden')) closeCleanly();
-        });
-      }
-      window.openUniversalLogin = function () {
-        resetLoginFlags();
-        var stale = findLoginModal();
-        if (stale && stale.parentNode) { try { stale.parentNode.removeChild(stale); } catch (e) {} }
-        if (typeof _origOpenLogin === 'function') { try { _origOpenLogin(); } catch (err) {} }
-        setTimeout(function () {
-          var m = findLoginModal();
-          if (m) {
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-            m.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            bindCloseHandlers(m);
-          }
-        }, 30);
-      };
-    })();
-
-    /* ============================================================
-       EASTER EGGS
-       ============================================================ */
-    (function () {
-      var konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-      var konamiIndex = 0;
-      document.addEventListener('keydown', function (e) {
-        var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-        if (key === konamiCode[konamiIndex]) {
-          konamiIndex++;
-          if (konamiIndex === konamiCode.length) {
-            if (document.body.classList.contains('ee-turbo')) { konamiIndex = 0; return; }
-            document.body.classList.add('ee-turbo');
-            showEasterEggToast('🚀 MODE TURBO · KEMET ACTIVÉ');
-            if (window.Maat && window.Maat.buzz) window.Maat.buzz(150);
-            setTimeout(function () { document.body.classList.remove('ee-turbo'); }, 12000);
-            konamiIndex = 0;
-          }
-        } else {
-          konamiIndex = (key === konamiCode[0]) ? 1 : 0;
-        }
-      });
-    })();
-
-    (function () {
-      var logoLink = document.getElementById('logoLink');
-      if (!logoLink) return;
-      logoLink.addEventListener('dblclick', function (e) {
-        e.preventDefault();
-        var isActive = document.body.classList.contains('ee-kemet');
-        if (isActive) {
-          document.body.classList.remove('ee-kemet');
-          showEasterEggToast('🔓 MODE KEMET · DÉSACTIVÉ');
-        } else {
-          document.body.classList.add('ee-kemet');
-          showEasterEggToast('👁️ MODE KEMET · ACTIVÉ');
-          if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
-        }
-      });
-    })();
-
-    (function () {
-      var overlay = document.getElementById('hieroglyphOverlay');
-      if (!overlay) return;
-      var glyphs = ['𓂀','𓆣','𓋹','𓁹','𓃭','𓅓','𓆓','𓇋','𓈖','𓊪','𓋴','𓌀','𓍿','𓎛','𓏏','𓂋','𓃀','𓄿','𓅱','𓆑'];
-      var isActive = false;
-      var rowsHTML = '';
-      for (var r = 0; r < 6; r++) {
-        rowsHTML += '<div class="glyph-row">';
-        for (var c = 0; c < 8; c++) {
-          rowsHTML += '<span>' + glyphs[Math.floor(Math.random() * glyphs.length)] + '</span>';
-        }
-        rowsHTML += '</div>';
-      }
-      overlay.innerHTML = rowsHTML;
-      document.addEventListener('keydown', function (e) {
-        var tag = document.activeElement && document.activeElement.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-        if (e.key === 'h' || e.key === 'H') {
-          isActive = !isActive;
-          overlay.classList.toggle('active', isActive);
-          if (isActive) showEasterEggToast('𓂀 SUPERPOSITION HIÉROGLYPHIQUE');
-        }
-      });
-    })();
-
-    (function () {
-      var svg = document.getElementById('kmehPyramidSvg');
-      if (!svg) return;
-      var clickCount = 0, clickTimer = null;
-      svg.addEventListener('click', function (e) {
-        if (e.target.closest('.kmeh-layer')) return;
-        clickCount++;
-        if (clickTimer) clearTimeout(clickTimer);
-        clickTimer = setTimeout(function () {
-          if (clickCount >= 3) {
-            var isActive = document.body.classList.contains('ee-pharaonic');
-            if (isActive) {
-              document.body.classList.remove('ee-pharaonic');
-              showEasterEggToast('𓂀 MODE PHARAONIQUE · DÉSACTIVÉ');
-            } else {
-              document.body.classList.add('ee-pharaonic');
-              showEasterEggToast('👑 MODE PHARAONIQUE · LE ROI EST DE RETOUR');
-              if (window.Maat && window.Maat.buzz) window.Maat.buzz(120);
-              setTimeout(function () { document.body.classList.remove('ee-pharaonic'); }, 10000);
-            }
-          }
-          clickCount = 0;
-        }, 600);
-      });
-    })();
-
-    (function () {
-      var loginBtn = document.getElementById('loginBtn');
-      if (!loginBtn) return;
-      var loginClicks = 0, loginTimer = null;
-      window.__eeOnLoginClick = function () {
-        loginClicks++;
-        if (loginTimer) clearTimeout(loginTimer);
-        loginTimer = setTimeout(function () {
-          if (loginClicks >= 5) {
-            showEasterEggToast('👁️ CODE SECRET DÉBLOQUÉ · SCEAU DE MAAT');
-            if (window.kmehResetView) window.kmehResetView();
-            if (window.Maat && window.Maat.buzz) window.Maat.buzz(100);
-          }
-          loginClicks = 0;
-        }, 2000);
-      };
-    })();
-
-    function showEasterEggToast(text) {
-      var existing = document.querySelector('.ee-toast');
-      if (existing) existing.remove();
-      var toast = document.createElement('div');
-      toast.className = 'ee-toast';
-      toast.textContent = text;
-      document.body.appendChild(toast);
-      setTimeout(function () {
-        toast.classList.add('ee-toast-out');
-        setTimeout(function () { toast.remove(); }, 400);
-      }, 2200);
-    }
-    window.showEasterEggToast = showEasterEggToast;
-
-    /* ============================================================
-       SCROLL PROGRESS
-       ============================================================ */
-    window.addEventListener('scroll', function () {
-      var bar = document.getElementById('scrollProgress');
-      if (!bar) return;
-      var total = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
-    }, { passive: true });
-
-    /* ============================================================
-       REVEAL ON SCROLL
-       ============================================================ */
-    if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-        });
-      }, { threshold: 0.1 });
-      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
-    }
-
-    /* ============================================================
-       TILT 3D
-       ============================================================ */
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window && window.innerWidth < 1024)) {
-      document.querySelectorAll('.tilt-card').forEach(function (card) {
-        card.addEventListener('mousemove', function (e) {
-          var r = card.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width;
-          var y = (e.clientY - r.top) / r.height;
-          card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * 6) + 'deg) rotateY(' + ((x - 0.5) * -6) + 'deg) translateZ(6px)';
-        });
-        card.addEventListener('mouseleave', function () { card.style.transform = ''; });
-      });
-    }
-
-    window.ensureInit = function () {
-      try {
-        if (!window.Maat) return;
-        if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
-      } catch (e) {}
-    };
-
-    /* ============================================================
-       TOAST ROBUSTE
-       ============================================================ */
+    /* TOAST */
     function toast(text, kind) {
       if (window.Maat && typeof window.Maat.toast === 'function') return window.Maat.toast(text, kind);
       var d = document.createElement('div');
       d.setAttribute('role', 'status');
-      d.style.cssText =
-        'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);' +
-        'background:#0A0D10;color:' +
-        (kind === 'err' ? '#f87171' : kind === 'warn' ? '#E6CA86' : '#00FFA3') +
-        ';padding:.7rem 1.2rem;border:1px solid currentColor;border-radius:.6rem;' +
-        'font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
+      d.style.cssText = 'position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);background:#0A0D10;color:' + (kind === 'err' ? '#f87171' : kind === 'warn' ? '#E6CA86' : '#00FFA3') + ';padding:.7rem 1.2rem;border:1px solid currentColor;border-radius:.6rem;font-family:"JetBrains Mono",monospace;font-size:.72rem;z-index:9999;max-width:92vw;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,.8);';
       d.textContent = text;
       document.body.appendChild(d);
-      setTimeout(function () { d.remove(); }, 4000);
+      setTimeout(function () { d.remove(); }, 4500);
     }
 
-    /* ============================================================
-       MENU MOBILE
-       ============================================================ */
+    /* EMAIL VALIDATION - Block generic domains */
+    var GENERIC_DOMAINS = ['gmail.com','yahoo.com','hotmail.com','outlook.com','aol.com','icloud.com','protonmail.com','yandex.com','mail.com','gmx.com','live.com','msn.com'];
+    function isProfessionalEmail(email) {
+      var m = String(email || '').toLowerCase().match(/^[^\s@]+@([^\s@]+\.[^\s@]+)$/);
+      if (!m) return false;
+      var domain = m[1];
+      if (GENERIC_DOMAINS.indexOf(domain) !== -1) return false;
+      if (domain.length < 4) return false;
+      return true;
+    }
+
+    /* ACCREDITATION SUBMIT */
+    window.handleAccreditSubmit = async function (e) {
+      e.preventDefault();
+      var form = e.target;
+      var btn = document.getElementById('btnAccreditSubmit');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Transmission en cours…';
+
+      var fd = new FormData(form);
+      var firstName = String(fd.get('first_name') || '').trim();
+      var lastName = String(fd.get('last_name') || '').trim();
+      var fullName = (firstName + ' ' + lastName).trim();
+      var payload = {
+        full_name: fullName,
+        entity_name: String(fd.get('entity_name') || '').trim(),
+        email: String(fd.get('email') || '').toLowerCase().trim(),
+        phone: String(fd.get('phone') || '').trim() || null,
+        role_title: String(fd.get('role_title') || '').trim(),
+        motivation: String(fd.get('motivation') || '').trim(),
+        nda_accepted: fd.get('nda_agreement') === 'on',
+        investor_type: 'OTHER',
+        status: 'PENDING'
+      };
+
+      if (!payload.full_name || !payload.entity_name || !payload.email || !payload.role_title || !payload.motivation || !payload.phone) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+      }
+      if (!payload.nda_accepted) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Veuillez accepter l\'accord de non-divulgation (NDA).', 'warn');
+      }
+      if (!isProfessionalEmail(payload.email)) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Email professionnel requis. Domaines génériques (Gmail, Yahoo…) refusés.', 'warn');
+      }
+
+      if (window.ensureInit) window.ensureInit();
+      var sb = window.Maat && window.Maat.sb;
+      if (!sb) {
+        btn.disabled = false; btn.textContent = original;
+        return toast('Service temporairement indisponible.', 'err');
+      }
+
+      try {
+        var r = await sb.from('kmeh20_access_requests').insert([payload]);
+        if (r.error) {
+          console.warn('[Accredit] kmeh20_access_requests failed, fallback:', r.error.message);
+          var r2 = await sb.from('market_study_leads').insert([{
+            full_name: payload.full_name,
+            organization: payload.entity_name,
+            role_title: payload.role_title + ' [K-MEH-20 ACCREDITATION]',
+            email: payload.email,
+            phone: payload.phone
+          }]);
+          if (r2.error) throw r2.error;
+        }
+        toast('Demande transmise à la Direction Générale. Examen sous 48h. Protocole NDA envoyé par email après approbation.', 'ok');
+        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
+        form.reset();
+        btn.textContent = '✓ Demande Enregistrée';
+        setTimeout(function () {
+          window.closeAccreditModal();
+          btn.textContent = original;
+          btn.disabled = false;
+        }, 2500);
+      } catch (err) {
+        console.error('[Accredit] submit error:', err);
+        btn.disabled = false;
+        btn.textContent = original;
+        toast('Erreur de transmission. Veuillez réessayer.', 'err');
+      }
+    };
+
+    /* MOBILE NAV */
     window.toggleMobileNav = function () {
       var nav = document.getElementById('mobileNavMenu');
       var btn = document.getElementById('menuBtn');
@@ -2289,94 +815,38 @@
       nav.classList.add('hidden');
     });
 
-    /* ============================================================
-       FORM · DATA ROOM ACCRÉDITATION
-       ============================================================ */
-    window.handleDataRoomSubmit = async function (e) {
-      e.preventDefault();
-      var form = e.target;
-      var btn = document.getElementById('btnDataRoomSubmit');
-      var original = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Vérification de l\'accréditation…';
-
-      var fd = new FormData(form);
-      var payload = {
-        full_name: String(fd.get('full_name') || '').trim(),
-        organization: String(fd.get('organization') || '').trim(),
-        role_title: String(fd.get('role_title') || '').trim(),
-        phone: String(fd.get('phone') || '').trim() || null,
-        email: String(fd.get('email') || '').toLowerCase().trim(),
-        motivation: String(fd.get('motivation') || '').trim(),
-        nda_agreement: fd.get('nda_agreement') === 'on'
-      };
-
-      if (!payload.full_name || !payload.organization || !payload.role_title || !payload.email || !payload.phone || !payload.motivation) {
-        btn.disabled = false; btn.textContent = original;
-        return toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
-      }
-      if (!payload.nda_agreement) {
-        btn.disabled = false; btn.textContent = original;
-        return toast('Veuillez accepter l\'accord de non-divulgation (NDA).', 'warn');
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-        btn.disabled = false; btn.textContent = original;
-        return toast('Adresse email invalide.', 'warn');
-      }
-
-      if (window.ensureInit) window.ensureInit();
-      var sb = window.Maat && window.Maat.sb;
-      var saved = false;
-
-      if (sb) {
-        try {
-          var r1 = await sb.from('market_study_leads').insert([{
-            full_name: payload.full_name,
-            organization: payload.organization,
-            role_title: payload.role_title + ' [DATA ROOM K-MEH-20]',
-            email: payload.email,
-            phone: payload.phone
-          }]);
-          if (!r1.error) saved = true;
-        } catch (err) {
-          try {
-            var r2 = await sb.from('field_notes').insert([{
-              note_type: 'GENERAL',
-              content: 'DEMANDE ACCÈS DATA ROOM K-MEH-20 : ' + payload.full_name + ' (' + payload.role_title + ' @ ' + payload.organization + ') - Email: ' + payload.email + ' - Tél: ' + payload.phone + ' - Motif: ' + payload.motivation,
-              operator_email: payload.email
-            }]);
-            if (!r2.error) saved = true;
-          } catch (x) {}
-        }
-      }
-
-      if (saved) {
-        toast('Demande d\'accréditation transmise à la Direction. Protocole NDA transmis sous 48h.');
-        if (window.Maat && window.Maat.buzz) window.Maat.buzz(80);
-        form.reset();
-        btn.textContent = '✓ Demande Enregistrée';
-        setTimeout(function () {
-          window.closeDataRoomModal();
-          btn.textContent = original;
-          btn.disabled = false;
-        }, 2200);
-      } else {
-        btn.disabled = false;
-        btn.textContent = original;
-        toast('Service temporairement indisponible. Veuillez réessayer.', 'err');
-      }
+    window.ensureInit = function () {
+      try {
+        if (!window.Maat) return;
+        if (!window.Maat.sb && typeof window.Maat.init === 'function') window.Maat.init();
+      } catch (e) {}
     };
 
-    /* ============================================================
-       SERVICE WORKER
-       ============================================================ */
+    /* SCROLL */
+    window.addEventListener('scroll', function () {
+      var bar = document.getElementById('scrollProgress');
+      if (!bar) return;
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = total > 0 ? (window.scrollY / total * 100) + '%' : '0%';
+    }, { passive: true });
+
+    /* REVEAL */
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    }
+
+    /* SERVICE WORKER */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js').catch(function () {});
       });
     }
-
   })();
   </script>
 </body>
-</html> 
+</html>
