@@ -1,0 +1,359 @@
+/* ==========================================================================
+ *  assets/admin-accredits.css
+ *  Control Tower · Unificazione Accrediti Istituzionali
+ *  Design system: Obsidian / CyberGreen / KemetGold
+ * ========================================================================== */
+
+.admin-accredits {
+  margin: 0 0 28px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(13, 20, 24, 0.7);
+  border: 1px solid rgba(0, 255, 163, 0.22);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.admin-accredits__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-accredits__title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #00FFA3;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-accredits__badge {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #E8C86A;
+  color: #0B0F0E;
+  font-size: 0.78rem;
+  font-weight: 700;
+  animation: accreditPulse 2s ease-in-out infinite;
+}
+
+@keyframes accreditPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* ─── Tab + Filtri ──────────────────────────────────────────────────── */
+.admin-accredits__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+.admin-accredits__tabs {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.admin-accredits__tab {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-accredits__tab:hover { color: #CBD5E1; }
+
+.admin-accredits__tab.is-active {
+  background: rgba(0, 255, 163, 0.15);
+  color: #00FFA3;
+  box-shadow: 0 0 12px -3px rgba(0, 255, 163, 0.4);
+}
+
+.admin-accredits__tab--kmeh20.is-active {
+  background: rgba(232, 200, 106, 0.15);
+  color: #E8C86A;
+  box-shadow: 0 0 12px -3px rgba(232, 200, 106, 0.4);
+}
+
+.admin-accredits__status-filter {
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.admin-accredits__status-filter:focus {
+  border-color: #00FFA3;
+}
+
+.admin-accredits__refresh {
+  margin-left: auto;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.08);
+  color: #D4AF37;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.admin-accredits__refresh:hover { background: rgba(212, 175, 55, 0.18); }
+
+/* ─── Lista card ────────────────────────────────────────────────────── */
+.admin-accredits__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-accredits__empty {
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: #64748B;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.admin-accredits__loading {
+  padding: 24px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #94A3B8;
+  animation: accreditPulse 1.5s ease-in-out infinite;
+}
+
+/* ─── Card singola ──────────────────────────────────────────────────── */
+.accredit-card {
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border-left: 3px solid #64748B;
+  display: grid;
+  gap: 10px;
+}
+
+.accredit-card--pending   { border-left-color: #E8C86A; background: rgba(232, 200, 106, 0.04); }
+.accredit-card--approved  { border-left-color: #00FFA3; background: rgba(0, 255, 163, 0.04); }
+.accredit-card--rejected  { border-left-color: #F87171; background: rgba(248, 113, 113, 0.04); opacity: 0.8; }
+
+.accredit-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.accredit-card__source {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 255, 163, 0.12);
+  color: #00FFA3;
+  border: 1px solid rgba(0, 255, 163, 0.3);
+}
+
+.accredit-card__source--kmeh20 {
+  background: rgba(232, 200, 106, 0.12);
+  color: #E8C86A;
+  border-color: rgba(232, 200, 106, 0.35);
+}
+
+.accredit-card__status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.accredit-card__status--pending  { background: rgba(232, 200, 106, 0.15); color: #E8C86A; }
+.accredit-card__status--approved { background: rgba(0, 255, 163, 0.15); color: #00FFA3; }
+.accredit-card__status--rejected { background: rgba(248, 113, 113, 0.15); color: #F87171; }
+
+.accredit-card__date {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748B;
+}
+
+.accredit-card__name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.accredit-card__entity {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem;
+  color: #CBD5E1;
+  margin: 0;
+}
+
+.accredit-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #94A3B8;
+}
+
+.accredit-card__meta a {
+  color: #00FFA3;
+  text-decoration: none;
+}
+
+.accredit-card__meta a:hover { text-decoration: underline; }
+
+.accredit-card__motivation {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #94A3B8;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.accredit-card__notes {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #64748B;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+
+.accredit-card__token {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(0, 255, 163, 0.06);
+  border: 1px solid rgba(0, 255, 163, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.accredit-card__token-label {
+  color: #64748B;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.accredit-card__token-value {
+  color: #00FFA3;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  flex: 1;
+  word-break: break-all;
+}
+
+.accredit-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.accredit-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.accredit-btn:disabled { opacity: 0.45; cursor: wait; }
+
+.accredit-btn--approve {
+  border-color: rgba(0, 255, 163, 0.4);
+  background: rgba(0, 255, 163, 0.1);
+  color: #00FFA3;
+}
+.accredit-btn--approve:hover:not(:disabled) { background: rgba(0, 255, 163, 0.2); }
+
+.accredit-btn--reject {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.1);
+  color: #F87171;
+}
+.accredit-btn--reject:hover:not(:disabled) { background: rgba(248, 113, 113, 0.2); }
+
+.accredit-btn--copy {
+  border-color: rgba(0, 255, 163, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+  color: #00FFA3;
+  padding: 5px 10px;
+}
+.accredit-btn--copy:hover { background: rgba(0, 255, 163, 0.15); }
+
+@media (max-width: 640px) {
+  .admin-accredits { padding: 14px; }
+  .admin-accredits__tab { padding: 5px 10px; font-size: 0.65rem; }
+  .accredit-card__date { margin-left: 0; width: 100%; }
+  .accredit-card__actions { flex-direction: column; }
+  .accredit-btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-accredits__badge,
+  .admin-accredits__loading { animation: none; }
+}
