@@ -11,7 +11,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Maat OS">
-<link rel="manifest" href="manifest.webmanifest">
+<!-- CHANGED : manifest dédié à la Workstation (scope /pwa.html) -->
+<link rel="manifest" href="pwa.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +25,10 @@
 <!-- Suppression de 'defer' pour garantir le chargement avant le kernel -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<!-- ADDED : Maat unified QR infrastructure (disponibles pour pwa.js) -->
+<script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="assets/qr-generator.js" defer></script>
+<script src="assets/qr-scanner.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden" style="background:#090D10">
 
@@ -86,5 +91,22 @@
 <script src="assets/core.js"></script>
 <script src="assets/pwa.js"></script>
 <script src="assets/monitoring.js"></script>
+
+<!-- ADDED : Service Worker registration (idempotent, safe even if pwa.js also registers it) -->
+<script>
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then(function (reg) {
+        console.log('[MaatOS] SW registered · scope:', reg.scope);
+      })
+      .catch(function (err) {
+        console.warn('[MaatOS] SW registration failed:', err);
+      });
+  });
+})();
+</script>
+
 </body>
 </html>
