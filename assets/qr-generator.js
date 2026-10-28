@@ -1,7 +1,11 @@
 /* ==========================================================================
  *  assets/qr-generator.js
- *  Phase 3 · QR Generator (bag, badge, certificate)
- *  Formato: PK-{CLUSTER}-{MATERIAL}-{ANNO}-{SERIAL}
+ *  Phase 3 · QR Generator (bag, badge, certificate, DEPOT)
+ *  Formati:
+ *   - Bag:    PK-{CLUSTER}-{MATERIAL}-{ANNO}-{SERIAL}
+ *   - Badge:  BDG-{ROLE}-{userId_short}-{userId_last4}
+ *   - Cert:   ESG-{serial}-{hash_short}
+ *   - Depot:  DEPOT-{CLUSTER}-{SERIAL}
  *  Dipendenza: qrcode-generator (CDN jsdelivr, global window.qrcode)
  * ========================================================================== */
 (function () {
@@ -11,6 +15,7 @@
 
   const CLUSTERS = ['MED','GUEL','PALM','HIVER','AGDAL','SEM','TARGA'];
   const MATERIALS = ['PET','PEHD','LDPE','PP','CARD','ALU','FER','GLASS','ORG'];
+  const DEPOT_SERIALS = ['01','02','03','04','05','06','07','08','09','10'];
   const COLORS = {
     green:  '#00FFA3',
     gold:   '#D4AF37',
@@ -18,13 +23,15 @@
     white:  '#FFFFFF',
   };
 
-  function generateSerial() {
+  function generateSerial(len) {
+    len = len || 6;
     const chars = 'ABCDEF0123456789';
     let s = '';
-    for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
     return s;
   }
 
+  /* ─── Bag QR ──────────────────────────────────────────────────────────── */
   function parseBagQR(qr) {
     if (!qr || typeof qr !== 'string') return null;
     const m = qr.match(/^PK-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA)-(PET|PEHD|LDPE|PP|CARD|ALU|FER|GLASS|ORG)-(\d{4})-([A-Z0-9]{6})$/);
@@ -36,11 +43,12 @@
     if (!CLUSTERS.includes(cluster)) throw new Error('INVALID_CLUSTER: ' + cluster);
     if (!MATERIALS.includes(material)) throw new Error('INVALID_MATERIAL: ' + material);
     if (year < 2026 || year > 2050) throw new Error('INVALID_YEAR: ' + year);
-    const s = (serial || generateSerial()).toUpperCase();
+    const s = (serial || generateSerial(6)).toUpperCase();
     if (!/^[A-Z0-9]{6}$/.test(s)) throw new Error('INVALID_SERIAL: ' + s);
     return `PK-${cluster}-${material}-${year}-${s}`;
   }
 
+  /* ─── Badge QR ────────────────────────────────────────────────────────── */
   function badgeQRString(userId, role) {
     if (!userId) throw new Error('INVALID_USER');
     const validRoles = ['vector','client_hotel','admin','direction','fmcg','viewer'];
@@ -48,11 +56,28 @@
     return `BDG-${role.toUpperCase()}-${userId.slice(0, 8)}-${userId.slice(-4)}`;
   }
 
+  /* ─── Cert QR ─────────────────────────────────────────────────────────── */
   function certQRString(serial, hash) {
     if (!serial || !hash) throw new Error('INVALID_CERT');
     return `ESG-${serial}-${hash.slice(0, 16)}`;
   }
 
+  /* ─── Depot QR ────────────────────────────────────────────────────────── */
+  function parseDepotQR(qr) {
+    if (!qr || typeof qr !== 'string') return null;
+    const m = qr.match(/^DEPOT-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA)-(\d{2})$/);
+    if (!m) return null;
+    return { cluster: m[1], serial: m[2], raw: qr };
+  }
+
+  function depotQRString(cluster, serial) {
+    if (!CLUSTERS.includes(cluster)) throw new Error('INVALID_CLUSTER: ' + cluster);
+    const s = (serial || '01').toString().padStart(2, '0');
+    if (!/^\d{2}$/.test(s)) throw new Error('INVALID_SERIAL: ' + s);
+    return `DEPOT-${cluster}-${s}`;
+  }
+
+  /* ─── Render SVG ──────────────────────────────────────────────────────── */
   function renderSVG(text, opts) {
     opts = opts || {};
     const size = opts.size || 240;
@@ -84,14 +109,13 @@
       }
     }
 
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges">
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" shape-rendering="crispEdges">
 <rect width="${size}" height="${size}" fill="${bg}"/>
 <path d="${paths}" fill="${fg}"/>
 </svg>`;
-
-    return svg;
   }
 
+  /* ─── Render Canvas ───────────────────────────────────────────────────── */
   function renderCanvas(canvasEl, text, opts) {
     opts = opts || {};
     const size = opts.size || 240;
@@ -130,18 +154,22 @@
     return canvasEl;
   }
 
+  /* ─── API pubblica ────────────────────────────────────────────────────── */
   window.MaatQR = {
     CLUSTERS,
     MATERIALS,
+    DEPOT_SERIALS,
     COLORS,
     generateSerial,
     parseBagQR,
     bagQRString,
     badgeQRString,
     certQRString,
+    parseDepotQR,
+    depotQRString,
     renderSVG,
     renderCanvas,
   };
 
-  console.log('[QR] generator ready · v1.0.0');
+  console.log('[QR] generator ready · v1.1.0 · +DEPOT format');
 })();
