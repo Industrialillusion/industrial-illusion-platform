@@ -1,10 +1,10 @@
 /* ==========================================================================
  *  assets/pwa-scan-handlers.js
- *  Maat OS · Scanner QR Handlers (Phase 5.3.B.2)
+ *  Maat OS · Scanner QR Handlers (Phase 5.3.B.2 + 5.3.B.3a)
  *  Business logic per eventi 'maat:scan' emessi da pwa-scan.js
  *
- *  B.2: Badge → validate_badge_qr · Depot → checkin_depot_station
- *  B.3: Bag P1 → validate_and_claim_bag · Bag P2 → register_depot_weighing_p2
+ *  B.2:  Badge → validate_badge_qr · Depot → checkin_depot_station
+ *  B.3a: Bag P1/P2 → weigh input modal (UI only, RPC in B.3b)
  * ========================================================================== */
 (function () {
   'use strict';
@@ -38,6 +38,12 @@
     return n;
   }
 
+  function esc(str) {
+    const d = document.createElement('div');
+    d.textContent = String(str || '');
+    return d.innerHTML;
+  }
+
   /* ─── Modal factory (riusa stili .maat-scan-modal__card) ─────────────── */
   function buildModal() {
     const modal = el('div', 'maat-scan-modal');
@@ -65,6 +71,10 @@
     return row;
   }
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     B.2 · HANDLERS BADGE + DEPOT
+     ═══════════════════════════════════════════════════════════════════════ */
+
   /* ─── Handler BADGE → validate_badge_qr ──────────────────────────────── */
   async function handleBadge(scan) {
     const sb = getClient();
@@ -87,7 +97,6 @@
       log('badge valid:', data);
       closeModal(modal);
 
-      // Salva contesto cliente in sessionStorage (per P1 successivo)
       if (data.owner_type === 'client') {
         try {
           sessionStorage.setItem('maat_current_client', JSON.stringify({
@@ -166,7 +175,6 @@
       log('depot checkin:', data);
       closeModal(modal);
 
-      // Salva sessione depot in sessionStorage
       try {
         sessionStorage.setItem('maat_active_depot_session', JSON.stringify({
           depot_id: data.depot_id,
@@ -244,6 +252,241 @@
     setTimeout(() => t.classList.remove('is-visible'), 3000);
   }
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     B.3a · WEIGH INPUT (P1 / P2) — UI only, RPC in B.3b
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ─── P1 · raccolta hotel ────────────────────────────────────────────── */
+  function handleBagP1(scan) {
+    let clientCtx = null;
+    try {
+      const raw = sessionStorage.getItem('maat_current_client');
+      if (raw) clientCtx = JSON.parse(raw);
+    } catch (_) {}
+
+    if (!clientCtx || !clientCtx.client_id) {
+      showModalError(
+        '🏨',
+        'Contexte client manquant',
+        'Scannez d\'abord le badge de l\'établissement (réception hôtel).'
+      );
+      return;
+    }
+
+    showWeighModal({
+      mode: 'p1',
+      scan,
+      contextLabel: 'Collecte · ' + (clientCtx.company_name || 'Client'),
+      contextSub: clientCtx.cluster ? 'Cluster ' + clientCtx.cluster : '',
+      onConfirm: function(weight) {
+        try {
+          sessionStorage.setItem('maat_pending_p1', JSON.stringify({
+            bag_qr: scan.token,
+            weight_kg: weight,
+            client_id: clientCtx.client_id,
+            client_name: clientCtx.company_name,
+            cluster: clientCtx.cluster,
+            timestamp: Date.now()
+          }));
+        } catch (_) {}
+        log('P1 weight:', weight, 'kg for', scan.token, '(RPC pending B.3b)');
+        showSuccessToast('P1 · ' + weight + ' kg enregistré · ' + scan.token);
+      }
+    });
+  }
+
+  /* ─── P2 · ricezione depot ───────────────────────────────────────────── */
+  function handleBagP2(scan) {
+    let depotCtx = null;
+    try {
+      const raw = sessionStorage.getItem('maat_active_depot_session');
+      if (raw) depotCtx = JSON.parse(raw);
+    } catch (_) {}
+
+    if (!depotCtx || !depotCtx.depot_code) {
+      showModalError(
+        '🏭',
+        'Dépôt non identifié',
+        'Scannez d\'abord le QR de la station dépôt.'
+      );
+      return;
+    }
+
+    showWeighModal({
+      mode: 'p2',
+      scan,
+      contextLabel: 'Réception · ' + (depotCtx.depot_name || depotCtx.depot_code),
+      contextSub: depotCtx.cluster ? 'Cluster ' + depotCtx.cluster : '',
+      onConfirm: function(weight) {
+        try {
+          sessionStorage.setItem('maat_pending_p2', JSON.stringify({
+            bag_qr: scan.token,
+            weight_kg: weight,
+            depot_code: depotCtx.depot_code,
+            depot_id: depotCtx.depot_id,
+            cluster: depotCtx.cluster,
+            timestamp: Date.now()
+          }));
+        } catch (_) {}
+        log('P2 weight:', weight, 'kg for', scan.token, '(RPC pending B.3b)');
+        showSuccessToast('P2 · ' + weight + ' kg enregistré · ' + scan.token);
+      }
+    });
+  }
+
+  /* ─── Modal weigh input ──────────────────────────────────────────────── */
+  function showWeighModal(opts) {
+    const isP2 = opts.mode === 'p2';
+
+    const overlay = el('div', 'maat-weigh-overlay');
+    const card = el('div', 'maat-weigh-card' + (isP2 ? ' is-p2' : ''));
+
+    // Header
+    const header = el('div', 'maat-weigh-header');
+    header.appendChild(el('span', 'maat-weigh-badge',
+      isP2 ? '🏭 Pesée P2' : '🏨 Pesée P1'));
+    const closeBtn = el('button', 'maat-weigh-close', '×');
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Fermer');
+    closeBtn.addEventListener('click', () => overlay.remove());
+    header.appendChild(closeBtn);
+    card.appendChild(header);
+
+    // Titolo
+    card.appendChild(el('h3', 'maat-weigh-title', 'Saisir le poids'));
+
+    // Contesto
+    const ctx = el('div', 'maat-weigh-context');
+    ctx.innerHTML = '<strong>' + esc(opts.contextLabel || '') + '</strong>' +
+      (opts.contextSub ? '<br>' + esc(opts.contextSub) : '') +
+      '<br>Sac: ' + esc(opts.scan.token);
+    card.appendChild(ctx);
+
+    // Field input
+    const field = el('div', 'maat-weigh-field');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.inputMode = 'decimal';
+    input.step = '0.1';
+    input.min = '0.1';
+    input.max = '1000';
+    input.placeholder = '0.0';
+    input.className = 'maat-weigh-input';
+    field.appendChild(input);
+    field.appendChild(el('span', 'maat-weigh-unit', 'kg'));
+    card.appendChild(field);
+
+    // Quick-add
+    const quickWrap = el('div', 'maat-weigh-quickadd');
+    [0.5, 1, 5, 10].forEach(val => {
+      const q = el('button', 'maat-weigh-quick', '+' + val);
+      q.type = 'button';
+      q.addEventListener('click', () => {
+        const curr = parseFloat(input.value) || 0;
+        input.value = (curr + val).toFixed(1);
+        input.focus();
+      });
+      quickWrap.appendChild(q);
+    });
+    card.appendChild(quickWrap);
+
+    // Error
+    const errBox = el('div', 'maat-weigh-error');
+    errBox.hidden = true;
+    card.appendChild(errBox);
+
+    // Actions
+    const actions = el('div', 'maat-weigh-actions');
+
+    const cancelBtn = el('button', 'maat-weigh-btn maat-weigh-btn--ghost', 'Annuler');
+    cancelBtn.type = 'button';
+    cancelBtn.addEventListener('click', () => overlay.remove());
+    actions.appendChild(cancelBtn);
+
+    const confirmBtn = el('button', 'maat-weigh-btn maat-weigh-btn--primary', 'Confirmer');
+    confirmBtn.type = 'button';
+    confirmBtn.addEventListener('click', () => {
+      errBox.hidden = true;
+      const val = parseFloat(input.value);
+      if (!Number.isFinite(val) || val <= 0) {
+        errBox.textContent = 'Poids invalide (doit être > 0)';
+        errBox.hidden = false;
+        input.focus();
+        return;
+      }
+      if (val > 1000) {
+        errBox.textContent = 'Poids trop élevé (max 1000 kg)';
+        errBox.hidden = false;
+        return;
+      }
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Enregistrement…';
+      try {
+        opts.onConfirm(val);
+      } catch (e) {
+        console.error('[ScanHandler] onConfirm error:', e);
+      }
+      setTimeout(() => overlay.remove(), 300);
+    });
+    actions.appendChild(confirmBtn);
+    card.appendChild(actions);
+
+    // Enter to confirm
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmBtn.click();
+      }
+    });
+
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+
+    setTimeout(() => input.focus(), 100);
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
+  }
+
+  /* ─── Modal errore contesto ──────────────────────────────────────────── */
+  function showModalError(icon, title, body) {
+    const overlay = el('div', 'maat-scan-modal');
+    const card = el('div', 'maat-scan-modal__card');
+
+    card.appendChild(el('div', 'maat-scan-modal__icon maat-scan-modal__icon--err', icon));
+    card.appendChild(el('h3', 'maat-scan-modal__title', title));
+    card.appendChild(el('p', 'maat-scan-modal__body', body));
+
+    const actions = el('div', 'maat-scan-modal__actions');
+    const closeBtn = el('button', 'maat-scan-btn maat-scan-btn--primary', 'OK');
+    closeBtn.type = 'button';
+    closeBtn.addEventListener('click', () => overlay.remove());
+    actions.appendChild(closeBtn);
+    card.appendChild(actions);
+
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+  }
+
+  /* ─── Toast success ──────────────────────────────────────────────────── */
+  function showSuccessToast(msg) {
+    let t = document.getElementById('maat-scan-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'maat-scan-toast';
+      t.className = 'maat-scan-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.remove('maat-scan-toast--err');
+    t.classList.add('is-visible');
+    clearTimeout(t._hideTimer);
+    t._hideTimer = setTimeout(() => {
+      t.classList.remove('is-visible');
+    }, 3500);
+  }
+
   /* ─── Event listener principale ──────────────────────────────────────── */
   window.addEventListener('maat:scan', (e) => {
     if (!e || !e.detail) return;
@@ -261,10 +504,20 @@
       return;
     }
     if (scan.type === 'bag') {
-      log('bag handler pending (B.3) — fallback modal');
-      return;  // no preventDefault → mostra fallback B.1
+      if (scan.mode === 'p1') {
+        e.preventDefault();
+        handleBagP1(scan);
+        return;
+      }
+      if (scan.mode === 'p2') {
+        e.preventDefault();
+        handleBagP2(scan);
+        return;
+      }
+      log('bag without mode — fallback modal');
+      return;
     }
   });
 
-  log('ready v1.0.0');
+  log('ready v1.1.0');
 })();
