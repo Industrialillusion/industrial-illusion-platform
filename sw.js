@@ -1,6 +1,6 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone)
+ *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone + cssfix)
  *
  *  Strategie:
  *  - App shell → pre-cache all'install
@@ -8,11 +8,13 @@
  *  - Asset statici → cache-first
  *  - Supabase API → bypass totale
  *
- *  FIX v1.0.1: clonare la Response PRIMA di restituirla al browser,
- *  altrimenti il body viene consumato dal chiamante e clone() fallisce.
+ *  v1.0.1: clonare la Response PRIMA di restituirla al browser,
+ *          altrimenti il body viene consumato dal chiamante e clone() fallisce.
+ *  v1.0.1-cssfix: bump VERSION per forzare refresh pwa.html (link pwa-weigh.css)
+ *          + estensione SHELL_URLS con moduli PWA (badges/scan/weigh)
  * ========================================================================== */
 
-const VERSION      = 'maat-v1.0.1-pre-pwa';
+const VERSION      = 'maat-v1.0.1-pre-pwa-cssfix';
 const SHELL_CACHE  = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -21,10 +23,16 @@ const SHELL_URLS = [
   '/pwa.webmanifest',
   '/icons/icon-192.png',
   '/assets/maat.css',
+  '/assets/pwa-badges.css',
+  '/assets/pwa-scan.css',
+  '/assets/pwa-weigh.css',
   '/assets/config.js',
   '/assets/core.js',
   '/assets/monitoring.js',
   '/assets/pwa.js',
+  '/assets/pwa-badges.js',
+  '/assets/pwa-scan.js',
+  '/assets/pwa-scan-handlers.js',
   '/assets/qr-generator.js',
   '/assets/qr-scanner.js'
 ];
