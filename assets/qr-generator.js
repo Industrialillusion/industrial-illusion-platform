@@ -1,11 +1,12 @@
 /* ==========================================================================
  *  assets/qr-generator.js
- *  Phase 3 · QR Generator (bag, badge, certificate, DEPOT)
+ *  Phase 3 + 5.3.A · QR Generator (bag, badge, certificate, DEPOT)
  *  Formati:
  *   - Bag:    PK-{CLUSTER}-{MATERIAL}-{ANNO}-{SERIAL}
  *   - Badge:  BDG-{ROLE}-{userId_short}-{userId_last4}
  *   - Cert:   ESG-{serial}-{hash_short}
  *   - Depot:  DEPOT-{CLUSTER}-{SERIAL}
+ *  v1.2.0: +buildScanURL +normalizeScannedPayload +extractScanMode +DIB
  *  Dipendenza: qrcode-generator (CDN jsdelivr, global window.qrcode)
  * ========================================================================== */
 (function () {
@@ -14,7 +15,7 @@
   window.__MaatQRGenLoaded = true;
 
   const CLUSTERS = ['MED','GUEL','PALM','HIVER','AGDAL','SEM','TARGA'];
-  const MATERIALS = ['PET','PEHD','LDPE','PP','CARD','ALU','FER','GLASS','ORG'];
+  const MATERIALS = ['PET','PEHD','LDPE','PP','CARD','ALU','FER','GLASS','ORG','DIB'];
   const DEPOT_SERIALS = ['01','02','03','04','05','06','07','08','09','10'];
   const COLORS = {
     green:  '#00FFA3',
@@ -34,7 +35,7 @@
   /* ─── Bag QR ──────────────────────────────────────────────────────────── */
   function parseBagQR(qr) {
     if (!qr || typeof qr !== 'string') return null;
-    const m = qr.match(/^PK-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA)-(PET|PEHD|LDPE|PP|CARD|ALU|FER|GLASS|ORG)-(\d{4})-([A-Z0-9]{6})$/);
+    const m = qr.match(/^PK-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA)-(PET|PEHD|LDPE|PP|CARD|ALU|FER|GLASS|ORG|DIB)-(\d{4})-([A-Z0-9]{6})$/);
     if (!m) return null;
     return { cluster: m[1], material: m[2], year: parseInt(m[3], 10), serial: m[4], raw: qr };
   }
@@ -75,6 +76,47 @@
     const s = (serial || '01').toString().padStart(2, '0');
     if (!/^\d{2}$/.test(s)) throw new Error('INVALID_SERIAL: ' + s);
     return `DEPOT-${cluster}-${s}`;
+  }
+
+  /* ─── Scan URL building (badge + sacchi + depot) ──────────────────────── */
+  function buildScanURL(token, opts) {
+    opts = opts || {};
+    var base = opts.base || 'https://www.industrialillusion.ma/pwa.html';
+    var mode = opts.mode || null;
+    var url = base + '?scan=' + encodeURIComponent(token);
+    if (mode) url += '&mode=' + encodeURIComponent(mode);
+    return url;
+  }
+
+  /* ─── Scan payload normalization (da URL o testo puro) ────────────────── */
+  function normalizeScannedPayload(rawText) {
+    if (!rawText) return '';
+    var s = String(rawText).trim();
+    if (/^https?:\/\//i.test(s)) {
+      try {
+        var u = new URL(s);
+        var scan = u.searchParams.get('scan');
+        if (scan) return decodeURIComponent(scan).trim();
+        var parts = u.pathname.split('/').filter(Boolean);
+        return parts.length ? decodeURIComponent(parts[parts.length - 1]) : '';
+      } catch (e) {
+        return s;
+      }
+    }
+    return s;
+  }
+
+  /* ─── Scan mode extraction (p1 / p2 / depot) ──────────────────────────── */
+  function extractScanMode(rawText) {
+    if (!rawText) return null;
+    var s = String(rawText).trim();
+    if (!/^https?:\/\//i.test(s)) return null;
+    try {
+      var u = new URL(s);
+      return u.searchParams.get('mode') || null;
+    } catch (e) {
+      return null;
+    }
   }
 
   /* ─── Render SVG ──────────────────────────────────────────────────────── */
@@ -167,9 +209,12 @@
     certQRString,
     parseDepotQR,
     depotQRString,
+    buildScanURL,
+    normalizeScannedPayload,
+    extractScanMode,
     renderSVG,
     renderCanvas,
   };
 
-  console.log('[QR] generator ready · v1.1.0 · +DEPOT format');
+  console.log('[QR] generator ready · v1.2.0 · +SCAN URL helpers · +DIB');
 })();
