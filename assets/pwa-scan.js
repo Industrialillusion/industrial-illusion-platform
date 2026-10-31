@@ -1,6 +1,7 @@
+
 /* ==========================================================================
  *  assets/pwa-scan.js
- *  Maat OS · Scanner QR Base (Phase 5.3.B.1)
+ *  Maat OS · Scanner QR Base (Phase 5.3.B.1 + 5.3.B.2)
  *  - FAB scan (basso-sinistra)
  *  - Overlay scanner con MaatQRScanner
  *  - Riconoscimento tipo QR (badge / sacco / depot / unknown)
@@ -10,6 +11,8 @@
  *  - URL param handling (?scan=...&mode=...)
  *
  *  v1.0.1: detectType accepts DEPOT-HUB-XX prefix
+ *  v1.0.2: emits 'maat:scan' CustomEvent to handlers (business logic separation)
+ *          if no handler consumes event → fallback modal B.1
  * ========================================================================== */
 (function () {
   'use strict';
@@ -347,61 +350,69 @@
     const urlMode = window.MaatQR.extractScanMode && window.MaatQR.extractScanMode(window.location.href);
     let mode = opts.mode || urlMode || determineModeFromContext();
 
+    // ── Unknown type ──────────────────────────────────────────────────
     if (type === 'unknown') {
       feedbackError();
       showToast('QR non reconnu: ' + token.slice(0, 30), true);
       return;
     }
 
+    // ── Cert (future Phase 6) ─────────────────────────────────────────
     if (type === 'cert') {
       feedbackSuccess();
       showToast('Certificat ESG détecté (Phase 6)', false);
       return;
     }
 
-    if (type === 'badge') {
-      if (isDuplicate(token, 'badge')) {
-        feedbackError();
-        showToast('Badge déjà scanné dans cette session', true);
-        return;
-      }
-      markScanned(token, 'badge');
+    // ── Bag senza mode → disambig ─────────────────────────────────────
+    if (type === 'bag' && (!mode || (mode !== 'p1' && mode !== 'p2'))) {
       feedbackSuccess();
-      showResultModal('badge', token, null);
+      showDisambiguation(token);
       return;
     }
 
-    if (type === 'depot') {
-      if (isDuplicate(token, 'depot')) {
-        feedbackError();
-        showToast('Dépôt déjà check-in dans cette session', true);
-        return;
-      }
-      markScanned(token, 'depot');
-      feedbackSuccess();
-      showResultModal('depot', token, 'depot');
+    // ── Doppio-dip check ──────────────────────────────────────────────
+    const dupKey = type === 'bag' ? mode : type;
+    if (isDuplicate(token, dupKey)) {
+      feedbackError();
+      showToast(
+        type === 'bag' ? 'Sac déjà scanné en mode ' + mode.toUpperCase()
+        : type === 'badge' ? 'Badge déjà scanné dans cette session'
+        : 'Dépôt déjà check-in dans cette session',
+        true
+      );
       return;
     }
+    markScanned(token, dupKey);
+    feedbackSuccess();
 
-    if (type === 'bag') {
-      if (!mode || (mode !== 'p1' && mode !== 'p2')) {
-        feedbackSuccess();
-        showDisambiguation(token);
-        return;
-      }
-      if (isDuplicate(token, mode)) {
-        feedbackError();
-        showToast('Sac déjà scanné en mode ' + mode.toUpperCase(), true);
-        return;
-      }
-      markScanned(token, mode);
-      feedbackSuccess();
-      showResultModal('bag', token, mode);
-      return;
+    // ═══ v1.0.2: emit event → handlers (pwa-scan-handlers.js) ═════════
+    const scanPayload = {
+      token,
+      type,
+      mode: mode || null,
+      raw: rawText,
+      timestamp: Date.now(),
+    };
+
+    const event = new CustomEvent('maat:scan', {
+      detail: scanPayload,
+      cancelable: true,
+    });
+
+    // dispatchEvent ritorna false se un handler ha chiamato preventDefault
+    const consumed = !window.dispatchEvent(event);
+
+    if (!consumed) {
+      // ── Fallback: nessun handler → mostra modal B.1 ────────────────
+      log('no handler consumed event, fallback modal');
+      showResultModal(type, token, mode);
+    } else {
+      log('event consumed by handler:', type, token);
     }
   }
 
-  /* ─── Result modal ───────────────────────────────────────────────────── */
+  /* ─── Result modal (fallback B.1) ────────────────────────────────────── */
   function showResultModal(type, token, mode) {
     const typeLabels = {
       bag:    { label: 'Sac', icon: '📦', cls: 'bag' },
@@ -417,7 +428,7 @@
     card.appendChild(el('div', 'maat-scan-modal__icon', meta.icon));
     card.appendChild(el('h3', 'maat-scan-modal__title', 'QR reconnu'));
     card.appendChild(el('p', 'maat-scan-modal__body',
-      'En mode 5.3.B.1, la reconnaissance est validée. La logique métier sera active en 5.3.B.2.'));
+      'Aucun handler actif pour ce type de QR. Affichage brut du token.'));
 
     card.appendChild(el('span', 'maat-scan-modal__badge maat-scan-modal__badge--' + meta.cls, meta.label));
     card.appendChild(el('div', 'maat-scan-modal__token', token));
@@ -541,7 +552,7 @@
     ensureFab();
     ensureOverlay();
     handleUrlScanParam();
-    log('ready v1.0.1');
+    log('ready v1.0.2');
   }
 
   /* ─── Public API ─────────────────────────────────────────────────────── */
