@@ -9,7 +9,7 @@
  *  - Auto-detect P1/P2 (URL → session → modal)
  *  - URL param handling (?scan=...&mode=...)
  *
- *  B.1: nessuna chiamata RPC. Log + toast. B.2 aggiunge handler veri.
+ *  v1.0.1: detectType accepts DEPOT-HUB-XX prefix
  * ========================================================================== */
 (function () {
   'use strict';
@@ -26,7 +26,7 @@
     flashSuccessColor: 'rgba(0, 255, 163, 0.65)',
     flashErrorColor: 'rgba(248, 113, 113, 0.65)',
     flashMs: 250,
-    doubleDipTtlMs: 30 * 60 * 1000,  // 30 min
+    doubleDipTtlMs: 30 * 60 * 1000,
     toastMs: 2400,
     scanCooldownMs: 900,
   };
@@ -106,7 +106,7 @@
     flashScreen(CFG.flashErrorColor);
   }
 
-  /* ─── Detector tipo QR ───────────────────────────────────────────────── */
+  /* ─── Detector tipo QR (v1.0.1: +HUB) ────────────────────────────────── */
   function detectType(token) {
     if (!token) return 'unknown';
     const t = String(token).trim();
@@ -117,7 +117,7 @@
     if (/^BDG-(CLIENT|OPERATOR|ADMIN|DIRECTION|FMCG|VIEWER)-/i.test(t)) {
       return 'badge';
     }
-    if (/^DEPOT-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA)-\d{2}$/i.test(t)) {
+    if (/^DEPOT-(MED|GUEL|PALM|HIVER|AGDAL|SEM|TARGA|HUB)-\d{2}$/i.test(t)) {
       return 'depot';
     }
     if (/^ESG-/i.test(t)) {
@@ -152,17 +152,14 @@
 
   /* ─── Mode detection ─────────────────────────────────────────────────── */
   function determineModeFromContext() {
-    // 1) URL params (priorità massima)
     if (window.MaatQR && typeof window.MaatQR.extractScanMode === 'function') {
       const urlMode = window.MaatQR.extractScanMode(window.location.href);
       if (urlMode) return urlMode;
     }
-    // 2) Session storage
     try {
       if (sessionStorage.getItem('maat_active_pickup')) return 'p1';
       if (sessionStorage.getItem('maat_active_depot_session')) return 'p2';
     } catch (e) {}
-    // 3) Unknown
     return null;
   }
 
@@ -209,7 +206,6 @@
     ov.setAttribute('aria-modal', 'true');
     ov.setAttribute('aria-label', 'Scanner QR');
 
-    // Header
     const header = el('div', 'maat-scan-header');
     header.appendChild(el('div', 'maat-scan-title', 'Scanner QR'));
 
@@ -235,11 +231,9 @@
     actions.appendChild(closeBtn);
     header.appendChild(actions);
 
-    // Video
     const videoWrap = el('div', 'maat-scan-video-wrap');
     videoWrap.id = 'maat-scan-video-wrap';
 
-    // Frame
     const frame = el('div', 'maat-scan-frame');
     const square = el('div', 'maat-scan-frame__square');
     const scanline = el('div', 'maat-scan-frame__scanline');
@@ -247,7 +241,6 @@
     frame.appendChild(square);
     videoWrap.appendChild(frame);
 
-    // Hint
     const hint = el('div', 'maat-scan-hint');
     hint.innerHTML = 'Alignez le QR dans le cadre · <strong>Focus auto</strong>';
     videoWrap.appendChild(hint);
@@ -292,7 +285,6 @@
       });
       window.MaatQRScanner.attachTo(videoWrap);
 
-      // Torch button visibility
       const torchBtn = ov.querySelector('.maat-scan-torch');
       if (torchBtn) {
         const hasTorch = window.MaatQRScanner.hasTorch && window.MaatQRScanner.hasTorch();
@@ -329,7 +321,6 @@
     }
     S.lastScanAt = now;
 
-    // Stop scanner immediately (freeze)
     if (opts.from === 'scanner') {
       try { window.MaatQRScanner.stop(); } catch (e) {}
       S.scannerStarted = false;
@@ -356,21 +347,18 @@
     const urlMode = window.MaatQR.extractScanMode && window.MaatQR.extractScanMode(window.location.href);
     let mode = opts.mode || urlMode || determineModeFromContext();
 
-    // ── Unknown type ──────────────────────────────────────────────────
     if (type === 'unknown') {
       feedbackError();
       showToast('QR non reconnu: ' + token.slice(0, 30), true);
       return;
     }
 
-    // ── Cert (future Phase 6) ─────────────────────────────────────────
     if (type === 'cert') {
       feedbackSuccess();
       showToast('Certificat ESG détecté (Phase 6)', false);
       return;
     }
 
-    // ── Badge ─────────────────────────────────────────────────────────
     if (type === 'badge') {
       if (isDuplicate(token, 'badge')) {
         feedbackError();
@@ -383,7 +371,6 @@
       return;
     }
 
-    // ── Depot ─────────────────────────────────────────────────────────
     if (type === 'depot') {
       if (isDuplicate(token, 'depot')) {
         feedbackError();
@@ -396,10 +383,8 @@
       return;
     }
 
-    // ── Bag: serve mode ───────────────────────────────────────────────
     if (type === 'bag') {
       if (!mode || (mode !== 'p1' && mode !== 'p2')) {
-        // Disambiguazione
         feedbackSuccess();
         showDisambiguation(token);
         return;
@@ -416,7 +401,7 @@
     }
   }
 
-  /* ─── Result modal (B.1: solo display) ───────────────────────────────── */
+  /* ─── Result modal ───────────────────────────────────────────────────── */
   function showResultModal(type, token, mode) {
     const typeLabels = {
       bag:    { label: 'Sac', icon: '📦', cls: 'bag' },
@@ -429,18 +414,13 @@
     modal.id = 'maat-scan-result-modal';
     const card = el('div', 'maat-scan-modal__card');
 
-    const icon = el('div', 'maat-scan-modal__icon', meta.icon);
-    card.appendChild(icon);
-
+    card.appendChild(el('div', 'maat-scan-modal__icon', meta.icon));
     card.appendChild(el('h3', 'maat-scan-modal__title', 'QR reconnu'));
     card.appendChild(el('p', 'maat-scan-modal__body',
       'En mode 5.3.B.1, la reconnaissance est validée. La logique métier sera active en 5.3.B.2.'));
 
-    const badge = el('span', 'maat-scan-modal__badge maat-scan-modal__badge--' + meta.cls, meta.label);
-    card.appendChild(badge);
-
-    const tokBox = el('div', 'maat-scan-modal__token', token);
-    card.appendChild(tokBox);
+    card.appendChild(el('span', 'maat-scan-modal__badge maat-scan-modal__badge--' + meta.cls, meta.label));
+    card.appendChild(el('div', 'maat-scan-modal__token', token));
 
     if (mode) {
       const modeInfo = el('p', 'maat-scan-modal__body');
@@ -451,7 +431,6 @@
     }
 
     const actions = el('div', 'maat-scan-modal__actions');
-
     const closeBtn = el('button', 'maat-scan-btn maat-scan-btn--ghost', 'Fermer');
     closeBtn.type = 'button';
     closeBtn.addEventListener('click', () => modal.remove());
@@ -470,7 +449,6 @@
     modal.appendChild(card);
     document.body.appendChild(modal);
 
-    // Auto-close dopo 6s se nessuna azione
     const autoClose = setTimeout(() => {
       if (document.body.contains(modal)) modal.remove();
     }, 6000);
@@ -483,7 +461,7 @@
     });
   }
 
-  /* ─── Disambiguation modal (bag, mode unknown) ───────────────────────── */
+  /* ─── Disambiguation modal ───────────────────────────────────────────── */
   function showDisambiguation(token) {
     const modal = el('div', 'maat-scan-modal');
     modal.id = 'maat-scan-disambig-modal';
@@ -493,7 +471,6 @@
     card.appendChild(el('h3', 'maat-scan-modal__title', 'Contexte requis'));
     card.appendChild(el('p', 'maat-scan-modal__body',
       'Sac détecté. Sélectionnez le contexte opérationnel.'));
-
     card.appendChild(el('div', 'maat-scan-modal__token', token));
 
     const actions = el('div', 'maat-scan-modal__actions');
@@ -525,7 +502,7 @@
     document.body.appendChild(modal);
   }
 
-  /* ─── URL param handling (da fotocamera nativa) ──────────────────────── */
+  /* ─── URL param handling ─────────────────────────────────────────────── */
   function handleUrlScanParam() {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -535,13 +512,11 @@
 
       log('URL scan param detected:', scan, 'mode:', mode);
 
-      // Pulisce URL per evitare re-processing
       try {
         const cleanUrl = window.location.pathname;
         window.history.replaceState({}, '', cleanUrl);
       } catch (e) {}
 
-      // Attende che i moduli siano pronti
       let attempts = 0;
       const tryProcess = () => {
         attempts++;
@@ -566,7 +541,7 @@
     ensureFab();
     ensureOverlay();
     handleUrlScanParam();
-    log('ready v1.0.0');
+    log('ready v1.0.1');
   }
 
   /* ─── Public API ─────────────────────────────────────────────────────── */
