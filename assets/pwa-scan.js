@@ -13,6 +13,7 @@
  *  v1.0.1: detectType accepts DEPOT-HUB-XX prefix
  *  v1.0.2: emits 'maat:scan' CustomEvent to handlers (business logic separation)
  *          if no handler consumes event → fallback modal B.1
+ *  v1.0.3: fix mode detection — extractScanMode(rawText) + P1 from maat_current_client
  * ========================================================================== */
 (function () {
   'use strict';
@@ -153,15 +154,13 @@
     } catch (e) {}
   }
 
-  /* ─── Mode detection ─────────────────────────────────────────────────── */
+  /* ─── Mode detection (v1.0.3 fix) ────────────────────────────────────── */
   function determineModeFromContext() {
-    if (window.MaatQR && typeof window.MaatQR.extractScanMode === 'function') {
-      const urlMode = window.MaatQR.extractScanMode(window.location.href);
-      if (urlMode) return urlMode;
-    }
     try {
-      if (sessionStorage.getItem('maat_active_pickup')) return 'p1';
+      // Priorità 1: depot attivo → P2 (siamo al deposito)
       if (sessionStorage.getItem('maat_active_depot_session')) return 'p2';
+      // Priorità 2: client attivo → P1 (siamo in raccolta)
+      if (sessionStorage.getItem('maat_current_client')) return 'p1';
     } catch (e) {}
     return null;
   }
@@ -347,8 +346,9 @@
     const type = detectType(token);
     log('detected:', token, 'type:', type);
 
-    const urlMode = window.MaatQR.extractScanMode && window.MaatQR.extractScanMode(window.location.href);
-    let mode = opts.mode || urlMode || determineModeFromContext();
+    // v1.0.3 fix: extract mode from rawText (il QR), non da window.location
+    const qrMode = window.MaatQR.extractScanMode && window.MaatQR.extractScanMode(rawText);
+    let mode = opts.mode || qrMode || determineModeFromContext();
 
     // ── Unknown type ──────────────────────────────────────────────────
     if (type === 'unknown') {
@@ -400,11 +400,9 @@
       cancelable: true,
     });
 
-    // dispatchEvent ritorna false se un handler ha chiamato preventDefault
     const consumed = !window.dispatchEvent(event);
 
     if (!consumed) {
-      // ── Fallback: nessun handler → mostra modal B.1 ────────────────
       log('no handler consumed event, fallback modal');
       showResultModal(type, token, mode);
     } else {
@@ -552,7 +550,7 @@
     ensureFab();
     ensureOverlay();
     handleUrlScanParam();
-    log('ready v1.0.2');
+    log('ready v1.0.3');
   }
 
   /* ─── Public API ─────────────────────────────────────────────────────── */
