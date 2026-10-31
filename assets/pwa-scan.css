@@ -1,0 +1,431 @@
+/* ==========================================================================
+ *  assets/pwa-scan.css
+ *  Maat OS · Scanner QR Module
+ *  FAB + overlay + feedback multimodale + modali
+ * ========================================================================== */
+
+/* ─── FAB Scan (basso-sinistra, speculare a badge) ─────────────────────── */
+#maat-scan-fab {
+  position: fixed;
+  bottom: 100px;
+  left: 16px;
+  z-index: 60;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00B871, #00FFA3);
+  color: #001a10;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 255, 163, 0.35),
+    0 0 20px rgba(0, 255, 163, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: maatScanFabPulse 3s ease-in-out infinite;
+}
+#maat-scan-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(0, 255, 163, 0.55);
+}
+#maat-scan-fab:active { transform: scale(0.95); }
+#maat-scan-fab[hidden] { display: none !important; }
+
+@keyframes maatScanFabPulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0,255,163,0.35), 0 0 0 0 rgba(0,255,163,0.4); }
+  50%      { box-shadow: 0 8px 24px rgba(0,255,163,0.35), 0 0 0 12px rgba(0,255,163,0); }
+}
+
+/* ─── Overlay Scanner ─────────────────────────────────────────────────── */
+.maat-scan-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  animation: maatScanFadeIn 0.2s ease-out;
+}
+.maat-scan-overlay[hidden] { display: none !important; }
+
+@keyframes maatScanFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.maat-scan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(12px, env(safe-area-inset-top)) 16px 12px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.8), transparent);
+  position: relative;
+  z-index: 2;
+}
+
+.maat-scan-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #00FFA3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.maat-scan-title::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00FFA3;
+  box-shadow: 0 0 10px #00FFA3;
+  animation: maatScanDotPulse 1.5s ease-in-out infinite;
+}
+@keyframes maatScanDotPulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50%      { opacity: 1;   transform: scale(1.1); }
+}
+
+.maat-scan-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.maat-scan-close:hover { background: rgba(255,255,255,0.2); }
+
+.maat-scan-torch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #E8C86A;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  margin-right: 8px;
+}
+.maat-scan-torch:hover { background: rgba(232,200,106,0.2); }
+.maat-scan-torch.is-on {
+  background: rgba(232,200,106,0.3);
+  border-color: #E8C86A;
+  box-shadow: 0 0 12px rgba(232,200,106,0.5);
+}
+
+/* Video container */
+.maat-scan-video-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.maat-scan-video-wrap video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+
+/* Frame di puntamento */
+.maat-scan-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.maat-scan-frame__square {
+  width: 75%;
+  max-width: 320px;
+  aspect-ratio: 1;
+  border: 2px solid rgba(0, 255, 163, 0.8);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0, 255, 163, 0.3), inset 0 0 30px rgba(0, 255, 163, 0.15);
+}
+.maat-scan-frame__square::before,
+.maat-scan-frame__square::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 3px solid #00FFA3;
+  filter: drop-shadow(0 0 6px #00FFA3);
+}
+.maat-scan-frame__square::before {
+  top: -3px; left: -3px;
+  border-right: none; border-bottom: none;
+  border-top-left-radius: 16px;
+}
+.maat-scan-frame__square::after {
+  bottom: -3px; right: -3px;
+  border-left: none; border-top: none;
+  border-bottom-right-radius: 16px;
+}
+
+.maat-scan-frame__scanline {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00FFA3, transparent);
+  box-shadow: 0 0 15px #00FFA3;
+  animation: maatScanScanline 2.5s ease-in-out infinite;
+  top: 20%;
+}
+
+@keyframes maatScanScanline {
+  0%   { top: 10%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+
+.maat-scan-hint {
+  position: absolute;
+  bottom: max(30px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 255, 163, 0.3);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #00FFA3;
+  letter-spacing: 0.05em;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+.maat-scan-hint strong {
+  color: #E8C86A;
+}
+
+/* ─── Flash feedback ──────────────────────────────────────────────────── */
+.maat-scan-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 95;
+  animation: maatScanFlash 0.25s ease-out forwards;
+}
+@keyframes maatScanFlash {
+  0%   { opacity: 0.65; }
+  100% { opacity: 0; }
+}
+
+/* ─── Modale (disambig + result) ──────────────────────────────────────── */
+.maat-scan-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 10, 13, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: maatScanFadeIn 0.2s ease-out;
+}
+.maat-scan-modal[hidden] { display: none !important; }
+
+.maat-scan-modal__card {
+  width: 100%;
+  max-width: 380px;
+  background: #0A0D10;
+  border: 1px solid rgba(0, 255, 163, 0.3);
+  border-radius: 16px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.maat-scan-modal__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0, 255, 163, 0.1);
+  border: 1px solid rgba(0, 255, 163, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto;
+  color: #00FFA3;
+}
+
+.maat-scan-modal__icon--err {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #F87171;
+}
+
+.maat-scan-modal__title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  margin: 0;
+}
+
+.maat-scan-modal__body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #CBD5E1;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.maat-scan-modal__token {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #00FFA3;
+  background: rgba(0, 255, 163, 0.06);
+  border: 1px solid rgba(0, 255, 163, 0.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+  word-break: break-all;
+  letter-spacing: 0.03em;
+}
+
+.maat-scan-modal__badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  align-self: center;
+}
+.maat-scan-modal__badge--bag    { background: rgba(0, 255, 163, 0.15); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.4); }
+.maat-scan-modal__badge--badge  { background: rgba(232, 200, 106, 0.15); color: #E8C86A; border: 1px solid rgba(232, 200, 106, 0.4); }
+.maat-scan-modal__badge--depot  { background: rgba(255, 122, 26, 0.15); color: #FF7A1A; border: 1px solid rgba(255, 122, 26, 0.4); }
+
+.maat-scan-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.maat-scan-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  min-height: 44px;
+}
+.maat-scan-btn--primary {
+  background: linear-gradient(135deg, #00B871, #00FFA3);
+  color: #001a10;
+  border: none;
+}
+.maat-scan-btn--primary:hover { filter: brightness(1.1); box-shadow: 0 0 20px rgba(0, 255, 163, 0.4); }
+.maat-scan-btn--gold {
+  background: rgba(232, 200, 106, 0.08);
+  color: #E8C86A;
+  border-color: rgba(232, 200, 106, 0.4);
+}
+.maat-scan-btn--gold:hover { background: rgba(232, 200, 106, 0.16); }
+.maat-scan-btn--ghost {
+  background: transparent;
+  color: #94A3B8;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.maat-scan-btn--ghost:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+/* ─── Toast result ────────────────────────────────────────────────────── */
+.maat-scan-toast {
+  position: fixed;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 85;
+  padding: 12px 18px;
+  background: rgba(10, 13, 16, 0.95);
+  border: 1px solid rgba(0, 255, 163, 0.5);
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #00FFA3;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: 90vw;
+  text-align: center;
+  white-space: nowrap;
+}
+.maat-scan-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.maat-scan-toast--err {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #F87171;
+}
+
+/* ─── Mobile adjustments ──────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  #maat-scan-fab {
+    bottom: 90px;
+    left: 12px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+  .maat-scan-toast {
+    bottom: 160px;
+    font-size: 0.72rem;
+    padding: 10px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #maat-scan-fab,
+  .maat-scan-title::before,
+  .maat-scan-frame__scanline,
+  .maat-scan-overlay,
+  .maat-scan-modal {
+    animation: none !important;
+  }
+}
