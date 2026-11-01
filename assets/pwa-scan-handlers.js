@@ -1,12 +1,13 @@
 /* ==========================================================================
  *  assets/pwa-scan-handlers.js
  *  Maat OS · Scanner QR Handlers
- *  Phase: 5.3.B.2 + 5.3.B.3a + 5.3.B.3b-1 + 5.3.B.3b-3
+ *  Phase: 5.3.B.2 + 5.3.B.3a + 5.3.B.3b + 5.4-1+2
  *
  *  B.2:    Badge → validate_badge_qr · Depot → checkin_depot_station
  *  B.3a:   Weigh modal UI
- *  B.3b-1: P1 → RPC reale validate_and_claim_bag + GPS non bloccante
- *  B.3b-3: P1 offline → IndexedDB queue + auto-drain on 'online' event
+ *  B.3b:   P1 → RPC reale + GPS + offline queue + hash
+ *  B.3b-1.5: hash/email/method nel DB (lato RPC, già attivo)
+ *  5.4-1+2: P2 → RPC reale register_depot_weighing_p2 + lista sacchi depot + Δ
  * ========================================================================== */
 (function () {
   'use strict';
@@ -17,7 +18,7 @@
   const warn = (...a) => console.warn('[ScanHandler]', ...a);
 
   /* ═══════════════════════════════════════════════════════════════════════
-     QUEUE · IndexedDB (inline, no external module)
+     QUEUE · IndexedDB (solo P1)
      ═══════════════════════════════════════════════════════════════════════ */
   const QDB_NAME = 'maat_queue';
   const QDB_VERSION = 1;
@@ -130,18 +131,15 @@
     } catch (_) {}
   }
 
-  /* Auto-drain on 'online' event */
   window.addEventListener('online', () => {
     log('online detected → drain queue');
     qDrain();
   });
 
-  /* Drain all'avvio (recupera queue da sessione precedente) */
   if (navigator.onLine !== false) {
     setTimeout(() => qDrain(), 2000);
   }
 
-  /* Espone per debug/test */
   window.MaatQueue = {
     enqueue: qEnqueue, getAll: qGetAll, remove: qRemove, count: qCount, drain: qDrain,
   };
@@ -201,7 +199,6 @@
     return row;
   }
 
-  /* ─── vector_id + GPS ───────────────────────────────────────────────── */
   let _vectorIdCache = null;
   let _vectorIdCacheAt = 0;
 
@@ -246,7 +243,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BADGE HANDLER
+     BADGE HANDLER (invariato)
      ═══════════════════════════════════════════════════════════════════════ */
   async function handleBadge(scan) {
     const sb = getClient();
@@ -317,7 +314,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     DEPOT HANDLER
+     DEPOT HANDLER (invariato)
      ═══════════════════════════════════════════════════════════════════════ */
   async function handleDepot(scan) {
     const sb = getClient();
@@ -345,31 +342,58 @@
     }
   }
 
+  /* 5.4-1: lista sacchi con bottone "Peser" */
   function showDepotResult(data) {
     const { modal, card } = buildModal();
     card.appendChild(el('div', 'maat-scan-modal__icon', '🏭'));
     card.appendChild(el('h3', 'maat-scan-modal__title', data.depot_name || '—'));
     card.appendChild(el('span', 'maat-scan-modal__badge maat-scan-modal__badge--depot', 'Dépôt actif'));
     card.appendChild(el('div', 'maat-scan-modal__token', data.depot_code));
+
     const info = el('div', null);
     info.style.cssText = 'display:flex;flex-direction:column;gap:6px';
     info.appendChild(infoRow('Cluster', data.cluster || '—'));
     info.appendChild(infoRow('Sacs en transit', String(data.bag_count || 0)));
     card.appendChild(info);
+
     if (data.bags && data.bags.length > 0) {
       const listTitle = el('p', 'maat-scan-modal__body');
       listTitle.innerHTML = '<strong>Sac à réceptionner (P2):</strong>';
       card.appendChild(listTitle);
+
       const list = el('div', null);
-      list.style.cssText = 'max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px';
+      list.style.cssText = 'max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px';
+
       data.bags.forEach(bag => {
-        const item = el('div', null);
-        item.style.cssText = 'padding:8px 10px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,163,0.2);border-radius:8px;font-family:"JetBrains Mono",monospace;font-size:0.7rem;color:#00FFA3';
-        item.textContent = bag.bag_qr_id + ' · P1 ' + bag.weight_collect_kg + ' kg';
-        list.appendChild(item);
+        const row = el('div', null);
+        row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,163,0.2);border-radius:8px;font-family:"JetBrains Mono",monospace;font-size:0.7rem;color:#00FFA3';
+
+        const lbl = el('span', null, bag.bag_qr_id + ' · P1 ' + bag.weight_collect_kg + ' kg');
+        lbl.style.cssText = 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+
+        const btn = el('button', 'maat-scan-btn maat-scan-btn--gold', 'Peser');
+        btn.type = 'button';
+        btn.style.cssText = 'padding:4px 10px;font-size:0.65rem';
+        btn.addEventListener('click', () => {
+          closeModal(modal);
+          openP2WeighModal(bag.bag_qr_id, {
+            depot_code: data.depot_code,
+            depot_name: data.depot_name,
+            cluster: data.cluster,
+            weight_p1: bag.weight_collect_kg,
+          });
+        });
+
+        row.appendChild(lbl);
+        row.appendChild(btn);
+        list.appendChild(row);
       });
       card.appendChild(list);
+    } else {
+      const empty = el('p', 'maat-scan-modal__body', 'Aucun sac en transit à réceptionner.');
+      card.appendChild(empty);
     }
+
     const actions = el('div', 'maat-scan-modal__actions');
     const closeBtn = el('button', 'maat-scan-btn maat-scan-btn--primary', 'Fermer');
     closeBtn.type = 'button';
@@ -410,7 +434,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BAG P1 — RPC reale + queue offline
+     BAG P1 — RPC reale + queue offline (invariato)
      ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP1(scan) {
     let clientCtx = null;
@@ -439,7 +463,6 @@
         const gps = await getGpsPosition(8000);
         log('P1 GPS:', gps ? (gps.lat + ',' + gps.lng) : 'null');
 
-        // Audit trail locale
         try {
           sessionStorage.setItem('maat_pending_p1', JSON.stringify({
             bag_qr: scan.token, weight_kg: weight,
@@ -462,10 +485,8 @@
           return true;
         };
 
-        // Offline → queue
         if (navigator.onLine === false) return await queueP1('offline');
 
-        // Online → RPC
         try {
           const { data, error } = await sb.rpc('validate_and_claim_bag', {
             p_bag_qr_id: scan.token,
@@ -491,7 +512,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BAG P2 — UI only (RPC reale in 5.4)
+     BAG P2 — RPC reale register_depot_weighing_p2 (5.4-2)
      ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP2(scan) {
     let depotCtx = null;
@@ -504,27 +525,108 @@
         'Scannez d\'abord le QR de la station dépôt.');
       return;
     }
+    openP2WeighModal(scan.token, {
+      depot_code: depotCtx.depot_code,
+      depot_name: depotCtx.depot_name,
+      cluster: depotCtx.cluster,
+      weight_p1: null, // sconosciuto finché RPC non ritorna il record
+    });
+  }
+
+  /* 5.4-2: helper condiviso per weigh P2 + RPC + Δ handling */
+  function openP2WeighModal(bagQrId, ctx) {
     showWeighModal({
-      mode: 'p2', scan,
-      contextLabel: 'Réception · ' + (depotCtx.depot_name || depotCtx.depot_code),
-      contextSub: depotCtx.cluster ? 'Cluster ' + depotCtx.cluster : '',
-      onConfirm: function (weight) {
+      mode: 'p2',
+      scan: { token: bagQrId, type: 'bag' },
+      contextLabel: 'Réception · ' + (ctx.depot_name || ctx.depot_code),
+      contextSub: (ctx.cluster ? 'Cluster ' + ctx.cluster : '') +
+                  (ctx.weight_p1 != null ? ' · P1 ' + ctx.weight_p1 + ' kg' : ''),
+      onConfirm: async function (weight) {
+        const sb = getClient();
+        if (!sb) { showError('Service Supabase indisponible'); return false; }
+
+        // P2 non richiede GPS per ora (deposito = punto fisso certificato)
+        log('P2 submit:', bagQrId, weight, 'kg → depot', ctx.depot_code);
+
         try {
           sessionStorage.setItem('maat_pending_p2', JSON.stringify({
-            bag_qr: scan.token, weight_kg: weight,
-            depot_code: depotCtx.depot_code, depot_id: depotCtx.depot_id,
-            cluster: depotCtx.cluster, timestamp: Date.now(),
+            bag_qr: bagQrId, weight_kg: weight,
+            depot_code: ctx.depot_code, timestamp: Date.now(),
           }));
         } catch (_) {}
-        log('P2 weight:', weight, 'kg for', scan.token, '(RPC pending 5.4)');
-        showSuccessToast('P2 · ' + weight + ' kg enregistré · ' + scan.token);
+
+        if (navigator.onLine === false) {
+          // P2 offline: queue non ancora supportata (→ 5.5). Blocca.
+          showError('Réseau indisponible · reconnectez-vous pour P2');
+          return false;
+        }
+
+        const { data, error } = await sb.rpc('register_depot_weighing_p2', {
+          p_bag_qr_id: bagQrId,
+          p_depot_qr: ctx.depot_code,
+          p_weight_p2: weight,
+        });
+
+        if (error) {
+          console.error('[ScanHandler] register_depot_weighing_p2 failed:', error);
+          showError('Erreur: ' + (error.message || error));
+          return false;
+        }
+
+        try { sessionStorage.removeItem('maat_pending_p2'); } catch (_) {}
+
+        const p1 = data && data.weight_collect_kg != null ? Number(data.weight_collect_kg) : null;
+        const p2 = data && data.weight_depot_kg != null ? Number(data.weight_depot_kg) : weight;
+        const delta = (p1 != null && p1 > 0) ? ((p2 - p1) / p1 * 100) : null;
+        const status = data && data.status;
+        const bagQr = data && data.bag_qr_id || bagQrId;
+
+        log('P2 RPC OK:', { status, p1, p2, delta });
+
+        if (status === 'DISCREPANCY') {
+          showVarianceResult(bagQr, p1, p2, delta);
+        } else {
+          showSuccessToast('P2 · ' + weight + ' kg · ' + bagQr + ' (ANCRÉ)');
+        }
         return true;
       }
     });
   }
 
+  /* 5.4-3: modale Δ per DISCREPANCY */
+  function showVarianceResult(bagQrId, p1, p2, delta) {
+    const { modal, card } = buildModal();
+    card.appendChild(el('div', 'maat-scan-modal__icon maat-scan-modal__icon--err', '⚠️'));
+    card.appendChild(el('h3', 'maat-scan-modal__title', 'Écart détecté'));
+    card.appendChild(el('span', 'maat-scan-modal__badge',
+      'Variance > 3%'));
+
+    const info = el('div', null);
+    info.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:8px';
+    info.appendChild(infoRow('Sac', bagQrId));
+    if (p1 != null) info.appendChild(infoRow('P1 · Collecte', p1.toFixed(2) + ' kg'));
+    if (p2 != null) info.appendChild(infoRow('P2 · Réception', p2.toFixed(2) + ' kg'));
+    if (delta != null) {
+      const row = infoRow('Écart', delta.toFixed(2) + ' %');
+      row.lastChild.style.color = '#F87171';
+      info.appendChild(row);
+    }
+    card.appendChild(info);
+
+    const body = el('p', 'maat-scan-modal__body');
+    body.innerHTML = 'Le sac est en <strong>DISCREPANCY</strong>. Un opérateur admin doit investiguer via <em>Control Tower → Variance</em>.';
+    card.appendChild(body);
+
+    const actions = el('div', 'maat-scan-modal__actions');
+    const closeBtn = el('button', 'maat-scan-btn maat-scan-btn--primary', 'Compris');
+    closeBtn.type = 'button';
+    closeBtn.addEventListener('click', () => closeModal(modal));
+    actions.appendChild(closeBtn);
+    card.appendChild(actions);
+  }
+
   /* ═══════════════════════════════════════════════════════════════════════
-     Weigh modal (adattato per onConfirm async)
+     Weigh modal (invariato)
      ═══════════════════════════════════════════════════════════════════════ */
   function showWeighModal(opts) {
     const isP2 = opts.mode === 'p2';
@@ -660,7 +762,6 @@
     }
   });
 
-  /* Init */
   updateQueueBadge();
-  log('ready v1.3.0');
+  log('ready v1.4.0');
 })();
