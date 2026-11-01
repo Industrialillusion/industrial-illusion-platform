@@ -1,13 +1,14 @@
 /* ==========================================================================
  *  assets/pwa-scan-handlers.js
  *  Maat OS · Scanner QR Handlers
- *  Phase: 5.3.B.2 + 5.3.B.3a + 5.3.B.3b + 5.4-1+2
+ *  Phase: 5.3.B.2 + 5.3.B.3a + 5.3.B.3b + 5.4 + 5.5-1+2
  *
  *  B.2:    Badge → validate_badge_qr · Depot → checkin_depot_station
  *  B.3a:   Weigh modal UI
  *  B.3b:   P1 → RPC reale + GPS + offline queue + hash
- *  B.3b-1.5: hash/email/method nel DB (lato RPC, già attivo)
- *  5.4-1+2: P2 → RPC reale register_depot_weighing_p2 + lista sacchi depot + Δ
+ *  5.4:    P2 → RPC reale register_depot_weighing_p2 + variance Δ
+ *  5.5-1:  P2 offline → IndexedDB queue (drain su 'online')
+ *  5.5-2:  Photo-proof → capture + resize + upload Storage + UPDATE column
  * ========================================================================== */
 (function () {
   'use strict';
@@ -18,7 +19,7 @@
   const warn = (...a) => console.warn('[ScanHandler]', ...a);
 
   /* ═══════════════════════════════════════════════════════════════════════
-     QUEUE · IndexedDB (solo P1)
+     QUEUE · IndexedDB (P1 + P2)
      ═══════════════════════════════════════════════════════════════════════ */
   const QDB_NAME = 'maat_queue';
   const QDB_VERSION = 1;
@@ -100,6 +101,13 @@
             p_weight_p1: item.weight_kg,
             p_gps_lat: (item.gps && item.gps.lat != null) ? item.gps.lat : null,
             p_gps_lng: (item.gps && item.gps.lng != null) ? item.gps.lng : null,
+          };
+        } else if (item.type === 'p2') {
+          rpc = 'register_depot_weighing_p2';
+          params = {
+            p_bag_qr_id: item.bag_qr,
+            p_depot_qr: item.depot_code,
+            p_weight_p2: item.weight_kg,
           };
         } else {
           warn('drain: tipo sconosciuto', item.type);
@@ -243,6 +251,65 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
+     PHOTO-PROOF helpers (5.5-2)
+     ═══════════════════════════════════════════════════════════════════════ */
+  const PHOTO_BUCKET = 'proofs';
+  const PHOTO_MAX_DIM = 1200;
+  const PHOTO_QUALITY = 0.75;
+
+  function resizeImage(file, maxDim) {
+    return new Promise((resolve) => {
+      try {
+        const reader = new FileReader();
+        const img = new Image();
+        reader.onload = (e) => { img.src = e.target.result; };
+        img.onload = () => {
+          try {
+            const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => resolve(blob), 'image/jpeg', PHOTO_QUALITY);
+          } catch (e) { warn('resize canvas:', e); resolve(null); }
+        };
+        img.onerror = () => { warn('image load fail'); resolve(null); };
+        reader.onerror = () => { warn('file read fail'); resolve(null); };
+        reader.readAsDataURL(file);
+      } catch (e) { warn('resizeImage:', e); resolve(null); }
+    });
+  }
+
+  async function uploadPhoto(blob, bagQrId, mode) {
+    const sb = getClient();
+    if (!sb || !sb.storage) { warn('storage non disponibile'); return null; }
+    try {
+      const folder = mode === 'p1' ? 'p1' : 'p2';
+      const filename = folder + '/' + bagQrId + '-' + Date.now() + '.jpg';
+      const { error } = await sb.storage.from(PHOTO_BUCKET).upload(filename, blob, {
+        contentType: 'image/jpeg', upsert: true
+      });
+      if (error) { warn('storage upload failed:', error.message); return null; }
+      const { data: urlData } = sb.storage.from(PHOTO_BUCKET).getPublicUrl(filename);
+      return (urlData && urlData.publicUrl) || filename;
+    } catch (e) { warn('uploadPhoto exception:', e); return null; }
+  }
+
+  async function attachPhotoToCollection(bagQrId, mode, photoUrl) {
+    const sb = getClient();
+    if (!sb) return false;
+    const column = mode === 'p1' ? 'scale_fault_photo' : 'depot_fault_photo';
+    try {
+      const { error } = await sb.from('collections')
+        .update({ [column]: photoUrl })
+        .eq('bag_qr_id', bagQrId);
+      if (error) { warn('UPDATE photo column failed:', error.message); return false; }
+      log('photo attached:', column, '←', photoUrl);
+      return true;
+    } catch (e) { warn('attachPhoto exception:', e); return false; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
      BADGE HANDLER (invariato)
      ═══════════════════════════════════════════════════════════════════════ */
   async function handleBadge(scan) {
@@ -342,7 +409,6 @@
     }
   }
 
-  /* 5.4-1: lista sacchi con bottone "Peser" */
   function showDepotResult(data) {
     const { modal, card } = buildModal();
     card.appendChild(el('div', 'maat-scan-modal__icon', '🏭'));
@@ -390,8 +456,7 @@
       });
       card.appendChild(list);
     } else {
-      const empty = el('p', 'maat-scan-modal__body', 'Aucun sac en transit à réceptionner.');
-      card.appendChild(empty);
+      card.appendChild(el('p', 'maat-scan-modal__body', 'Aucun sac en transit à réceptionner.'));
     }
 
     const actions = el('div', 'maat-scan-modal__actions');
@@ -434,7 +499,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BAG P1 — RPC reale + queue offline (invariato)
+     BAG P1 — RPC + queue offline + photo
      ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP1(scan) {
     let clientCtx = null;
@@ -453,7 +518,7 @@
       scan,
       contextLabel: 'Collecte · ' + (clientCtx.company_name || 'Client'),
       contextSub: clientCtx.cluster ? 'Cluster ' + clientCtx.cluster : '',
-      onConfirm: async function (weight) {
+      onConfirm: async function (weight, photoBlob) {
         const sb = getClient();
         if (!sb) { showError('Service Supabase indisponible'); return false; }
 
@@ -472,6 +537,7 @@
         } catch (_) {}
 
         const queueP1 = async (reason) => {
+          if (photoBlob) warn('P1 offline → photo ignorée (buffer locale seulement)');
           await qEnqueue({
             type: 'p1', bag_qr: scan.token, vector_id: vectorId,
             weight_kg: weight, client_id: clientCtx.client_id,
@@ -498,6 +564,13 @@
           if (error) throw error;
           log('P1 RPC OK:', data);
           try { sessionStorage.removeItem('maat_pending_p1'); } catch (_) {}
+
+          if (photoBlob) {
+            const url = await uploadPhoto(photoBlob, scan.token, 'p1');
+            if (url) await attachPhotoToCollection(scan.token, 'p1', url);
+            else warn('photo upload skipped');
+          }
+
           showSuccessToast('P1 · ' + weight + ' kg · ' + scan.token);
           return true;
         } catch (e) {
@@ -512,7 +585,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BAG P2 — RPC reale register_depot_weighing_p2 (5.4-2)
+     BAG P2 — RPC + queue offline + photo (5.5-1)
      ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP2(scan) {
     let depotCtx = null;
@@ -529,11 +602,10 @@
       depot_code: depotCtx.depot_code,
       depot_name: depotCtx.depot_name,
       cluster: depotCtx.cluster,
-      weight_p1: null, // sconosciuto finché RPC non ritorna il record
+      weight_p1: null,
     });
   }
 
-  /* 5.4-2: helper condiviso per weigh P2 + RPC + Δ handling */
   function openP2WeighModal(bagQrId, ctx) {
     showWeighModal({
       mode: 'p2',
@@ -541,11 +613,10 @@
       contextLabel: 'Réception · ' + (ctx.depot_name || ctx.depot_code),
       contextSub: (ctx.cluster ? 'Cluster ' + ctx.cluster : '') +
                   (ctx.weight_p1 != null ? ' · P1 ' + ctx.weight_p1 + ' kg' : ''),
-      onConfirm: async function (weight) {
+      onConfirm: async function (weight, photoBlob) {
         const sb = getClient();
         if (!sb) { showError('Service Supabase indisponible'); return false; }
 
-        // P2 non richiede GPS per ora (deposito = punto fisso certificato)
         log('P2 submit:', bagQrId, weight, 'kg → depot', ctx.depot_code);
 
         try {
@@ -555,51 +626,68 @@
           }));
         } catch (_) {}
 
-        if (navigator.onLine === false) {
-          // P2 offline: queue non ancora supportata (→ 5.5). Blocca.
-          showError('Réseau indisponible · reconnectez-vous pour P2');
+        const queueP2 = async (reason) => {
+          if (photoBlob) warn('P2 offline → photo ignorée (buffer locale seulement)');
+          await qEnqueue({
+            type: 'p2', bag_qr: bagQrId, weight_kg: weight,
+            depot_code: ctx.depot_code, depot_name: ctx.depot_name,
+            reason: reason,
+          });
+          await updateQueueBadge();
+          log('P2 → queue (' + reason + '):', bagQrId);
+          try { sessionStorage.removeItem('maat_pending_p2'); } catch (_) {}
+          showSuccessToast('P2 · ' + weight + ' kg · enregistré hors ligne');
+          return true;
+        };
+
+        if (navigator.onLine === false) return await queueP2('offline');
+
+        try {
+          const { data, error } = await sb.rpc('register_depot_weighing_p2', {
+            p_bag_qr_id: bagQrId,
+            p_depot_qr: ctx.depot_code,
+            p_weight_p2: weight,
+          });
+          if (error) throw error;
+
+          try { sessionStorage.removeItem('maat_pending_p2'); } catch (_) {}
+
+          if (photoBlob) {
+            const url = await uploadPhoto(photoBlob, bagQrId, 'p2');
+            if (url) await attachPhotoToCollection(bagQrId, 'p2', url);
+            else warn('photo upload skipped');
+          }
+
+          const p1 = data && data.weight_collect_kg != null ? Number(data.weight_collect_kg) : null;
+          const p2 = data && data.weight_depot_kg != null ? Number(data.weight_depot_kg) : weight;
+          const delta = (p1 != null && p1 > 0) ? ((p2 - p1) / p1 * 100) : null;
+          const status = data && data.status;
+          const bagQr = (data && data.bag_qr_id) || bagQrId;
+
+          log('P2 RPC OK:', { status, p1, p2, delta });
+
+          if (status === 'DISCREPANCY') {
+            showVarianceResult(bagQr, p1, p2, delta);
+          } else {
+            showSuccessToast('P2 · ' + weight + ' kg · ' + bagQr + ' (ANCRÉ)');
+          }
+          return true;
+        } catch (e) {
+          const isNetwork = /network|fetch|offline|failed to fetch/i.test(String(e.message || e));
+          if (isNetwork) return await queueP2('network-error');
+          console.error('[ScanHandler] register_depot_weighing_p2 failed:', e);
+          showError('Erreur: ' + (e.message || e));
           return false;
         }
-
-        const { data, error } = await sb.rpc('register_depot_weighing_p2', {
-          p_bag_qr_id: bagQrId,
-          p_depot_qr: ctx.depot_code,
-          p_weight_p2: weight,
-        });
-
-        if (error) {
-          console.error('[ScanHandler] register_depot_weighing_p2 failed:', error);
-          showError('Erreur: ' + (error.message || error));
-          return false;
-        }
-
-        try { sessionStorage.removeItem('maat_pending_p2'); } catch (_) {}
-
-        const p1 = data && data.weight_collect_kg != null ? Number(data.weight_collect_kg) : null;
-        const p2 = data && data.weight_depot_kg != null ? Number(data.weight_depot_kg) : weight;
-        const delta = (p1 != null && p1 > 0) ? ((p2 - p1) / p1 * 100) : null;
-        const status = data && data.status;
-        const bagQr = data && data.bag_qr_id || bagQrId;
-
-        log('P2 RPC OK:', { status, p1, p2, delta });
-
-        if (status === 'DISCREPANCY') {
-          showVarianceResult(bagQr, p1, p2, delta);
-        } else {
-          showSuccessToast('P2 · ' + weight + ' kg · ' + bagQr + ' (ANCRÉ)');
-        }
-        return true;
       }
     });
   }
 
-  /* 5.4-3: modale Δ per DISCREPANCY */
   function showVarianceResult(bagQrId, p1, p2, delta) {
     const { modal, card } = buildModal();
     card.appendChild(el('div', 'maat-scan-modal__icon maat-scan-modal__icon--err', '⚠️'));
     card.appendChild(el('h3', 'maat-scan-modal__title', 'Écart détecté'));
-    card.appendChild(el('span', 'maat-scan-modal__badge',
-      'Variance > 3%'));
+    card.appendChild(el('span', 'maat-scan-modal__badge', 'Variance > 3%'));
 
     const info = el('div', null);
     info.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:8px';
@@ -626,7 +714,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     Weigh modal (invariato)
+     Weigh modal (con photo-proof 5.5-2)
      ═══════════════════════════════════════════════════════════════════════ */
   function showWeighModal(opts) {
     const isP2 = opts.mode === 'p2';
@@ -675,6 +763,63 @@
     });
     card.appendChild(quickWrap);
 
+    /* Photo-proof optionnel */
+    let capturedPhoto = null;
+    const photoWrap = el('div', 'maat-weigh-photo');
+    photoWrap.style.cssText = 'margin:12px 0;display:flex;flex-direction:column;gap:6px;align-items:center';
+
+    const photoBtn = el('button', 'maat-weigh-photo-btn', '📷 Preuve photo (optionnel)');
+    photoBtn.type = 'button';
+    photoBtn.style.cssText = 'padding:8px 14px;border-radius:8px;border:1px dashed rgba(0,255,163,0.4);background:transparent;color:#00FFA3;font-size:0.7rem;cursor:pointer;font-family:inherit';
+
+    const photoInput = document.createElement('input');
+    photoInput.type = 'file';
+    photoInput.accept = 'image/*';
+    photoInput.capture = 'environment';
+    photoInput.style.display = 'none';
+
+    const photoPreview = el('div', null);
+    photoPreview.style.cssText = 'text-align:center';
+
+    photoWrap.appendChild(photoBtn);
+    photoWrap.appendChild(photoInput);
+    photoWrap.appendChild(photoPreview);
+    card.appendChild(photoWrap);
+
+    photoBtn.addEventListener('click', () => photoInput.click());
+    photoInput.addEventListener('change', async () => {
+      const file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+      const original = photoBtn.textContent;
+      photoBtn.textContent = '⏳ Compression…';
+      photoBtn.disabled = true;
+      const blob = await resizeImage(file, PHOTO_MAX_DIM);
+      photoBtn.disabled = false;
+      if (!blob) {
+        photoBtn.textContent = original;
+        showError('Impossible de traiter la photo');
+        return;
+      }
+      capturedPhoto = blob;
+      const url = URL.createObjectURL(blob);
+      photoPreview.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.cssText = 'max-width:100%;max-height:90px;border-radius:6px;display:block;margin:0 auto 4px';
+      const removeBtn = el('button', null, '✕ Retirer');
+      removeBtn.type = 'button';
+      removeBtn.style.cssText = 'background:none;border:none;color:#F87171;font-size:0.65rem;cursor:pointer;font-family:inherit';
+      removeBtn.addEventListener('click', () => {
+        capturedPhoto = null;
+        photoPreview.innerHTML = '';
+        photoBtn.textContent = '📷 Preuve photo (optionnel)';
+        photoInput.value = '';
+      });
+      photoPreview.appendChild(img);
+      photoPreview.appendChild(removeBtn);
+      photoBtn.textContent = '✅ Photo capturée · ' + Math.round(blob.size / 1024) + ' Ko';
+    });
+
     const errBox = el('div', 'maat-weigh-error');
     errBox.hidden = true;
     card.appendChild(errBox);
@@ -706,7 +851,7 @@
         confirmBtn.textContent = 'Confirmer';
         cancelBtn.disabled = false;
       };
-      Promise.resolve().then(() => opts.onConfirm(val))
+      Promise.resolve().then(() => opts.onConfirm(val, capturedPhoto))
         .then((result) => {
           if (result === false) { resetBtn(); return; }
           overlay.remove();
@@ -747,7 +892,6 @@
     document.body.appendChild(overlay);
   }
 
-  /* Event listener */
   window.addEventListener('maat:scan', (e) => {
     if (!e || !e.detail) return;
     const scan = e.detail;
@@ -763,5 +907,5 @@
   });
 
   updateQueueBadge();
-  log('ready v1.4.0');
+  log('ready v1.5.0');
 })();
