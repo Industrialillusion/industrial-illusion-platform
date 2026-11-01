@@ -1,10 +1,11 @@
 /* ==========================================================================
  *  assets/pwa-scan-handlers.js
- *  Maat OS · Scanner QR Handlers (Phase 5.3.B.2 + 5.3.B.3a)
+ *  Maat OS · Scanner QR Handlers (Phase 5.3.B.2 + 5.3.B.3a + 5.3.B.3b-1)
  *  Business logic per eventi 'maat:scan' emessi da pwa-scan.js
  *
  *  B.2:  Badge → validate_badge_qr · Depot → checkin_depot_station
- *  B.3a: Bag P1/P2 → weigh input modal (UI only, RPC in B.3b)
+ *  B.3a: Bag P1/P2 → weigh input modal (UI only)
+ *  B.3b-1: Bag P1 → RPC reale validate_and_claim_bag + GPS non bloccante
  * ========================================================================== */
 (function () {
   'use strict';
@@ -72,10 +73,87 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     B.2 · HANDLERS BADGE + DEPOT
+     B.3b-1 · HELPER: vector_id + GPS
      ═══════════════════════════════════════════════════════════════════════ */
 
-  /* ─── Handler BADGE → validate_badge_qr ──────────────────────────────── */
+  /* Cache vector_id (evita chiamate ripetute a auth.getUser) */
+  let _vectorIdCache = null;
+  let _vectorIdCacheAt = 0;
+
+  async function getCurrentVectorId() {
+    const now = Date.now();
+    if (_vectorIdCache && (now - _vectorIdCacheAt) < 60000) {
+      return _vectorIdCache;
+    }
+    const sb = getClient();
+    if (!sb || !sb.auth || typeof sb.auth.getUser !== 'function') {
+      warn('getCurrentVectorId: Supabase auth non disponibile');
+      return null;
+    }
+    try {
+      const { data, error } = await sb.auth.getUser();
+      if (error) {
+        warn('auth.getUser error:', error.message);
+        return null;
+      }
+      const uid = data && data.user && data.user.id;
+      if (!uid) {
+        warn('getCurrentVectorId: nessun utente loggato');
+        return null;
+      }
+      _vectorIdCache = uid;
+      _vectorIdCacheAt = now;
+      return uid;
+    } catch (e) {
+      warn('getCurrentVectorId exception:', e);
+      return null;
+    }
+  }
+
+  /* GPS: promise che risolve con {lat,lng} o null (mai throw, mai bloccante) */
+  function getGpsPosition(timeoutMs) {
+    const t = timeoutMs || 8000;
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        log('geolocation not available');
+        resolve(null);
+        return;
+      }
+      let resolved = false;
+      const timer = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          warn('GPS timeout after ' + t + 'ms → null');
+          resolve(null);
+        }
+      }, t);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (resolved) return;
+          resolved = true;
+          clearTimeout(timer);
+          resolve({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            accuracy: pos.coords.accuracy || null,
+          });
+        },
+        (err) => {
+          if (resolved) return;
+          resolved = true;
+          clearTimeout(timer);
+          warn('GPS error: ' + (err.message || err.code) + ' → null');
+          resolve(null);
+        },
+        { enableHighAccuracy: true, timeout: t, maximumAge: 30000 }
+      );
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     B.2 · HANDLERS BADGE + DEPOT (INVARIATI)
+     ═══════════════════════════════════════════════════════════════════════ */
+
   async function handleBadge(scan) {
     const sb = getClient();
     if (!sb) { showError('Service Supabase indisponible'); return; }
@@ -119,7 +197,6 @@
     }
   }
 
-  /* ─── Modal risultato badge ──────────────────────────────────────────── */
   function showBadgeResult(data) {
     const isClient = data.owner_type === 'client';
     const { modal, card } = buildModal();
@@ -159,7 +236,6 @@
     setTimeout(() => { if (document.body.contains(modal)) closeModal(modal); }, 10000);
   }
 
-  /* ─── Handler DEPOT → checkin_depot_station ──────────────────────────── */
   async function handleDepot(scan) {
     const sb = getClient();
     if (!sb) { showError('Service Supabase indisponible'); return; }
@@ -195,7 +271,6 @@
     }
   }
 
-  /* ─── Modal risultato depot ──────────────────────────────────────────── */
   function showDepotResult(data) {
     const { modal, card } = buildModal();
 
@@ -234,7 +309,6 @@
     card.appendChild(actions);
   }
 
-  /* ─── Error toast ────────────────────────────────────────────────────── */
   function showError(msg) {
     if (window.Maat && typeof window.Maat.toast === 'function') {
       window.Maat.toast(msg, 'err');
@@ -253,10 +327,10 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     B.3a · WEIGH INPUT (P1 / P2) — UI only, RPC in B.3b
+     B.3b-1 · WEIGH INPUT P1 (RPC REALE) + P2 (UI only, RPC in 5.4)
      ═══════════════════════════════════════════════════════════════════════ */
 
-  /* ─── P1 · raccolta hotel ────────────────────────────────────────────── */
+  /* ─── P1 · raccolta hotel → RPC validate_and_claim_bag ──────────────── */
   function handleBagP1(scan) {
     let clientCtx = null;
     try {
@@ -278,7 +352,25 @@
       scan,
       contextLabel: 'Collecte · ' + (clientCtx.company_name || 'Client'),
       contextSub: clientCtx.cluster ? 'Cluster ' + clientCtx.cluster : '',
-      onConfirm: function(weight) {
+      onConfirm: async function(weight) {
+        const sb = getClient();
+        if (!sb) {
+          showError('Service Supabase indisponible');
+          return false;
+        }
+
+        // 1. vector_id (bloccante: se null, abort)
+        const vectorId = await getCurrentVectorId();
+        if (!vectorId) {
+          showError('Session vétérinaire introuvable · reconnectez-vous');
+          return false;
+        }
+
+        // 2. GPS (non bloccante: max 8s, poi null)
+        const gps = await getGpsPosition(8000);
+        log('P1 GPS:', gps ? (gps.lat + ',' + gps.lng) : 'null');
+
+        // 3. Pending audit trail (retry manuale in B.3b-3)
         try {
           sessionStorage.setItem('maat_pending_p1', JSON.stringify({
             bag_qr: scan.token,
@@ -286,16 +378,36 @@
             client_id: clientCtx.client_id,
             client_name: clientCtx.company_name,
             cluster: clientCtx.cluster,
-            timestamp: Date.now()
+            vector_id: vectorId,
+            gps: gps,
+            timestamp: Date.now(),
           }));
         } catch (_) {}
-        log('P1 weight:', weight, 'kg for', scan.token, '(RPC pending B.3b)');
-        showSuccessToast('P1 · ' + weight + ' kg enregistré · ' + scan.token);
+
+        // 4. RPC reale
+        const { data, error } = await sb.rpc('validate_and_claim_bag', {
+          p_bag_qr_id: scan.token,
+          p_vector_id: vectorId,
+          p_weight_p1: weight,
+          p_gps_lat: gps ? gps.lat : null,
+          p_gps_lng: gps ? gps.lng : null,
+        });
+
+        if (error) {
+          console.error('[ScanHandler] validate_and_claim_bag failed:', error);
+          showError('Erreur sauvegarde: ' + (error.message || error));
+          return false;
+        }
+
+        log('P1 RPC OK:', data);
+        try { sessionStorage.removeItem('maat_pending_p1'); } catch (_) {}
+        showSuccessToast('P1 · ' + weight + ' kg · ' + scan.token);
+        return true;
       }
     });
   }
 
-  /* ─── P2 · ricezione depot ───────────────────────────────────────────── */
+  /* ─── P2 · ricezione depot (UI only, invariato — RPC in 5.4) ────────── */
   function handleBagP2(scan) {
     let depotCtx = null;
     try {
@@ -328,20 +440,20 @@
             timestamp: Date.now()
           }));
         } catch (_) {}
-        log('P2 weight:', weight, 'kg for', scan.token, '(RPC pending B.3b)');
+        log('P2 weight:', weight, 'kg for', scan.token, '(RPC pending 5.4)');
         showSuccessToast('P2 · ' + weight + ' kg enregistré · ' + scan.token);
+        return true;
       }
     });
   }
 
-  /* ─── Modal weigh input ──────────────────────────────────────────────── */
+  /* ─── Modal weigh input (adattato per onConfirm async) ──────────────── */
   function showWeighModal(opts) {
     const isP2 = opts.mode === 'p2';
 
     const overlay = el('div', 'maat-weigh-overlay');
     const card = el('div', 'maat-weigh-card' + (isP2 ? ' is-p2' : ''));
 
-    // Header
     const header = el('div', 'maat-weigh-header');
     header.appendChild(el('span', 'maat-weigh-badge',
       isP2 ? '🏭 Pesée P2' : '🏨 Pesée P1'));
@@ -352,17 +464,14 @@
     header.appendChild(closeBtn);
     card.appendChild(header);
 
-    // Titolo
     card.appendChild(el('h3', 'maat-weigh-title', 'Saisir le poids'));
 
-    // Contesto
     const ctx = el('div', 'maat-weigh-context');
     ctx.innerHTML = '<strong>' + esc(opts.contextLabel || '') + '</strong>' +
       (opts.contextSub ? '<br>' + esc(opts.contextSub) : '') +
       '<br>Sac: ' + esc(opts.scan.token);
     card.appendChild(ctx);
 
-    // Field input
     const field = el('div', 'maat-weigh-field');
     const input = document.createElement('input');
     input.type = 'number';
@@ -376,7 +485,6 @@
     field.appendChild(el('span', 'maat-weigh-unit', 'kg'));
     card.appendChild(field);
 
-    // Quick-add
     const quickWrap = el('div', 'maat-weigh-quickadd');
     [0.5, 1, 5, 10].forEach(val => {
       const q = el('button', 'maat-weigh-quick', '+' + val);
@@ -390,12 +498,10 @@
     });
     card.appendChild(quickWrap);
 
-    // Error
     const errBox = el('div', 'maat-weigh-error');
     errBox.hidden = true;
     card.appendChild(errBox);
 
-    // Actions
     const actions = el('div', 'maat-weigh-actions');
 
     const cancelBtn = el('button', 'maat-weigh-btn maat-weigh-btn--ghost', 'Annuler');
@@ -421,17 +527,34 @@
       }
       confirmBtn.disabled = true;
       confirmBtn.textContent = 'Enregistrement…';
-      try {
-        opts.onConfirm(val);
-      } catch (e) {
-        console.error('[ScanHandler] onConfirm error:', e);
-      }
-      setTimeout(() => overlay.remove(), 300);
+      cancelBtn.disabled = true;
+
+      const resetBtn = () => {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Confirmer';
+        cancelBtn.disabled = false;
+      };
+
+      Promise.resolve()
+        .then(() => opts.onConfirm(val))
+        .then((result) => {
+          if (result === false) {
+            // l'handler a déjà affiché son erreur
+            resetBtn();
+            return;
+          }
+          overlay.remove();
+        })
+        .catch((e) => {
+          console.error('[ScanHandler] onConfirm error:', e);
+          errBox.textContent = 'Erreur: ' + (e && e.message ? e.message : String(e));
+          errBox.hidden = false;
+          resetBtn();
+        });
     });
     actions.appendChild(confirmBtn);
     card.appendChild(actions);
 
-    // Enter to confirm
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -449,7 +572,6 @@
     });
   }
 
-  /* ─── Modal errore contesto ──────────────────────────────────────────── */
   function showModalError(icon, title, body) {
     const overlay = el('div', 'maat-scan-modal');
     const card = el('div', 'maat-scan-modal__card');
@@ -469,7 +591,6 @@
     document.body.appendChild(overlay);
   }
 
-  /* ─── Toast success ──────────────────────────────────────────────────── */
   function showSuccessToast(msg) {
     let t = document.getElementById('maat-scan-toast');
     if (!t) {
@@ -519,5 +640,5 @@
     }
   });
 
-  log('ready v1.1.0');
+  log('ready v1.2.0');
 })();
