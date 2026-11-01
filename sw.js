@@ -1,19 +1,17 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone + cssfix + b3b1)
+ *  Maat OS · Industrial Illusion SARL · v1.0.2
  *
  *  Strategie:
- *  - App shell → pre-cache all'install
- *  - HTML → network-first con fallback cache
- *  - Asset statici → cache-first
- *  - Supabase API → bypass totale
+ *  - HTML       → network-first con fallback cache
+ *  - JS / CSS   → network-first con fallback cache  (deploy visibile al F5)
+ *  - img/font   → cache-first
+ *  - Supabase   → bypass totale
  *
- *  v1.0.1: clonare la Response PRIMA di restituirla al browser.
- *  v1.0.1-cssfix: bump VERSION per forzare refresh pwa.html (link pwa-weigh.css).
- *  v1.0.1-b3b1: bump VERSION per forzare refresh pwa-scan-handlers.js v1.2.0.
+ *  v1.0.2: JS/CSS ora network-first → fine bump manuali VERSION.
  * ========================================================================== */
 
-const VERSION      = 'maat-v1.0.1-pre-pwa-b3b1';
+const VERSION      = 'maat-v1.0.2-pre-pwa';
 const SHELL_CACHE  = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -70,21 +68,24 @@ self.addEventListener('fetch', function (event) {
 
   var url = new URL(req.url);
 
-  // Supabase: bypass totale
   if (url.hostname.indexOf('supabase.co') !== -1) return;
-
-  // Font Google: bypass
   if (url.hostname.indexOf('fonts.googleapis.com') !== -1) return;
   if (url.hostname.indexOf('fonts.gstatic.com') !== -1) return;
 
-  // HTML
+  // HTML → network-first
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').indexOf('text/html') !== -1) {
-    event.respondWith(networkFirstHTML(req));
+    event.respondWith(networkFirst(req, RUNTIME_CACHE, '/pwa.html'));
     return;
   }
 
-  // Static assets
-  if (/\.(css|js|png|jpg|jpeg|svg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname)) {
+  // JS / CSS → network-first (sempre freschi online, cache offline)
+  if (/\.(js|css)$/i.test(url.pathname)) {
+    event.respondWith(networkFirst(req, RUNTIME_CACHE));
+    return;
+  }
+
+  // img / font / manifest → cache-first
+  if (/\.(png|jpg|jpeg|svg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname)) {
     event.respondWith(cacheFirst(req));
     return;
   }
@@ -92,14 +93,14 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(staleWhileRevalidate(req));
 });
 
-/* ─── Strategia: network-first per HTML ─────────────────────────────── */
-function networkFirstHTML(req) {
+/* ─── network-first ──────────────────────────────────────────────────── */
+function networkFirst(req, cacheName, fallbackUrl) {
   return fetch(req).then(function (fresh) {
     if (fresh && fresh.ok) {
       var clone = fresh.clone();
-      caches.open(RUNTIME_CACHE).then(function (cache) {
+      caches.open(cacheName).then(function (cache) {
         cache.put(req, clone).catch(function (e) {
-          console.warn('[SW] cache.put HTML failed:', e.message);
+          console.warn('[SW] cache.put failed:', e.message);
         });
       });
     }
@@ -107,18 +108,13 @@ function networkFirstHTML(req) {
   }).catch(function () {
     return caches.match(req).then(function (cached) {
       if (cached) return cached;
-      return caches.match('/pwa.html');
-    }).then(function (shell) {
-      if (shell) return shell;
-      return new Response(
-        '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="background:#060A0D;color:#F87171;font-family:monospace;padding:2rem;text-align:center"><h1>OFFLINE</h1><p>Pas de connexion et page absente du cache.</p></body></html>',
-        { headers: { 'Content-Type': 'text/html; charset=utf-8' }, status: 503 }
-      );
+      if (fallbackUrl) return caches.match(fallbackUrl);
+      return new Response('', { status: 503 });
     });
   });
 }
 
-/* ─── Strategia: cache-first per asset ──────────────────────────────── */
+/* ─── cache-first ────────────────────────────────────────────────────── */
 function cacheFirst(req) {
   return caches.match(req).then(function (cached) {
     if (cached) return cached;
@@ -138,7 +134,7 @@ function cacheFirst(req) {
   });
 }
 
-/* ─── Strategia: stale-while-revalidate ─────────────────────────────── */
+/* ─── stale-while-revalidate ─────────────────────────────────────────── */
 function staleWhileRevalidate(req) {
   return caches.match(req).then(function (cached) {
     var networkPromise = fetch(req).then(function (fresh) {
@@ -152,7 +148,6 @@ function staleWhileRevalidate(req) {
       }
       return fresh;
     }).catch(function () { return cached; });
-
     return cached || networkPromise;
   });
 }
