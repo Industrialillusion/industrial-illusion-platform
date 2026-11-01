@@ -1,6 +1,6 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone + cssfix)
+ *  Maat OS · Industrial Illusion SARL · v1.0.1 (fix clone + cssfix + b3b1)
  *
  *  Strategie:
  *  - App shell → pre-cache all'install
@@ -8,13 +8,12 @@
  *  - Asset statici → cache-first
  *  - Supabase API → bypass totale
  *
- *  v1.0.1: clonare la Response PRIMA di restituirla al browser,
- *          altrimenti il body viene consumato dal chiamante e clone() fallisce.
- *  v1.0.1-cssfix: bump VERSION per forzare refresh pwa.html (link pwa-weigh.css)
- *          + estensione SHELL_URLS con moduli PWA (badges/scan/weigh)
+ *  v1.0.1: clonare la Response PRIMA di restituirla al browser.
+ *  v1.0.1-cssfix: bump VERSION per forzare refresh pwa.html (link pwa-weigh.css).
+ *  v1.0.1-b3b1: bump VERSION per forzare refresh pwa-scan-handlers.js v1.2.0.
  * ========================================================================== */
 
-const VERSION      = 'maat-v1.0.1-pre-pwa-cssfix';
+const VERSION      = 'maat-v1.0.1-pre-pwa-b3b1';
 const SHELL_CACHE  = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -96,7 +95,6 @@ self.addEventListener('fetch', function (event) {
 /* ─── Strategia: network-first per HTML ─────────────────────────────── */
 function networkFirstHTML(req) {
   return fetch(req).then(function (fresh) {
-    // FIX: clona SUBITO, prima di restituire al browser
     if (fresh && fresh.ok) {
       var clone = fresh.clone();
       caches.open(RUNTIME_CACHE).then(function (cache) {
@@ -125,7 +123,6 @@ function cacheFirst(req) {
   return caches.match(req).then(function (cached) {
     if (cached) return cached;
     return fetch(req).then(function (fresh) {
-      // FIX: clona SUBITO
       if (fresh && fresh.ok) {
         var clone = fresh.clone();
         caches.open(SHELL_CACHE).then(function (cache) {
@@ -145,7 +142,6 @@ function cacheFirst(req) {
 function staleWhileRevalidate(req) {
   return caches.match(req).then(function (cached) {
     var networkPromise = fetch(req).then(function (fresh) {
-      // FIX: clona SUBITO
       if (fresh && fresh.ok) {
         var clone = fresh.clone();
         caches.open(RUNTIME_CACHE).then(function (cache) {
