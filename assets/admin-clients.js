@@ -1,12 +1,12 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.2
+ *  Maat OS · Admin · Clients Management v4.3
  *  - Header button "Clients" injecté
  *  - Section plein écran : recherche, filtre, grille cards
  *  - Création via /api/create-client (serverless)
  *  - Édition client + upload fiche technique / contrat
  *  - Désactivation / Réactivation (soft delete)
- *  - Détail client avec profils liés + unlink
+ *  - Détail client avec profils liés + unlink + bouton Voir Dashboard
  * ========================================================================== */
 (function () {
   'use strict';
@@ -52,7 +52,7 @@
     return d.innerHTML;
   }
 
-  /* Upload helper — v4.2 */
+  /* Upload helper */
   async function uploadDoc(file, prefix) {
     if (!file || file.size === 0) return null;
     const sb = getClient();
@@ -216,7 +216,8 @@
     if (e2) { toast('⚠️ Client mis à jour, profils: ' + e2.message, true); return false; }
     return true;
   }
-    /* ─── Détail client ────────────────────────────────────────────────── */
+
+  /* ─── Détail client ────────────────────────────────────────────────── */
   async function openClientDetail(client, parentSec) {
     const modal = document.createElement('div');
     modal.className = 'ac-modal fixed inset-0 z-[9996] bg-black/85 backdrop-blur-sm overflow-y-auto p-4 sm:p-8 flex items-start justify-center';
@@ -243,7 +244,8 @@
         </div>
         <h3 class="text-cyberGreen text-xs uppercase tracking-wider font-bold mb-2">🔗 Profils liés</h3>
         <div id="ac-profiles" class="space-y-2 mb-5 text-xs">⏳ Chargement…</div>
-        <div class="flex justify-end pt-3 border-t border-slate-800">
+        <div class="flex justify-between gap-3 pt-3 border-t border-slate-800">
+          <button type="button" class="ac-dashboard px-4 py-2 rounded-lg bg-kemetGold text-black font-bold text-xs hover:brightness-110" data-client-id="${esc(client.id)}">👁️ Voir la Dashboard</button>
           <button type="button" class="ac-x px-4 py-2 rounded-lg bg-slate-700 text-slate-200 font-bold text-xs hover:bg-slate-600">Fermer</button>
         </div>
       </div>
@@ -251,6 +253,14 @@
     document.body.appendChild(modal);
     modal.querySelectorAll('.ac-x').forEach(b => b.addEventListener('click', () => modal.remove()));
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+    // Bouton "Voir la Dashboard"
+    var dashBtn = modal.querySelector('.ac-dashboard');
+    if (dashBtn) {
+      dashBtn.addEventListener('click', function () {
+        window.open('dashboard.html', '_blank', 'noopener');
+      });
+    }
 
     const profList = modal.querySelector('#ac-profiles');
     const sb = getClient();
@@ -279,7 +289,8 @@
       profList.appendChild(row);
     }
   }
-    /* ─── Form création OU édition ─────────────────────────────────────── */
+
+  /* ─── Form création OU édition ─────────────────────────────────────── */
   function openClientForm(existingClient, parentSec) {
     const isEdit = !!existingClient;
     document.querySelectorAll('.ac-form').forEach(n => n.remove());
@@ -370,7 +381,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ Enregistrement…';
 
-      // Upload fichiers (v4.2)
+      // Upload fichiers
       const ficheFile = form.querySelector('[name="fiche_file"]').files[0];
       const contractFile = form.querySelector('[name="contract_file"]').files[0];
       if (ficheFile) {
@@ -465,5 +476,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.2.0');
+  log('ready v4.3.0');
 })();
