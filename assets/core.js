@@ -1,4 +1,3 @@
-
 /* ============================================================
    MAAT OS — Noyau partagé (PWA opérateurs + Control Tower)
    Industrial Illusion SARL · Projet PurKemet
@@ -19,6 +18,7 @@
      - exec/insert/update/rpc : écritures avec queue offline
      - flush/pending/netInit : gestion réseau
      - profile/signOut/sw : session
+     - redirectByRole : redirect post-login selon profiles.role
      - modal/confirm/form : UI déclarative
    ============================================================ */
 (function () {
@@ -318,6 +318,33 @@
   M.sw = function () {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+  };
+
+  /* ---------- Redirect post-login par rôle (RBAC) ---------- */
+  M.redirectByRole = async function (fallback) {
+    try {
+      var p = await M.profile();
+      if (!p || !p.role) {
+        window.location.replace(fallback || 'index.html');
+        return;
+      }
+      if (p.role === 'client') {
+        window.location.replace('dashboard.html');
+        return;
+      }
+      if (p.role === 'operator') {
+        window.location.replace('pwa.html');
+        return;
+      }
+      if (p.role === 'admin' || p.role === 'direction') {
+        window.location.replace('admin.html');
+        return;
+      }
+      window.location.replace(fallback || 'index.html');
+    } catch (e) {
+      console.error('[Maat] redirectByRole error:', e);
+      window.location.replace(fallback || 'index.html');
     }
   };
 
