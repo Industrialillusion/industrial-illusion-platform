@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Espace Client ESG & DG Inspection | Industrial Illusion SARL</title>
-  <meta name="description" content="Portail Client B2B PurKemet & DG Control Tower: Suivi des pesées notariées, identification des vecteurs logistiques, bilans CO2 et Certificat Zéro-Déchet ESG.">
+  <title>Espace Client ESG B2B | Industrial Illusion SARL</title>
+  <meta name="description" content="Portail Client B2B PurKemet & DG Control Tower: Suivi des pesées notariées, bilans CO2 et Certificat Zéro-Déchet ESG.">
   <meta name="theme-color" content="#00FFA3">
   <meta name="color-scheme" content="dark">
   
@@ -20,22 +20,97 @@
   <link rel="stylesheet" href="assets/maat.css">
 
   <style>
-    body { background-color: #0B0F12; color: #F1F5F9; }
-    .glass-card { background: linear-gradient(170deg, #131920, #0B0F12); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 1.25rem; }
-    .glass-card.g { border-color: rgba(0, 255, 163, 0.4); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.15); }
-    .glass-card.au { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.2); }
-    .inp { width: 100%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; }
-    .inp:focus { border-color: #00FFA3; }
+    html, body { background-color: #060A0D; color: #F1F5F9; }
+    
+    /* MATRIX CANVAS BACKGROUND */
+    #matrixCanvas {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      opacity: 0.10;
+    }
+    header, main, footer, .float-wa { position: relative; z-index: 10; }
+
+    /* GLASSMORPHISM ENTERPRISE */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 1.25rem;
+      transition: all 0.25s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(16, 185, 129, 0.45);
+      box-shadow: 0 0 32px -6px rgba(16, 185, 129, 0.35);
+    }
+    .glass-card.g { border-color: rgba(0, 255, 163, 0.45); box-shadow: 0 0 25px -5px rgba(0, 255, 163, 0.2); }
+    .glass-card.au { border-color: rgba(232, 200, 106, 0.55); box-shadow: 0 0 25px -5px rgba(232, 200, 106, 0.22); }
+    .glass-card.coming-soon {
+      border-color: rgba(232, 200, 106, 0.5);
+      background: linear-gradient(160deg, rgba(30, 20, 5, 0.85), rgba(15, 23, 42, 0.9));
+      cursor: default;
+      opacity: 0.92;
+    }
+    .glass-card.coming-soon:hover {
+      border-color: rgba(232, 200, 106, 0.7);
+      box-shadow: 0 0 28px -6px rgba(232, 200, 106, 0.35);
+    }
+
+    .inp { width: 100%; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); border-radius: .75rem; padding: .75rem; font-size: .8rem; color: #fff; outline: none; transition: border-color .2s; }
+    .inp:focus { border-color: #00FFA3; box-shadow: 0 0 0 3px rgba(0,255,163,.12); }
     .btn { padding: .85rem; border-radius: .8rem; font: 800 .72rem 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; transition: all .2s; }
     .btn-g { background: linear-gradient(135deg, #00B871, #059669); color: #000; }
-    .btn-g:hover { filter: brightness(1.1); }
+    .btn-g:hover { filter: brightness(1.1); box-shadow: 0 0 20px -3px rgba(0,255,163,0.5); }
     .btn-au { background: linear-gradient(135deg, #E8C86A, #C5A059); color: #1a1405; }
+    .btn-au:hover { filter: brightness(1.1); box-shadow: 0 0 20px -3px rgba(232,200,106,0.5); }
     .btn-o { background: rgba(0,0,0,.8); border: 1px solid rgba(0,255,163,.5); color: #00FFA3; }
+    .btn-o:hover { background: rgba(0,255,163,.08); }
 
     /* BADGE HEADER */
     #header-badge-widget { display: none; }
     #header-badge-widget.ready { display: flex; }
     #header-badge-qr svg { width: 100%; height: 100%; display: block; }
+
+    /* ESG PERIOD SELECTOR */
+    .esg-period-select {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(232, 200, 106, 0.4);
+      color: #E8C86A;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .esg-period-select:focus { outline: none; border-color: #E8C86A; }
+    .esg-preview-metric { transition: all 0.3s ease; }
+
+    /* FLOATING WHATSAPP */
+    .float-wa {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 90;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 12px;
+      border-radius: 50px;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .float-wa:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(37, 211, 102, 0.5); }
 
     /* PRINT — isole unicamente il badge institutionnel */
     #printable-badge { display: none; }
@@ -44,104 +119,55 @@
       body > *:not(#printable-badge) { display: none !important; }
       #printable-badge {
         display: block !important;
-        position: absolute;
-        inset: 0;
-        background: #fff !important;
-        color: #000 !important;
+        position: absolute; inset: 0;
+        background: #fff !important; color: #000 !important;
         padding: 40px;
         font-family: 'JetBrains Mono', monospace;
       }
-      #printable-badge .badge-sheet {
-        max-width: 640px;
-        margin: 0 auto;
-        border: 3px solid #000;
-        border-radius: 16px;
-        padding: 30px;
-        text-align: center;
-      }
-      #printable-badge .badge-header {
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        border-bottom: 2px solid #000;
-        padding-bottom: 8px;
-        margin-bottom: 16px;
-      }
-      #printable-badge .badge-title {
-        font-size: 22px;
-        font-weight: 900;
-        margin: 10px 0;
-        letter-spacing: 0.05em;
-      }
-      #printable-badge .badge-client-name {
-        font-size: 18px;
-        font-weight: 800;
-        margin: 12px 0 4px;
-      }
-      #printable-badge .badge-district {
-        font-size: 12px;
-        color: #444;
-        margin-bottom: 20px;
-      }
-      #printable-badge .badge-qr-container {
-        display: inline-block;
-        padding: 12px;
-        border: 2px solid #000;
-        border-radius: 12px;
-        background: #fff;
-        line-height: 0;
-        margin: 10px 0;
-      }
+      #printable-badge .badge-sheet { max-width: 640px; margin: 0 auto; border: 3px solid #000; border-radius: 16px; padding: 30px; text-align: center; }
+      #printable-badge .badge-header { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 16px; }
+      #printable-badge .badge-title { font-size: 22px; font-weight: 900; margin: 10px 0; letter-spacing: 0.05em; }
+      #printable-badge .badge-client-name { font-size: 18px; font-weight: 800; margin: 12px 0 4px; }
+      #printable-badge .badge-district { font-size: 12px; color: #444; margin-bottom: 20px; }
+      #printable-badge .badge-qr-container { display: inline-block; padding: 12px; border: 2px solid #000; border-radius: 12px; background: #fff; line-height: 0; margin: 10px 0; }
       #printable-badge .badge-qr-container svg { width: 280px !important; height: 280px !important; }
-      #printable-badge .badge-code {
-        font-size: 14px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        margin: 12px 0;
-      }
-      #printable-badge .badge-footer {
-        font-size: 9px;
-        color: #333;
-        margin-top: 16px;
-        padding-top: 10px;
-        border-top: 1px solid #999;
-      }
+      #printable-badge .badge-code { font-size: 14px; font-weight: 800; letter-spacing: 0.1em; margin: 12px 0; }
+      #printable-badge .badge-footer { font-size: 9px; color: #333; margin-top: 16px; padding-top: 10px; border-top: 1px solid #999; }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER CLIENT / SUPER-ADMIN -->
-  <header class="border-b border-kemetGold/30 bg-cyberDark/95 backdrop-blur fixed top-0 w-full z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      <a href="index.html" class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center">
+  <!-- HEADER CLIENT -->
+  <header class="border-b border-cyberGreen/20 bg-[#060A0D]/95 backdrop-blur-xl fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center space-x-3 min-w-0">
+        <div class="w-10 h-10 bg-black rounded-xl p-1 border border-cyberGreen/40 flex items-center justify-center shrink-0">
           <svg class="w-8 h-8 text-cyberGreen" viewBox="0 0 100 100" fill="none">
             <path d="M10 50Q50 15 90 50Q50 85 10 50Z" stroke="#00FFA3" stroke-width="4"/>
             <circle cx="50" cy="50" r="16" stroke="#C5A059" stroke-width="3.5" fill="#0A0D10"/>
             <circle cx="50" cy="50" r="6" fill="#00FFA3"/>
           </svg>
         </div>
-        <div>
-          <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none">ESPACE CLIENT ESG B2B</h1>
-          <p class="text-[9px] font-mono text-cyberGreen uppercase">Industrial Illusion SARL • Data Lake Privé</p>
+        <div class="min-w-0">
+          <h1 class="font-kemetTitle text-sm sm:text-base font-bold text-white leading-none truncate">ESPACE CLIENT ESG B2B</h1>
+          <p class="text-[9px] font-mono text-cyberGreen uppercase truncate">Industrial Illusion SARL · Data Lake Privé</p>
         </div>
       </a>
 
-      <!-- ID CLIENT & ACCÈS SUPER-ADMIN -->
-      <div class="flex items-center space-x-3 sm:space-x-6 font-mono text-xs">
-        <div class="text-right hidden sm:block">
-          <div class="flex items-center space-x-2">
-            <span class="text-slate-400 text-[10px]">MODE ACCÈS:</span>
+      <div class="flex items-center space-x-2 sm:space-x-4 font-mono text-xs shrink-0">
+        <div class="text-right hidden md:block">
+          <div class="flex items-center space-x-2 justify-end">
+            <span class="text-slate-400 text-[10px]">MODE:</span>
             <span id="access-role-tag" class="font-bold text-cyberGreen bg-cyberGreen/10 px-2 py-0.5 rounded border border-cyberGreen/30">CLIENT B2B</span>
           </div>
-          <span id="client-company-name" class="font-bold text-white text-[11px] block mt-0.5">Chargement...</span>
+          <span id="client-company-name" class="font-bold text-white text-[11px] block mt-0.5 truncate max-w-[180px]">Chargement...</span>
         </div>
 
-        <!-- BADGE QR HEADER (v2.0) -->
+        <!-- BADGE QR HEADER -->
         <div id="header-badge-widget" class="items-center space-x-2">
           <button type="button" onclick="window.openQrFullscreen()"
-                  class="w-12 h-12 bg-white rounded-lg p-1 border-2 border-cyberGreen/40 hover:border-cyberGreen transition-all shrink-0 flex items-center justify-center"
+                  class="w-12 h-12 bg-white rounded-lg p-1 border-2 border-cyberGreen/50 hover:border-cyberGreen transition-all shrink-0 flex items-center justify-center"
                   title="Agrandir le QR pour scan vettore">
             <div id="header-badge-qr" style="line-height:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center"></div>
           </button>
@@ -152,6 +178,13 @@
           </button>
         </div>
 
+        <!-- MFA -->
+        <button type="button" onclick="window.openMfaSetup()"
+                class="px-2.5 py-2 bg-cyberGreen/10 border border-cyberGreen/40 text-cyberGreen rounded-lg text-[10px] font-bold hover:bg-cyberGreen/20 transition-all hidden sm:inline-flex items-center"
+                title="Sécurité MFA · Google Authenticator">
+          🔐
+        </button>
+
         <button type="button" onclick="window.handleClientLogout()" class="px-3.5 py-2 bg-black border border-white/15 text-slate-300 hover:text-white rounded-xl text-[10px] font-bold">
           Quitter 🔒
         </button>
@@ -159,241 +192,255 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="mt-24 mb-16 max-w-7xl mx-auto px-4 sm:px-6 space-y-8 w-full flex-1">
 
-    <!-- SUPER-ADMIN DG CONTROL BAR (VISIBILE SOLO SE LOGGATO COME DG) -->
+    <!-- DG CONTROL BAR (admin only) -->
     <section id="dg-control-bar" class="hidden glass-card au p-4 sm:p-5 font-mono text-xs space-y-3">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-kemetGold/30 pb-3">
         <div class="flex items-center space-x-2">
           <span class="text-lg">👑</span>
           <div>
             <span class="text-kemetGoldBright font-extrabold text-sm block">BUREAU DE DIRECTION (DG INSPECTION DESK)</span>
-            <span class="text-[10px] text-slate-400">Roberto Passarella • Super-Admin Control Panel</span>
+            <span class="text-[10px] text-slate-400">Roberto Passarella · Super-Admin</span>
           </div>
         </div>
         <div class="text-[10px] text-cyberGreen font-bold bg-cyberGreen/10 px-2.5 py-1 rounded border border-cyberGreen/30">
-          VUE GLOBALE SYSTÈME ACTIVE
+          VUE GLOBALE ACTIVE
         </div>
       </div>
-
-      <!-- SELETTORE CLIENTE B2B PER IL SUPER-ADMIN -->
       <div class="grid sm:grid-cols-12 gap-3 items-center">
-        <label class="sm:col-span-4 lbl !text-kemetGoldBright">Sélectionner un Établissement Client à Inspecter :</label>
+        <label class="sm:col-span-4 lbl !text-kemetGoldBright">Client à inspecter :</label>
         <div class="sm:col-span-8 flex gap-2">
           <select id="dg-client-selector" onchange="window.switchInspectedClient(this.value)" class="inp !py-2 text-xs">
-            <option value="">Chargement des établissements actifs...</option>
+            <option value="">Chargement...</option>
           </select>
           <button type="button" onclick="window.reloadCurrentInspectedData()" class="px-4 py-2 bg-kemetGold text-black font-bold rounded-xl text-[10px] hover:brightness-110 shrink-0">
-            Rafraîchir ↻
+            ↻
           </button>
         </div>
       </div>
     </section>
 
-    <!-- BANNIÈRE ASSISTANCE & CONTACTS DIRECTION -->
+    <!-- BANNIÈRE ASSISTANCE -->
     <section class="glass-card g p-4 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-cyberGreen/20 border border-cyberGreen/40 flex items-center justify-center text-lg shrink-0">
-          ☎️
-        </div>
+        <div class="w-10 h-10 rounded-xl bg-cyberGreen/20 border border-cyberGreen/40 flex items-center justify-center text-lg shrink-0">☎️</div>
         <div>
-          <span class="text-cyberGreen font-bold block text-sm">Assistance Client &amp; Support Direct</span>
-          <p class="text-[11px] text-slate-300">Votre chargé de compte dédié et la Direction Générale PurKemet sont à votre disposition.</p>
+          <span class="text-cyberGreen font-bold block text-sm">Assistance Client & Support Direct</span>
+          <p class="text-[11px] text-slate-300">Votre chargé de compte dédié et la Direction PurKemet à votre disposition.</p>
         </div>
       </div>
-
       <div class="flex flex-wrap gap-2 w-full md:w-auto text-[11px]">
         <a href="mailto:r.passarella@industrialillusion.ma" class="px-3 py-2 bg-black/60 border border-white/10 rounded-xl text-slate-200 hover:text-cyberGreen flex items-center space-x-1.5">
-          <span>✉️</span> <span>r.passarella@industrialillusion.ma</span>
+          <span>✉️</span> <span class="hidden sm:inline">r.passarella@industrialillusion.ma</span><span class="sm:hidden">Email</span>
         </a>
-        <a href="tel:+212600000000" class="px-3 py-2 bg-black/60 border border-kemetGold/40 rounded-xl text-kemetGoldBright font-bold flex items-center space-x-1.5">
-          <span>📞</span> <span>+212 6 00 00 00 00</span>
+        <a href="tel:+212708875960" class="px-3 py-2 bg-black/60 border border-kemetGold/40 rounded-xl text-kemetGoldBright font-bold flex items-center space-x-1.5">
+          <span>📞</span> <span>+212 708 875 960</span>
         </a>
       </div>
     </section>
 
-    <!-- RÉPARTITION MATIÈRES (rendu par dashboard.js v2.0) -->
-    <section id="client-materials-section"></section>
-
-    <!-- KPIS CO2 ET TONNAGE SCELLES -->
+    <!-- KPI CARDS -->
     <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 font-mono">
       <div class="glass-card p-5 space-y-2 border-l-4 border-l-cyberGreen">
-        <span class="text-[10px] text-slate-400 uppercase block font-bold">Tonnage Notarié (Cumul P2)</span>
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Tonnage Notarié (YTD)</span>
         <span id="kpi-tonnage" class="text-3xl font-black text-cyberGreen">0.00 <span class="text-xs font-normal">T</span></span>
         <p class="text-[10px] text-slate-400">Scellé par double pesée Bluetooth Hub</p>
       </div>
-
       <div class="glass-card p-5 space-y-2 border-l-4 border-l-kemetGold">
         <span class="text-[10px] text-slate-400 uppercase block font-bold">Émissions CO₂ Évitées</span>
         <span id="kpi-co2" class="text-3xl font-black text-kemetGoldBright">0.00 <span class="text-xs font-normal">T eq.</span></span>
         <p class="text-[10px] text-slate-400">Ratios officiels PurKemet / ADEME</p>
       </div>
-
       <div class="glass-card p-5 space-y-2 border-l-4 border-l-emerald-500">
-        <span class="text-[10px] text-slate-400 uppercase block font-bold">Programme Actif / Statut</span>
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Programme Actif</span>
         <span id="kpi-schedule" class="text-sm font-bold text-white block pt-1">Sur Demande</span>
         <p class="text-[10px] text-emerald-400">✓ Enlèvement garanti sous SLA</p>
       </div>
-
       <div class="glass-card p-5 space-y-2 border-l-4 border-l-blue-500">
-        <span class="text-[10px] text-slate-400 uppercase block font-bold">Certificat Zéro-Déchet ESG</span>
-        <span id="kpi-cert-status" class="text-xs font-bold text-white block pt-1">DISPONIBLE</span>
+        <span class="text-[10px] text-slate-400 uppercase block font-bold">Certificat ESG</span>
+        <span id="kpi-cert-status" class="text-xs font-bold text-white block pt-1">DRAFT</span>
         <button type="button" id="btn-cert-action" onclick="window.handleEsgCertAction()" class="w-full mt-2 btn btn-g !py-2 !text-[10px] flex items-center justify-center space-x-1">
-          <span>📜 Demander / Voir Attestation</span>
+          <span>📜 Demander / Voir</span>
         </button>
       </div>
     </section>
 
-    <!-- MODULE PROGRAMMATION DES ENLÈVEMENTS (PONCTUEL ET CONTINU) -->
+    <!-- ═══ ESG PREVIEW · Sélecteur temporel + audit manual workflow ═══ -->
+    <section class="glass-card au p-6 space-y-5 font-mono">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-kemetGold/30 pb-3">
+        <div>
+          <h3 class="font-kemetTitle text-lg font-bold text-kemetGoldBright">📜 Anteprima Bilan ESG</h3>
+          <p class="text-[11px] text-slate-400 font-sans mt-0.5">Vidimation officielle par la Direction Générale · Audit manuel requis</p>
+        </div>
+        <select id="esg-period-select" class="esg-period-select" onchange="window.handlePeriodChange(this.value)">
+          <option value="current_month">📅 Mois en cours</option>
+          <option value="prev_month">📅 Mois précédent</option>
+          <option value="ytd" selected>📊 Année en cours (YTD)</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="esg-preview-metric bg-black/40 p-4 rounded-xl border border-white/10">
+          <span class="text-[10px] text-slate-400 uppercase block font-bold">Matières Recyclées</span>
+          <span id="cert-preview-kg" class="text-2xl font-black text-cyberGreen block mt-1">0.00 <span class="text-xs font-normal">T</span></span>
+        </div>
+        <div class="esg-preview-metric bg-black/40 p-4 rounded-xl border border-white/10">
+          <span class="text-[10px] text-slate-400 uppercase block font-bold">CO₂ Évité</span>
+          <span id="cert-preview-co2" class="text-2xl font-black text-kemetGoldBright block mt-1">0.00 <span class="text-xs font-normal">T eq.</span></span>
+        </div>
+        <div class="esg-preview-metric bg-black/40 p-4 rounded-xl border border-white/10">
+          <span class="text-[10px] text-slate-400 uppercase block font-bold">Collectes Effectuées</span>
+          <span id="cert-preview-count" class="text-2xl font-black text-white block mt-1">0</span>
+        </div>
+      </div>
+
+      <div id="esg-cert-workflow" class="pt-3 border-t border-white/10 text-[11px] text-slate-300 font-sans leading-relaxed">
+        <!-- rempli par JS selon status -->
+      </div>
+    </section>
+
+    <!-- MATERIALS + COMING SOON -->
+    <section class="grid lg:grid-cols-3 gap-6">
+      <div id="client-materials-section" class="lg:col-span-2"></div>
+
+      <!-- COMING SOON · DÉCHETS ALIMENTAIRES -->
+      <div class="glass-card coming-soon p-6 space-y-4 font-mono flex flex-col justify-between">
+        <div class="space-y-3">
+          <div class="flex justify-between items-start gap-2">
+            <span class="text-3xl">♻️</span>
+            <span class="px-2 py-1 rounded-md bg-kemetGold/20 text-kemetGoldBright border border-kemetGold/50 text-[9px] font-black tracking-wider">BIENTÔT DISPONIBLE</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-kemetGoldBright text-sm leading-tight">Déchets Alimentaires & Organiques</h4>
+            <p class="text-[11px] text-slate-400 mt-1 font-sans leading-relaxed">Une nouvelle filière de valorisation est en cours de déploiement pilote sur notre réseau B2B.</p>
+          </div>
+        </div>
+        <div class="pt-4 border-t border-kemetGold/20 flex items-center justify-between text-[10px] text-kemetGoldBright/80">
+          <span>⏳ EN DÉPLOIEMENT</span>
+          <span>Q1 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENLÈVEMENTS -->
     <section class="grid lg:grid-cols-2 gap-6">
-      
-      <!-- FORM 1: ENLÈVEMENT SINGLE / EXPRESS -->
+
       <div class="glass-card p-6 space-y-4 font-mono text-xs">
         <div class="border-b border-white/10 pb-3 flex justify-between items-center">
           <div>
-            <h3 class="font-bold text-white text-sm">🚚 Demander un Enlèvement Ponctuel (On-Demand)</h3>
-            <p class="text-[10px] text-slate-400 font-sans">Intervention sous SLA &lt; 12h ou Urgence Express &lt; 3h</p>
+            <h3 class="font-bold text-white text-sm">🚚 Enlèvement Ponctuel</h3>
+            <p class="text-[10px] text-slate-400 font-sans">SLA &lt; 12h · Express &lt; 3h</p>
           </div>
           <span class="px-2 py-0.5 rounded bg-cyberGreen/10 text-cyberGreen border border-cyberGreen/30 text-[9px]">SLA GUARANTEE</span>
         </div>
 
         <form onsubmit="window.handleSinglePickupSubmit(event)" class="space-y-3">
           <div>
-            <label class="lbl">Date &amp; Heure Souhaitée *</label>
+            <label class="lbl">Date & Heure *</label>
             <input type="datetime-local" id="pickup_datetime" required class="inp mt-1">
           </div>
-
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="lbl">Sacs / Bacs Estimés *</label>
+              <label class="lbl">Sacs / Bacs *</label>
               <input type="number" id="pickup_bags" required min="1" max="200" value="5" class="inp mt-1">
             </div>
             <div>
-              <label class="lbl">Priorité / Type *</label>
+              <label class="lbl">Priorité *</label>
               <select id="pickup_type" class="inp mt-1">
-                <option value="STANDARD">Standard (SLA 12h)</option>
-                <option value="EXPRESS">Express (&lt; 3h)</option>
+                <option value="STANDARD">Standard (12h)</option>
+                <option value="EXPRESS">Express (&lt;3h)</option>
               </select>
             </div>
           </div>
-
           <div>
-            <label class="lbl">Matières Prédominantes *</label>
-            <input type="text" id="pickup_materials" required placeholder="Ex: Cartons livraison + Verre événement" class="inp mt-1">
+            <label class="lbl">Matières *</label>
+            <input type="text" id="pickup_materials" required placeholder="Ex: Cartons + PET" class="inp mt-1">
           </div>
-
           <div>
-            <label class="lbl">Quiet Window (Plage de Silence Établissement) *</label>
+            <label class="lbl">Quiet Window *</label>
             <select id="pickup_quiet_window" class="inp mt-1">
               <option value="NONE">Aucune restriction</option>
-              <option value="NO_CHECKOUT">Pas de passage 11:00 - 12:30 (Check-out)</option>
-              <option value="NO_AFTERNOON">Pas de passage 14:00 - 16:00 (Repos)</option>
+              <option value="NO_CHECKOUT">Pas 11:00-12:30</option>
+              <option value="NO_AFTERNOON">Pas 14:00-16:00</option>
             </select>
           </div>
-
           <div>
-            <label class="lbl">Contact Référent sur place (Stewarding / Quai)</label>
-            <input type="text" id="pickup_contact" placeholder="Nom et n° de poste / GSM" class="inp mt-1">
+            <label class="lbl">Contact Référent</label>
+            <input type="text" id="pickup_contact" placeholder="Nom + poste/GSM" class="inp mt-1">
           </div>
-
-          <button type="submit" id="btn-submit-single" class="btn btn-au w-full !py-3">Envoyer Demande d'Enlèvement</button>
+          <button type="submit" id="btn-submit-single" class="btn btn-au w-full !py-3">Envoyer Demande</button>
         </form>
       </div>
 
-      <!-- FORM 2: PROGRAMMATION RÉCURRENTE (RITIRO CONTINUO) -->
       <div class="glass-card p-6 space-y-4 font-mono text-xs border-l-4 border-l-kemetGold">
         <div class="border-b border-white/10 pb-3 flex justify-between items-center">
           <div>
-            <h3 class="font-bold text-kemetGoldBright text-sm">📅 Enlèvement Récurrent (Programme Continu)</h3>
-            <p class="text-[10px] text-slate-400 font-sans">Fixez vos jours et heures de passage hebdomadaires automatiques</p>
+            <h3 class="font-bold text-kemetGoldBright text-sm">📅 Enlèvement Récurrent</h3>
+            <p class="text-[10px] text-slate-400 font-sans">Jours et heures fixes hebdomadaires</p>
           </div>
-          <span class="px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/40 text-[9px]">AUTOMATIQUE</span>
+          <span class="px-2 py-0.5 rounded bg-kemetGold/20 text-kemetGold border border-kemetGold/40 text-[9px]">AUTO</span>
         </div>
 
         <form onsubmit="window.handleRecurringScheduleSubmit(event)" class="space-y-3">
           <div>
-            <label class="lbl !text-kemetGoldBright">Jours de Passages Hebdomadaires *</label>
+            <label class="lbl !text-kemetGoldBright">Jours *</label>
             <div class="grid grid-cols-3 gap-2 text-[10px] pt-1">
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Lundi" checked class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Lundi</span>
-              </label>
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Mardi" class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Mardi</span>
-              </label>
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Mercredi" checked class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Mercredi</span>
-              </label>
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Jeudi" class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Jeudi</span>
-              </label>
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Vendredi" class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Vendredi</span>
-              </label>
-              <label class="p-2 bg-black/60 rounded-xl border border-white/10 flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" name="schedule_days" value="Samedi" class="rounded border-white/20 bg-black text-kemetGold">
-                <span>Samedi</span>
-              </label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Lundi" checked class="rounded border-white/20 bg-black text-kemetGold"><span>Lun</span></label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Mardi" class="rounded border-white/20 bg-black text-kemetGold"><span>Mar</span></label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Mercredi" checked class="rounded border-white/20 bg-black text-kemetGold"><span>Mer</span></label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Jeudi" class="rounded border-white/20 bg-black text-kemetGold"><span>Jeu</span></label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Vendredi" class="rounded border-white/20 bg-black text-kemetGold"><span>Ven</span></label>
+              <label class="p-2 bg-black/60 rounded-lg border border-white/10 flex items-center space-x-1.5 cursor-pointer"><input type="checkbox" name="schedule_days" value="Samedi" class="rounded border-white/20 bg-black text-kemetGold"><span>Sam</span></label>
             </div>
           </div>
-
           <div>
-            <label class="lbl !text-kemetGoldBright">Heure Fixe de Passage *</label>
+            <label class="lbl !text-kemetGoldBright">Heure *</label>
             <select id="schedule_time" class="inp mt-1">
-              <option value="08:00">08:00 (Matinée haute efficacité)</option>
-              <option value="09:00" selected>09:00 (Créneau standard recommandé)</option>
-              <option value="10:00">10:00 (Avant quiet window)</option>
-              <option value="16:30">16:30 (Après-midi)</option>
+              <option value="08:00">08:00</option>
+              <option value="09:00" selected>09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="16:30">16:30</option>
             </select>
           </div>
-
           <div>
-            <label class="lbl !text-kemetGoldBright">Matières concernées par la récurrence</label>
-            <input type="text" id="schedule_materials" placeholder="PET, Cartons, Aluminium..." class="inp mt-1" value="Carton ondulé, Bouteilles PET">
+            <label class="lbl !text-kemetGoldBright">Matières</label>
+            <input type="text" id="schedule_materials" placeholder="PET, Cartons..." class="inp mt-1" value="Carton ondulé, Bouteilles PET">
           </div>
-
-          <button type="submit" id="btn-submit-recurring" class="btn btn-g w-full !py-3">Enregistrer le Programme Continu</button>
+          <button type="submit" id="btn-submit-recurring" class="btn btn-g w-full !py-3">Enregistrer Programme</button>
         </form>
       </div>
 
     </section>
 
-    <!-- DATA LAKE PRIVÉ: HISTORIQUE DES PESÉES NOTARIÉES AVEC DÉTAILS VECTEUR -->
+    <!-- REGISTRE PESÉES -->
     <section class="glass-card p-6 space-y-4">
       <div class="flex flex-wrap justify-between items-center gap-3 border-b border-white/10 pb-3 font-mono">
         <div>
           <h3 class="font-kemetTitle text-lg font-bold text-white">Registre Privé Maat Data Lake</h3>
-          <p class="text-xs text-slate-400">Traçabilité complète avec double pesée scellée et identification de l'opérateur logistique.</p>
+          <p class="text-xs text-slate-400">Traçabilité complète · Double pesée scellée · Identification opérateur</p>
         </div>
         <span class="px-3 py-1 bg-cyberGreen/10 border border-cyberGreen/30 text-cyberGreen text-xs rounded-xl font-bold">
           IMMUTABLE ANCHORING
         </span>
       </div>
-
       <div class="overflow-x-auto">
         <table class="w-full text-left font-mono text-xs">
           <thead>
             <tr class="border-b border-white/10 text-slate-400 uppercase text-[10px]">
-              <th class="py-3 px-2">Date &amp; Heure</th>
+              <th class="py-3 px-2">Date & Heure</th>
               <th class="py-3 px-2">N° Lot QR</th>
               <th class="py-3 px-2">Matériau</th>
-              <th class="py-3 px-2 text-right">Pesée 1 (Site)</th>
-              <th class="py-3 px-2 text-right">Pesée 2 (Hub)</th>
-              <th class="py-3 px-2 text-right">Écart Δ</th>
-              <th class="py-3 px-2">Opérateur / Vecteur</th>
+              <th class="py-3 px-2 text-right">P1 (Site)</th>
+              <th class="py-3 px-2 text-right">P2 (Hub)</th>
+              <th class="py-3 px-2 text-right">Δ</th>
+              <th class="py-3 px-2">Opérateur</th>
               <th class="py-3 px-2 text-center">Statut</th>
-              <th class="py-3 px-2 text-right">Hash Blockchain</th>
+              <th class="py-3 px-2 text-right">Hash</th>
             </tr>
           </thead>
           <tbody id="client-pesees-tbody" class="divide-y divide-white/5 text-slate-300">
-            <tr>
-              <td colspan="9" class="py-8 text-center text-slate-500 font-mono">Chargement du Data Lake privé...</td>
-            </tr>
+            <tr><td colspan="9" class="py-8 text-center text-slate-500 font-mono">Chargement...</td></tr>
           </tbody>
         </table>
       </div>
@@ -401,7 +448,7 @@
 
   </main>
 
-  <!-- MODAL FULLSCREEN QR (scan vettore) -->
+  <!-- ═══ MODAL FULLSCREEN QR ═══ -->
   <div id="qrFullscreenModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4" onclick="window.closeQrFullscreen()">
     <div class="text-center space-y-6" onclick="event.stopPropagation()">
       <div class="bg-white p-6 rounded-3xl inline-block" style="line-height:0" id="fullscreen-qr-container"></div>
@@ -414,73 +461,87 @@
     </div>
   </div>
 
-  <!-- MODAL CERTIFICAT ZÉRO-DÉCHET ESG -->
+  <!-- ═══ MODAL ESG CERT PDF ═══ -->
   <div id="esgCertModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="max-w-2xl w-full space-y-4">
-      
-      <!-- ZONE D'IMPRESSION DU CERTIFICAT -->
       <div id="printable-esg-cert" class="bg-slate-900 text-slate-100 border-2 border-kemetGold p-8 rounded-3xl space-y-6 relative font-mono shadow-2xl">
-        
         <div class="flex justify-between items-start border-b border-kemetGold/40 pb-4">
           <div>
             <h2 class="font-kemetTitle text-xl font-black text-cyberGreen tracking-wider">INDUSTRIAL ILLUSION SARL</h2>
             <p class="text-[10px] text-kemetGoldBright uppercase font-bold">CERTIFICAT ESG ZÉRO-DÉCHET AU MAAT DATA LAKE</p>
           </div>
           <div class="text-right text-[9px] text-slate-400">
-            <span>RÉFÉRENCE: <strong id="cert-ref-id" class="text-white">ESG-2026-CL01</strong></span><br>
-            <span>DATE D'ÉMISSION: <strong id="cert-date-now">15/10/2026</strong></span>
+            <span>RÉFÉRENCE: <strong id="cert-ref-id" class="text-white">—</strong></span><br>
+            <span>DATE: <strong id="cert-date-now">—</strong></span>
           </div>
         </div>
-
         <div class="space-y-2 text-xs font-sans text-slate-200">
           <p class="text-sm font-bold text-white">Nous attestons par la présente que l'établissement partenaire :</p>
           <div class="p-3 bg-black/60 border border-kemetGold/30 rounded-xl font-mono text-center">
-            <span id="cert-client-title" class="text-base font-black text-kemetGoldBright block">ÉTABLISSEMENT PARTENAIRE</span>
-            <span id="cert-client-ice" class="text-[10px] text-slate-400">ICE : Enregistré au Registre Central PurKemet</span>
+            <span id="cert-client-title" class="text-base font-black text-kemetGoldBright block">—</span>
+            <span id="cert-client-ice" class="text-[10px] text-slate-400">ICE : Enregistré</span>
           </div>
           <p class="text-xs leading-relaxed text-slate-300 pt-1">
-            A satisfait aux exigences du protocole de valorisation sélective <strong>PurKemet B2B</strong> et de la <strong>Loi marocaine n° 28-00</strong>. L'ensemble des gisements de matières secondaires a été mesuré par double pesée Bluetooth certifiée et notarié de manière immuable sur le Maat Data Lake.
+            A satisfait aux exigences du protocole <strong>PurKemet B2B</strong> et de la <strong>Loi marocaine n° 28-00</strong>. L'ensemble des gisements a été mesuré par double pesée certifiée et notarié de manière immuable sur le Maat Data Lake.
           </p>
         </div>
-
         <div class="grid grid-cols-3 gap-3 text-center text-xs font-mono">
           <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-            <span class="text-[9px] text-slate-400 block uppercase">Matières Valorisées</span>
-            <span id="cert-tonnage-val" class="text-lg font-black text-cyberGreen">0.00 T</span>
+            <span class="text-[9px] text-slate-400 block uppercase">Matières</span>
+            <span id="cert-tonnage-val" class="text-lg font-black text-cyberGreen">—</span>
           </div>
           <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-            <span class="text-[9px] text-slate-400 block uppercase">CO₂ Évité (ADEME)</span>
-            <span id="cert-co2-val" class="text-lg font-black text-kemetGoldBright">0.00 T</span>
+            <span class="text-[9px] text-slate-400 block uppercase">CO₂ Évité</span>
+            <span id="cert-co2-val" class="text-lg font-black text-kemetGoldBright">—</span>
           </div>
           <div class="p-3 bg-black/40 border border-white/10 rounded-xl">
-            <span class="text-[9px] text-slate-400 block uppercase">Conformité RSE</span>
-            <span class="text-lg font-black text-white">100% Notarié</span>
+            <span class="text-[9px] text-slate-400 block uppercase">Conformité</span>
+            <span class="text-lg font-black text-white">100%</span>
           </div>
         </div>
-
         <div class="flex justify-between items-end border-t border-white/10 pt-4 text-[10px] font-mono">
           <div>
-            <span class="text-slate-400 block">SIGNATURE DIRECTION GÉNÉRALE:</span>
+            <span class="text-slate-400 block">SIGNATURE DG:</span>
             <span class="font-bold text-white text-xs">Roberto Passarella</span><br>
-            <span class="text-[9px] text-slate-500">Directeur Général • Industrial Illusion SARL</span>
+            <span class="text-[9px] text-slate-500">Directeur Général</span>
           </div>
-
           <div class="text-right space-y-1">
-            <span class="text-slate-400 block">HASH CRYPTOGRAPHIQUE MASTER:</span>
-            <span id="cert-hash-master" class="text-[8px] font-bold text-cyberGreen block bg-black/80 px-2 py-1 rounded border border-cyberGreen/30">0xPending</span>
+            <span class="text-slate-400 block">HASH:</span>
+            <span id="cert-hash-master" class="text-[8px] font-bold text-cyberGreen block bg-black/80 px-2 py-1 rounded border border-cyberGreen/30">—</span>
           </div>
         </div>
-
       </div>
-
-      <div class="flex justify-between items-center font-mono text-xs no-print">
+      <div class="flex justify-between items-center font-mono text-xs">
         <button type="button" onclick="window.closeEsgPdfModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-bold">Fermer</button>
-        <button type="button" onclick="window.printEsgCert()" class="btn btn-g !py-2.5 px-6">🖨️ Imprimer / Sauvegarder PDF</button>
+        <button type="button" onclick="window.printEsgCert()" class="btn btn-g !py-2.5 px-6">🖨️ Imprimer</button>
       </div>
     </div>
   </div>
 
-  <!-- PRINTABLE BADGE (visible uniquement en print) -->
+  <!-- ═══ MODAL MFA SETUP ═══ -->
+  <div id="mfaModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="max-w-md w-full glass-card p-6 space-y-4 font-mono text-xs">
+      <div class="flex justify-between items-center border-b border-cyberGreen/30 pb-3">
+        <h3 class="font-bold text-cyberGreen text-sm">🔐 Sécurité MFA · Google Authenticator</h3>
+        <button type="button" onclick="window.closeMfaModal()" class="text-slate-400 hover:text-white text-xl">×</button>
+      </div>
+      <div id="mfa-content" class="space-y-3 text-slate-300 font-sans text-[12px] leading-relaxed">
+        <p>Renforcez la sécurité de votre compte avec l'authentification à deux facteurs (TOTP).</p>
+        <p class="text-[11px] text-slate-400">À chaque connexion, vous devrez saisir un code à 6 chiffres généré par Google Authenticator.</p>
+      </div>
+      <div id="mfa-qr-area" class="hidden text-center py-2 bg-white rounded-xl p-3"></div>
+      <div id="mfa-verify-area" class="hidden space-y-2">
+        <label class="lbl text-slate-400">Code à 6 chiffres</label>
+        <input id="mfa-verify-code" type="text" inputmode="numeric" maxlength="6" class="inp text-center !text-lg !font-bold !text-kemetGoldBright tracking-widest" placeholder="000000">
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+        <button type="button" onclick="window.closeMfaModal()" class="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 font-bold text-[11px] hover:bg-slate-800">Annuler</button>
+        <button type="button" id="mfa-action-btn" onclick="window.handleMfaAction()" class="px-4 py-2 rounded-lg bg-cyberGreen text-black font-bold text-[11px]">Configurer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PRINTABLE BADGE ═══ -->
   <div id="printable-badge">
     <div class="badge-sheet">
       <div class="badge-header">INDUSTRIAL ILLUSION SARL · PURKEMET · MAAT OS</div>
@@ -495,12 +556,26 @@
     </div>
   </div>
 
-  <footer class="border-t border-white/10 py-6 bg-cyberDark text-center font-mono text-xs text-slate-500">
-    © 2026 Industrial Illusion SARL — Espace ESG B2B. Tous droits réservés.
+  <!-- ═══ FLOATING WHATSAPP ═══ -->
+  <a href="https://wa.me/212708875960?text=Bonjour%20PurKemet%2C%20je%20souhaite%20programmer%20un%20enl%C3%A8vement%20express."
+     target="_blank" rel="noopener noreferrer"
+     class="float-wa"
+     aria-label="Contacter PurKemet via WhatsApp">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.522 5.848L.006 24l6.317-1.651A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.917a9.907 9.907 0 0 1-5.062-1.39l-.363-.216-3.748.983 1.001-3.65-.237-.375A9.917 9.917 0 1 1 12 21.917z"/>
+    </svg>
+    <span>Enlèvement Express</span>
+  </a>
+
+  <footer class="border-t border-white/10 py-6 bg-[#060A0D] text-center font-mono text-xs text-slate-500 relative z-10">
+    © 2026 Industrial Illusion SARL — Espace ESG B2B · Tous droits réservés.
   </footer>
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
+  <!-- MATRIX CANVAS -->
+  <script src="assets/matrix-canvas.js"></script>
   <script src="assets/core.js"></script>
   <script src="assets/dashboard.js"></script>
   <script src="assets/monitoring.js"></script>
