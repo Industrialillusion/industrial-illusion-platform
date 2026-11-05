@@ -1,19 +1,4 @@
-
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "header", "key": "x-forwarded-proto", "value": "http" }],
-      "destination": "https://www.industrialillusion.ma/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "industrialillusion.ma" }],
-      "destination": "https://www.industrialillusion.ma/:path*",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -29,7 +14,7 @@
         { "key": "X-DNS-Prefetch-Control", "value": "on" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://sqlgsaxdqcgwfxjrkpuc.supabase.co https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://sqlgsaxdqcgwfxjrkpuc.supabase.co https://www.industrialillusion.ma; connect-src 'self' https://sqlgsaxdqcgwfxjrkpuc.supabase.co wss://sqlgsaxdqcgwfxjrkpuc.supabase.co https://*.ingest.sentry.io https://cdn.jsdelivr.net https://cdn.tailwindcss.com https://browser.sentry-cdn.com; media-src 'self' blob: data:; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://sqlgsaxdqcgwfxjrkpuc.supabase.co https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://sqlgsaxdqcgwfxjrkpuc.supabase.co https://www.industrialillusion.ma; connect-src 'self' https://sqlgsaxdqcgwfxjrkpuc.supabase.co wss://sqlgsaxdqcgwfxjrkpuc.supabase.co https://*.sentry.io https://sentry.io https://cdn.jsdelivr.net https://cdn.tailwindcss.com https://browser.sentry-cdn.com; media-src 'self' blob: data:; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         }
       ]
     },
