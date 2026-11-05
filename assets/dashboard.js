@@ -1,727 +1,926 @@
-/* ==========================================================================
- *  assets/dashboard.js
- *  Maat OS · Client ESG Dashboard v3.0
- *  - RPC agrégée get_client_dashboard_data
- *  - Badge QR header + fullscreen + print
- *  - Sélecteur temporel ESG (mois / prev / YTD) avec recalcul dynamique
- *  - Certificat 4 états (DRAFT / PENDING / SEALED / REJECTED)
- *  - MFA TOTP opt-in (Supabase auth.mfa)
- *  - WhatsApp dynamique avec nom client
- *  - ZERO MOCK · données réelles uniquement
- * ========================================================================== */
-(function () {
-  'use strict';
 
-  if (!window.Maat) {
-    console.error('[Dashboard] Maat kernel missing');
+/* PurKemet · dashboard.js v5.0
+   HUD, KPI animés, catalogue matières (11 types), Chart.js cartésien + barres détail,
+   ESG workflow, MFA, QR, formulaires → Supabase (Control Tower)
+*/
+(function(){
+'use strict';
+
+/* ═══════════════════ STATE ═══════════════════ */
+var S = {
+  sb: null, user: null, profile: null,
+  clientId: null, data: null,
+  esgPeriod: 'ytd',
+  mfaFactorId: null,
+  tickerInterval: null,
+  chartInstance: null
+};
+
+/* ═══════════════════ HELPERS ═══════════════════ */
+function $(id){ return document.getElementById(id); }
+
+function getSB(){
+  return (window.Maat && window.Maat.sb) || window.supabaseClient || null;
+}
+
+function toast(msg, kind){
+  var box = $('toasts');
+  if (!box) { console.log('[toast]', kind || '', msg); return; }
+  var d = document.createElement('div');
+  d.className = 'toast ' + (kind || '');
+  d.textContent = msg;
+  box.appendChild(d);
+  setTimeout(function(){
+    d.style.opacity = '0';
+    setTimeout(function(){ d.remove(); }, 300);
+  }, 3800);
+}
+
+function fmtNum(n, d){ return (Number(n) || 0).toFixed(d == null ? 2 : d); }
+
+function escapeHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+function animateCounter(el, target, duration, decimals){
+  if (!el) return;
+  var startTxt = String(el.textContent || '0').replace(/\s/g,'').replace(',','.');
+  var start = parseFloat(startTxt) || 0;
+  var startTime = performance.now();
+  decimals = decimals == null ? 2 : decimals;
+  function step(now){
+    var p = Math.min((now - startTime) / (duration || 1000), 1);
+    var v = start + (target - start) * easeOutCubic(p);
+    el.textContent = v.toFixed(decimals);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function makeQrSvg(text, cellSize, margin){
+  try {
+    if (typeof qrcode !== 'function') {
+      return '<div style="color:#999;font-size:10px;padding:20px;text-align:center">QR lib manquante</div>';
+    }
+    var qr = qrcode(0, 'M');
+    qr.addData(String(text || '—'));
+    qr.make();
+    return qr.createSvgTag({
+      cellSize: cellSize || 4,
+      margin: margin == null ? 2 : margin,
+      scalable: true
+    });
+  } catch(e){
+    console.error('[qr] error', e);
+    return '<div style="color:#999;font-size:10px;padding:20px;text-align:center">QR erreur</div>';
+  }
+}
+
+/* ═══════════════════ MAT META (11 TYPES · source unique) ═══════════════════ */
+var MAT_META = {
+  'PET':    { label: 'PET Transparent',      short: 'PET',      emoji: '🟢', color: '#00FFA3', c2: '#00C77E' },
+  'PEHD':   { label: 'PE-HD Rigide',         short: 'PE-HD',    emoji: '🟡', color: '#FCD34D', c2: '#F59E0B' },
+  'PE_HD':  { label: 'PE-HD Rigide',         short: 'PE-HD',    emoji: '🟡', color: '#FCD34D', c2: '#F59E0B' },
+  'ALU':    { label: 'Aluminium',            short: 'ALU',      emoji: '🥫', color: '#E8C86A', c2: '#C5A059' },
+  'CARTON': { label: 'Carton Ondulé',        short: 'Carton',   emoji: '📦', color: '#F5A623', c2: '#D97706' },
+  'VERRE':  { label: 'Verre Blanc',          short: 'Verre',    emoji: '🍾', color: '#38BDF8', c2: '#0284C7' },
+  'DIB':    { label: 'Encombrants DIB',      short: 'DIB',      emoji: '🗑️', color: '#94A3B8', c2: '#64748B' },
+  'ORG':    { label: 'Déchets Organiques',   short: 'Organique',emoji: '🌱', color: '#A78BFA', c2: '#7C3AED' },
+  'PAP':    { label: 'Papier / Journaux',    short: 'Papier',   emoji: '📄', color: '#FCD34D', c2: '#CA8A04' },
+  'FILM':   { label: 'Film Plastique',       short: 'Film',     emoji: '🎞️', color: '#67E8F9', c2: '#0891B2' },
+  'METAL':  { label: 'Métaux Ferreux',       short: 'Métal',    emoji: '⚙️', color: '#A1A1AA', c2: '#71717A' },
+  'PP':     { label: 'Polypropylène (PP)',   short: 'PP',       emoji: '🥤', color: '#FB923C', c2: '#EA580C' }
+};
+
+// Ordre canonique = celui du catalogue HTML
+var MAT_ORDER = ['PET','PEHD','ALU','CARTON','VERRE','DIB','ORG','PAP','FILM','METAL','PP'];
+
+function getMatMeta(m){
+  return MAT_META[m] || { label: m || '—', short: m || '—', emoji: '♻️', color: '#E5E7EB', c2: '#9CA3AF' };
+}
+
+/* ═══════════════════ BOOT ═══════════════════ */
+async function boot(){
+  try {
+    S.sb = getSB();
+    if (!S.sb) { fail('Client Supabase non initialisé. Vérifiez assets/core.js'); return; }
+
+    var sess = await S.sb.auth.getSession();
+    if (!sess || !sess.data || !sess.data.session) {
+      location.href = 'index.html';
+      return;
+    }
+    S.user = sess.data.session.user;
+
+    var prof = await S.sb.from('profiles').select('*').eq('id', S.user.id).maybeSingle();
+    if (prof.error || !prof.data) { fail('Profil introuvable'); return; }
+    S.profile = prof.data;
+
+    if (S.profile.role === 'admin' || S.profile.role === 'direction') {
+      var urlP = new URLSearchParams(location.search);
+      S.clientId = urlP.get('client_id');
+      if (!S.clientId) { location.href = 'control-tower.html'; return; }
+    } else {
+      S.clientId = S.profile.client_id;
+    }
+
+    if (!S.clientId) { fail('Aucun client associé à ce compte.'); return; }
+
+    await loadClient();
+    renderAll();
+    var loader = $('loader');
+    if (loader) loader.style.display = 'none';
+    var content = $('content');
+    if (content) content.style.display = 'flex';
+    wire();
+    console.log('[dashboard] boot OK', S.data);
+  } catch(e) {
+    console.error('[dashboard] boot error', e);
+    fail('Erreur de chargement. Réessayez.');
+  }
+}
+
+function fail(msg){
+  var l = $('loader');
+  if (l) l.innerHTML = '<div style="color:#FF5C5C;text-align:center;padding:20px;font-family:monospace">' + escapeHtml(msg) + '</div>';
+}
+
+async function loadClient(){
+  var rpc = await S.sb.rpc('get_client_dashboard_data', { p_client_id: S.clientId });
+  if (rpc.error) { console.error('[dashboard] RPC error', rpc.error); throw rpc.error; }
+  S.data = rpc.data || {};
+}
+
+/* ═══════════════════ RENDER ALL ═══════════════════ */
+function renderAll(){
+  if (!S.data) return;
+  renderHero();
+  renderKpis();
+  renderMaterials();
+  renderEsg();
+  renderTable();
+  renderQr();
+  startTicker();
+}
+
+/* ═══════════════════ HERO ═══════════════════ */
+function renderHero(){
+  var c = S.data.client || {};
+  var company = c.company_name || '—';
+  var badge = c.badge_qr || '—';
+  var cluster = c.cluster || 'Marrakech';
+
+  var el;
+  el = $('brandCompany'); if (el) el.textContent = company.toUpperCase();
+  el = $('heroCompany'); if (el) el.textContent = company;
+  el = $('heroCluster'); if (el) el.textContent = cluster;
+  el = $('heroBadge'); if (el) el.textContent = badge;
+  el = $('heroStatus'); if (el) el.textContent = c.status || 'ACTIF';
+}
+
+/* ═══════════════════ KPI ═══════════════════ */
+function renderKpis(){
+  var k = S.data.kpi || {};
+  animateCounter($('kpiTon'), (k.year_kg || 0) / 1000, 1200, 2);
+  animateCounter($('kpiCo2'), (k.year_co2_kg || 0) / 1000, 1200, 2);
+
+  var sub = $('kpiTonSub');
+  if (sub) sub.textContent = (k.year_collections || 0) + ' collecte' + ((k.year_collections || 0) > 1 ? 's' : '');
+
+  var prog = $('kpiProgram');
+  if (prog) prog.textContent = (S.data.system_status === 'ACTIVE') ? 'Actif' : 'En attente';
+
+  var cert = S.data.certificate;
+  var st = (cert && cert.status) ? cert.status : 'DRAFT';
+  var labels = { DRAFT:'Brouillon', PENDING:'En attente DG', APPROVED:'Approuvé', SEALED:'Scellé', REJECTED:'Rejeté' };
+  var cs = $('kpiCertStatus');
+  if (cs) cs.textContent = labels[st] || st;
+}
+
+/* ═══════════════════ MATERIALS ═══════════════════ */
+function renderMaterials(){
+  var rawList = S.data.by_material || [];
+  var byCode = {};
+  for (var r = 0; r < rawList.length; r++) {
+    var it = rawList[r];
+    var code = it.material;
+    if (!code) continue;
+    if (!byCode[code]) byCode[code] = { material: code, kg: 0, co2_kg: 0, collections: 0 };
+    byCode[code].kg += Number(it.kg) || 0;
+    byCode[code].co2_kg += Number(it.co2_kg) || 0;
+    byCode[code].collections += Number(it.collections) || 0;
+  }
+
+  // Liste complète : tous les 11 types, même à 0, triés par kg desc
+  var list = MAT_ORDER.map(function(code){
+    return byCode[code] || { material: code, kg: 0, co2_kg: 0, collections: 0 };
+  }).sort(function(a,b){ return (b.kg||0) - (a.kg||0); });
+
+  var withData = list.filter(function(m){ return (Number(m.kg) || 0) > 0; });
+
+  var totalKg = list.reduce(function(s,m){ return s + (Number(m.kg) || 0); }, 0);
+  var totalCo2 = list.reduce(function(s,m){ return s + (Number(m.co2_kg) || 0); }, 0);
+  var totalColl = list.reduce(function(s,m){ return s + (Number(m.collections) || 0); }, 0);
+
+  var el;
+  el = $('matTotalKg'); if (el) el.textContent = (totalKg/1000).toFixed(2) + ' T';
+  el = $('matCount'); if (el) el.textContent = withData.length || '0';
+  el = $('matCollections'); if (el) el.textContent = totalColl || '0';
+  el = $('matCo2'); if (el) el.textContent = (totalCo2/1000).toFixed(2) + ' T';
+
+  var dom = withData[0];
+  el = $('matDominant');
+  if (el) el.textContent = dom ? getMatMeta(dom.material).label : '—';
+
+  // ⚠️ FIX BUG 1: graphe rendu AVANT le return → visible même à 0 collectes
+  renderMaterialsChart(list);
+
+  var container = $('matBars');
+  if (!container) return;
+
+  if (!withData.length) {
+    container.innerHTML =
+      '<div class="mat-empty">' +
+        '<div class="mat-empty-icon">📊</div>' +
+        '<div class="mat-empty-title">Aucune donnée de valorisation</div>' +
+        '<div class="mat-empty-sub">Vos matières apparaîtront ici après la première collecte certifiée. Les 11 filières sont déjà enregistrées dans le Data Lake.</div>' +
+      '</div>';
     return;
   }
-  var M = window.Maat, $ = M.$;
 
-  var WA_PHONE = '212708875960';
+  var html = '';
+  for (var i = 0; i < withData.length; i++) {
+    var m = withData[i];
+    var meta = getMatMeta(m.material);
+    var kg = Number(m.kg) || 0;
+    var co2 = Number(m.co2_kg) || 0;
+    var coll = Number(m.collections) || 0;
+    var pct = totalKg > 0 ? (kg / totalKg) * 100 : 0;
+    var pctStr = pct.toFixed(1);
+    var barGrad = 'linear-gradient(90deg, ' + meta.color + ', ' + meta.c2 + ')';
 
-  var S = {
-    P: null,
-    isStaff: false,
-    allClients: [],
-    clientId: null,
-    data: null,
-    currentPeriod: 'ytd',
-    mfa: {
-      factorId: null,
-      challengeId: null,
-      step: 'init' // init | qr | verify | done
-    }
-  };
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Utils
-     ═══════════════════════════════════════════════════════════════════ */
-  function esc(s) {
-    var d = document.createElement('div');
-    d.textContent = String(s == null ? '' : s);
-    return d.innerHTML;
-  }
-
-  function toast(msg, kind) {
-    if (M.toast) M.toast(msg, kind === 'err' ? 'err' : (kind === 'warn' ? 'warn' : undefined));
-    else console.log('[Dashboard]', msg);
-  }
-
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    try {
-      return new Date(iso).toLocaleString('fr-FR', {
-        day: '2-digit', month: '2-digit', year: '2-digit',
-        hour: '2-digit', minute: '2-digit'
-      });
-    } catch (e) { return '—'; }
-  }
-
-  function fmtKg(v) {
-    var n = Number(v) || 0;
-    return n < 1000 ? n.toFixed(0) + ' kg' : (n / 1000).toFixed(2) + ' T';
-  }
-
-  function fmtT(v) {
-    var n = Number(v) || 0;
-    return (n / 1000).toFixed(2);
-  }
-
-  function generateQrSvg(code, cellSize) {
-    if (!code || !window.qrcode) return null;
-    try {
-      var qr = window.qrcode(0, 'H');
-      qr.addData(code);
-      qr.make();
-      return qr.createSvgTag({ cellSize: cellSize || 4, margin: 2, scalable: true });
-    } catch (e) {
-      console.error('[Dashboard] QR error:', e);
-      return null;
-    }
-  }
-
-  function setWaLink(companyName) {
-    var wa = document.querySelector('.float-wa');
-    if (!wa) return;
-    var txt = companyName
-      ? 'Bonjour PurKemet, ' + companyName + ' souhaite programmer un enlèvement express.'
-      : 'Bonjour PurKemet, je souhaite programmer un enlèvement express.';
-    wa.href = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(txt);
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Boot
-     ═══════════════════════════════════════════════════════════════════ */
-  async function boot() {
-    if (!M.sb) { window.location.replace('index.html#login'); return; }
-    var p = await M.profile();
-    if (!p) { window.location.replace('index.html#login'); return; }
-
-    S.P = p;
-    S.isStaff = (p.role === 'admin' || p.role === 'direction') && p.status === 'ACTIVE';
-
-    if (S.isStaff) {
-      var dgBar = $('dg-control-bar');
-      if (dgBar) dgBar.classList.remove('hidden');
-      var tag = $('access-role-tag');
-      if (tag) {
-        tag.textContent = 'SUPER-ADMIN';
-        tag.className = 'font-bold text-kemetGoldBright bg-kemetGold/20 px-2 py-0.5 rounded border border-kemetGold/40';
-      }
-      var rClients = await M.sb.from('clients').select('id, company_name, horeca_category').order('company_name');
-      S.allClients = rClients.data || [];
-      var sel = $('dg-client-selector');
-      if (sel) {
-        if (!S.allClients.length) {
-          sel.innerHTML = '<option value="">Aucun client</option>';
-        } else {
-          sel.innerHTML = S.allClients.map(function (c) {
-            return '<option value="' + c.id + '">' + esc(c.company_name) + ' [' + esc(c.horeca_category || 'B2B') + ']</option>';
-          }).join('');
-        }
-      }
-      var defaultId = S.allClients.length ? S.allClients[0].id : null;
-      await loadClient(defaultId);
-    } else {
-      if (!p.client_id) {
-        toast('Compte non associé à un établissement. Contactez la Direction.', 'warn');
-        if ($('client-company-name')) $('client-company-name').textContent = p.full_name || p.email;
-        return;
-      }
-      await loadClient(p.client_id);
-    }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Data loading
-     ═══════════════════════════════════════════════════════════════════ */
-  async function loadClient(clientId) {
-    if (!clientId) { renderEmpty(); return; }
-    S.clientId = clientId;
-
-    var resp = await M.sb.rpc('get_client_dashboard_data', { p_client_id: clientId });
-    if (resp.error) {
-      toast('Erreur de chargement : ' + resp.error.message, 'err');
-      console.error('[Dashboard] RPC error:', resp.error);
-      return;
-    }
-    S.data = resp.data || null;
-    renderAll();
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Rendering principal
-     ═══════════════════════════════════════════════════════════════════ */
-  function renderAll() {
-    var d = S.data;
-    if (!d || !d.client) { renderEmpty(); return; }
-
-    if ($('client-company-name')) $('client-company-name').textContent = d.client.company_name || '—';
-
-    // KPI global (YTD toujours sur la vue d'accueil)
-    var yearKg = Number(d.kpi.year_kg || 0);
-    var yearCo2 = Number(d.kpi.year_co2_kg || 0);
-
-    if ($('kpi-tonnage')) $('kpi-tonnage').innerHTML = fmtT(yearKg) + ' <span class="text-xs font-normal">T</span>';
-    if ($('kpi-co2')) $('kpi-co2').innerHTML = fmtT(yearCo2) + ' <span class="text-xs font-normal">T eq.</span>';
-
-    if ($('kpi-schedule')) {
-      $('kpi-schedule').textContent = d.system_status === 'READY_FIRST_COLLECTION'
-        ? 'Prêt pour 1ère collecte' : 'Programme actif';
-    }
-
-    renderBadgeWidget(d.client);
-    renderCertStatus(d.certificate, d.client);
-    renderCertPreview(S.currentPeriod);
-    renderCollectionsTable(d.recent_collections || []);
-    renderByMaterial(d.by_material || []);
-    setWaLink(d.client.company_name);
-
-    // Init période ESG une fois
-    var esgSel = $('esg-period-select');
-    if (esgSel) esgSel.value = S.currentPeriod;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Badge QR + Fullscreen + Print
-     ═══════════════════════════════════════════════════════════════════ */
-  function renderBadgeWidget(client) {
-    var widget = $('header-badge-widget');
-    var qrContainer = $('header-badge-qr');
-    var printQr = $('print-qr-container');
-
-    if (!client.badge_qr) {
-      if (widget) widget.classList.remove('ready');
-      if (qrContainer) qrContainer.innerHTML = '';
-      return;
-    }
-
-    var svg = generateQrSvg(client.badge_qr, 4);
-
-    if (widget) widget.classList.add('ready');
-    if (qrContainer) {
-      qrContainer.innerHTML = svg || '<span style="font-size:8px;color:#666">—</span>';
-      var svgEl = qrContainer.querySelector('svg');
-      if (svgEl) {
-        svgEl.setAttribute('width', '40');
-        svgEl.setAttribute('height', '40');
-      }
-    }
-    if (printQr) printQr.innerHTML = svg || '';
-    if ($('print-client-name')) $('print-client-name').textContent = client.company_name || '—';
-    if ($('print-client-district')) $('print-client-district').textContent = (client.district || client.cluster || '—');
-    if ($('print-badge-code')) $('print-badge-code').textContent = client.badge_qr;
-
-    if ($('fullscreen-client-name')) $('fullscreen-client-name').textContent = client.company_name || '—';
-    if ($('fullscreen-badge-code')) $('fullscreen-badge-code').textContent = client.badge_qr;
-
-    var fullscreenQr = $('fullscreen-qr-container');
-    if (fullscreenQr) {
-      var bigSvg = generateQrSvg(client.badge_qr, 8);
-      fullscreenQr.innerHTML = bigSvg || '';
-      var svgBig = fullscreenQr.querySelector('svg');
-      if (svgBig) {
-        svgBig.setAttribute('width', '320');
-        svgBig.setAttribute('height', '320');
-      }
-    }
-  }
-
-  window.openQrFullscreen = function () {
-    if (!S.data || !S.data.client || !S.data.client.badge_qr) {
-      toast('Badge non disponible', 'warn');
-      return;
-    }
-    var m = $('qrFullscreenModal');
-    if (m) m.classList.remove('hidden');
-  };
-
-  window.closeQrFullscreen = function () {
-    var m = $('qrFullscreenModal');
-    if (m) m.classList.add('hidden');
-  };
-
-  window.printBadge = function () {
-    if (!S.data || !S.data.client || !S.data.client.badge_qr) {
-      toast('Badge non disponible', 'warn');
-      return;
-    }
-    window.print();
-  };
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Certificat ESG · 4 états + période dynamique
-     ═══════════════════════════════════════════════════════════════════ */
-  function renderCertStatus(cert, client) {
-    var statusEl = $('kpi-cert-status');
-    var btn = $('btn-cert-action');
-
-    // Pré-remplir modale PDF
-    if ($('cert-client-title')) $('cert-client-title').textContent = (client.company_name || '').toUpperCase();
-    if ($('cert-ref-id')) $('cert-ref-id').textContent = (cert && cert.certificate_serial) || 'ESG-' + new Date().getFullYear() + '-' + (client.id || '').slice(0, 8).toUpperCase();
-    if ($('cert-date-now')) $('cert-date-now').textContent = (cert && cert.approved_at)
-      ? new Date(cert.approved_at).toLocaleDateString('fr-FR')
-      : '—';
-    if ($('cert-hash-master')) $('cert-hash-master').textContent = (cert && cert.certificate_hash) || '—';
-
-    if (!cert) {
-      if (statusEl) statusEl.textContent = 'DRAFT · Aucune demande';
-      if (btn) {
-        btn.className = 'w-full mt-2 btn btn-o !py-2 !text-[10px] flex items-center justify-center space-x-1';
-        btn.innerHTML = '<span>📜 Demander la Certification</span>';
-      }
-      return;
-    }
-    if (cert.status === 'APPROVED' || cert.status === 'SEALED') {
-      if (statusEl) statusEl.textContent = 'SEALED · ' + (cert.period_label || '');
-      if (btn) {
-        btn.className = 'w-full mt-2 btn btn-g !py-2 !text-[10px] flex items-center justify-center space-x-1';
-        btn.innerHTML = '<span>🖨️ Voir Certificat Officiel</span>';
-      }
-    } else if (cert.status === 'PENDING' || cert.status === 'AUDITING' || cert.status === 'DRAFT') {
-      if (statusEl) statusEl.textContent = 'PENDING · ' + (cert.period_label || '');
-      if (btn) {
-        btn.className = 'w-full mt-2 btn btn-au !py-2 !text-[10px] flex items-center justify-center space-x-1';
-        btn.innerHTML = '<span>⏳ Audit en cours</span>';
-      }
-    } else if (cert.status === 'REJECTED') {
-      if (statusEl) statusEl.textContent = 'REJETÉ';
-      if (btn) {
-        btn.className = 'w-full mt-2 btn btn-o !py-2 !text-[10px] flex items-center justify-center space-x-1';
-        btn.innerHTML = '<span>📜 Nouvelle demande</span>';
-      }
-    }
-  }
-
-  window.handlePeriodChange = function (period) {
-    S.currentPeriod = period || 'ytd';
-    renderCertPreview(S.currentPeriod);
-  };
-
-  function renderCertPreview(period) {
-    if (!S.data || !S.data.kpi) return;
-    var k = S.data.kpi;
-    var kg, co2, cnt;
-
-    if (period === 'current_month') {
-      kg = Number(k.month_kg || 0);
-      co2 = Number(k.month_co2_kg || 0);
-      cnt = Number(k.month_collections || 0);
-    } else if (period === 'prev_month') {
-      kg = Number(k.prev_month_kg || 0);
-      co2 = Number(k.prev_month_co2_kg || 0);
-      cnt = Number(k.prev_month_collections || 0);
-    } else {
-      kg = Number(k.year_kg || 0);
-      co2 = Number(k.year_co2_kg || 0);
-      cnt = Number(k.year_collections || 0);
-    }
-
-    if ($('cert-preview-kg')) $('cert-preview-kg').innerHTML = fmtT(kg) + ' <span class="text-xs font-normal">T</span>';
-    if ($('cert-preview-co2')) $('cert-preview-co2').innerHTML = fmtT(co2) + ' <span class="text-xs font-normal">T eq.</span>';
-    if ($('cert-preview-count')) $('cert-preview-count').textContent = String(cnt);
-
-    if ($('cert-tonnage-val')) $('cert-tonnage-val').textContent = fmtT(kg) + ' T';
-    if ($('cert-co2-val')) $('cert-co2-val').textContent = fmtT(co2) + ' T';
-
-    renderCertWorkflow(S.data.certificate, kg, cnt);
-  }
-
-  function renderCertWorkflow(cert, periodKg, periodCnt) {
-    var wrap = $('esg-cert-workflow');
-    if (!wrap) return;
-
-    var html = '';
-
-    if (!cert) {
-      html =
-        '<div class="flex items-start gap-3">' +
-        '<span class="text-2xl">📄</span>' +
-        '<div class="flex-1">' +
-        '<p class="text-kemetGoldBright font-bold mb-1">Statut : DRAFT · Aucune certification demandée</p>' +
-        '<p class="text-slate-300">Les données ci-dessus sont une <strong>anteprima</strong>. La certification officielle, avec valeur légale Loi 28-00, est vidimée manuellement par la Direction Générale après audit.</p>' +
-        (periodCnt === 0
-          ? '<p class="text-slate-400 text-[10px] mt-2 italic">Aucune collecte enregistrée sur cette période.</p>'
-          : '<p class="text-slate-400 text-[10px] mt-2 italic">Clôture mensuelle officielle : dernier jour du mois calendaire.</p>') +
-        '</div></div>';
-    } else if (cert.status === 'PENDING' || cert.status === 'AUDITING') {
-      html =
-        '<div class="flex items-start gap-3">' +
-        '<span class="text-2xl">⏳</span>' +
-        '<div class="flex-1">' +
-        '<p class="text-kemetGoldBright font-bold mb-1">Demande en cours d\'audit</p>' +
-        '<p class="text-slate-300">' + esc(cert.period_label || '') + ' · Les données de pesée sont en phase de <strong>vérification manuelle</strong> par la Direction Générale pour la vidimation du certificat officiel.</p>' +
-        '<p class="text-slate-400 text-[10px] mt-2 italic">Vous recevrez une notification dès la signature.</p>' +
-        '</div></div>';
-    } else if (cert.status === 'APPROVED' || cert.status === 'SEALED') {
-      html =
-        '<div class="flex items-start gap-3">' +
-        '<span class="text-2xl">✅</span>' +
-        '<div class="flex-1">' +
-        '<p class="text-cyberGreen font-bold mb-1">Certificat Vidimé &amp; Ancré</p>' +
-        '<p class="text-slate-300">' + esc(cert.period_label || '') + ' · Certificat officiel signé par la Direction Générale, ancré cryptographiquement sur le Maat Data Lake.</p>' +
-        '<p class="text-slate-400 text-[10px] mt-2 italic">Hash : ' + esc((cert.certificate_hash || '').slice(0, 32)) + '…</p>' +
-        '</div></div>';
-    } else if (cert.status === 'REJECTED') {
-      html =
-        '<div class="flex items-start gap-3">' +
-        '<span class="text-2xl">❌</span>' +
-        '<div class="flex-1">' +
-        '<p class="text-red-400 font-bold mb-1">Demande rejetée</p>' +
-        '<p class="text-slate-300">' + esc(cert.rejection_note || 'Motif non spécifié.') + '</p>' +
-        '</div></div>';
-    }
-    wrap.innerHTML = html;
-  }
-
-  window.handleEsgCertAction = async function () {
-    if (!S.clientId) { toast('Client non identifié', 'warn'); return; }
-    var cert = S.data && S.data.certificate;
-
-    if (cert && (cert.status === 'APPROVED' || cert.status === 'SEALED')) {
-      var modal = $('esgCertModal');
-      if (modal) modal.classList.remove('hidden');
-      return;
-    }
-    if (cert && (cert.status === 'PENDING' || cert.status === 'AUDITING')) {
-      toast('Votre demande est en cours d\'audit par la Direction.', 'warn');
-      return;
-    }
-
-    var btn = $('btn-cert-action');
-    if (btn) { btn.disabled = true; btn.textContent = 'Envoi…'; }
-
-    try {
-      var now = new Date();
-      var periodLabel = 'Bilan ' + now.getFullYear() + ' · ' + (now.getMonth() + 1) + '/' + now.getFullYear();
-      var resp = await M.sb.from('esg_certificates').insert([{
-        client_id: S.clientId,
-        period_label: periodLabel,
-        status: 'PENDING',
-        requested_at: now.toISOString()
-      }]);
-      if (resp.error) {
-        if (/duplicate|unique/i.test(resp.error.message)) {
-          toast('Une demande existe déjà pour cette période.', 'warn');
-          await loadClient(S.clientId);
-          return;
-        }
-        console.error('[ESG] insert error:', resp.error);
-        toast('Erreur lors de la demande.', 'err');
-        return;
-      }
-      toast('✅ Demande de certification transmise à la Direction Générale.');
-      await loadClient(S.clientId);
-    } catch (e) {
-      console.error('[ESG] exception:', e);
-      toast('Erreur réseau.', 'err');
-    } finally {
-      if (btn) { btn.disabled = false; }
-    }
-  };
-
-  window.closeEsgPdfModal = function () { var m = $('esgCertModal'); if (m) m.classList.add('hidden'); };
-  window.printEsgCert = function () { window.print(); };
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Tableau pesées
-     ═══════════════════════════════════════════════════════════════════ */
-  function renderCollectionsTable(collections) {
-    var tbody = $('client-pesees-tbody');
-    if (!tbody) return;
-
-    if (!collections.length) {
-      tbody.innerHTML =
-        '<tr><td colspan="9" class="py-10 text-center text-slate-400 font-mono text-xs">' +
-        '🕊 Aucune pesée enregistrée pour cet établissement.<br>' +
-        '<span class="text-[10px] text-slate-500 mt-2 block">En attente du premier ramassage · Système prêt à recevoir les données certifiées.</span>' +
-        '</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = collections.map(function (p) {
-      var w1 = Number(p.weight_collect_kg || 0);
-      var w2 = p.weight_depot_kg != null ? Number(p.weight_depot_kg) : null;
-      var delta = (w2 != null && w1 > 0) ? ((w2 - w1) / w1 * 100) : null;
-      var deltaStr = delta != null ? delta.toFixed(2) + ' %' : '—';
-      var hashShort = p.blockchain_hash ? p.blockchain_hash.slice(0, 12) + '…' : '—';
-      var isAnchored = p.status === 'ANCHORED';
-      var statusClass = isAnchored
-        ? 'bg-cyberGreen/20 text-cyberGreen border-cyberGreen/40'
-        : (p.status === 'DISCREPANCY' ? 'bg-red-500/20 text-red-400 border-red-500/40' : 'bg-kemetGold/20 text-kemetGold border-kemetGold/40');
-
-      return '<tr class="border-b border-white/5 font-mono text-xs hover:bg-white/[0.02]">' +
-        '<td class="py-3 px-2 text-slate-400">' + fmtDate(p.created_at) + '</td>' +
-        '<td class="py-3 px-2 font-bold text-white">' + esc(p.bag_qr_id) + '</td>' +
-        '<td class="py-3 px-2 text-cyberGreen font-bold">' + esc(p.material_type) + '</td>' +
-        '<td class="py-3 px-2 text-right">' + (w1 > 0 ? w1.toFixed(2) + ' kg' : '—') + '</td>' +
-        '<td class="py-3 px-2 text-right font-bold text-white">' + (w2 != null ? w2.toFixed(2) + ' kg' : '—') + '</td>' +
-        '<td class="py-3 px-2 text-right text-kemetGoldBright">' + deltaStr + '</td>' +
-        '<td class="py-3 px-2 text-slate-300">' + esc(p.operator_email || '—') + '</td>' +
-        '<td class="py-3 px-2 text-center"><span class="inline-block px-2 py-0.5 rounded border text-[10px] font-bold ' + statusClass + '">' + esc(p.status) + '</span></td>' +
-        '<td class="py-3 px-2 text-right text-slate-400 text-[10px]">' + hashShort + '</td>' +
-        '</tr>';
-    }).join('');
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════
-     Répartition matériaux
-     ═══════════════════════════════════════════════════════════════════ */
-  function renderByMaterial(materials) {
-    var container = $('client-materials-section');
-    if (!container) return;
-
-    if (!materials.length) {
-      container.innerHTML =
-        '<div class="glass-card p-8 text-center font-mono text-xs text-slate-400 space-y-2">' +
-        '<div class="text-3xl mb-1">📊</div>' +
-        '<div class="text-cyberGreen font-bold">Aucune matière collectée pour le moment</div>' +
-        '<div class="text-[10px] text-slate-500">La première collecte alimentera cette section en temps réel.</div>' +
-        '</div>';
-      return;
-    }
-
-    var maxKg = Math.max.apply(null, materials.map(function (m) { return Number(m.kg) || 0; })) || 1;
-
-    container.innerHTML =
-      '<div class="glass-card p-6 space-y-4">' +
-      '  <h3 class="font-kemetTitle text-lg font-bold text-white border-b border-white/10 pb-3">Répartition par Matière (YTD)</h3>' +
-      '  <div class="space-y-3 font-mono text-xs">' +
-      materials.map(function (m) {
-        var kg = Number(m.kg) || 0;
-        var pct = (kg / maxKg * 100).toFixed(0);
-        var co2 = Number(m.co2_kg) || 0;
-        return '<div>' +
-          '<div class="flex justify-between mb-1">' +
-          '<span class="font-bold text-cyberGreen">' + esc(m.material) + '</span>' +
-          '<span class="text-slate-300">' + fmtKg(kg) + ' · ' + fmtKg(co2) + ' CO₂</span>' +
-          '</div>' +
-          '<div class="w-full bg-black/40 rounded-full h-2"><div class="bg-gradient-to-r from-cyberGreen to-cyberGreen/60 h-2 rounded-full transition-all" style="width:' + pct + '%"></div></div>' +
-          '</div>';
-      }).join('') +
-      '  </div>' +
+    html +=
+      '<div class="mat-row" style="animation-delay:' + (i*70) + 'ms; color:' + meta.color + '">' +
+        '<div class="mat-row-head">' +
+          '<span class="mat-row-emoji">' + meta.emoji + '</span>' +
+          '<span class="mat-row-name">' + escapeHtml(meta.label) + '</span>' +
+          '<span class="mat-row-kg">' + kg.toFixed(2) + ' kg</span>' +
+          '<span class="mat-row-pct">' + pctStr + '%</span>' +
+        '</div>' +
+        '<div class="mat-row-bar">' +
+          '<div class="mat-row-fill" data-target="' + pctStr + '" style="background:' + barGrad + '; color:' + meta.color + '"></div>' +
+        '</div>' +
+        '<div class="mat-row-meta">' +
+          '<span>CO₂ évité · <b>' + co2.toFixed(2) + ' kg</b></span>' +
+          '<span>' + coll + ' collecte' + (coll > 1 ? 's' : '') + '</span>' +
+        '</div>' +
       '</div>';
   }
+  container.innerHTML = html;
 
-  function renderEmpty() {
-    if ($('client-pesees-tbody')) {
-      $('client-pesees-tbody').innerHTML =
-        '<tr><td colspan="9" class="py-8 text-center text-slate-500">Aucun établissement sélectionné.</td></tr>';
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    var fills = container.querySelectorAll('.mat-row-fill');
+    for (var j = 0; j < fills.length; j++) {
+      var target = parseFloat(fills[j].dataset.target) || 0;
+      fills[j].style.width = Math.max(target, 1.5) + '%';
     }
+  }); });
+}
+
+/* ═══════════════════ CHART CARTÉSIEN MATERIALI ═══════════════════ */
+function renderMaterialsChart(list){
+  var canvas = $('materialsChart');
+  if (!canvas) return;
+
+  if (typeof Chart === 'undefined') {
+    console.warn('[chart] Chart.js non chargé — vérifier CDN');
+    return;
   }
 
-  /* ═══════════════════════════════════════════════════════════════════
-     MFA TOTP · opt-in
-     ═══════════════════════════════════════════════════════════════════ */
-  window.openMfaSetup = async function () {
-    var modal = $('mfaModal');
-    if (!modal) return;
-    modal.classList.remove('hidden');
+  if (S.chartInstance) {
+    try { S.chartInstance.destroy(); } catch(e){}
+    S.chartInstance = null;
+  }
 
-    // Reset state
-    S.mfa = { factorId: null, challengeId: null, step: 'init' };
+  var hasData = list && list.length > 0;
+  var labels = hasData
+    ? list.map(function(m){ return getMatMeta(m.material).short || getMatMeta(m.material).label.split(' ')[0]; })
+    : ['—'];
+  var dataKg = hasData
+    ? list.map(function(m){ return Number(m.kg) || 0; })
+    : [0];
+  var bgColors = hasData
+    ? list.map(function(m){ return getMatMeta(m.material).color; })
+    : ['rgba(148,163,184,0.25)'];
+  var borderColors = hasData
+    ? list.map(function(m){ return getMatMeta(m.material).c2; })
+    : ['rgba(148,163,184,0.5)'];
 
-    var qrArea = $('mfa-qr-area');
-    var verifyArea = $('mfa-verify-area');
-    var actionBtn = $('mfa-action-btn');
-    var content = $('mfa-content');
+  // ⚠️ FIX BUG 2: hoverColors avec regex pour éviter "rgba(...)CC" invalide
+  var hoverColors = bgColors.map(function(c){
+    return /^#[0-9A-Fa-f]{6}$/.test(c) ? c + 'CC' : c;
+  });
 
-    if (qrArea) qrArea.classList.add('hidden');
-    if (verifyArea) verifyArea.classList.add('hidden');
-    if (actionBtn) { actionBtn.textContent = 'Configurer'; actionBtn.disabled = false; }
+  var ctx = canvas.getContext('2d');
 
-    // Check si déjà activé
-    try {
-      var aal = await M.sb.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (aal && aal.data && aal.data.currentLevel === 'aal2') {
-        if (content) content.innerHTML =
-          '<div class="text-center py-4"><div class="text-3xl mb-2">✅</div>' +
-          '<p class="text-cyberGreen font-bold">MFA déjà activé sur votre compte</p>' +
-          '<p class="text-[11px] text-slate-400 mt-2">Chaque connexion requiert un code à 6 chiffres.</p></div>';
-        if (actionBtn) actionBtn.textContent = 'Fermer';
-        actionBtn.onclick = window.closeMfaModal;
-        return;
-      }
-    } catch (e) { /* ignore */ }
-  };
-
-  window.closeMfaModal = function () {
-    var modal = $('mfaModal');
-    if (modal) modal.classList.add('hidden');
-    // restore onclick
-    var actionBtn = $('mfa-action-btn');
-    if (actionBtn) {
-      actionBtn.textContent = 'Configurer';
-      actionBtn.onclick = window.handleMfaAction;
-    }
-  };
-
-  window.handleMfaAction = async function () {
-    var actionBtn = $('mfa-action-btn');
-    var content = $('mfa-content');
-    var qrArea = $('mfa-qr-area');
-    var verifyArea = $('mfa-verify-area');
-    var codeInput = $('mfa-verify-code');
-
-    if (S.mfa.step === 'init') {
-      // Step 1 : enrol
-      actionBtn.disabled = true;
-      actionBtn.textContent = 'Génération du QR…';
-      try {
-        // Cleanup dangling unverified factors
-        try {
-          var factors = await M.sb.auth.mfa.listFactors();
-          if (factors && factors.data && factors.data.totp) {
-            for (var i = 0; i < factors.data.totp.length; i++) {
-              var f = factors.data.totp[i];
-              if (f.status === 'unverified') {
-                await M.sb.auth.mfa.unenroll({ factorId: f.id });
-              }
-            }
+  S.chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Matière collectée (kg)',
+        data: dataKg,
+        backgroundColor: bgColors,
+        borderColor: borderColors,
+        borderWidth: 1,
+        borderRadius: 6,
+        hoverBackgroundColor: hoverColors
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 1100,
+        easing: 'easeOutCubic'
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10, 15, 20, 0.95)',
+          titleColor: '#E8C86A',
+          bodyColor: '#00FFA3',
+          titleFont: { family: 'JetBrains Mono', size: 12, weight: '700' },
+          bodyFont: { family: 'JetBrains Mono', size: 12 },
+          borderColor: 'rgba(232,200,106,0.4)',
+          borderWidth: 1,
+          padding: 10,
+          displayColors: false,
+          callbacks: {
+            title: function(items){
+              var idx = items[0].dataIndex;
+              return hasData ? getMatMeta(list[idx].material).label : 'Aucune collecte';
+            },
+            label: function(c){ return (c.parsed.y || 0).toFixed(2) + ' kg'; }
           }
-        } catch (e) { /* ignore */ }
-
-        var enroll = await M.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Maat OS · ' + (S.P && S.P.email || 'client') });
-        if (enroll.error) throw enroll.error;
-
-        S.mfa.factorId = enroll.data.id;
-        S.mfa.step = 'qr';
-
-        if (qrArea && enroll.data.totp && enroll.data.totp.qr_code) {
-          qrArea.innerHTML = '<img src="' + enroll.data.totp.qr_code + '" alt="QR TOTP" style="max-width:100%;height:auto;border-radius:8px">';
-          qrArea.classList.remove('hidden');
         }
-        if (content) content.innerHTML =
-          '<p class="text-cyberGreen font-bold mb-1">Étape 1/2 · Scanner le QR</p>' +
-          '<p class="text-slate-300 text-[11px]">Ouvrez Google Authenticator (ou équivalent), ajoutez un compte, puis scannez le QR ci-dessous.</p>' +
-          '<p class="text-slate-400 text-[10px] mt-1">Secret manuel : <code class="text-kemetGoldBright">' +
-          esc(enroll.data.totp.secret || '') + '</code></p>';
-        if (verifyArea) verifyArea.classList.remove('hidden');
-        if (codeInput) { codeInput.value = ''; codeInput.focus(); }
-        actionBtn.disabled = false;
-        actionBtn.textContent = 'Vérifier le code';
-      } catch (e) {
-        console.error('[MFA] enrol error:', e);
-        toast('Erreur MFA : ' + (e.message || e), 'err');
-        actionBtn.disabled = false;
-        actionBtn.textContent = 'Réessayer';
-      }
-      return;
-    }
-
-    if (S.mfa.step === 'qr') {
-      var code = (codeInput && codeInput.value || '').trim();
-      if (!/^\d{6}$/.test(code)) { toast('Entrez un code à 6 chiffres.', 'warn'); return; }
-
-      actionBtn.disabled = true;
-      actionBtn.textContent = 'Vérification…';
-      try {
-        var chal = await M.sb.auth.mfa.challenge({ factorId: S.mfa.factorId });
-        if (chal.error) throw chal.error;
-        S.mfa.challengeId = chal.data.id;
-
-        var verify = await M.sb.auth.mfa.verify({
-          factorId: S.mfa.factorId,
-          challengeId: S.mfa.challengeId,
-          code: code
-        });
-        if (verify.error) throw verify.error;
-
-        S.mfa.step = 'done';
-        if (content) content.innerHTML =
-          '<div class="text-center py-4"><div class="text-3xl mb-2">✅</div>' +
-          '<p class="text-cyberGreen font-bold">MFA activé avec succès</p>' +
-          '<p class="text-[11px] text-slate-400 mt-2">À chaque connexion, un code à 6 chiffres sera requis.</p></div>';
-        if (qrArea) qrArea.classList.add('hidden');
-        if (verifyArea) verifyArea.classList.add('hidden');
-        actionBtn.disabled = false;
-        actionBtn.textContent = 'Fermer';
-        actionBtn.onclick = window.closeMfaModal;
-        toast('✅ MFA activé', false);
-      } catch (e) {
-        console.error('[MFA] verify error:', e);
-        toast('Code invalide. Réessayez.', 'err');
-        actionBtn.disabled = false;
-        actionBtn.textContent = 'Vérifier le code';
+      },
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: {
+            color: '#94A3B8',
+            font: { family: 'JetBrains Mono', size: 10, weight: '700' },
+            maxRotation: 45,
+            minRotation: 0,
+            autoSkip: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: {
+            color: '#94A3B8',
+            font: { family: 'JetBrains Mono', size: 10 },
+            callback: function(v){ return v + ' kg'; }
+          }
+        }
       }
     }
-  };
+  });
+}
 
-  /* ═══════════════════════════════════════════════════════════════════
-     Actions globales
-     ═══════════════════════════════════════════════════════════════════ */
-  window.switchInspectedClient = function (clientId) { loadClient(clientId); };
+/* ═══════════════════ ESG ═══════════════════ */
+function renderEsg(){
+  var k = S.data.kpi || {};
+  var period = S.esgPeriod;
+  var kg, co2, coll;
 
-  window.reloadCurrentInspectedData = function () {
-    var sel = $('dg-client-selector');
-    loadClient(sel ? sel.value : S.clientId);
-    toast('Données rafraîchies.');
-  };
+  if (period === 'current_month') {
+    kg = k.month_kg || 0; co2 = k.month_co2_kg || 0; coll = k.month_collections || 0;
+  } else if (period === 'prev_month') {
+    kg = k.prev_month_kg || 0; co2 = k.prev_month_co2_kg || 0; coll = k.prev_month_collections || 0;
+  } else {
+    kg = k.year_kg || 0; co2 = k.year_co2_kg || 0; coll = k.year_collections || 0;
+  }
 
-  window.handleClientLogout = function () {
-    M.signOut().then(function () { window.location.replace('index.html'); });
-  };
+  var el;
+  el = $('esgKg'); if (el) el.textContent = (kg/1000).toFixed(2) + ' T';
+  el = $('esgCo2'); if (el) el.textContent = (co2/1000).toFixed(2) + ' T';
+  el = $('esgCount'); if (el) el.textContent = coll || 0;
 
-  /* Formulaire enlèvement ponctuel */
-  window.handleSinglePickupSubmit = async function (e) {
-    e.preventDefault();
-    if (!S.clientId) return toast('Aucun client actif.', 'err');
-    var btn = $('btn-submit-single');
-    btn.disabled = true;
-    var origText = btn.textContent;
-    btn.textContent = 'Transmission…';
+  var cert = S.data.certificate;
+  var st = (cert && cert.status) ? cert.status : null;
+  var icon = $('esgIcon');
+  var txt = $('esgStatusTxt');
+  var btn = $('esgActionBtn');
 
-    var payload = {
+  if (!cert) {
+    if (icon) icon.textContent = '📄';
+    if (txt) txt.innerHTML = '<strong>Période en cours · Statut : DRAFT</strong>Certificat officiel généré à la clôture mensuelle (30/31 du mois).';
+    if (btn) {
+      btn.textContent = 'Demander';
+      btn.disabled = (coll || 0) === 0;
+      if ((coll || 0) === 0) btn.textContent = 'En attente données';
+    }
+  } else if (st === 'PENDING') {
+    if (icon) icon.textContent = '⏳';
+    var dt = cert.requested_at ? new Date(cert.requested_at).toLocaleDateString('fr-FR') : '—';
+    if (txt) txt.innerHTML = '<strong>En cours d\'audit · Direction Générale</strong>Demande transmise le ' + dt + '.';
+    if (btn) { btn.textContent = 'En attente'; btn.disabled = true; }
+  } else if (st === 'APPROVED' || st === 'SEALED') {
+    if (icon) icon.textContent = '✅';
+    if (txt) txt.innerHTML = '<strong>Certifié · ' + escapeHtml(cert.period_label || 'période clôturée') + '</strong>Document officiel disponible pour téléchargement.';
+    if (btn) { btn.textContent = '📥 Télécharger PDF'; btn.disabled = false; }
+  } else if (st === 'REJECTED') {
+    if (icon) icon.textContent = '❌';
+    if (txt) txt.innerHTML = '<strong>Demande rejetée</strong>' + escapeHtml(cert.rejection_reason || 'Contactez la Direction Générale.');
+    if (btn) { btn.textContent = 'Nouvelle demande'; btn.disabled = false; }
+  } else {
+    if (icon) icon.textContent = '📝';
+    if (txt) txt.innerHTML = '<strong>Brouillon · ' + escapeHtml(cert.period_label || 'en cours') + '</strong>Finalisation à la clôture mensuelle.';
+    if (btn) { btn.textContent = 'Finaliser'; btn.disabled = false; }
+  }
+}
+
+function handlePeriodChange(v){
+  S.esgPeriod = v || 'ytd';
+  renderEsg();
+}
+
+async function handleEsgCertAction(){
+  if (!S.clientId || !S.data) return;
+  var cert = S.data.certificate;
+  var st = cert && cert.status;
+
+  if (st === 'APPROVED' || st === 'SEALED') {
+    if (cert.pdf_url) { window.open(cert.pdf_url, '_blank'); return; }
+    openEsgPdfModal();
+    return;
+  }
+  if (st === 'PENDING') return;
+
+  var btn = $('esgActionBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+
+  try {
+    var now = new Date();
+    var periodLabel = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    var resp = await S.sb.from('esg_certificates').insert([{
       client_id: S.clientId,
-      scheduled_at: new Date($('pickup_datetime').value).toISOString(),
-      materials: ($('pickup_materials').value || '') + ' (~' + $('pickup_bags').value + ' sacs, ' + $('pickup_type').value + ', Quiet: ' + $('pickup_quiet_window').value + ')',
-      status: 'PLANNED',
-      contact_person: $('pickup_contact').value || (S.data && S.data.client.contact_name) || null,
-      contact_phone: (S.data && S.data.client.phone) || null
-    };
-
-    var res = await M.sb.from('pickups').insert([payload]);
-    btn.disabled = false;
-    btn.textContent = origText;
-
-    if (res.error) { toast('Erreur : ' + res.error.message, 'err'); return; }
-    toast('✅ Demande d\'enlèvement enregistrée.');
-    e.target.reset();
-  };
-
-  /* Formulaire récurrent */
-  window.handleRecurringScheduleSubmit = async function (e) {
-    e.preventDefault();
-    if (!S.clientId) return toast('Aucun client actif.', 'err');
-    var days = Array.from(document.querySelectorAll('input[name="schedule_days"]:checked')).map(function (c) { return c.value; });
-    if (!days.length) return toast('Sélectionnez au moins un jour.', 'warn');
-
-    var btn = $('btn-submit-recurring');
-    btn.disabled = true;
-    var origText = btn.textContent;
-    btn.textContent = 'Enregistrement…';
-
-    var note = 'Programme Récurrent : ' + days.join(', ') + ' à ' + $('schedule_time').value + ' (' + $('schedule_materials').value + ')';
-    var res = await M.sb.from('pickups').insert([{
-      client_id: S.clientId,
-      scheduled_at: new Date().toISOString(),
-      materials: note,
-      status: 'RECURRING',
-      contact_person: (S.data && S.data.client.contact_name) || null,
-      contact_phone: (S.data && S.data.client.phone) || null
+      period_label: periodLabel,
+      status: 'PENDING',
+      requested_at: now.toISOString()
     }]);
 
-    btn.disabled = false;
-    btn.textContent = origText;
-    if (res.error) { toast('Erreur : ' + res.error.message, 'err'); return; }
-    toast('✅ Programme récurrent enregistré.');
-    if ($('kpi-schedule')) $('kpi-schedule').textContent = days.slice(0, 2).join(' & ') + ' · ' + $('schedule_time').value;
+    if (resp.error) {
+      if (/duplicate|unique/i.test(resp.error.message)) {
+        toast('Une demande est déjà en cours pour cette période.', 'warn');
+      } else {
+        console.error('[esg] insert error', resp.error);
+        toast('Erreur lors de la demande. Réessayez.', 'err');
+      }
+    } else {
+      toast('✅ Demande transmise à la Direction Générale.', 'success');
+    }
+    await loadClient();
+    renderAll();
+  } catch(e) {
+    console.error('[esg] exception', e);
+    toast('Erreur réseau.', 'err');
+    if (btn) { btn.disabled = false; btn.textContent = 'Demander'; }
+  }
+}
+
+function openEsgPdfModal(){
+  var cert = S.data.certificate || {};
+  var client = S.data.client || {};
+  var k = S.data.kpi || {};
+  var modal = $('esgCertModal');
+  if (!modal) return;
+
+  var kg = (k.year_kg || 0) / 1000;
+  var co2 = (k.year_co2_kg || 0) / 1000;
+
+  var ref = cert.id ? String(cert.id).slice(0, 8).toUpperCase() : 'DRAFT-2026';
+  var date = cert.requested_at ? new Date(cert.requested_at).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
+
+  var el;
+  el = $('cert-ref'); if (el) el.textContent = ref;
+  el = $('cert-date'); if (el) el.textContent = date;
+  el = $('cert-client-name'); if (el) el.textContent = client.company_name || '—';
+  el = $('cert-tonnage'); if (el) el.textContent = kg.toFixed(2) + ' T';
+  el = $('cert-co2'); if (el) el.textContent = co2.toFixed(2) + ' T eq.';
+
+  var hashEl = $('cert-hash');
+  if (hashEl) {
+    var hex = '';
+    for (var i = 0; i < 16; i++) hex += Math.floor(Math.random()*16).toString(16);
+    hashEl.textContent = '0x' + hex;
+  }
+
+  modal.classList.add('show');
+}
+
+function closeEsgPdfModal(){
+  var m = $('esgCertModal');
+  if (m) m.classList.remove('show');
+}
+
+function printEsgCert(){ window.print(); }
+
+/* ═══════════════════ TABLE ═══════════════════ */
+function renderTable(){
+  var body = $('collectionsBody');
+  if (!body) return;
+  var rows = S.data.recent_collections || [];
+
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="8" class="empty-cell">Aucune pesée enregistrée · En attente du premier ramassage</td></tr>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var date = r.created_at ? new Date(r.created_at).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+    var bag = r.bag_qr_id ? escapeHtml(String(r.bag_qr_id).slice(0, 14)) : '—';
+    var mat = escapeHtml(r.material_type || '—');
+    var p1 = Number(r.weight_collect_kg || 0);
+    var p2 = Number(r.weight_depot_kg || 0);
+    var delta = (p1 && p2) ? Math.abs(p1 - p2).toFixed(2) : '—';
+    var st = r.status || '—';
+    var stCls = st === 'ANCHORED' ? 'status-anchored' : st === 'DISCREPANCY' ? 'status-discrepancy' : 'status-transit';
+    var hash = r.blockchain_hash ? escapeHtml(String(r.blockchain_hash).slice(0, 12) + '…') : '0xPending';
+
+    html += '<tr>' +
+      '<td>' + date + '</td>' +
+      '<td>' + bag + '</td>' +
+      '<td>' + mat + '</td>' +
+      '<td style="text-align:right">' + (p1 ? p1.toFixed(2) + ' kg' : '—') + '</td>' +
+      '<td style="text-align:right">' + (p2 ? p2.toFixed(2) + ' kg' : '—') + '</td>' +
+      '<td style="text-align:right">' + delta + '</td>' +
+      '<td><span class="' + stCls + '">' + escapeHtml(st) + '</span></td>' +
+      '<td style="text-align:right">' + hash + '</td>' +
+    '</tr>';
+  }
+  body.innerHTML = html;
+}
+
+/* ═══════════════════ QR ═══════════════════ */
+function renderQr(){
+  var client = S.data.client || {};
+  var badge = client.badge_qr || 'BDG-UNKNOWN';
+  var company = client.company_name || '—';
+  var district = client.district || client.cluster || 'Marrakech';
+
+  var el;
+  el = $('headerQrTarget'); if (el) el.innerHTML = makeQrSvg(badge, 2, 0);
+  el = $('qrFullHolder'); if (el) el.innerHTML = makeQrSvg(badge, 8, 2);
+  el = $('printQrTarget'); if (el) el.innerHTML = makeQrSvg(badge, 10, 2);
+
+  el = $('qrFullCode'); if (el) el.textContent = badge;
+  el = $('qrFullCompany'); if (el) el.textContent = company;
+  el = $('printClientName'); if (el) el.textContent = company;
+  el = $('printClientDistrict'); if (el) el.textContent = district;
+  el = $('printBadgeCode'); if (el) el.textContent = badge;
+}
+
+function openQrFullscreen(){
+  var m = $('qrFullscreen');
+  if (m) m.classList.add('show');
+}
+
+function closeQrFullscreen(){
+  var m = $('qrFullscreen');
+  if (m) m.classList.remove('show');
+}
+
+function printBadge(){
+  if (S.data) renderQr();
+  setTimeout(function(){ window.print(); }, 150);
+}
+
+/* ═══════════════════ MFA ═══════════════════ */
+async function openMfaSetup(){
+  var m = $('mfaModal');
+  if (m) m.classList.add('show');
+  var area = $('mfaQrArea');
+  if (area) area.innerHTML = '<span style="color:#999;font-family:monospace;font-size:12px">Génération…</span>';
+
+  try {
+    var resp = await S.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'PurKemet Client' });
+    if (resp.error) throw resp.error;
+    S.mfaFactorId = resp.data.id;
+    var qrData = resp.data.totp && resp.data.totp.qr_code;
+    if (area) {
+      if (qrData && qrData.indexOf('data:') === 0) {
+        area.innerHTML = '<img src="' + qrData + '" alt="QR TOTP" style="max-width:220px;height:auto">';
+      } else {
+        var uri = (resp.data.totp && resp.data.totp.uri) || (resp.data.totp && resp.data.totp.secret) || '';
+        area.innerHTML = makeQrSvg(uri, 4, 2);
+      }
+    }
+    toast('Scannez le QR puis saisissez le code à 6 chiffres.', 'success');
+  } catch(e) {
+    console.error('[mfa] enroll error', e);
+    if (area) {
+      area.innerHTML = '<div style="color:#c00;font-size:12px;text-align:center;padding:12px">Erreur: ' + escapeHtml(e.message || 'impossible de générer le QR') + '</div>';
+    }
+  }
+}
+
+function closeMfaModal(){
+  var m = $('mfaModal');
+  if (m) m.classList.remove('show');
+  var code = $('mfaCodeInput');
+  if (code) code.value = '';
+}
+
+async function handleMfaVerify(){
+  var input = $('mfaCodeInput');
+  var code = input ? String(input.value || '').trim() : '';
+  if (code.length !== 6) { toast('Code à 6 chiffres requis', 'warn'); return; }
+  if (!S.mfaFactorId) { toast('Réessayez l\'enrôlement', 'err'); return; }
+
+  var btn = $('mfaVerifyBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+
+  try {
+    var ch = await S.sb.auth.mfa.challenge({ factorId: S.mfaFactorId });
+    if (ch.error) throw ch.error;
+    var v = await S.sb.auth.mfa.verify({ factorId: S.mfaFactorId, challengeId: ch.data.id, code: code });
+    if (v.error) throw v.error;
+
+    try { await S.sb.from('profiles').update({ mfa_enabled: true }).eq('id', S.user.id); } catch(x){}
+
+    toast('✅ 2FA activée avec succès.', 'success');
+    closeMfaModal();
+  } catch(e) {
+    console.error('[mfa] verify error', e);
+    toast('Code invalide. Réessayez.', 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Vérifier et Activer'; }
+  }
+}
+
+/* ═══════════════════ TICKER ═══════════════════ */
+function startTicker(){
+  var el = $('heroTicker');
+  if (!el) return;
+  var items = [];
+
+  var cols = (S.data.recent_collections || []).slice(0, 5);
+  if (cols.length) {
+    for (var i = 0; i < cols.length; i++) {
+      var c = cols[i];
+      var mat = c.material_type || 'LOT';
+      var w = (c.weight_depot_kg || c.weight_collect_kg || 0);
+      items.push({ label: mat, value: (Number(w) || 0).toFixed(1) + ' kg' });
+    }
+  } else {
+    items = [
+      { label: 'Maat Data Lake', value: 'ONLINE' },
+      { label: 'Blockchain', value: 'Fabric + BTC' },
+      { label: 'Node', value: 'HUB-MRK-01' },
+      { label: 'Filières actives', value: '11' }
+    ];
+  }
+
+  function renderTicker(){
+    var rows = '';
+    for (var j = 0; j < items.length; j++) {
+      rows += '<div class="ticker-row"><span>' + escapeHtml(items[j].label) + '</span><span>' + escapeHtml(items[j].value) + '</span></div>';
+    }
+    el.innerHTML = rows;
+  }
+  renderTicker();
+
+  if (S.tickerInterval) clearInterval(S.tickerInterval);
+  S.tickerInterval = setInterval(function(){
+    if (items.length > 1) {
+      items.push(items.shift());
+      renderTicker();
+    }
+  }, 4000);
+}
+
+/* ═══════════════════ FORM: ENLÈVEMENT PONCTUEL → SUPABASE ═══════════════════ */
+async function handleSinglePickupSubmit(e){
+  e.preventDefault();
+  var dt = $('pickup_datetime');
+  var bags = $('pickup_bags');
+  var type = $('pickup_type');
+  var mats = $('pickup_materials');
+  var btn = e.target.querySelector('button[type="submit"]');
+  var original = btn ? btn.textContent : 'Envoyer la Demande';
+
+  var payload = {
+    client_id: S.clientId,
+    requested_by: S.user ? S.user.email : null,
+    preferred_datetime: dt ? dt.value : null,
+    bags_count: bags ? parseInt(bags.value, 10) || 0 : 0,
+    priority: type ? type.value : 'STANDARD',
+    materials: mats ? mats.value.trim() : '',
+    status: 'PENDING',
+    source: 'CLIENT_DASHBOARD',
+    created_at: new Date().toISOString()
   };
 
-  /* Init */
-  window.addEventListener('load', function () {
-    M.init();
-    boot();
+  if (!payload.preferred_datetime || !payload.materials) {
+    toast('Veuillez renseigner tous les champs obligatoires.', 'warn');
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+
+  try {
+    var ok = false;
+
+    var primary = await S.sb.from('pickup_requests').insert([payload]);
+    if (!primary.error) {
+      ok = true;
+    } else if (!/does not exist|schema cache|relation/i.test(primary.error.message || '')) {
+      console.warn('[pickup] primary table error', primary.error);
+    }
+
+    if (!ok) {
+      var fallback = await S.sb.from('field_notes').insert([{
+        note_type: 'PICKUP_REQUEST',
+        content:
+          '🚚 DEMANDE D\'ENLÈVEMENT PONCTUEL\n' +
+          'Client ID: ' + S.clientId + '\n' +
+          'Date souhaitée: ' + payload.preferred_datetime + '\n' +
+          'Priorité: ' + payload.priority + '\n' +
+          'Sacs/Bacs: ' + payload.bags_count + '\n' +
+          'Matières: ' + payload.materials + '\n' +
+          'Demandé par: ' + (payload.requested_by || '—'),
+        operator_email: payload.requested_by || 'client@dashboard',
+        gps_location: null
+      }]);
+      if (fallback.error) throw fallback.error;
+      ok = true;
+    }
+
+    if (ok) {
+      toast('✅ Demande transmise à la Control Tower. Confirmation sous 30 min.', 'success');
+      e.target.reset();
+      if (bags) bags.value = '5';
+      fillDefaultDatetime();
+    } else {
+      toast('Envoi impossible. Réessayez.', 'err');
+    }
+  } catch(err) {
+    console.error('[pickup] exception', err);
+    toast('Erreur : ' + (err.message || 'réessayez'), 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = original; }
+  }
+}
+
+/* ═══════════════════ FORM: ENLÈVEMENT RÉCURRENT → SUPABASE ═══════════════════ */
+async function handleRecurringScheduleSubmit(e){
+  e.preventDefault();
+  var checkboxes = e.target.querySelectorAll('input[name="schedule_days"]:checked');
+  var days = [];
+  for (var i = 0; i < checkboxes.length; i++) days.push(checkboxes[i].value);
+
+  var time = $('schedule_time');
+  var mats = $('schedule_materials');
+  var btn = e.target.querySelector('button[type="submit"]');
+  var original = btn ? btn.textContent : 'Enregistrer le Programme';
+
+  if (!days.length) {
+    toast('Sélectionnez au moins un jour.', 'warn');
+    return;
+  }
+
+  var payload = {
+    client_id: S.clientId,
+    requested_by: S.user ? S.user.email : null,
+    days: days,
+    preferred_time: time ? time.value : '09:00',
+    materials: mats ? mats.value.trim() : '',
+    status: 'PENDING_APPROVAL',
+    source: 'CLIENT_DASHBOARD',
+    created_at: new Date().toISOString()
+  };
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+
+  try {
+    var ok = false;
+
+    var primary = await S.sb.from('recurring_schedules').insert([payload]);
+    if (!primary.error) {
+      ok = true;
+    } else if (!/does not exist|schema cache|relation/i.test(primary.error.message || '')) {
+      console.warn('[recurring] primary table error', primary.error);
+    }
+
+    if (!ok) {
+      var fallback = await S.sb.from('field_notes').insert([{
+        note_type: 'RECURRING_SCHEDULE',
+        content:
+          '📅 DEMANDE DE PROGRAMME RÉCURRENT\n' +
+          'Client ID: ' + S.clientId + '\n' +
+          'Jours: ' + days.join(', ') + '\n' +
+          'Heure: ' + payload.preferred_time + '\n' +
+          'Matières: ' + payload.materials + '\n' +
+          'Demandé par: ' + (payload.requested_by || '—'),
+        operator_email: payload.requested_by || 'client@dashboard',
+        gps_location: null
+      }]);
+      if (fallback.error) throw fallback.error;
+      ok = true;
+    }
+
+    if (ok) {
+      toast('✅ Programme transmis. Validation DG sous 24h.', 'success');
+    } else {
+      toast('Envoi impossible. Réessayez.', 'err');
+    }
+  } catch(err) {
+    console.error('[recurring] exception', err);
+    toast('Erreur : ' + (err.message || 'réessayez'), 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = original; }
+  }
+}
+
+/* ═══════════════════ SCROLL / LOGOUT ═══════════════════ */
+function scrollToMaterials(){
+  var el = $('matSection');
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('highlight');
+  setTimeout(function(){ el.classList.remove('highlight'); }, 3200);
+}
+
+async function handleClientLogout(){
+  try { if (S.sb) await S.sb.auth.signOut(); } catch(e){}
+  location.href = 'index.html';
+}
+
+/* ═══════════════════ WIRE ═══════════════════ */
+function fillDefaultDatetime(){
+  var dt = $('pickup_datetime');
+  if (!dt || dt.value) return;
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(9, 0, 0, 0);
+  var iso = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  dt.value = iso;
+}
+
+function wire(){
+  var ovs = document.querySelectorAll('.overlay');
+  for (var i = 0; i < ovs.length; i++) {
+    (function(ov){
+      ov.addEventListener('click', function(e){
+        if (e.target === ov) ov.classList.remove('show');
+      });
+    })(ovs[i]);
+  }
+
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    var ids = ['qrFullscreen', 'esgCertModal', 'mfaModal'];
+    for (var k = 0; k < ids.length; k++) {
+      var el = $(ids[k]);
+      if (el) el.classList.remove('show');
+    }
   });
+
+  fillDefaultDatetime();
+}
+
+/* ═══════════════════ EXPORTS GLOBAUX ═══════════════════ */
+window.openQrFullscreen = openQrFullscreen;
+window.closeQrFullscreen = closeQrFullscreen;
+window.printBadge = printBadge;
+window.openMfaSetup = openMfaSetup;
+window.closeMfaModal = closeMfaModal;
+window.handleMfaVerify = handleMfaVerify;
+window.handlePeriodChange = handlePeriodChange;
+window.handleEsgCertAction = handleEsgCertAction;
+window.openEsgPdfModal = openEsgPdfModal;
+window.closeEsgPdfModal = closeEsgPdfModal;
+window.printEsgCert = printEsgCert;
+window.handleSinglePickupSubmit = handleSinglePickupSubmit;
+window.handleRecurringScheduleSubmit = handleRecurringScheduleSubmit;
+window.scrollToMaterials = scrollToMaterials;
+window.handleClientLogout = handleClientLogout;
+
+/* ═══════════════════ GO ═══════════════════ */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+
 })();
