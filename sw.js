@@ -1,20 +1,19 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.2
+ *  Maat OS · Industrial Illusion SARL · v1.0.3
  *
- *  Strategie:
- *  - HTML       → network-first con fallback cache
- *  - JS / CSS   → network-first con fallback cache  (deploy visibile al F5)
- *  - img/font   → cache-first
- *  - Supabase   → bypass totale
- *
- *  v1.0.2: JS/CSS ora network-first → fine bump manuali VERSION.
+ *  v1.0.3: 
+ *  - Bump versione: invalidazione totale vecchie cache browser.
+ *  - Network-first con { cache: 'reload' } senza perdere gli header originali.
+ *  - Isolamento: fallback offline a /pwa.html SOLO se la navigazione è per la PWA.
+ *  - Dashboard & Admin escluse dal fallback dell'operatore.
  * ========================================================================== */
 
-const VERSION      = 'maat-v1.0.2-pre-pwa';
-const SHELL_CACHE  = VERSION + '-shell';
+const VERSION       = 'maat-v1.0.3-dashboard-fix';
+const SHELL_CACHE   = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
+// Lo Shell offline è riservato ESCLUSIVAMENTE all'operatore PWA
 const SHELL_URLS = [
   '/pwa.html',
   '/pwa.webmanifest',
@@ -68,23 +67,30 @@ self.addEventListener('fetch', function (event) {
 
   var url = new URL(req.url);
 
+  // Bypass totale per Supabase, Google Fonts, API esterne
   if (url.hostname.indexOf('supabase.co') !== -1) return;
   if (url.hostname.indexOf('fonts.googleapis.com') !== -1) return;
   if (url.hostname.indexOf('fonts.gstatic.com') !== -1) return;
 
-  // HTML → network-first
+  // 1. Pagine HTML
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').indexOf('text/html') !== -1) {
-    event.respondWith(networkFirst(req, RUNTIME_CACHE, '/pwa.html'));
+    // Clona la richiesta preservando headers ma forzando il download fresco da Vercel
+    var freshReq = new Request(req, { cache: 'reload' });
+    
+    // Fallback offline a /pwa.html SOLO se l'utente stava aprendo la PWA
+    var fallback = url.pathname.indexOf('pwa.html') !== -1 ? '/pwa.html' : null;
+    event.respondWith(networkFirst(freshReq, RUNTIME_CACHE, fallback));
     return;
   }
 
-  // JS / CSS → network-first (sempre freschi online, cache offline)
+  // 2. Script e Stili (JS / CSS) → download fresco obbligatorio
   if (/\.(js|css)$/i.test(url.pathname)) {
-    event.respondWith(networkFirst(req, RUNTIME_CACHE));
+    var freshAssetReq = new Request(req, { cache: 'reload' });
+    event.respondWith(networkFirst(freshAssetReq, RUNTIME_CACHE));
     return;
   }
 
-  // img / font / manifest → cache-first
+  // 3. Asset statici pesanti (immagini, font, icone) → cache-first
   if (/\.(png|jpg|jpeg|svg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname)) {
     event.respondWith(cacheFirst(req));
     return;
@@ -109,7 +115,10 @@ function networkFirst(req, cacheName, fallbackUrl) {
     return caches.match(req).then(function (cached) {
       if (cached) return cached;
       if (fallbackUrl) return caches.match(fallbackUrl);
-      return new Response('', { status: 503 });
+      return new Response('Offline - Risorsa non disponibile', { 
+        status: 503, 
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' } 
+      });
     });
   });
 }
