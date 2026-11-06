@@ -1,8 +1,7 @@
-
-/* PurKemet · dashboard.js v5.1
+/* PurKemet · dashboard.js v5.2
    HUD, KPI animés, catalogue matières (11 types), Chart.js cartésien + barres détail,
    ESG workflow, MFA, QR, formulaires → Supabase (Control Tower)
-   v5.1: fix redirect admin (control-tower.html → admin.html + message ?client_id)
+   v5.2: admin sans ?client_id → client picker inline (plus de message rouge)
 */
 (function(){
 'use strict';
@@ -97,11 +96,115 @@ var MAT_META = {
   'PP':     { label: 'Polypropylène (PP)',   short: 'PP',       emoji: '🥤', color: '#FB923C', c2: '#EA580C' }
 };
 
-// Ordre canonique = celui du catalogue HTML
 var MAT_ORDER = ['PET','PEHD','ALU','CARTON','VERRE','DIB','ORG','PAP','FILM','METAL','PP'];
 
 function getMatMeta(m){
   return MAT_META[m] || { label: m || '—', short: m || '—', emoji: '♻️', color: '#E5E7EB', c2: '#9CA3AF' };
+}
+
+/* ═══════════════════ CLIENT PICKER (admin sans ?client_id) ═══════════════════ */
+async function showClientPicker(){
+  var loader = $('loader');
+  if (!loader) return;
+
+  // Neutraliser le spinner ::before du .loader
+  loader.classList.remove('loader');
+  loader.style.display = 'block';
+  loader.style.padding = '20px 0';
+  loader.style.width = '100%';
+  loader.style.minHeight = 'auto';
+
+  loader.innerHTML =
+    '<div style="max-width:1000px;margin:20px auto;padding:0 16px;width:100%">' +
+      '<div style="text-align:center;margin-bottom:24px">' +
+        '<div style="display:inline-flex;width:64px;height:64px;border-radius:16px;background:rgba(232,200,106,.15);border:1px solid rgba(232,200,106,.4);align-items:center;justify-content:center;font-size:32px;margin-bottom:12px">👥</div>' +
+        '<h2 style="font-family:Cinzel,serif;font-size:20px;font-weight:900;color:#E8C86A;margin:0 0 6px">Sélectionnez un Client à Inspecter</h2>' +
+        '<p style="font-size:12px;color:#94A3B8;font-family:\'JetBrains Mono\',monospace;margin:0">Mode Direction · Control Tower → Fiche Client</p>' +
+      '</div>' +
+      '<input id="clientPickerSearch" type="text" placeholder="🔍 Rechercher un client…" ' +
+        'style="width:100%;max-width:400px;display:block;margin:0 auto 20px;padding:10px 14px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:border-color .2s">' +
+      '<div id="clientPickerGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">' +
+        '<div style="grid-column:1/-1;text-align:center;color:#94A3B8;font-family:\'JetBrains Mono\',monospace;font-size:12px;padding:40px">⏳ Chargement des clients…</div>' +
+      '</div>' +
+      '<div style="text-align:center;margin-top:24px">' +
+        '<a href="admin.html" style="color:#00FFA3;text-decoration:underline;font-family:\'JetBrains Mono\',monospace;font-size:12px">← Retour à la Control Tower</a>' +
+      '</div>' +
+    '</div>';
+
+  // Masquer QR + Print (inutiles sans client)
+  var qrBtn = $('btnQrBadge');
+  if (qrBtn) qrBtn.style.display = 'none';
+  var iconBtns = document.querySelectorAll('.top-actions .icon-btn');
+  for (var i = 0; i < iconBtns.length; i++) {
+    if ((iconBtns[i].getAttribute('onclick') || '').indexOf('printBadge') !== -1) {
+      iconBtns[i].style.display = 'none';
+    }
+  }
+
+  // Focus border sur search
+  var search = $('clientPickerSearch');
+  if (search) {
+    search.addEventListener('focus', function(){ this.style.borderColor = '#00FFA3'; });
+    search.addEventListener('blur',  function(){ this.style.borderColor = 'rgba(255,255,255,.15)'; });
+  }
+
+  try {
+    var resp = await S.sb.from('clients')
+      .select('id, company_name, contact_name, district, cluster, status, horeca_category')
+      .order('company_name', { ascending: true })
+      .limit(200);
+
+    if (resp.error) throw resp.error;
+
+    var allClients = resp.data || [];
+    var grid = $('clientPickerGrid');
+    if (!grid) return;
+
+    function renderGrid(items){
+      if (!items.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#94A3B8;font-family:\'JetBrains Mono\',monospace;font-size:12px;padding:40px">Aucun client ne correspond.</div>';
+        return;
+      }
+      var html = '';
+      for (var j = 0; j < items.length; j++) {
+        var c = items[j];
+        var statusColor = c.status === 'ACTIVE' ? '#00FFA3' : c.status === 'SUSPENDED' ? '#FF5C5C' : '#94A3B8';
+        html += '<a href="dashboard.html?client_id=' + encodeURIComponent(c.id) + '" ' +
+          'style="display:block;padding:16px;background:rgba(15,23,42,.72);border:1px solid rgba(232,200,106,.25);border-radius:12px;text-decoration:none;color:#F1F5F9;transition:all .2s;font-family:inherit" ' +
+          'onmouseover="this.style.borderColor=\'#E8C86A\';this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 8px 24px -8px rgba(232,200,106,.4)\'" ' +
+          'onmouseout="this.style.borderColor=\'rgba(232,200,106,.25)\';this.style.transform=\'none\';this.style.boxShadow=\'none\'">' +
+          '<div style="font-weight:700;color:#E8C86A;margin-bottom:6px;font-size:14px;line-height:1.2">' + escapeHtml(c.company_name || '—') + '</div>' +
+          '<div style="font-size:11px;color:#94A3B8;font-family:\'JetBrains Mono\',monospace;margin-bottom:2px">' + escapeHtml(c.contact_name || '—') + '</div>' +
+          '<div style="font-size:11px;color:#94A3B8;font-family:\'JetBrains Mono\',monospace">📍 ' + escapeHtml(c.district || c.cluster || '—') + '</div>' +
+          '<div style="font-size:10px;color:' + statusColor + ';margin-top:10px;font-family:\'JetBrains Mono\',monospace;font-weight:700">' + escapeHtml(c.status || '—') + ' →</div>' +
+        '</a>';
+      }
+      grid.innerHTML = html;
+    }
+
+    renderGrid(allClients);
+
+    // Recherche live
+    if (search) {
+      search.addEventListener('input', function(){
+        var q = this.value.toLowerCase().trim();
+        if (!q) { renderGrid(allClients); return; }
+        var filtered = allClients.filter(function(c){
+          return (c.company_name || '').toLowerCase().indexOf(q) !== -1 ||
+                 (c.contact_name || '').toLowerCase().indexOf(q) !== -1 ||
+                 (c.district || '').toLowerCase().indexOf(q) !== -1 ||
+                 (c.cluster || '').toLowerCase().indexOf(q) !== -1;
+        });
+        renderGrid(filtered);
+      });
+    }
+  } catch(e) {
+    console.error('[client-picker] error', e);
+    var grid2 = $('clientPickerGrid');
+    if (grid2) {
+      grid2.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#FF5C5C;font-family:\'JetBrains Mono\',monospace;font-size:12px;padding:40px">❌ Erreur : ' + escapeHtml(e.message || 'réessayez') + '</div>';
+    }
+  }
 }
 
 /* ═══════════════════ BOOT ═══════════════════ */
@@ -124,12 +227,9 @@ async function boot(){
     if (S.profile.role === 'admin' || S.profile.role === 'direction') {
       var urlP = new URLSearchParams(location.search);
       S.clientId = urlP.get('client_id');
-      // v5.1 · FIX : control-tower.html n'existe pas → admin.html + message clair
       if (!S.clientId) {
-        fail(
-          'Mode Direction : précisez <code>?client_id=&lt;uuid&gt;</code> dans l\'URL.<br>' +
-          '<a href="admin.html" style="color:#00FFA3;text-decoration:underline;margin-top:12px;display:inline-block">← Retour Control Tower</a>'
-        );
+        // v5.2 · Admin sans client_id → client picker inline
+        showClientPicker();
         return;
       }
     } else {
@@ -223,7 +323,6 @@ function renderMaterials(){
     byCode[code].collections += Number(it.collections) || 0;
   }
 
-  // Liste complète : tous les 11 types, même à 0, triés par kg desc
   var list = MAT_ORDER.map(function(code){
     return byCode[code] || { material: code, kg: 0, co2_kg: 0, collections: 0 };
   }).sort(function(a,b){ return (b.kg||0) - (a.kg||0); });
@@ -244,7 +343,6 @@ function renderMaterials(){
   el = $('matDominant');
   if (el) el.textContent = dom ? getMatMeta(dom.material).label : '—';
 
-  // ⚠️ FIX BUG 1: graphe rendu AVANT le return → visible même à 0 collectes
   renderMaterialsChart(list);
 
   var container = $('matBars');
@@ -328,7 +426,6 @@ function renderMaterialsChart(list){
     ? list.map(function(m){ return getMatMeta(m.material).c2; })
     : ['rgba(148,163,184,0.5)'];
 
-  // ⚠️ FIX BUG 2: hoverColors avec regex pour éviter "rgba(...)CC" invalide
   var hoverColors = bgColors.map(function(c){
     return /^#[0-9A-Fa-f]{6}$/.test(c) ? c + 'CC' : c;
   });
@@ -352,10 +449,7 @@ function renderMaterialsChart(list){
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animation: {
-        duration: 1100,
-        easing: 'easeOutCubic'
-      },
+      animation: { duration: 1100, easing: 'easeOutCubic' },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -383,9 +477,7 @@ function renderMaterialsChart(list){
           ticks: {
             color: '#94A3B8',
             font: { family: 'JetBrains Mono', size: 10, weight: '700' },
-            maxRotation: 45,
-            minRotation: 0,
-            autoSkip: false
+            maxRotation: 45, minRotation: 0, autoSkip: false
           }
         },
         y: {
@@ -596,6 +688,16 @@ function renderQr(){
   el = $('printClientName'); if (el) el.textContent = company;
   el = $('printClientDistrict'); if (el) el.textContent = district;
   el = $('printBadgeCode'); if (el) el.textContent = badge;
+
+  // v5.2 · Réactiver les boutons cachés par le picker
+  var qrBtn = $('btnQrBadge');
+  if (qrBtn) qrBtn.style.display = '';
+  var iconBtns = document.querySelectorAll('.top-actions .icon-btn');
+  for (var i = 0; i < iconBtns.length; i++) {
+    if ((iconBtns[i].getAttribute('onclick') || '').indexOf('printBadge') !== -1) {
+      iconBtns[i].style.display = '';
+    }
+  }
 }
 
 function openQrFullscreen(){
@@ -923,6 +1025,7 @@ window.handleSinglePickupSubmit = handleSinglePickupSubmit;
 window.handleRecurringScheduleSubmit = handleRecurringScheduleSubmit;
 window.scrollToMaterials = scrollToMaterials;
 window.handleClientLogout = handleClientLogout;
+window.showClientPicker = showClientPicker;
 
 /* ═══════════════════ GO ═══════════════════ */
 if (document.readyState === 'loading') {
