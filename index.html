@@ -863,7 +863,7 @@ body {
 
   <div class="animated-divider" aria-hidden="true"></div>
 
-  <!-- MATIÈRES -->
+   <!-- MATIÈRES -->
   <section class="space-y-5 sm:space-y-6 reveal" aria-labelledby="materiaux-title">
     <div class="border-b border-white/10 pb-3.5 sm:pb-4">
       <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyberGreen">Propriétés &amp; Chimie des Matériaux</span>
@@ -871,7 +871,7 @@ body {
       <p class="text-xs sm:text-sm text-slate-400 font-sans mt-1.5 sm:mt-2 max-w-3xl">Chaque flux intercepté par PurKemet est caractérisé selon les référentiels internationaux (UNEP / ADEME / GIZ). Les facteurs d'émission sont utilisés par le moteur de calcul CO₂ du Maat Data Lake, aligné sur la méthodologie Verra VCS et UNFCCC AMS-III.BA.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono text-xs">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 font-mono text-xs">
       <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-cyberGreen font-bold block text-sm">🟢 PET Transparent</span>
         <p class="text-[11px] text-slate-400 font-sans">Polyéthylène téréphtalate pur (bouteilles eau minérale &amp; sodas).</p>
@@ -904,13 +904,69 @@ body {
           <div>CO₂ évité : 0.95 kg/kg</div>
         </div>
       </div>
-      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 sm:col-span-2 lg:col-span-1 tilt-card">
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
         <span class="text-sky-400 font-bold block text-sm">🍾 Verre Blanc</span>
         <p class="text-[11px] text-slate-400 font-sans">Bouteilles et récipients silico-calciques pour verreries partenaires.</p>
         <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
           <div>Cullet recyclable à 100%</div>
           <div>CO₂ évité : 0.67 kg/kg</div>
         </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-slate-400 font-bold block text-sm">🗑️ Encombrants DIB</span>
+        <p class="text-[11px] text-slate-400 font-sans">Déchets industriels banals — filière dédiée, tri mécanique et valorisation matière.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : dédiée B2B</div>
+          <div>Tri : mécanique</div>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-cyberGreen/30 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-emerald-400 font-bold block text-sm">🌱 Déchets Organiques</span>
+        <p class="text-[11px] text-slate-400 font-sans">Fraction fermentescible — biométhanisation et compostage.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : biométhanisation</div>
+          <div class="text-cyberGreen font-bold">Phase test · ouverture prochaine</div>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-yellow-200 font-bold block text-sm">📄 Papier / Journaux</span>
+        <p class="text-[11px] text-slate-400 font-sans">Fibres imprimées — désencrage et réincorporation en papeterie.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : papeterie</div>
+          <div>Traitement : désencrage</div>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-teal-300 font-bold block text-sm">🎞️ Film Plastique</span>
+        <p class="text-[11px] text-slate-400 font-sans">PEBD / PEBDL souple — densification et régénération en granulés.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : régénération</div>
+          <div>Traitement : densification</div>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-zinc-300 font-bold block text-sm">⚙️ Métaux Ferreux</span>
+        <p class="text-[11px] text-slate-400 font-sans">Fonte et acier — réintégration en filière sidérurgique.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : sidérurgie</div>
+          <div>Traitement : refonte</div>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 bg-black/60 rounded-xl sm:rounded-2xl border border-white/10 space-y-1.5 sm:space-y-2 tilt-card">
+        <span class="text-orange-300 font-bold block text-sm">🥤 Polypropylène (PP)</span>
+        <p class="text-[11px] text-slate-400 font-sans">Thermoplastique semi-cristallin — injection et régénération.</p>
+        <div class="text-[10px] text-slate-500 pt-1 border-t border-white/5 space-y-0.5 font-mono">
+          <div>Filière : régénération</div>
+          <div>Traitement : injection</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-3.5 sm:p-4 bg-cyberGreen/5 rounded-xl sm:rounded-2xl border border-cyberGreen/30 flex items-start gap-3 font-mono text-xs">
+      <span class="text-xl sm:text-2xl shrink-0" aria-hidden="true">🌱</span>
+      <div class="min-w-0">
+        <div class="text-cyberGreen font-bold text-[11px] sm:text-xs uppercase tracking-widest mb-0.5">Bientôt disponible · Déchets alimentaires</div>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 font-sans leading-relaxed">La filière des biodéchets (fraction fermentescible des cuisines) entre en phase de test opérationnel. Ouverture prochaine aux établissements pilotes de Marrakech.</p>
       </div>
     </div>
   </section>
