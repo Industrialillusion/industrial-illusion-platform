@@ -1,7 +1,12 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.4
+ *  Maat OS · Admin · Clients Management v4.5
  *  v4.4: fix bouton "Voir la Dashboard" → passe ?client_id=<uuid>
+ *  v4.5: création client → Edge Function create-client (inviteUserByEmail)
+ *        - Suppression champ "Mot de passe provisoire"
+ *        - Suppression validation password
+ *        - fetch /api/create-client → /functions/v1/create-client
+ *        - Message succès → "invitation email envoyée"
  * ========================================================================== */
 (function () {
   'use strict';
@@ -249,10 +254,6 @@
     modal.querySelectorAll('.ac-x').forEach(b => b.addEventListener('click', () => modal.remove()));
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
-    /* ═════════════════════════════════════════════════════════════════
-       FIX v4.4 · Le bouton "Voir la Dashboard" doit passer ?client_id=
-       Sinon dashboard.js n'a pas de contexte → fallback / 404
-       ═════════════════════════════════════════════════════════════════ */
     var dashBtn = modal.querySelector('.ac-dashboard');
     if (dashBtn) {
       dashBtn.addEventListener('click', function () {
@@ -329,7 +330,7 @@
               <label class="block"><span class="text-[10px] text-slate-500 uppercase">Nom complet référent *</span><input name="contact_name" required value="${esc(d.contact_name || '')}" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm"></label>
               <label class="block"><span class="text-[10px] text-slate-500 uppercase">Email ${isEdit ? '' : '(login) *'}</span><input name="email" type="email" ${isEdit ? 'readonly' : 'required'} value="${esc(d.email || '')}" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm ${isEdit ? 'opacity-60 cursor-not-allowed' : ''}"></label>
               <label class="block"><span class="text-[10px] text-slate-500 uppercase">Téléphone / WhatsApp *</span><input name="phone_whatsapp" required value="${esc(d.phone || '')}" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm"></label>
-              ${isEdit ? '' : `<label class="block"><span class="text-[10px] text-slate-500 uppercase">Mot de passe provisoire *</span><input name="password" required minlength="8" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm" placeholder="Min 8 caractères"></label>`}
+              ${isEdit ? '' : `<div class="col-span-full p-3 bg-cyberGreen/5 border border-cyberGreen/30 rounded-lg text-[11px] text-cyberGreen font-mono">📧 Un email d'invitation sera envoyé à l'adresse renseignée. Le client définira son propre mot de passe.</div>`}
             </div>
           </section>
           <section>
@@ -432,29 +433,30 @@
         toast('Remplissez tous les champs obligatoires (*)', true);
         submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return;
       }
-      if ((payload.password || '').length < 8) {
-        toast('Mot de passe min 8 caractères', true);
-        submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return;
-      }
       const sb = getClient();
       const { data: { session } } = await sb.auth.getSession();
       if (!session?.access_token) { toast('Session introuvable', true); submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return; }
 
       try {
-        const res = await fetch('/api/create-client', {
+        const fnUrl = (window.II_CONFIG?.SUPABASE_URL || '') + '/functions/v1/create-client';
+        const res = await fetch(fnUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session.access_token,
+            'apikey': window.II_CONFIG?.SUPABASE_ANON_KEY || ''
+          },
           body: JSON.stringify(payload),
         });
         const json = await res.json();
         if (!res.ok) {
           const msg = json.error || 'Erreur';
-          if (msg === 'EMAIL_ALREADY_REGISTERED') toast('❌ Email déjà utilisé. Utilisez "Lier un profil existant".', true);
+          if (msg === 'EMAIL_ALREADY_REGISTERED') toast('❌ Email déjà utilisé. Utilisez une autre adresse.', true);
           else if (msg === 'NOT_ADMIN') toast('❌ Session admin requise (MFA)', true);
           else toast('❌ ' + msg + (json.detail ? ' · ' + json.detail : ''), true);
           submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return;
         }
-        toast('✅ Client créé · mot de passe: ' + json.temporary_password, false);
+        toast('✅ Client créé · invitation email envoyée à ' + payload.email, false);
         log('created:', json);
         modal.remove();
         loadClients(parentSec);
@@ -477,5 +479,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.4.0');
+  log('ready v4.5.0');
 })();
