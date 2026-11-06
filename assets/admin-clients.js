@@ -1,12 +1,7 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.3
- *  - Header button "Clients" injecté
- *  - Section plein écran : recherche, filtre, grille cards
- *  - Création via /api/create-client (serverless)
- *  - Édition client + upload fiche technique / contrat
- *  - Désactivation / Réactivation (soft delete)
- *  - Détail client avec profils liés + unlink + bouton Voir Dashboard
+ *  Maat OS · Admin · Clients Management v4.4
+ *  v4.4: fix bouton "Voir la Dashboard" → passe ?client_id=<uuid>
  * ========================================================================== */
 (function () {
   'use strict';
@@ -254,11 +249,20 @@
     modal.querySelectorAll('.ac-x').forEach(b => b.addEventListener('click', () => modal.remove()));
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 
-    // Bouton "Voir la Dashboard"
+    /* ═════════════════════════════════════════════════════════════════
+       FIX v4.4 · Le bouton "Voir la Dashboard" doit passer ?client_id=
+       Sinon dashboard.js n'a pas de contexte → fallback / 404
+       ═════════════════════════════════════════════════════════════════ */
     var dashBtn = modal.querySelector('.ac-dashboard');
     if (dashBtn) {
       dashBtn.addEventListener('click', function () {
-        window.open('dashboard.html', '_blank', 'noopener');
+        var cid = dashBtn.getAttribute('data-client-id') || client.id;
+        if (!cid) {
+          toast('❌ Identifiant client manquant', true);
+          return;
+        }
+        var url = location.origin + '/dashboard.html?client_id=' + encodeURIComponent(cid);
+        window.open(url, '_blank', 'noopener');
       });
     }
 
@@ -381,7 +385,6 @@
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ Enregistrement…';
 
-      // Upload fichiers
       const ficheFile = form.querySelector('[name="fiche_file"]').files[0];
       const contractFile = form.querySelector('[name="contract_file"]').files[0];
       if (ficheFile) {
@@ -425,7 +428,6 @@
         return;
       }
 
-      // CREATE via serverless
       if (!payload.raison_sociale || !payload.contact_name || !payload.email || !payload.phone_whatsapp || !payload.district || !payload.address) {
         toast('Remplissez tous les champs obligatoires (*)', true);
         submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return;
@@ -463,7 +465,6 @@
     });
   }
 
-  /* Init */
   function init() {
     let attempts = 0;
     const tryInject = () => {
@@ -476,5 +477,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.3.0');
+  log('ready v4.4.0');
 })();
