@@ -111,7 +111,7 @@
             </header>
 
             <div class="admin-accredits__controls">
-                <div class="admin-accredits__tabs" role="tablist" aria-label="Sorgenti accreditamenti">
+                <div class="admin-accredits__tabs" role="tablist" aria-label="Sources d'accréditation">
                     <button type="button" class="admin-accredits__tab is-active" data-source="datalake" role="tab" aria-selected="true">
                         Maat Data Lake
                     </button>
@@ -121,31 +121,31 @@
                 </div>
 
                 <select id="admin-accredits-status" class="admin-accredits__status-filter" aria-label="Filtrer par statut">
-                    <option value="PENDING">In attesa</option>
-                    <option value="APPROVED">Approvati</option>
-                    <option value="REJECTED">Rifiutati</option>
-                    <option value="ALL">Tutti</option>
+                    <option value="PENDING">En attente</option>
+                    <option value="APPROVED">Approuvés</option>
+                    <option value="REJECTED">Rejetés</option>
+                    <option value="ALL">Tous</option>
                 </select>
 
                 <button type="button" id="admin-accredits-refresh" class="admin-accredits__refresh">
-                    ⟳ Aggiorna
+                    ⟳ Actualiser
                 </button>
             </div>
 
             <div id="admin-accredits-list" class="admin-accredits__list">
-                <div class="admin-accredits__loading">Caricamento…</div>
+                <div class="admin-accredits__loading">Chargement…</div>
             </div>
         </section>
 
-        <!-- ═══ Phase 🅲 · Control Tower — Doppia Pesata Atomica ═══ -->
+        <!-- ═══ Phase 🅲 · Control Tower — Double Pesée Atomique ═══ -->
         <section id="variance-tower" class="variance-tower" aria-live="assertive" hidden>
             <header class="variance-tower__head">
                 <h2 class="variance-tower__title">
-                    Allerte Doppia Pesata
+                    Alertes Double Pesée
                     <span id="variance-badge" class="variance-badge" hidden>0</span>
                 </h2>
                 <button id="variance-refresh" type="button" class="variance-btn variance-btn--ghost">
-                    Aggiorna
+                    Actualiser
                 </button>
             </header>
             <div id="variance-alert-stack" class="variance-stack"></div>
