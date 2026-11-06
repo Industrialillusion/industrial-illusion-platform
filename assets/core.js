@@ -2,8 +2,10 @@
    MAAT OS — Noyau partagé (PWA opérateurs + Control Tower)
    Industrial Illusion SARL · Projet PurKemet
    ------------------------------------------------------------
+   v2.0 · Auto-init sur pages protégées (dashboard, admin, control-tower, pwa)
    Expose window.Maat = { ... } avec toutes les primitives :
      - init()       : instancie le client Supabase
+     - ensureInit() : alias public de init() (rétrocompat)
      - h()          : créateur DOM sûr (jamais innerHTML sur données)
      - toast()      : notification visuelle
      - buzz()       : vibration mobile
@@ -39,6 +41,9 @@
     } catch (e) { M.sb = null; }
     return M.sb;
   };
+
+  /* Alias public pour compatibilité (utilisé par index.html) */
+  M.ensureInit = M.init;
 
   /* ---------- DOM sûr : textContent uniquement, jamais innerHTML sur données ---------- */
   M.h = function (tag, a) {
@@ -468,5 +473,60 @@
     b.appendChild(s);
     setTimeout(function () { s.remove(); }, 600);
   });
+
+  /* ============================================================
+     AUTO-INIT SUR PAGES PROTÉGÉES
+     ------------------------------------------------------------
+     - Pages publiques : PAS d'init auto (le bouton Login appelle ensureInit())
+     - Pages protégées (dashboard, admin, control-tower, pwa, etc.) :
+       init immédiate, avec retry si le CDN supabase n'est pas encore là.
+     ============================================================ */
+  (function autoInitProtected() {
+    try {
+      var path = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      var publicPages = [
+        'index.html', '',
+        'purkemet.html', 'kmeh20.html',
+        'datalake.html', 'carrieres.html', 'apropos.html'
+      ];
+      if (publicPages.indexOf(path) !== -1) return;
+
+      var attempts = 0;
+      var tryInit = function () {
+        attempts++;
+        try {
+          if (!M.sb && typeof M.init === 'function') M.init();
+          if (M.sb) {
+            console.log('[Maat] auto-init OK · ' + path);
+            return true;
+          }
+        } catch (e) {
+          console.warn('[Maat] auto-init error (attempt ' + attempts + ')', e);
+        }
+        return false;
+      };
+
+      var start = function () {
+        if (tryInit()) return;
+        // Retry jusqu'à 3s (CDN supabase ou II_CONFIG pas encore prêts)
+        var tries = 0;
+        var timer = setInterval(function () {
+          tries++;
+          if (tryInit() || tries >= 30) {
+            clearInterval(timer);
+            if (!M.sb) console.warn('[Maat] auto-init échoué après 3s · path=' + path);
+          }
+        }, 100);
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+      } else {
+        start();
+      }
+    } catch (e) {
+      console.warn('[Maat] autoInitProtected fatal', e);
+    }
+  })();
 
 })();
