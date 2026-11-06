@@ -1,6 +1,9 @@
 /* ============================================================
-   MAAT OS — Portal Kernel & Smart Router (site.js v8.4)
+   MAAT OS — Portal Kernel & Smart Router (site.js v8.5)
    Industrial Illusion SARL · Projet PurKemet
+   v8.5 · login toujours explicite (jamais d'auto-login silencieux)
+        - openUniversalLogin : ferme la session existante avant d'afficher le form
+        - sécurité anti-modale stantia (élément détaché du DOM)
    ============================================================ */
 (function () {
   'use strict';
@@ -42,24 +45,55 @@
 
   function openUniversalLogin() {
     ensureInit();
+
+    // Sécurité : si une modale précédente a été fermée manuellement (élément
+    // retiré du DOM par close()) mais que la référence JS est encore en mémoire,
+    // on la nettoie. Sinon le click suivant serait bloqué silencieusement.
+    if (loginModal && loginModal.el && !document.body.contains(loginModal.el)) {
+      loginModal = null;
+    }
     if (loginModal || routingLock) return;
+
     if (!M.sb) {
       M.toast('Initialisation de la session sécurisée...', 'warn');
       return;
     }
 
+    // FIX v8.5 · JAMAIS d'auto-login silencieux.
+    // Si une session existe déjà (résidu de test, ancien compte, ou utilisateur
+    // qui veut changer de compte), on la ferme proprement PUIS on affiche le
+    // formulaire. L'utilisateur choisit explicitement son compte à chaque
+    // connexion — c'est le comportement attendu sur un portail unique.
     M.sb.auth.getSession().then(function (s) {
       var has = s && s.data && s.data.session && s.data.session.user;
-      if (has) { M.profile().then(routeUser); return; }
+      if (has) {
+        M.sb.auth.signOut().then(function () {
+          try { sessionStorage.clear(); } catch (e) {}
+          renderLoginModal();
+        }).catch(function () {
+          // même si signOut échoue (réseau), on affiche le formulaire :
+          // un nouveau signInWithPassword écrasera la session précédente.
+          renderLoginModal();
+        });
+        return;
+      }
       renderLoginModal();
     }).catch(renderLoginModal);
   }
 
   function renderLoginModal() {
+    // Sécurité redondante : ne jamais empiler deux modales de login.
+    if (loginModal && loginModal.el && document.body.contains(loginModal.el)) {
+      var firstInput = loginModal.el.querySelector('input');
+      if (firstInput) firstInput.focus();
+      return;
+    }
+    loginModal = null;
+
     var errBox = h('p', { class: 'text-[11px] text-center font-mono font-bold text-red-400 min-h-[1.2rem]' });
     var emailInp = h('input', { id: 'site_login_email', type: 'email', class: 'inp mt-1', placeholder: 'direction@etablissement.ma', autocomplete: 'username' });
     var passInp = h('input', { id: 'site_login_pass', type: 'password', class: 'inp mt-1', placeholder: '••••••••', autocomplete: 'current-password' });
-    
+
     var submitBtn = h('button', {
       type: 'button', class: 'btn btn-g !py-3 w-full font-bold', text: 'Se connecter 🔓',
       onclick: async function () {
@@ -88,6 +122,25 @@
       errBox
     );
     loginModal = M.modal('Espace Partenaires & Direction', body);
+
+    // Si l'utilisateur ferme la modale (X, backdrop, Escape), on nettoie la
+    // référence pour que le prochain click sur « Connexion » rouvre le form.
+    // M.modal ne l'expose pas directement → on observe la disparition du DOM.
+    var observed = loginModal;
+    var cleanup = function () {
+      if (loginModal === observed && observed.el && !document.body.contains(observed.el)) {
+        loginModal = null;
+      }
+    };
+    observed.el.addEventListener('DOMNodeRemoved', cleanup);
+    // Fallback MutationObserver (DOMNodeRemoved n'est pas standard partout)
+    if (window.MutationObserver) {
+      var mo = new MutationObserver(function () {
+        cleanup();
+        if (loginModal === null) mo.disconnect();
+      });
+      mo.observe(document.body, { childList: true });
+    }
   }
 
   function bindAuditForm() {
