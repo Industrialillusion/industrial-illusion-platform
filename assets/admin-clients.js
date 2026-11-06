@@ -1,12 +1,13 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.5
- *  v4.4: fix bouton "Voir la Dashboard" → passe ?client_id=<uuid>
- *  v4.5: création client → Edge Function create-client (inviteUserByEmail)
- *        - Suppression champ "Mot de passe provisoire"
- *        - Suppression validation password
- *        - fetch /api/create-client → /functions/v1/create-client
- *        - Message succès → "invitation email envoyée"
+ *  Maat OS · Admin · Clients Management v4.6
+ *  v4.5: Edge Function create-client (inviteUserByEmail)
+ *  v4.6: fix disable (SUSPENDED) + archivage soft + section "clients de test"
+ *        - setClientStatus utilise SUSPENDED (autorise par CHECK)
+ *        - toast non più sovrascritto dal chiamante
+ *        - archiveClient / unarchiveClient (archived_at + profiles.status)
+ *        - checkbox "Client de test" (colonne is_test)
+ *        - filtres "Afficher les tests" / "Afficher les archivés" (cachés par défaut)
  * ========================================================================== */
 (function () {
   'use strict';
@@ -98,16 +99,28 @@
         </div>
       </div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <div class="flex flex-col sm:flex-row gap-3 mb-6">
-          <input id="ac-search" type="text" placeholder="🔍 Rechercher par nom, référent ou email…"
-            class="flex-1 px-4 py-3 bg-[#0F1419] border border-slate-700 rounded-lg text-slate-100 font-mono text-sm placeholder-slate-500 focus:border-kemetGold focus:outline-none">
-          <select id="ac-filter-status"
-            class="px-4 py-3 bg-[#0F1419] border border-slate-700 rounded-lg text-slate-100 font-mono text-sm focus:border-kemetGold focus:outline-none">
-            <option value="ALL">Tous statuts</option>
-            <option value="ACTIVE">Actifs</option>
-            <option value="SUSPENDED">Suspendus</option>
-            <option value="PROSPECT">Prospects</option>
-          </select>
+        <div class="flex flex-col gap-3 mb-6">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input id="ac-search" type="text" placeholder="🔍 Rechercher par nom, référent ou email…"
+              class="flex-1 px-4 py-3 bg-[#0F1419] border border-slate-700 rounded-lg text-slate-100 font-mono text-sm placeholder-slate-500 focus:border-kemetGold focus:outline-none">
+            <select id="ac-filter-status"
+              class="px-4 py-3 bg-[#0F1419] border border-slate-700 rounded-lg text-slate-100 font-mono text-sm focus:border-kemetGold focus:outline-none">
+              <option value="ALL">Tous statuts</option>
+              <option value="ACTIVE">Actifs</option>
+              <option value="SUSPENDED">Suspendus</option>
+              <option value="PROSPECT">Prospects</option>
+            </select>
+          </div>
+          <div class="flex flex-wrap gap-4 text-[11px] font-mono text-slate-400">
+            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+              <input type="checkbox" id="ac-show-tests" class="accent-kemetGold">
+              🧪 Afficher les clients de test
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-200">
+              <input type="checkbox" id="ac-show-archived" class="accent-kemetGold">
+              🗄 Afficher les archivés
+            </label>
+          </div>
         </div>
         <div id="ac-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         <div id="ac-empty" class="hidden text-center py-16 text-slate-500 font-mono text-sm">Aucun client ne correspond à vos critères.</div>
@@ -118,6 +131,8 @@
     sec.querySelector('#ac-btn-new').addEventListener('click', () => openClientForm(null, sec));
     sec.querySelector('#ac-search').addEventListener('input', debounce(() => loadClients(sec), 250));
     sec.querySelector('#ac-filter-status').addEventListener('change', () => loadClients(sec));
+    sec.querySelector('#ac-show-tests').addEventListener('change', () => loadClients(sec));
+    sec.querySelector('#ac-show-archived').addEventListener('change', () => loadClients(sec));
     loadClients(sec);
   }
 
@@ -134,15 +149,21 @@
     const empty = sec.querySelector('#ac-empty');
     const search = (sec.querySelector('#ac-search').value || '').trim();
     const status = sec.querySelector('#ac-filter-status').value;
+    const showTests = sec.querySelector('#ac-show-tests').checked;
+    const showArchived = sec.querySelector('#ac-show-archived').checked;
+
     grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500 font-mono text-sm">⏳ Chargement…</div>';
     empty.classList.add('hidden');
     const sb = getClient();
     if (!sb) { grid.innerHTML = '<div class="col-span-full text-center text-red-400 font-mono">❌ Supabase non disponible</div>'; return; }
 
     let req = sb.from('clients')
-      .select('id, company_name, contact_name, email, phone, district, cluster, status, horeca_category, address, google_maps_url, ice, if_fiscal, rc, patente, fiche_technique_url, contract_url, created_at')
+      .select('id, company_name, contact_name, email, phone, district, cluster, status, horeca_category, address, google_maps_url, ice, if_fiscal, rc, patente, fiche_technique_url, contract_url, created_at, is_test, archived_at')
       .order('created_at', { ascending: false }).limit(200);
-    if (search) req = req.or(`company_name.ilike.%${search}%,contact_name.ilike.%${search}%,email.ilike.%${search}%`);
+
+    if (!showArchived) req = req.is('archived_at', null);
+    if (!showTests)    req = req.eq('is_test', false);
+    if (search)        req = req.or(`company_name.ilike.%${search}%,contact_name.ilike.%${search}%,email.ilike.%${search}%`);
     if (status !== 'ALL') req = req.eq('status', status);
 
     const { data, error } = await req;
@@ -156,19 +177,28 @@
     const map = {
       ACTIVE: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
       SUSPENDED: 'bg-red-500/20 text-red-300 border-red-500/40',
+      PAUSED: 'bg-red-500/20 text-red-300 border-red-500/40',
       PROSPECT: 'bg-slate-500/20 text-slate-300 border-slate-500/40',
       PENDING: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+      ARCHIVED: 'bg-slate-700/40 text-slate-400 border-slate-600/50',
     };
     return `<span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${map[status] || map.PROSPECT}">${esc(status || '—')}</span>`;
   }
 
   function renderClientCard(c, sec) {
+    const isArchived = !!c.archived_at;
+    const isTest = !!c.is_test;
     const card = document.createElement('div');
-    card.className = 'bg-[#0F1419] border border-slate-700 rounded-xl p-4 hover:border-kemetGold transition-all flex flex-col';
+    card.className = 'bg-[#0F1419] border rounded-xl p-4 transition-all flex flex-col ' +
+      (isArchived ? 'border-slate-700 opacity-70' : (isTest ? 'border-amber-500/40 hover:border-amber-400' : 'border-slate-700 hover:border-kemetGold'));
     card.innerHTML = `
       <div class="flex justify-between items-start mb-3 gap-2">
         <h3 class="font-bold text-white text-sm leading-tight flex-1 min-w-0 truncate" title="${esc(c.company_name)}">${esc(c.company_name || '—')}</h3>
-        ${statusBadge(c.status)}
+        <div class="flex gap-1 flex-shrink-0">
+          ${isTest ? `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border bg-amber-500/20 text-amber-300 border-amber-500/40" title="Client de test">🧪</span>` : ''}
+          ${isArchived ? `<span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border bg-slate-700/40 text-slate-300 border-slate-600/50" title="Archivé">🗄</span>` : ''}
+          ${statusBadge(c.status)}
+        </div>
       </div>
       <div class="space-y-1.5 text-xs font-mono text-slate-400 flex-1">
         ${c.contact_name ? `<div>👤 ${esc(c.contact_name)}</div>` : ''}
@@ -177,43 +207,102 @@
         ${(c.district || c.cluster) ? `<div>📍 ${esc(c.district || c.cluster)}</div>` : ''}
         ${c.horeca_category ? `<div>🏷️ ${esc(c.horeca_category)}</div>` : ''}
       </div>
-      <div class="mt-3 pt-3 border-t border-slate-800 flex gap-2">
+      <div class="mt-3 pt-3 border-t border-slate-800 flex flex-wrap gap-2">
         <button data-act="view" class="flex-1 px-2 py-1.5 rounded border border-kemetGold/50 text-kemetGold text-[10px] font-bold hover:bg-kemetGold/10">👁 Détail</button>
-        <button data-act="edit" class="flex-1 px-2 py-1.5 rounded border border-cyberGreen/50 text-cyberGreen text-[10px] font-bold hover:bg-cyberGreen/10">✏️ Modifier</button>
-        ${c.status === 'ACTIVE'
-          ? `<button data-act="disable" class="px-2 py-1.5 rounded border border-red-500/50 text-red-400 text-[10px] font-bold hover:bg-red-500/10" title="Désactiver">⏸</button>`
-          : `<button data-act="enable" class="px-2 py-1.5 rounded border border-emerald-500/50 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/10" title="Réactiver">▶️</button>`
+        ${isArchived
+          ? `<button data-act="unarchive" class="flex-1 px-2 py-1.5 rounded border border-emerald-500/50 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/10" title="Réstaurer">♻ Réstaurer</button>`
+          : `
+            <button data-act="edit" class="flex-1 px-2 py-1.5 rounded border border-cyberGreen/50 text-cyberGreen text-[10px] font-bold hover:bg-cyberGreen/10">✏️ Modifier</button>
+            ${c.status === 'ACTIVE'
+              ? `<button data-act="disable" class="px-2 py-1.5 rounded border border-red-500/50 text-red-400 text-[10px] font-bold hover:bg-red-500/10" title="Suspendre">⏸</button>`
+              : `<button data-act="enable" class="px-2 py-1.5 rounded border border-emerald-500/50 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/10" title="Réactiver">▶️</button>`
+            }
+            <button data-act="archive" class="px-2 py-1.5 rounded border border-slate-600/60 text-slate-400 text-[10px] font-bold hover:bg-slate-700/30" title="Archiver (soft delete)">🗄</button>
+          `
         }
       </div>
     `;
+
     card.querySelector('[data-act="view"]').addEventListener('click', (e) => { e.stopPropagation(); openClientDetail(c, sec); });
-    card.querySelector('[data-act="edit"]').addEventListener('click', (e) => { e.stopPropagation(); openClientForm(c, sec); });
-    if (c.status === 'ACTIVE') {
-      card.querySelector('[data-act="disable"]').addEventListener('click', async (e) => {
+
+    if (isArchived) {
+      card.querySelector('[data-act="unarchive"]').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!confirm(`Désactiver "${c.company_name}" ?\nLe client et ses profils seront suspendus.`)) return;
-        await setClientStatus(c.id, 'SUSPENDED');
-        toast('⏸ Client suspendu', false);
-        loadClients(sec);
+        if (!confirm(`Réstaurer "${c.company_name}" ?\nLe client réapparaîtra dans la liste.`)) return;
+        const ok = await unarchiveClient(c.id);
+        if (ok) loadClients(sec);
       });
     } else {
-      card.querySelector('[data-act="enable"]').addEventListener('click', async (e) => {
+      card.querySelector('[data-act="edit"]').addEventListener('click', (e) => { e.stopPropagation(); openClientForm(c, sec); });
+
+      if (c.status === 'ACTIVE') {
+        card.querySelector('[data-act="disable"]').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!confirm(`Suspendre "${c.company_name}" ?\nLe client et ses profils seront suspendus.`)) return;
+          const ok = await setClientStatus(c.id, 'SUSPENDED');
+          if (ok) loadClients(sec);
+        });
+      } else {
+        card.querySelector('[data-act="enable"]').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          if (!confirm(`Réactiver "${c.company_name}" ?`)) return;
+          const ok = await setClientStatus(c.id, 'ACTIVE');
+          if (ok) loadClients(sec);
+        });
+      }
+
+      card.querySelector('[data-act="archive"]').addEventListener('click', async (e) => {
         e.stopPropagation();
-        await setClientStatus(c.id, 'ACTIVE');
-        toast('▶️ Client réactivé', false);
-        loadClients(sec);
+        if (!confirm(`Archiver "${c.company_name}" ?\nIl disparaîtra de la liste active (soft delete, aucune suppression). Vous pourrez le réstaurer via "Afficher les archivés".`)) return;
+        const ok = await archiveClient(c.id);
+        if (ok) loadClients(sec);
       });
     }
+
     return card;
   }
 
   async function setClientStatus(clientId, status) {
     const sb = getClient();
+    if (!sb) { toast('❌ Supabase non disponible', true); return false; }
+
     const { error: e1 } = await sb.from('clients').update({ status }).eq('id', clientId);
-    if (e1) { toast('❌ ' + e1.message, true); return false; }
+    if (e1) { toast('❌ Clients: ' + e1.message, true); return false; }
+
     const profileStatus = status === 'ACTIVE' ? 'ACTIVE' : 'SUSPENDED';
     const { error: e2 } = await sb.from('profiles').update({ status: profileStatus }).eq('client_id', clientId);
-    if (e2) { toast('⚠️ Client mis à jour, profils: ' + e2.message, true); return false; }
+    if (e2) { toast('⚠️ Client mis à jour · Profils: ' + e2.message, true); return false; }
+
+    toast(status === 'ACTIVE' ? '▶️ Client réactivé' : '⏸ Client suspendu', false);
+    return true;
+  }
+
+  async function archiveClient(clientId) {
+    const sb = getClient();
+    if (!sb) { toast('❌ Supabase non disponible', true); return false; }
+    const now = new Date().toISOString();
+
+    const { error: e1 } = await sb.from('clients').update({ archived_at: now }).eq('id', clientId);
+    if (e1) { toast('❌ Clients: ' + e1.message, true); return false; }
+
+    const { error: e2 } = await sb.from('profiles').update({ status: 'SUSPENDED' }).eq('client_id', clientId);
+    if (e2) { toast('⚠️ Client archivé · Profils: ' + e2.message, true); return false; }
+
+    toast('🗄 Client archivé · restaurable via « Afficher les archivés »', false);
+    return true;
+  }
+
+  async function unarchiveClient(clientId) {
+    const sb = getClient();
+    if (!sb) { toast('❌ Supabase non disponible', true); return false; }
+
+    const { error: e1 } = await sb.from('clients').update({ archived_at: null }).eq('id', clientId);
+    if (e1) { toast('❌ Clients: ' + e1.message, true); return false; }
+
+    const { error: e2 } = await sb.from('profiles').update({ status: 'ACTIVE' }).eq('client_id', clientId);
+    if (e2) { toast('⚠️ Client réstauré · Profils: ' + e2.message, true); return false; }
+
+    toast('♻ Client réstauré', false);
     return true;
   }
 
@@ -241,6 +330,8 @@
           ${client.google_maps_url ? `<div class="col-span-2 bg-[#0F1419] rounded-lg p-3 border border-slate-800"><div class="text-slate-500 mb-1 text-[10px]">GOOGLE MAPS</div><a href="${esc(client.google_maps_url)}" target="_blank" rel="noopener" class="text-cyberGreen underline truncate block">${esc(client.google_maps_url)}</a></div>` : ''}
           ${client.fiche_technique_url ? `<div class="bg-[#0F1419] rounded-lg p-3 border border-slate-800"><div class="text-slate-500 mb-1 text-[10px]">FICHE TECHNIQUE</div><a href="${esc(client.fiche_technique_url)}" target="_blank" rel="noopener" class="text-cyberGreen underline text-[11px]">📄 Ouvrir</a></div>` : ''}
           ${client.contract_url ? `<div class="bg-[#0F1419] rounded-lg p-3 border border-slate-800"><div class="text-slate-500 mb-1 text-[10px]">CONTRAT / LOI</div><a href="${esc(client.contract_url)}" target="_blank" rel="noopener" class="text-cyberGreen underline text-[11px]">📄 Ouvrir</a></div>` : ''}
+          ${client.is_test ? `<div class="bg-amber-500/10 rounded-lg p-3 border border-amber-500/40"><div class="text-amber-300 mb-1 text-[10px]">🧪 CLIENT DE TEST</div><div class="text-amber-200 text-[11px]">Ne pas contacter · masquable dans la liste</div></div>` : ''}
+          ${client.archived_at ? `<div class="bg-slate-700/20 rounded-lg p-3 border border-slate-600/50"><div class="text-slate-400 mb-1 text-[10px]">🗄 ARCHIVÉ LE</div><div class="text-slate-300 text-[11px]">${esc(new Date(client.archived_at).toLocaleString('fr-FR'))}</div></div>` : ''}
         </div>
         <h3 class="text-cyberGreen text-xs uppercase tracking-wider font-bold mb-2">🔗 Profils liés</h3>
         <div id="ac-profiles" class="space-y-2 mb-5 text-xs">⏳ Chargement…</div>
@@ -258,10 +349,7 @@
     if (dashBtn) {
       dashBtn.addEventListener('click', function () {
         var cid = dashBtn.getAttribute('data-client-id') || client.id;
-        if (!cid) {
-          toast('❌ Identifiant client manquant', true);
-          return;
-        }
+        if (!cid) { toast('❌ Identifiant client manquant', true); return; }
         var url = location.origin + '/dashboard.html?client_id=' + encodeURIComponent(cid);
         window.open(url, '_blank', 'noopener');
       });
@@ -331,6 +419,10 @@
               <label class="block"><span class="text-[10px] text-slate-500 uppercase">Email ${isEdit ? '' : '(login) *'}</span><input name="email" type="email" ${isEdit ? 'readonly' : 'required'} value="${esc(d.email || '')}" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm ${isEdit ? 'opacity-60 cursor-not-allowed' : ''}"></label>
               <label class="block"><span class="text-[10px] text-slate-500 uppercase">Téléphone / WhatsApp *</span><input name="phone_whatsapp" required value="${esc(d.phone || '')}" class="ac-in w-full mt-1 px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm"></label>
               ${isEdit ? '' : `<div class="col-span-full p-3 bg-cyberGreen/5 border border-cyberGreen/30 rounded-lg text-[11px] text-cyberGreen font-mono">📧 Un email d'invitation sera envoyé à l'adresse renseignée. Le client définira son propre mot de passe.</div>`}
+              <label class="col-span-full flex items-center gap-2 p-3 bg-amber-500/5 border border-amber-500/30 rounded-lg text-[11px] text-amber-300 font-mono cursor-pointer hover:bg-amber-500/10">
+                <input type="checkbox" name="is_test" value="1" ${d.is_test ? 'checked' : ''} class="accent-amber-500">
+                🧪 <span><strong>Client de test</strong> · ne pas contacter · masquable dans la liste (vous pourrez le retrouver via "Afficher les clients de test")</span>
+              </label>
             </div>
           </section>
           <section>
@@ -382,6 +474,8 @@
         if (v instanceof File) continue;
         payload[k] = String(v).trim();
       }
+      const isTestFlag = payload.is_test === '1';
+      delete payload.is_test;
 
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ Enregistrement…';
@@ -416,6 +510,7 @@
           patente:         payload.patente || null,
           fiche_technique_url: payload.fiche_technique_url || existingClient.fiche_technique_url || null,
           contract_url:        payload.contract_url || existingClient.contract_url || null,
+          is_test:             isTestFlag,
         };
         const { error } = await sb.from('clients').update(updates).eq('id', existingClient.id);
         if (error) {
@@ -456,6 +551,12 @@
           else toast('❌ ' + msg + (json.detail ? ' · ' + json.detail : ''), true);
           submitBtn.disabled = false; submitBtn.textContent = '✓ Créer et provisionner l\'accès'; return;
         }
+
+        if (isTestFlag && json.client_id) {
+          const { error: eTest } = await sb.from('clients').update({ is_test: true }).eq('id', json.client_id);
+          if (eTest) toast('⚠️ Client créé, mais is_test: ' + eTest.message, true);
+        }
+
         toast('✅ Client créé · invitation email envoyée à ' + payload.email, false);
         log('created:', json);
         modal.remove();
@@ -479,5 +580,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.5.0');
+  log('ready v4.6.0');
 })();
