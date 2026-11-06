@@ -1,7 +1,8 @@
 
-/* PurKemet · dashboard.js v5.0
+/* PurKemet · dashboard.js v5.1
    HUD, KPI animés, catalogue matières (11 types), Chart.js cartésien + barres détail,
    ESG workflow, MFA, QR, formulaires → Supabase (Control Tower)
+   v5.1: fix redirect admin (control-tower.html → admin.html + message ?client_id)
 */
 (function(){
 'use strict';
@@ -123,7 +124,14 @@ async function boot(){
     if (S.profile.role === 'admin' || S.profile.role === 'direction') {
       var urlP = new URLSearchParams(location.search);
       S.clientId = urlP.get('client_id');
-      if (!S.clientId) { location.href = 'control-tower.html'; return; }
+      // v5.1 · FIX : control-tower.html n'existe pas → admin.html + message clair
+      if (!S.clientId) {
+        fail(
+          'Mode Direction : précisez <code>?client_id=&lt;uuid&gt;</code> dans l\'URL.<br>' +
+          '<a href="admin.html" style="color:#00FFA3;text-decoration:underline;margin-top:12px;display:inline-block">← Retour Control Tower</a>'
+        );
+        return;
+      }
     } else {
       S.clientId = S.profile.client_id;
     }
