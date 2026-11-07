@@ -1,12 +1,11 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.7
+ *  Maat OS · Admin · Clients Management v4.8
  *  v4.5: Edge Function create-client (inviteUserByEmail)
  *  v4.6: fix disable (SUSPENDED) + archivage soft + section "clients de test"
- *  v4.7: bouton 🗑 (suppression définitive DB) réservé aux is_test=true
- *        - DELETE profiles + clients via RLS admin (auth.users reste manuel)
- *        - double confirmation (nom exact + confirm natif)
- *        - helper deleteClientHard()
+ *  v4.7: bouton 🗑 suppression définitive DB
+ *  v4.8: modal custom (remplace prompt/confirm) + vérification .select() post-delete
+ *        + cascade manuel collections + messages RLS/FK explicites
  * ========================================================================== */
 (function () {
   'use strict';
@@ -253,38 +252,24 @@
 
       card.querySelector('[data-act="archive"]').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (!confirm(`Archiver "${c.company_name}" ?\nIl disparaîtra de la liste active (soft delete, aucune suppression). Vous pourrez le réstaurer via "Afficher les archivés".`)) return;
+        if (!confirm(`Archiver "${c.company_name}" ?\nIl disparaîtra de la liste active.`)) return;
         const ok = await archiveClient(c.id);
         if (ok) loadClients(sec);
       });
 
-      // 🗑 Suppression définitive (DB) — uniquement pour is_test=true
+      // 🗑 Suppression définitive via modal custom (pas de prompt/confirm Chrome)
       const delHardBtn = card.querySelector('[data-act="delete-hard"]');
       if (delHardBtn) {
         delHardBtn.addEventListener('click', async (e) => {
           e.stopPropagation();
-
-          const typed = prompt(
-            `⚠️ SUPPRESSION DÉFINITIVE\n\n` +
-            `Va supprimer en base :\n` +
-            `  • profil (${c.email || '—'})\n` +
-            `  • fiche client "${c.company_name}"\n\n` +
-            `L'utilisateur auth (login) reste dans Supabase → supprime-le manuellement depuis Authentication → Users.\n\n` +
-            `Pour confirmer, tapez le nom exact du client :`,
-            ''
-          );
-          if (typed === null) return;
-          if ((typed || '').trim() !== (c.company_name || '').trim()) {
-            toast('❌ Nom incorrect. Suppression annulée.', true);
-            return;
-          }
-          if (!confirm(`Dernière confirmation : supprimer "${c.company_name}" (${c.email || '—'}) de la base ?`)) return;
+          const confirmed = await openDeleteConfirmModal(c);
+          if (!confirmed) return;
 
           delHardBtn.disabled = true;
           delHardBtn.textContent = '⏳';
 
-          const ok = await deleteClientHard(c.id);
-          if (!ok) {
+          const result = await deleteClientHard(c.id);
+          if (!result.ok) {
             delHardBtn.disabled = false;
             delHardBtn.textContent = '🗑';
             return;
@@ -295,6 +280,72 @@
     }
 
     return card;
+  }
+
+  /* Modal custom de confirmation — remplace le prompt() + confirm() natifs */
+  function openDeleteConfirmModal(client) {
+    return new Promise((resolve) => {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm overflow-y-auto p-4 flex items-start justify-center';
+      modal.innerHTML = `
+        <div class="w-full max-w-md bg-[#0A0D10] border border-red-500/50 rounded-xl p-6 font-mono text-sm text-slate-200 shadow-2xl my-8">
+          <div class="flex justify-between items-start mb-4 gap-3">
+            <div class="min-w-0">
+              <h2 class="text-base font-black text-red-400">⚠️ Suppression définitive</h2>
+              <p class="text-[11px] text-slate-500 mt-1">Action irréversible en base de données</p>
+            </div>
+            <button type="button" class="mdc-x w-8 h-8 rounded border border-slate-600 text-slate-300 hover:text-white hover:border-red-400 font-bold flex-shrink-0">✕</button>
+          </div>
+
+          <div class="space-y-3 mb-4">
+            <div class="bg-[#0F1419] rounded-lg p-3 border border-slate-800 text-xs">
+              <div class="text-slate-500 text-[10px] uppercase mb-1">Client</div>
+              <div class="text-white font-bold break-words">${esc(client.company_name || '—')}</div>
+              <div class="text-slate-400 text-[11px] mt-1 break-all">${esc(client.email || '—')}</div>
+            </div>
+
+            <div class="bg-red-500/5 rounded-lg p-3 border border-red-500/30 text-xs">
+              <div class="text-red-300 font-bold mb-1.5">Sera supprimé :</div>
+              <div class="text-slate-300 leading-relaxed">• La fiche client<br>• Le(s) profil(s) lié(s)<br>• Les collectes liées (si applicable)</div>
+            </div>
+
+            <div class="bg-amber-500/5 rounded-lg p-3 border border-amber-500/30 text-xs">
+              <div class="text-amber-300 font-bold mb-1">⚠️ Reste dans Supabase :</div>
+              <div class="text-slate-300 leading-relaxed">L'utilisateur auth (login). À supprimer manuellement via Authentication → Users.</div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] text-slate-500 uppercase mb-1">Pour confirmer, tapez le nom exact :</label>
+              <input type="text" id="mdc-confirm" class="w-full px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm font-mono focus:border-red-400 focus:outline-none" placeholder="Tapez le nom du client" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-3 border-t border-slate-800">
+            <button type="button" class="mdc-x flex-1 px-4 py-2 rounded-lg border border-slate-600 text-slate-300 font-bold text-xs hover:bg-slate-800">Annuler</button>
+            <button type="button" id="mdc-delete" class="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white font-black text-xs hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed" disabled>🗑 Supprimer</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      const input = modal.querySelector('#mdc-confirm');
+      const delBtn = modal.querySelector('#mdc-delete');
+      const close = (val) => { modal.remove(); resolve(val); };
+
+      modal.querySelectorAll('.mdc-x').forEach(b => b.addEventListener('click', () => close(false)));
+      modal.addEventListener('click', e => { if (e.target === modal) close(false); });
+
+      input.addEventListener('input', () => {
+        delBtn.disabled = input.value.trim() !== (client.company_name || '').trim();
+      });
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Escape') close(false);
+        if (e.key === 'Enter' && !delBtn.disabled) delBtn.click();
+      });
+      setTimeout(() => input.focus(), 50);
+
+      delBtn.addEventListener('click', () => close(true));
+    });
   }
 
   async function setClientStatus(clientId, status) {
@@ -341,35 +392,61 @@
     return true;
   }
 
-  /* Suppression définitive DB — profiles + clients. auth.users reste manuel. */
+  /* Suppression définitive DB — profiles + collections + clients. auth.users reste manuel. */
   async function deleteClientHard(clientId) {
     const sb = getClient();
-    if (!sb) { toast('❌ Supabase non disponible', true); return false; }
+    if (!sb) { toast('❌ Supabase non disponible', true); return { ok: false }; }
 
-    // Garde-fou : uniquement is_test=true
+    // Garde-fou is_test
     const { data: check, error: cErr } = await sb
-      .from('clients')
-      .select('id, is_test, company_name, email')
-      .eq('id', clientId)
-      .single();
-
-    if (cErr || !check) { toast('❌ Client introuvable.', true); return false; }
+      .from('clients').select('id, is_test, company_name, email').eq('id', clientId).single();
+    if (cErr || !check) { toast('❌ Client introuvable.', true); return { ok: false }; }
     if (check.is_test !== true) {
       toast('❌ Ce client n\'est pas marqué is_test. Suppression refusée.', true);
-      return false;
+      return { ok: false };
     }
 
-    // 1) Supprimer les profils liés (FK vers clients.id + auth.users.id)
-    const { error: pErr } = await sb.from('profiles').delete().eq('client_id', clientId);
-    if (pErr) { toast('❌ Profiles: ' + pErr.message, true); return false; }
+    // 1. Collections (FK probable) — try/catch silencieux si table/colonne absente
+    try {
+      const { error: colErr } = await sb.from('collections').delete().eq('client_id', clientId);
+      if (colErr && !/does not exist|column .* does not exist/i.test(colErr.message)) {
+        console.warn('[deleteClientHard] collections delete warning', colErr.message);
+      }
+    } catch (e) { /* ignore */ }
 
-    // 2) Supprimer la fiche client
-    const { error: cDelErr } = await sb.from('clients').delete().eq('id', clientId);
-    if (cDelErr) { toast('❌ Clients: ' + cDelErr.message, true); return false; }
+    // 2. Profils — vérification du nombre de lignes supprimées
+    const { data: pDel, error: pErr } = await sb.from('profiles').delete().eq('client_id', clientId).select('id');
+    if (pErr) {
+      console.error('[deleteClientHard] profiles delete error', pErr);
+      toast('❌ Profiles : ' + pErr.message, true);
+      return { ok: false, step: 'profiles', error: pErr.message };
+    }
+    const profilesDeleted = (pDel || []).length;
+    log('profiles deleted:', profilesDeleted);
 
-    toast('✅ Client supprimé de la base. Pensez à supprimer l\'utilisateur auth dans Supabase.', false);
-    log('deleted-hard:', { id: clientId, email: check.email });
-    return true;
+    // 3. Client — vérification du nombre de lignes supprimées
+    const { data: cDel, error: cDelErr } = await sb.from('clients').delete().eq('id', clientId).select('id');
+    if (cDelErr) {
+      console.error('[deleteClientHard] clients delete error', cDelErr);
+      if (/foreign key/i.test(cDelErr.message)) {
+        toast('❌ FK : une autre table référence ce client. Détail : ' + cDelErr.message, true);
+      } else {
+        toast('❌ Clients : ' + cDelErr.message, true);
+      }
+      return { ok: false, step: 'clients', error: cDelErr.message };
+    }
+    const clientsDeleted = (cDel || []).length;
+    log('clients deleted:', clientsDeleted);
+
+    // 4. Diagnostic honnête
+    if (clientsDeleted === 0) {
+      console.warn('[deleteClientHard] 0 rows — probablement RLS bloque ou client inexistant');
+      toast('❌ 0 ligne client supprimée. Cause : policy RLS DELETE manquante sur clients, ou is_admin() = false. Vérifie dans Supabase → SQL Editor.', true);
+      return { ok: false, step: 'clients-rls' };
+    }
+
+    toast(`✅ Client supprimé (${clientsDeleted} client, ${profilesDeleted} profil[s]). Pensez à supprimer l'utilisateur auth dans Supabase.`, false);
+    return { ok: true, profilesDeleted, clientsDeleted };
   }
 
   /* ─── Détail client ────────────────────────────────────────────────── */
@@ -487,7 +564,7 @@
               ${isEdit ? '' : `<div class="col-span-full p-3 bg-cyberGreen/5 border border-cyberGreen/30 rounded-lg text-[11px] text-cyberGreen font-mono">📧 Un email d'invitation sera envoyé à l'adresse renseignée. Le client définira son propre mot de passe.</div>`}
               <label class="col-span-full flex items-center gap-2 p-3 bg-amber-500/5 border border-amber-500/30 rounded-lg text-[11px] text-amber-300 font-mono cursor-pointer hover:bg-amber-500/10">
                 <input type="checkbox" name="is_test" value="1" ${d.is_test ? 'checked' : ''} class="accent-amber-500">
-                🧪 <span><strong>Client de test</strong> · ne pas contacter · masquable dans la liste (vous pourrez le retrouver via "Afficher les clients de test")</span>
+                🧪 <span><strong>Client de test</strong> · ne pas contacter · masquable dans la liste</span>
               </label>
             </div>
           </section>
@@ -646,5 +723,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.7.0');
+  log('ready v4.8.0');
 })();
