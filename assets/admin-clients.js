@@ -1,11 +1,13 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.8
+ *  Maat OS · Admin · Clients Management v4.9
  *  v4.5: Edge Function create-client (inviteUserByEmail)
- *  v4.6: fix disable (SUSPENDED) + archivage soft + section "clients de test"
+ *  v4.6: fix disable + archivage soft + section "clients de test"
  *  v4.7: bouton 🗑 suppression définitive DB
- *  v4.8: modal custom (remplace prompt/confirm) + vérification .select() post-delete
- *        + cascade manuel collections + messages RLS/FK explicites
+ *  v4.8: modal custom + vérification .select() post-delete
+ *  v4.9: 🗑 sur toutes les cartes · modal premium différencié test/réel
+ *        · cascade complet (collections, field_notes, pwa_scans)
+ *        · vérification UPDATE edit (plus de faux positif)
  * ========================================================================== */
 (function () {
   'use strict';
@@ -216,7 +218,7 @@
               : `<button data-act="enable" class="px-2 py-1.5 rounded border border-emerald-500/50 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/10" title="Réactiver">▶️</button>`
             }
             <button data-act="archive" class="px-2 py-1.5 rounded border border-slate-600/60 text-slate-400 text-[10px] font-bold hover:bg-slate-700/30" title="Archiver (soft delete)">🗄</button>
-            ${isTest ? `<button data-act="delete-hard" class="px-2 py-1.5 rounded border border-red-500/60 text-red-400 text-[10px] font-bold hover:bg-red-500/15" title="Supprimer définitivement (DB)">🗑</button>` : ''}
+            <button data-act="delete-hard" class="px-2 py-1.5 rounded border border-red-500/60 text-red-400 text-[10px] font-bold hover:bg-red-500/15" title="Supprimer définitivement (DB)">🗑</button>
           `
         }
       </div>
@@ -257,12 +259,12 @@
         if (ok) loadClients(sec);
       });
 
-      // 🗑 Suppression définitive via modal custom (pas de prompt/confirm Chrome)
+      // 🗑 Suppression définitive — modal premium différencié
       const delHardBtn = card.querySelector('[data-act="delete-hard"]');
       if (delHardBtn) {
         delHardBtn.addEventListener('click', async (e) => {
           e.stopPropagation();
-          const confirmed = await openDeleteConfirmModal(c);
+          const confirmed = await openDeleteConfirmModal(c, isTest);
           if (!confirmed) return;
 
           delHardBtn.disabled = true;
@@ -282,68 +284,118 @@
     return card;
   }
 
-  /* Modal custom de confirmation — remplace le prompt() + confirm() natifs */
-  function openDeleteConfirmModal(client) {
+  /* ═══════ Modal de confirmation — design Kemet premium ═══════ */
+  function openDeleteConfirmModal(client, isTest) {
     return new Promise((resolve) => {
       const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm overflow-y-auto p-4 flex items-start justify-center';
+      modal.className = 'fixed inset-0 z-[9999] bg-black/92 backdrop-blur-md overflow-y-auto p-4 flex items-start justify-center';
+
+      const accent     = isTest ? 'amber' : 'red';
+      const accentHex  = isTest ? '#F5A623' : '#FF5C5C';
+      const accentBg   = isTest ? 'rgba(245,166,35,.08)' : 'rgba(255,92,92,.08)';
+      const accentBd   = isTest ? 'rgba(245,166,35,.45)' : 'rgba(255,92,92,.55)';
+      const accentTxt  = isTest ? '#F5A623' : '#FF5C5C';
+      const titleIcon  = isTest ? '🗑️' : '🚨';
+      const titleTxt   = isTest ? 'SUPPRESSION · CLIENT DE TEST' : 'SUPPRESSION · CLIENT RÉEL';
+
       modal.innerHTML = `
-        <div class="w-full max-w-md bg-[#0A0D10] border border-red-500/50 rounded-xl p-6 font-mono text-sm text-slate-200 shadow-2xl my-8">
-          <div class="flex justify-between items-start mb-4 gap-3">
-            <div class="min-w-0">
-              <h2 class="text-base font-black text-red-400">⚠️ Suppression définitive</h2>
-              <p class="text-[11px] text-slate-500 mt-1">Action irréversible en base de données</p>
-            </div>
-            <button type="button" class="mdc-x w-8 h-8 rounded border border-slate-600 text-slate-300 hover:text-white hover:border-red-400 font-bold flex-shrink-0">✕</button>
+        <div style="width:100%;max-width:32rem;margin:2rem auto;background:linear-gradient(165deg,#131920 0%,#0A0D10 100%);border:1px solid ${accentBd};border-radius:1.25rem;box-shadow:0 30px 70px -15px rgba(0,0,0,.95),0 0 40px -10px ${accentHex}33;font-family:'JetBrains Mono',monospace;overflow:hidden;">
+
+          <!-- Header -->
+          <div style="padding:1.5rem 1.5rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:center;position:relative;">
+            <button type="button" class="mdc-x" style="position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#94A3B8;font-size:16px;font-weight:700;cursor:pointer;">✕</button>
+            <div style="font-size:2.25rem;line-height:1;margin-bottom:.5rem;">${titleIcon}</div>
+            <div style="font-size:.6rem;font-weight:800;letter-spacing:.22em;color:${accentTxt};text-transform:uppercase;margin-bottom:.35rem;">${titleTxt}</div>
+            <div style="font-size:.7rem;color:#94A3B8;">Cette action est irréversible</div>
           </div>
 
-          <div class="space-y-3 mb-4">
-            <div class="bg-[#0F1419] rounded-lg p-3 border border-slate-800 text-xs">
-              <div class="text-slate-500 text-[10px] uppercase mb-1">Client</div>
-              <div class="text-white font-bold break-words">${esc(client.company_name || '—')}</div>
-              <div class="text-slate-400 text-[11px] mt-1 break-all">${esc(client.email || '—')}</div>
+          <!-- Body -->
+          <div style="padding:1.25rem 1.5rem;">
+
+            <!-- Client cible -->
+            <div style="background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;padding:.85rem;margin-bottom:.85rem;">
+              <div style="font-size:.55rem;color:#64748B;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.35rem;">Client ciblé</div>
+              <div style="font-size:.85rem;font-weight:800;color:#fff;word-break:break-word;">${esc(client.company_name || '—')}</div>
+              <div style="font-size:.68rem;color:#94A3B8;margin-top:.25rem;word-break:break-all;">${esc(client.email || '—')}</div>
             </div>
 
-            <div class="bg-red-500/5 rounded-lg p-3 border border-red-500/30 text-xs">
-              <div class="text-red-300 font-bold mb-1.5">Sera supprimé :</div>
-              <div class="text-slate-300 leading-relaxed">• La fiche client<br>• Le(s) profil(s) lié(s)<br>• Les collectes liées (si applicable)</div>
+            ${!isTest ? `
+            <!-- Alerte client réel -->
+            <div style="background:rgba(255,92,92,.08);border:2px solid rgba(255,92,92,.55);border-radius:.75rem;padding:.85rem;margin-bottom:.85rem;">
+              <div style="font-size:.6rem;font-weight:900;color:#FF5C5C;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.35rem;">🚨 Attention · client réel</div>
+              <div style="font-size:.7rem;color:#FCA5A5;line-height:1.5;">Ce client n'est PAS marqué comme test. Vous allez supprimer une fiche réelle.</div>
+            </div>
+            ` : ''}
+
+            <!-- Ce qui sera supprimé -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:.75rem;padding:.85rem;margin-bottom:.85rem;">
+              <div style="font-size:.55rem;color:#94A3B8;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;">Sera supprimé en base</div>
+              <div style="font-size:.7rem;color:#CBD5E1;line-height:1.7;">
+                <div>• La fiche client</div>
+                <div>• Le(s) profil(s) lié(s)</div>
+                <div>• Les collectes liées</div>
+                <div>• Les notes terrain liées</div>
+              </div>
             </div>
 
-            <div class="bg-amber-500/5 rounded-lg p-3 border border-amber-500/30 text-xs">
-              <div class="text-amber-300 font-bold mb-1">⚠️ Reste dans Supabase :</div>
-              <div class="text-slate-300 leading-relaxed">L'utilisateur auth (login). À supprimer manuellement via Authentication → Users.</div>
+            <!-- Reste dans Supabase -->
+            <div style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.3);border-radius:.75rem;padding:.85rem;margin-bottom:1rem;">
+              <div style="font-size:.55rem;color:#F5A623;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.35rem;">⚠️ Reste dans Supabase</div>
+              <div style="font-size:.7rem;color:#CBD5E1;line-height:1.5;">L'utilisateur <strong>auth</strong> (login). À supprimer manuellement via Authentication → Users.</div>
             </div>
 
+            <!-- Input de confirmation -->
             <div>
-              <label class="block text-[10px] text-slate-500 uppercase mb-1">Pour confirmer, tapez le nom exact :</label>
-              <input type="text" id="mdc-confirm" class="w-full px-3 py-2 bg-[#0F1419] border border-slate-700 rounded text-slate-100 text-sm font-mono focus:border-red-400 focus:outline-none" placeholder="Tapez le nom du client" autocomplete="off">
+              <label style="display:block;font-size:.6rem;color:#64748B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem;">Tapez le nom exact pour confirmer</label>
+              <input type="text" id="mdc-confirm" autocomplete="off" spellcheck="false"
+                style="width:100%;padding:.7rem .85rem;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.14);border-radius:.6rem;color:#fff;font-family:'JetBrains Mono',monospace;font-size:.8rem;outline:none;transition:border-color .2s;"
+                placeholder="${esc(client.company_name || '')}">
+              <div id="mdc-hint" style="font-size:.6rem;color:#64748B;margin-top:.35rem;">Sensible à la casse · doit correspondre exactement</div>
             </div>
+
           </div>
 
-          <div class="flex gap-2 pt-3 border-t border-slate-800">
-            <button type="button" class="mdc-x flex-1 px-4 py-2 rounded-lg border border-slate-600 text-slate-300 font-bold text-xs hover:bg-slate-800">Annuler</button>
-            <button type="button" id="mdc-delete" class="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white font-black text-xs hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed" disabled>🗑 Supprimer</button>
+          <!-- Footer -->
+          <div style="padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:.6rem;">
+            <button type="button" class="mdc-x"
+              style="flex:1;padding:.7rem;border-radius:.6rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);color:#CBD5E1;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;">Annuler</button>
+            <button type="button" id="mdc-delete" disabled
+              style="flex:1;padding:.7rem;border-radius:.6rem;background:${accentHex};color:#000;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;cursor:not-allowed;opacity:.4;transition:all .2s;">${isTest ? '🗑 Supprimer' : '🚨 Supprimer quand même'}</button>
           </div>
+
         </div>
       `;
       document.body.appendChild(modal);
 
-      const input = modal.querySelector('#mdc-confirm');
-      const delBtn = modal.querySelector('#mdc-delete');
-      const close = (val) => { modal.remove(); resolve(val); };
+      const input   = modal.querySelector('#mdc-confirm');
+      const delBtn  = modal.querySelector('#mdc-delete');
+      const hint    = modal.querySelector('#mdc-hint');
+      const close   = (val) => { modal.remove(); resolve(val); };
 
-      modal.querySelectorAll('.mdc-x').forEach(b => b.addEventListener('click', () => close(false)));
-      modal.addEventListener('click', e => { if (e.target === modal) close(false); });
+      // Focus glow sur input
+      input.addEventListener('focus', () => { input.style.borderColor = accentHex; input.style.boxShadow = '0 0 0 3px ' + accentBg; });
+      input.addEventListener('blur',  () => { input.style.borderColor = 'rgba(255,255,255,.14)'; input.style.boxShadow = 'none'; });
 
+      // Bouton actif seulement si nom exact
       input.addEventListener('input', () => {
-        delBtn.disabled = input.value.trim() !== (client.company_name || '').trim();
+        const match = input.value.trim() === (client.company_name || '').trim();
+        delBtn.disabled = !match;
+        delBtn.style.opacity = match ? '1' : '.4';
+        delBtn.style.cursor = match ? 'pointer' : 'not-allowed';
+        hint.textContent = match
+          ? '✅ Nom validé · vous pouvez supprimer'
+          : 'Sensible à la casse · doit correspondre exactement';
+        hint.style.color = match ? '#00FFA3' : '#64748B';
       });
-      input.addEventListener('keydown', e => {
+
+      input.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') close(false);
         if (e.key === 'Enter' && !delBtn.disabled) delBtn.click();
       });
-      setTimeout(() => input.focus(), 50);
+      setTimeout(() => input.focus(), 60);
 
+      modal.querySelectorAll('.mdc-x').forEach(b => b.addEventListener('click', () => close(false)));
+      modal.addEventListener('click', e => { if (e.target === modal) close(false); });
       delBtn.addEventListener('click', () => close(true));
     });
   }
@@ -392,60 +444,62 @@
     return true;
   }
 
-  /* Suppression définitive DB — profiles + collections + clients. auth.users reste manuel. */
+  /* ═══════ Suppression définitive — cascade complet ═══════ */
   async function deleteClientHard(clientId) {
     const sb = getClient();
     if (!sb) { toast('❌ Supabase non disponible', true); return { ok: false }; }
 
-    // Garde-fou is_test
-    const { data: check, error: cErr } = await sb
-      .from('clients').select('id, is_test, company_name, email').eq('id', clientId).single();
-    if (cErr || !check) { toast('❌ Client introuvable.', true); return { ok: false }; }
-    if (check.is_test !== true) {
-      toast('❌ Ce client n\'est pas marqué is_test. Suppression refusée.', true);
-      return { ok: false };
+    log('deleting client:', clientId);
+
+    // 1. Cascade silencieux sur tables annexes (ignore si table/colonne absente)
+    const sideTables = ['collections', 'field_notes', 'pwa_scans', 'collectes'];
+    for (const tbl of sideTables) {
+      try {
+        const { error } = await sb.from(tbl).delete().eq('client_id', clientId);
+        if (error) {
+          const msg = (error.message || '').toLowerCase();
+          if (!/does not exist|column .* does not exist|schema cache/i.test(msg)) {
+            log('cascade warning [' + tbl + ']', error.message);
+          }
+        }
+      } catch (e) { /* ignore */ }
     }
 
-    // 1. Collections (FK probable) — try/catch silencieux si table/colonne absente
-    try {
-      const { error: colErr } = await sb.from('collections').delete().eq('client_id', clientId);
-      if (colErr && !/does not exist|column .* does not exist/i.test(colErr.message)) {
-        console.warn('[deleteClientHard] collections delete warning', colErr.message);
-      }
-    } catch (e) { /* ignore */ }
-
-    // 2. Profils — vérification du nombre de lignes supprimées
+    // 2. Profils (vérifie le nombre de lignes supprimées)
     const { data: pDel, error: pErr } = await sb.from('profiles').delete().eq('client_id', clientId).select('id');
     if (pErr) {
-      console.error('[deleteClientHard] profiles delete error', pErr);
+      console.error('[deleteClientHard] profiles', pErr);
       toast('❌ Profiles : ' + pErr.message, true);
       return { ok: false, step: 'profiles', error: pErr.message };
     }
     const profilesDeleted = (pDel || []).length;
     log('profiles deleted:', profilesDeleted);
 
-    // 3. Client — vérification du nombre de lignes supprimées
-    const { data: cDel, error: cDelErr } = await sb.from('clients').delete().eq('id', clientId).select('id');
-    if (cDelErr) {
-      console.error('[deleteClientHard] clients delete error', cDelErr);
-      if (/foreign key/i.test(cDelErr.message)) {
-        toast('❌ FK : une autre table référence ce client. Détail : ' + cDelErr.message, true);
+    // 3. Client — le point critique, la carte disparaît d'ici
+    const { data: cDel, error: cErr } = await sb.from('clients').delete().eq('id', clientId).select('id');
+    if (cErr) {
+      console.error('[deleteClientHard] clients', cErr);
+      const msg = (cErr.message || '').toLowerCase();
+      if (msg.includes('foreign key')) {
+        toast('❌ FK bloque le DELETE : une table référence encore ce client. Détail : ' + cErr.message, true);
+      } else if (msg.includes('policy')) {
+        toast('❌ RLS : policy DELETE manquante sur clients. Voir SQL dans Supabase.', true);
       } else {
-        toast('❌ Clients : ' + cDelErr.message, true);
+        toast('❌ Clients : ' + cErr.message, true);
       }
-      return { ok: false, step: 'clients', error: cDelErr.message };
+      return { ok: false, step: 'clients', error: cErr.message };
     }
     const clientsDeleted = (cDel || []).length;
     log('clients deleted:', clientsDeleted);
 
     // 4. Diagnostic honnête
     if (clientsDeleted === 0) {
-      console.warn('[deleteClientHard] 0 rows — probablement RLS bloque ou client inexistant');
-      toast('❌ 0 ligne client supprimée. Cause : policy RLS DELETE manquante sur clients, ou is_admin() = false. Vérifie dans Supabase → SQL Editor.', true);
-      return { ok: false, step: 'clients-rls' };
+      console.warn('[deleteClientHard] 0 rows — RLS bloquante ou client inexistant');
+      toast('❌ 0 ligne clients supprimée. Cause probable : RLS ou FK. Vérifie la console.', true);
+      return { ok: false, step: 'clients-0' };
     }
 
-    toast(`✅ Client supprimé (${clientsDeleted} client, ${profilesDeleted} profil[s]). Pensez à supprimer l'utilisateur auth dans Supabase.`, false);
+    toast(`✅ Client supprimé (${clientsDeleted} fiche, ${profilesDeleted} profil[s]). Pensez à supprimer l'utilisateur auth dans Supabase → Authentication → Users.`, false);
     return { ok: true, profilesDeleted, clientsDeleted };
   }
 
@@ -655,9 +709,14 @@
           contract_url:        payload.contract_url || existingClient.contract_url || null,
           is_test:             isTestFlag,
         };
-        const { error } = await sb.from('clients').update(updates).eq('id', existingClient.id);
+        // ✅ Vérification réelle : .select('id') retourne les lignes modifiées
+        const { data: updData, error } = await sb.from('clients').update(updates).eq('id', existingClient.id).select('id');
         if (error) {
           toast('❌ ' + error.message, true);
+          submitBtn.disabled = false; submitBtn.textContent = '✓ Enregistrer'; return;
+        }
+        if (!updData || updData.length === 0) {
+          toast('❌ 0 ligne mise à jour. Cause probable : RLS (is_admin() = false) ou session MFA expirée. Reconnectez-vous via le bouton Connexion.', true);
           submitBtn.disabled = false; submitBtn.textContent = '✓ Enregistrer'; return;
         }
         toast('✅ Client mis à jour', false);
@@ -723,5 +782,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.8.0');
+  log('ready v4.9.0');
 })();
