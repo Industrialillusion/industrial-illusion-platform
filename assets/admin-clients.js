@@ -1,13 +1,12 @@
 /* ==========================================================================
  *  assets/admin-clients.js
- *  Maat OS · Admin · Clients Management v4.6
+ *  Maat OS · Admin · Clients Management v4.7
  *  v4.5: Edge Function create-client (inviteUserByEmail)
  *  v4.6: fix disable (SUSPENDED) + archivage soft + section "clients de test"
- *        - setClientStatus utilise SUSPENDED (autorise par CHECK)
- *        - toast non più sovrascritto dal chiamante
- *        - archiveClient / unarchiveClient (archived_at + profiles.status)
- *        - checkbox "Client de test" (colonne is_test)
- *        - filtres "Afficher les tests" / "Afficher les archivés" (cachés par défaut)
+ *  v4.7: bouton 🗑 (suppression définitive DB) réservé aux is_test=true
+ *        - DELETE profiles + clients via RLS admin (auth.users reste manuel)
+ *        - double confirmation (nom exact + confirm natif)
+ *        - helper deleteClientHard()
  * ========================================================================== */
 (function () {
   'use strict';
@@ -218,6 +217,7 @@
               : `<button data-act="enable" class="px-2 py-1.5 rounded border border-emerald-500/50 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/10" title="Réactiver">▶️</button>`
             }
             <button data-act="archive" class="px-2 py-1.5 rounded border border-slate-600/60 text-slate-400 text-[10px] font-bold hover:bg-slate-700/30" title="Archiver (soft delete)">🗄</button>
+            ${isTest ? `<button data-act="delete-hard" class="px-2 py-1.5 rounded border border-red-500/60 text-red-400 text-[10px] font-bold hover:bg-red-500/15" title="Supprimer définitivement (DB)">🗑</button>` : ''}
           `
         }
       </div>
@@ -257,6 +257,41 @@
         const ok = await archiveClient(c.id);
         if (ok) loadClients(sec);
       });
+
+      // 🗑 Suppression définitive (DB) — uniquement pour is_test=true
+      const delHardBtn = card.querySelector('[data-act="delete-hard"]');
+      if (delHardBtn) {
+        delHardBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+
+          const typed = prompt(
+            `⚠️ SUPPRESSION DÉFINITIVE\n\n` +
+            `Va supprimer en base :\n` +
+            `  • profil (${c.email || '—'})\n` +
+            `  • fiche client "${c.company_name}"\n\n` +
+            `L'utilisateur auth (login) reste dans Supabase → supprime-le manuellement depuis Authentication → Users.\n\n` +
+            `Pour confirmer, tapez le nom exact du client :`,
+            ''
+          );
+          if (typed === null) return;
+          if ((typed || '').trim() !== (c.company_name || '').trim()) {
+            toast('❌ Nom incorrect. Suppression annulée.', true);
+            return;
+          }
+          if (!confirm(`Dernière confirmation : supprimer "${c.company_name}" (${c.email || '—'}) de la base ?`)) return;
+
+          delHardBtn.disabled = true;
+          delHardBtn.textContent = '⏳';
+
+          const ok = await deleteClientHard(c.id);
+          if (!ok) {
+            delHardBtn.disabled = false;
+            delHardBtn.textContent = '🗑';
+            return;
+          }
+          loadClients(sec);
+        });
+      }
     }
 
     return card;
@@ -303,6 +338,37 @@
     if (e2) { toast('⚠️ Client réstauré · Profils: ' + e2.message, true); return false; }
 
     toast('♻ Client réstauré', false);
+    return true;
+  }
+
+  /* Suppression définitive DB — profiles + clients. auth.users reste manuel. */
+  async function deleteClientHard(clientId) {
+    const sb = getClient();
+    if (!sb) { toast('❌ Supabase non disponible', true); return false; }
+
+    // Garde-fou : uniquement is_test=true
+    const { data: check, error: cErr } = await sb
+      .from('clients')
+      .select('id, is_test, company_name, email')
+      .eq('id', clientId)
+      .single();
+
+    if (cErr || !check) { toast('❌ Client introuvable.', true); return false; }
+    if (check.is_test !== true) {
+      toast('❌ Ce client n\'est pas marqué is_test. Suppression refusée.', true);
+      return false;
+    }
+
+    // 1) Supprimer les profils liés (FK vers clients.id + auth.users.id)
+    const { error: pErr } = await sb.from('profiles').delete().eq('client_id', clientId);
+    if (pErr) { toast('❌ Profiles: ' + pErr.message, true); return false; }
+
+    // 2) Supprimer la fiche client
+    const { error: cDelErr } = await sb.from('clients').delete().eq('id', clientId);
+    if (cDelErr) { toast('❌ Clients: ' + cDelErr.message, true); return false; }
+
+    toast('✅ Client supprimé de la base. Pensez à supprimer l\'utilisateur auth dans Supabase.', false);
+    log('deleted-hard:', { id: clientId, email: check.email });
     return true;
   }
 
@@ -580,5 +646,5 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();
-  log('ready v4.6.0');
+  log('ready v4.7.0');
 })();
