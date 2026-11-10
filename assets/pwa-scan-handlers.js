@@ -3,12 +3,20 @@
  *  Maat OS · Scanner QR Handlers
  *  Phase: 5.3.B.2 + 5.3.B.3a + 5.3.B.3b + 5.4 + 5.5-1+2
  *
- *  B.2:    Badge → validate_badge_qr · Depot → checkin_depot_station
- *  B.3a:   Weigh modal UI
- *  B.3b:   P1 → RPC reale + GPS + offline queue + hash
- *  5.4:    P2 → RPC reale register_depot_weighing_p2 + variance Δ
- *  5.5-1:  P2 offline → IndexedDB queue (drain su 'online')
- *  5.5-2:  Photo-proof → capture + resize + upload Storage + UPDATE column
+ *  v1.6.0 (Phase 2):
+ *  - handleBadge: GPS Point B (client) + emit 'maat:client-context'
+ *  - Listener 'maat:scan': suppression dispatch bag → vues vCollect/vDepot
+ *
+ *  Dead code conservé jusqu'à Phase 6:
+ *  - handleBagP1 / handleBagP2 / openP2WeighModal / showVarianceResult / showWeighModal
+ *  - Queue IndexedDB (maat_queue) + qDrain → RPC obsolètes (validate_and_claim_bag,
+ *    register_depot_weighing_p2 NE EXISTENT PAS en DB)
+ *  - resizeImage / uploadPhoto / attachPhotoToCollection
+ *  - getCurrentVectorId / getGpsPosition
+ *  - showModalError / showSuccessToast
+ *
+ *  ⚠️ GPS Point B ne fonctionne QU'APRÈS Phase 3a (window.S exposé par pwa.js).
+ *     Tant que ce n'est pas fait, le bloc est silencieux (skip).
  * ========================================================================== */
 (function () {
   'use strict';
@@ -19,7 +27,7 @@
   const warn = (...a) => console.warn('[ScanHandler]', ...a);
 
   /* ═══════════════════════════════════════════════════════════════════════
-     QUEUE · IndexedDB (P1 + P2)
+     QUEUE · IndexedDB (P1 + P2) — dead code conservé pour Phase 6
      ═══════════════════════════════════════════════════════════════════════ */
   const QDB_NAME = 'maat_queue';
   const QDB_VERSION = 1;
@@ -251,7 +259,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     PHOTO-PROOF helpers (5.5-2)
+     PHOTO-PROOF helpers (dead code · Phase 6 removal)
      ═══════════════════════════════════════════════════════════════════════ */
   const PHOTO_BUCKET = 'proofs';
   const PHOTO_MAX_DIM = 1200;
@@ -310,7 +318,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BADGE HANDLER (invariato)
+     BADGE HANDLER — FASE 2 · GPS Point B + emit maat:client-context
      ═══════════════════════════════════════════════════════════════════════ */
   async function handleBadge(scan) {
     const sb = getClient();
@@ -339,6 +347,40 @@
             timestamp: Date.now(),
           }));
           log('client context saved:', data.company_name);
+        } catch (e) {}
+
+        // FASE 2 · GPS Point B (client) sur la mission active
+        // ⚠️ window.S sera exposé par pwa.js en Phase 3a. Tant que ce n'est pas fait,
+        //    ce bloc est silencieux (window.S undefined → skip).
+        try {
+          var activeId = window.S && window.S.activePickupId;
+          if (activeId && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              async function (pos) {
+                try {
+                  await sb.from('pickups').update({
+                    gps_client_lat: pos.coords.latitude,
+                    gps_client_lng: pos.coords.longitude,
+                    badge_scanned_at: new Date().toISOString()
+                  }).eq('id', activeId);
+                  log('GPS Point B saved on pickup', activeId);
+                } catch (e) { warn('GPS Point B update failed:', e); }
+              },
+              function () { /* GPS refusé → fallback trigger DB côté serveur */ },
+              { enableHighAccuracy: true, timeout: 6000, maximumAge: 30000 }
+            );
+          }
+        } catch (e) {}
+
+        // FASE 2 · Notify vCollect (refresh header client)
+        try {
+          window.dispatchEvent(new CustomEvent('maat:client-context', {
+            detail: {
+              client_id: data.client_id,
+              company_name: data.company_name,
+              cluster: data.cluster
+            }
+          }));
         } catch (e) {}
       }
       showBadgeResult(data);
@@ -499,7 +541,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     BAG P1 — RPC + queue offline + photo
+     BAG P1 / P2 — dead code conservé pour Phase 6
      ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP1(scan) {
     let clientCtx = null;
@@ -584,9 +626,6 @@
     });
   }
 
-  /* ═══════════════════════════════════════════════════════════════════════
-     BAG P2 — RPC + queue offline + photo (5.5-1)
-     ═══════════════════════════════════════════════════════════════════════ */
   function handleBagP2(scan) {
     let depotCtx = null;
     try {
@@ -714,7 +753,7 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
-     Weigh modal (con photo-proof 5.5-2)
+     Weigh modal (dead code · Phase 6 removal)
      ═══════════════════════════════════════════════════════════════════════ */
   function showWeighModal(opts) {
     const isP2 = opts.mode === 'p2';
@@ -763,7 +802,6 @@
     });
     card.appendChild(quickWrap);
 
-    /* Photo-proof optionnel */
     let capturedPhoto = null;
     const photoWrap = el('div', 'maat-weigh-photo');
     photoWrap.style.cssText = 'margin:12px 0;display:flex;flex-direction:column;gap:6px;align-items:center';
@@ -892,20 +930,21 @@
     document.body.appendChild(overlay);
   }
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     LISTENER maat:scan — FASE 2 · bag dispatch rimosso (vues pwa.js prennent le relais)
+     ═══════════════════════════════════════════════════════════════════════ */
   window.addEventListener('maat:scan', (e) => {
     if (!e || !e.detail) return;
     const scan = e.detail;
     log('received:', scan.type, scan.token);
     if (scan.type === 'badge') { e.preventDefault(); handleBadge(scan); return; }
     if (scan.type === 'depot') { e.preventDefault(); handleDepot(scan); return; }
-    if (scan.type === 'bag') {
-      if (scan.mode === 'p1') { e.preventDefault(); handleBagP1(scan); return; }
-      if (scan.mode === 'p2') { e.preventDefault(); handleBagP2(scan); return; }
-      log('bag without mode — fallback');
-      return;
-    }
+    // FASE 2 · BAG scan géré par les vues vCollect / vDepot (pwa.js · Phase 3c-3d)
+    // ⚠️ Tant que Phase 3c-3d n'est pas livrée, le scan bag retombe sur le modal
+    //    fallback de pwa-scan.js ("Aucun handler actif") — comportement attendu.
+    log('bag scan — laissé aux vues');
   });
 
   updateQueueBadge();
-  log('ready v1.5.0');
+  log('ready v1.6.0 · Phase 2');
 })();
