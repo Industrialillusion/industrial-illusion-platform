@@ -1,15 +1,18 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.3
+ *  Maat OS · Industrial Illusion SARL · v1.0.4
  *
- *  v1.0.3: 
- *  - Bump versione: invalidazione totale vecchie cache browser.
+ *  v1.0.4:
+ *  - Aggiunti /assets/materials.js e /assets/mfa-gate.js allo shell offline.
+ *  - Bump VERSION → invalidazione cache vecchie.
+ *
+ *  v1.0.3:
  *  - Network-first con { cache: 'reload' } senza perdere gli header originali.
- *  - Isolamento: fallback offline a /pwa.html SOLO se la navigazione è per la PWA.
+ *  - Fallback offline a /pwa.html SOLO se la navigazione è per la PWA.
  *  - Dashboard & Admin escluse dal fallback dell'operatore.
  * ========================================================================== */
 
-const VERSION       = 'maat-v1.0.3-dashboard-fix';
+const VERSION       = 'maat-v1.0.4-materials-mfa';
 const SHELL_CACHE   = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
@@ -30,7 +33,9 @@ const SHELL_URLS = [
   '/assets/pwa-scan.js',
   '/assets/pwa-scan-handlers.js',
   '/assets/qr-generator.js',
-  '/assets/qr-scanner.js'
+  '/assets/qr-scanner.js',
+  '/assets/materials.js',
+  '/assets/mfa-gate.js'
 ];
 
 /* ─── Install ────────────────────────────────────────────────────────── */
@@ -74,10 +79,7 @@ self.addEventListener('fetch', function (event) {
 
   // 1. Pagine HTML
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').indexOf('text/html') !== -1) {
-    // Clona la richiesta preservando headers ma forzando il download fresco da Vercel
     var freshReq = new Request(req, { cache: 'reload' });
-    
-    // Fallback offline a /pwa.html SOLO se l'utente stava aprendo la PWA
     var fallback = url.pathname.indexOf('pwa.html') !== -1 ? '/pwa.html' : null;
     event.respondWith(networkFirst(freshReq, RUNTIME_CACHE, fallback));
     return;
@@ -115,9 +117,9 @@ function networkFirst(req, cacheName, fallbackUrl) {
     return caches.match(req).then(function (cached) {
       if (cached) return cached;
       if (fallbackUrl) return caches.match(fallbackUrl);
-      return new Response('Offline - Risorsa non disponibile', { 
-        status: 503, 
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' } 
+      return new Response('Offline - Risorsa non disponibile', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
       });
     });
   });
