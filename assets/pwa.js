@@ -26,8 +26,12 @@
   var S = {
     P: null, mode: null, view: null, pos: null, wake: null,
     deferred: null, scanner: null, stream: null, chan: null,
-    lastSync: null
+    lastSync: null,
+    activePickupId: null,   // FASE 3a · mission active pour GPS + collections
+    cleanupView: null       // FASE 3a · cleanup listeners à la fin d'une vue
   };
+  window.S = S; // FASE 3a · expose for pwa-scan-handlers.js (GPS Point B)
+
   var ctx = { pickup: null, client: '', qr: '', mat: '', fault: false, photo: null };
   var bags = {};
 
@@ -515,6 +519,11 @@
     }
 
     S.P = p;
+
+    // FASE 3a · MFA gate (bloquant, la Promise ne reject jamais)
+    if (window.MfaGate && window.MfaGate.done) {
+      await window.MfaGate.done;
+    }
 
     if (p.role === 'client') {
       return gate('Espace Client B2B', 'Votre compte est configuré pour l\'Espace Client ESG.', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
