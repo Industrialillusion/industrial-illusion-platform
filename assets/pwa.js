@@ -2,10 +2,13 @@
    MAAT OS v8.1 — Workstation Opérateurs & Super-Admin (Production)
    Industrial Illusion SARL · Projet PurKemet Phase 1
    ------------------------------------------------------------
-   Consomme assets/core.js (kernel M) et assets/config.js (II_CONFIG).
-   Authentification 100% Supabase Live (Connexion, Inscription, OTP),
-   Tournée, double pesée Bluetooth, photo-preuve canvas notarisée,
-   contrats B2B et Kemet Wallet — Zéro données simulées.
+   FASE 3a-3g integrated:
+   - MFA gate in boot · window.S exposed · activePickupId/cleanupView
+   - GPS Point A sur Démarrer · gpsNow() one-shot
+   - vCollect: MAAT_MATERIALS · FAB scanner · insert direct
+   - vDepot: P2 multi-pickup · ANCHORED/DISCREPANCY · clôture
+   - openMissionClose: trigger course · payout_requests · link
+   - vAmbassador: clients portés · avances · contrats
    ============================================================ */
 (function () {
   'use strict';
@@ -27,26 +30,18 @@
     P: null, mode: null, view: null, pos: null, wake: null,
     deferred: null, scanner: null, stream: null, chan: null,
     lastSync: null,
-    activePickupId: null,   // FASE 3a · mission active pour GPS + collections
-    cleanupView: null       // FASE 3a · cleanup listeners à la fin d'une vue
+    activePickupId: null,   // FASE 3a · mission active
+    cleanupView: null,      // FASE 3a · cleanup listeners fin vue
+    onBagScan: null,        // FASE 3c · callback registered par vCollect/vDepot
+    sessionBags: []         // FASE 3c · sacs ajoutés dans la session courante
   };
-  window.S = S; // FASE 3a · expose for pwa-scan-handlers.js (GPS Point B)
+  window.S = S;
 
-  var ctx = { pickup: null, client: '', qr: '', mat: '', fault: false, photo: null };
-  var bags = {};
+  var ctx = { pickup: null, client: '', qr: '', mat: '' };
 
   /* =================================================================
-     2. CONSTANTES MÉTIER (Alignées BP Phase 1 §3.1.6)
+     2. CONSTANTES MÉTIER
      ================================================================= */
-  var MATS = [
-    { id: 'PET_CLEAR', icon: '🟢', label: 'PET transparent',  color: '#00FFA3', hint: 'Bouteilles eau/soda' },
-    { id: 'PE_HD',     icon: '🟡', label: 'PE-HD flaconnage', color: '#E6CA65', hint: 'Bidons, flacons lessive' },
-    { id: 'ALUMINIUM', icon: '🥫', label: 'Aluminium',        color: '#C5A059', hint: 'Canettes, barquettes' },
-    { id: 'CARTON',    icon: '📦', label: 'Carton ondulé',    color: '#B48A5A', hint: 'Emballages livraison' },
-    { id: 'VERRE',     icon: '🍾', label: 'Verre',            color: '#7EB8D9', hint: 'Bouteilles boisson' }
-  ];
-  var MAT_MAP = {}; MATS.forEach(function (m) { MAT_MAP[m.id] = m; });
-
   var CATS = [
     ['RIAD', 'Riad / Maison d\'hôtes'], ['RESTAURANT', 'Restaurant / Rooftop'],
     ['HOTEL_RESORT', 'Hôtel / Resort'], ['CLINIQUE', 'Clinique'],
@@ -111,6 +106,29 @@
     return S.pos ? S.pos.lat.toFixed(6) + ', ' + S.pos.lng.toFixed(6) : null;
   }
 
+  // FASE 3b · GPS one-shot (Point A/B/C) · ne bloque jamais
+  function gpsNow(timeoutMs) {
+    var t = timeoutMs || 8000;
+    return new Promise(function (resolve) {
+      if (!navigator.geolocation) return resolve(null);
+      var done = false;
+      var timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, t);
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          if (done) return;
+          done = true; clearTimeout(timer);
+          resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy || null });
+        },
+        function () {
+          if (done) return;
+          done = true; clearTimeout(timer);
+          resolve(null);
+        },
+        { enableHighAccuracy: true, timeout: t, maximumAge: 10000 }
+      );
+    });
+  }
+
   function keepAwake() {
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(function (w) { S.wake = w; }); } catch (e) {}
   }
@@ -134,7 +152,7 @@
   }
 
   /* =================================================================
-     4. COMPOSANT BALANCE BLUETOOTH CERTIFIÉE (Avec secours photo)
+     4. COMPOSANT BALANCE BLUETOOTH CERTIFIÉE
      ================================================================= */
   function Scale(refW) {
     var s = { stable: false, w: 0, fault: false, photo: null, buf: [], ref: refW || '' };
@@ -282,7 +300,7 @@
   }
 
   /* =================================================================
-     5. TIMBRE NOTARIÉ CANVAS (GPS + Horodatage certifiés)
+     5. TIMBRE NOTARIÉ CANVAS
      ================================================================= */
   function annotate(blob, meta) {
     return new Promise(function (res) {
@@ -309,30 +327,23 @@
   }
 
   /* =================================================================
-     6. LECTEUR QR CODE
+     6. LISTENER GLOBAL · bag scan → vue active
      ================================================================= */
-  function scanStop() {
-    var done = function () { var b = document.getElementById('reader'); if (b) b.parentElement.classList.add('hidden'); };
-    if (S.scanner) S.scanner.stop().then(done).catch(done); else done();
-  }
+  window.addEventListener('maat:scan', function (e) {
+    if (!e || !e.detail) return;
+    var scan = e.detail;
+    if (scan.type === 'bag' && typeof S.onBagScan === 'function') {
+      try { S.onBagScan(scan.token); e.preventDefault(); } catch (err) {}
+    }
+  });
 
-  function scanStart(box, onHit) {
-    if (!window.Html5Qrcode) return M.toast('Scanner indisponible hors-ligne.', 'err');
-    box.classList.remove('hidden');
-    if (!S.scanner) S.scanner = new Html5Qrcode('reader');
-    S.scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 220, height: 220 } },
-      function (t) {
-        if (bags[t]) { M.toast('Ce sac a déjà été pesé lors de cette session.', 'warn'); return; }
-        onHit(t); buzz(50); voice('Sac scanné'); scanStop();
-      }, function () {}
-    ).catch(function () {
-      scanStop();
-      M.toast('Caméra inaccessible pour scanner le QR.', 'err');
-    });
-  }
+  window.addEventListener('maat:client-context', function (e) {
+    if (!e || !e.detail) return;
+    console.log('[pwa] client-context', e.detail.company_name);
+  });
 
   /* =================================================================
-     7. AUTHENTIFICATION LIVE SUPABASE (Connexion, Inscription, OTP)
+     7. AUTHENTIFICATION LIVE SUPABASE
      ================================================================= */
   function msgBox() { return h('p', { class: 'text-[11px] text-center font-mono font-bold min-h-[1.2rem]', role: 'alert' }); }
 
@@ -353,13 +364,11 @@
         '<button type="button" class="tab" data-t="signup">Inscription</button>' +
         '<button type="button" class="tab" data-t="otp">Code Email</button></div>' +
 
-      '<!-- 1. CONNEXION MOT DE PASSE -->' +
       '<div data-f="login" class="space-y-3 font-mono">' +
         '<div><label class="lbl" for="l_em">Email</label><input id="l_em" type="email" autocomplete="username" class="inp mt-1" placeholder="direction@industrialillusion.ma"></div>' +
         '<div><label class="lbl" for="l_pw">Mot de passe</label><input id="l_pw" type="password" autocomplete="current-password" class="inp mt-1" placeholder="••••••••"></div>' +
         '<button type="button" data-a="login" class="btn btn-g">Se connecter 🔓</button></div>' +
 
-      '<!-- 2. INSCRIPTION OPÉRATEUR SANS SIMULATION -->' +
       '<div data-f="signup" class="hidden space-y-3 font-mono">' +
         '<div><label class="lbl" for="s_name">Nom & Prénom *</label><input id="s_name" type="text" class="inp mt-1" placeholder="Nom complet"></div>' +
         '<div><label class="lbl" for="s_em">Email opérateur *</label><input id="s_em" type="email" class="inp mt-1" placeholder="agent@domaine.ma"></div>' +
@@ -368,7 +377,6 @@
         '<span>Consentement Loi CNDP n° 09-08.</span></label>' +
         '<button type="button" data-a="signup" class="btn btn-au">Créer mon compte opérateur ✍️</button></div>' +
 
-      '<!-- 3. CODE EMAIL TEMPORAIRE OTP -->' +
       '<div data-f="otp" class="hidden space-y-3 font-mono">' +
         '<div><label class="lbl" for="a_em">Email</label><input id="a_em" type="email" class="inp mt-1" placeholder="agent@domaine.ma"></div>' +
         '<button type="button" data-a="send" class="btn btn-o">Recevoir un code OTP 📩</button>' +
@@ -390,84 +398,66 @@
       };
     });
 
-    // Action: Connexion
     q('[data-a="login"]').onclick = async function () {
       var em = $('l_em').value.trim().toLowerCase();
       var pw = $('l_pw').value;
       if (!em || !pw) return say('Renseignez l\'email et le mot de passe.');
       if (!M.sb) return say('Service Supabase inaccessible.');
-
       var b = q('[data-a="login"]');
       b.disabled = true; b.textContent = 'Connexion…';
       say('Vérification des identifiants…', true);
-
       var res = await M.sb.auth.signInWithPassword({ email: em, password: pw });
       b.disabled = false; b.textContent = 'Se connecter 🔓';
-
       if (res.error) return say('Erreur : ' + res.error.message);
       say('✓ Connexion établie. Chargement…', true);
       boot();
     };
 
-    // Action: Inscription réelle
     q('[data-a="signup"]').onclick = async function () {
       var name = $('s_name').value.trim();
       var em = $('s_em').value.trim().toLowerCase();
       var pw = $('s_pw').value;
-
       if (!name || !em || !pw) return say('Remplissez tous les champs.');
       if (pw.length < 6) return say('Mot de passe : minimum 6 caractères.');
       if (!$('s_ok').checked) return say('Veuillez accepter la charte CNDP.');
       if (!M.sb) return say('Service Supabase inaccessible.');
-
       var b = q('[data-a="signup"]');
       b.disabled = true; b.textContent = 'Création du compte…';
       say('Inscription auprès de Supabase…', true);
-
       var res = await M.sb.auth.signUp({
-        email: em,
-        password: pw,
+        email: em, password: pw,
         options: { data: { name: name, type: 'operator' } }
       });
       b.disabled = false; b.textContent = 'Créer mon compte opérateur ✍️';
-
       if (res.error) return say('Erreur : ' + res.error.message);
       say('✓ Compte créé avec succès ! Initialisation…', true);
       voice('Compte opérateur créé');
       setTimeout(boot, 600);
     };
 
-    // Action: Envoi OTP
     q('[data-a="send"]').onclick = async function () {
       var em = $('a_em').value.trim().toLowerCase();
       if (!em) return say('Saisissez une adresse email.');
       if (!M.sb) return say('Service Supabase inaccessible.');
-
       var b = q('[data-a="send"]');
       b.disabled = true; b.textContent = 'Envoi en cours…';
       say('Demande de jeton OTP…', true);
-
       var res = await M.sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: false } });
       b.disabled = false; b.textContent = 'Recevoir un code OTP 📩';
-
       if (res.error) return say(res.error.message);
       q('[data-r="otp"]').classList.remove('hidden');
       $('a_code').focus();
       say('Code envoyé à ' + em + '. Vérifiez votre boîte mail.', true);
     };
 
-    // Action: Validation OTP
     q('[data-a="verify"]').onclick = async function () {
       var em = $('a_em').value.trim().toLowerCase();
       var code = $('a_code').value.trim();
       if (!code) return say('Saisissez le code reçu.');
-
       var b = q('[data-a="verify"]');
       b.disabled = true; b.textContent = 'Vérification…';
-
       var res = await M.sb.auth.verifyOtp({ email: em, token: code, type: 'email' });
       b.disabled = false; b.textContent = 'Valider le code 🔓';
-
       if (res.error) return say('Code invalide ou expiré.');
       say('✓ Session validée. Chargement…', true);
       boot();
@@ -500,12 +490,10 @@
     if (!user) return showAuth();
 
     var p = await M.profile();
-
     if (!p) {
       var isDG = (user.email === 'r.passarella@industrialillusion.ma');
       var rIns = await M.sb.from('profiles').upsert({
-        id: user.id,
-        email: user.email,
+        id: user.id, email: user.email,
         full_name: isDG ? 'Roberto Passarella' : user.email,
         role: isDG ? 'admin' : 'operator',
         status: isDG ? 'ACTIVE' : 'PENDING',
@@ -513,14 +501,11 @@
       }).select().maybeSingle();
       p = rIns.data;
     }
-
-    if (!p) {
-      return gate('Initialisation du compte', 'Compte authentifié. En attente de synchronisation avec la base centrale.');
-    }
+    if (!p) return gate('Initialisation du compte', 'Compte authentifié. En attente de synchronisation avec la base centrale.');
 
     S.P = p;
 
-    // FASE 3a · MFA gate (bloquant, la Promise ne reject jamais)
+    // FASE 3a · MFA gate
     if (window.MfaGate && window.MfaGate.done) {
       await window.MfaGate.done;
     }
@@ -528,7 +513,6 @@
     if (p.role === 'client') {
       return gate('Espace Client B2B', 'Votre compte est configuré pour l\'Espace Client ESG.', ['dashboard.html', 'Ouvrir l\'Espace ESG']);
     }
-
     if (p.role !== 'admin' && p.status !== 'ACTIVE') {
       return gate('Compte en attente de validation', 'Votre compte opérateur a été créé avec succès. La Direction Générale doit l\'activer depuis la Control Tower avant la première tournée.');
     }
@@ -576,7 +560,7 @@
 
     var tabs = S.mode === 'vector'
       ? [['tour', '🗓️', 'Tournée'], ['collect', '⚖️', 'Collecte'], ['depot', '🏭', 'Dépôt'], ['wallet', '💰', 'Wallet'], ['me', '👤', 'Profil']]
-      : [['contracts', '🤝', 'Contrats'], ['wallet', '💰', 'Wallet'], ['me', '👤', 'Profil']];
+      : [['contracts', '🤝', 'Ambassadeur'], ['wallet', '💰', 'Wallet'], ['me', '👤', 'Profil']];
 
     bn.innerHTML = ''; bn.classList.remove('hidden');
     tabs.forEach(function (t) {
@@ -588,9 +572,11 @@
 
   function go(v) {
     S.view = v; stopStream();
+    if (typeof S.cleanupView === 'function') { try { S.cleanupView(); } catch (e) {} S.cleanupView = null; }
+    S.onBagScan = null;
     document.querySelectorAll('#bnav .tab').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
     app.innerHTML = '';
-    var fn = { tour: vTour, collect: vCollect, depot: vDepot, contracts: vContracts, wallet: vWallet, me: vMe }[v];
+    var fn = { tour: vTour, collect: vCollect, depot: vDepot, contracts: vAmbassador, wallet: vWallet, me: vMe }[v];
     try { fn(); } catch (e) { app.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Erreur : ' + e.message })); }
     window.scrollTo(0, 0);
   }
@@ -602,7 +588,7 @@
   }
 
   /* =================================================================
-     10. SYNCHRONISATION TEMPS RÉEL (Supabase Realtime)
+     10. REALTIME
      ================================================================= */
   function realtime() {
     if (!M.sb || !S.P) return;
@@ -619,7 +605,7 @@
   }
 
   /* =================================================================
-     11. CACHE CLIENTS B2B (Données réelles DB uniquement)
+     11. CLIENTS CACHE
      ================================================================= */
   async function clients() {
     try {
@@ -636,13 +622,11 @@
     } catch (e) {}
     try {
       return JSON.parse(localStorage.getItem('ii_clients')) || [];
-    } catch (e) {
-      return [];
-    }
+    } catch (e) { return []; }
   }
 
   /* =================================================================
-     12. VUE : MA TOURNÉE (Zéro fallback fittizio)
+     12. VUE : MA TOURNÉE
      ================================================================= */
   async function vTour() {
     app.append(title('Ma tournée', 'Vos ritiri programmés par la Direction.'));
@@ -671,6 +655,10 @@
     }
 
     $('kPickups').textContent = String(rows.length);
+
+    // FASE 3b · auto-restore mission active
+    var inProg = rows.filter(function (x) { return x.status === 'IN_PROGRESS'; })[0];
+    if (inProg) S.activePickupId = inProg.id;
 
     try {
       var r2 = await M.sb.from('collections').select('weight_collect_kg, status')
@@ -722,18 +710,41 @@
       actionBtn = h('button', {
         type: 'button', class: 'btn btn-g !py-2 !text-[10px]', text: '✓ Terminer',
         onclick: async function () {
-          var r = await M.update('pickups', { status: 'DONE' }, { id: p.id });
-          M.toast(r.status === 'error' ? r.message : 'Ritiro terminé.', r.status === 'error' ? 'err' : '');
-          go('tour');
+          S.activePickupId = p.id;
+          await openMissionClose(p.id);
         }
       });
     } else {
       actionBtn = h('button', {
         type: 'button', class: 'btn btn-au !py-2 !text-[10px]', text: '▶ Démarrer',
         onclick: async function () {
-          ctx.pickup = p.id; ctx.client = p.client_id;
-          await M.update('pickups', { status: 'IN_PROGRESS' }, { id: p.id });
-          voice('Ritiro démarré'); go('collect');
+          var btn = this;
+          btn.disabled = true;
+          btn.textContent = '⏳ Démarrage…';
+          try {
+            var gpsA = await gpsNow(8000);
+            if (!gpsA) M.toast('GPS indisponible — mission acceptée sans position', 'warn');
+            var now = new Date().toISOString();
+            var r = await M.update('pickups', {
+              status: 'IN_PROGRESS',
+              accepted_at: now,
+              gps_accept_lat: gpsA ? gpsA.lat : null,
+              gps_accept_lng: gpsA ? gpsA.lng : null
+            }, { id: p.id });
+            if (r.status === 'error') {
+              M.toast('Erreur : ' + r.message, 'err');
+              btn.disabled = false; btn.textContent = '▶ Démarrer';
+              return;
+            }
+            S.activePickupId = p.id;
+            ctx.pickup = p.id;
+            ctx.client = p.client_id;
+            voice('Ritiro démarré');
+            go('collect');
+          } catch (e) {
+            M.toast('Erreur démarrage : ' + (e.message || e), 'err');
+            btn.disabled = false; btn.textContent = '▶ Démarrer';
+          }
         }
       });
     }
@@ -753,33 +764,63 @@
   }
 
   /* =================================================================
-     13. VUE : COLLECTE SUR SITE (Pesée 1)
+     13. VUE : COLLECTE P1
      ================================================================= */
   async function vCollect() {
     app.append(title('Collecte', 'Étape 1 — Première pesée certifiée sur site'));
-    var cl = await clients();
 
-    var sel = h('select', { class: 'inp mt-2', id: 'c_client', 'aria-label': 'Client' },
-      h('option', { value: '', text: cl.length ? 'Sélectionnez un établissement…' : 'Aucun établissement disponible (à créer dans la Control Tower)' }),
-      cl.map(function (c) { return h('option', { value: c.id, text: c.company_name + ' [' + (c.horeca_category || 'B2B') + ']' }); }));
-    sel.value = ctx.client || '';
-    sel.onchange = function () { ctx.client = sel.value; };
-    app.appendChild(h('div', { class: 'card' }, h('label', { class: 'lbl', for: 'c_client', text: '1. Établissement client' }), sel));
+    if (!S.activePickupId) {
+      app.appendChild(h('div', { class: 'card au text-center space-y-3 !p-6' },
+        h('div', { class: 'text-3xl', text: '🚚' }),
+        h('h3', { class: 'font-mono font-bold text-kemetGoldBright text-sm', text: 'Aucune mission active' }),
+        h('p', { class: 'text-xs text-slate-300', text: 'Démarrez une mission depuis la Tournée avant de collecter.' }),
+        h('button', { type: 'button', class: 'btn btn-au', text: '🗓️ Aller à la Tournée', onclick: function () { go('tour'); } })));
+      return;
+    }
 
-    var qr = h('input', { class: 'inp font-mono mt-3', readonly: true,
-      placeholder: 'Scannez le QR du sac (saisie bloquée)',
+    // Charger le pickup + client
+    var pkData = null, clientData = null;
+    try {
+      var pr = await M.sb.from('pickups').select('id,client_id').eq('id', S.activePickupId).single();
+      pkData = pr.data;
+      if (pkData && pkData.client_id) {
+        ctx.client = pkData.client_id;
+        var cr = await M.sb.from('clients').select('id,company_name,horeca_category,address,city,cluster').eq('id', pkData.client_id).maybeSingle();
+        clientData = cr.data;
+      }
+    } catch (e) {}
+
+    if (!pkData) {
+      app.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Mission introuvable. Rechargez la page.' }));
+      return;
+    }
+
+    // Header client
+    var headerCard = h('div', { class: 'card g space-y-1' },
+      h('div', { class: 'flex justify-between items-center' },
+        h('span', { class: 'lbl', text: 'Client actif' }),
+        h('span', { class: 'bd bd-g', text: 'MISSION ' + S.activePickupId.slice(0, 8) })),
+      h('p', { class: 'font-bold text-white text-sm mt-1', text: clientData ? clientData.company_name : '—' }),
+      clientData && (clientData.address || clientData.city) ? h('p', { class: 'text-[10px] font-mono text-slate-400', text: [clientData.address, clientData.city].filter(Boolean).join(', ') }) : null
+    );
+    app.appendChild(headerCard);
+
+    // QR input (readonly) + info scanner FAB
+    var qr = h('input', { class: 'inp font-mono mt-2', readonly: true,
+      placeholder: 'Scannez le QR du sac via le FAB 📷',
       'aria-label': 'Identifiant du sac', value: ctx.qr || '' });
 
-    var box = h('div', { class: 'hidden mt-3 bg-black rounded-2xl p-2 border border-cyberGreen/50 text-center relative overflow-hidden' },
-      h('div', { class: 'beam' }),
-      h('div', { id: 'reader', class: 'w-full rounded-xl overflow-hidden' }),
-      h('button', { type: 'button', class: 'text-[10px] font-mono text-red-400 font-bold py-2', text: 'Fermer caméra', onclick: scanStop }));
+    app.appendChild(h('div', { class: 'card' },
+      h('label', { class: 'lbl', for: 'qr_input', text: '1. QR du sac (scanner FAB)' }), qr,
+      h('p', { class: 'text-[10px] text-slate-400 mt-1', text: '📷 Utilisez le bouton caméra en bas à gauche' })));
 
+    // Grille matériaux (MAAT_MATERIALS)
+    var mats = (window.MAAT_MATERIALS || []).filter(function (m) { return m.active; });
     var matGrid = h('div', { class: 'grid grid-cols-2 gap-2 mt-3' });
-    MATS.forEach(function (m, i) {
+    mats.forEach(function (m, i) {
       var b = h('button', {
         type: 'button',
-        class: 'mat' + (i === 4 ? ' col-span-2' : '') + (ctx.mat === m.id ? ' on' : ''),
+        class: 'mat' + (ctx.mat === m.id ? ' on' : ''),
         style: '--m:' + m.color,
         onclick: function () {
           ctx.mat = m.id;
@@ -789,206 +830,558 @@
       },
         h('span', { class: 'mat-ico', text: m.icon }),
         h('span', { class: 'mat-lbl', text: m.label }),
-        h('span', { class: 'mat-hint', text: m.hint }));
+        h('span', { class: 'mat-hint', text: m.hint || '' }));
       matGrid.appendChild(b);
     });
 
     app.appendChild(h('div', { class: 'card' },
-      h('div', { class: 'flex justify-between items-center' },
-        h('span', { class: 'lbl', text: '2. Sac QR & Matériau' }),
-        h('button', { type: 'button', class: 'text-[10px] font-mono bg-cyberGreen/15 text-cyberGreen border border-cyberGreen/40 px-2.5 py-1 rounded-lg',
-          text: '📷 Scanner QR',
-          onclick: function () { scanStart(box, function (t) { qr.value = t; ctx.qr = t; }); } })),
-      box, qr, matGrid));
+      h('span', { class: 'lbl', text: '2. Matériau' }),
+      matGrid));
 
+    // Balance
     var sc = Scale('Site client');
     app.appendChild(sc.el);
 
-    var go1 = h('button', {
+    // Bouton ajouter sac
+    var addBtn = h('button', {
       type: 'button', class: 'btn btn-au !py-4 !text-sm !rounded-2xl font-black shadow-lg',
-      text: '🚚 Enregistrer la pesée 1 — Mettre en transit'
+      text: '➕ Ajouter ce sac à la mission'
     });
 
-    go1.onclick = async function () {
+    addBtn.onclick = async function () {
+      if (!ctx.qr) return M.toast('Scannez le QR du sac via le FAB 📷', 'err');
+      if (!ctx.mat) return M.toast('Sélectionnez le matériau', 'err');
       var w = sc.value();
-      if (!ctx.client) return M.toast('Sélectionnez un client.', 'err');
-      if (!qr.value) return M.toast('Scannez le QR du sac.', 'err');
-      if (!ctx.mat) return M.toast('Sélectionnez le matériau.', 'err');
-      if (sc.fault && !sc.photo) return M.toast('Photo du cadran obligatoire.', 'err');
-      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation Bluetooth.', 'err');
-      if (!(w > 0 && w <= 1000)) return M.toast('Poids invalide.', 'err');
-      if (bags[qr.value]) return M.toast('Ce sac a déjà été pesé lors de cette session.', 'warn');
+      if (!(w > 0 && w <= 1000)) return M.toast('Poids invalide', 'err');
+      if (sc.fault && !sc.photo) return M.toast('Photo du cadran requise', 'err');
+      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation Bluetooth', 'err');
 
-      go1.disabled = true;
-      var id = M.uuid();
-      var row = {
-        client_uuid: id, pickup_id: ctx.pickup, client_id: ctx.client,
-        bag_qr_id: qr.value, material_type: ctx.mat,
-        weight_collect_kg: w, status: 'IN_TRANSIT',
-        weighing_method: sc.fault ? 'PHOTO_PROOF' : 'BLUETOOTH_IOT',
-        gps_location: gpsStr(), gps_accuracy_m: S.pos ? Math.round(S.pos.acc) : null,
-        device_time: new Date().toISOString(), operator_email: S.P.email
-      };
-      row.payload_hash = await hashRow(row);
+      if (S.sessionBags.find(function (b) { return b.qr === ctx.qr; })) {
+        return M.toast('Ce sac est déjà dans la session', 'warn');
+      }
 
-      var files = sc.photo ? [{ bucket: 'proofs', path: S.P.id + '/' + id + '.jpg', blob: sc.photo, field: 'scale_fault_photo' }] : null;
-      var r = await M.insert('collections', row, files);
-      go1.disabled = false;
+      addBtn.disabled = true; addBtn.textContent = '⏳ Enregistrement…';
 
-      if (r.status === 'error') return M.toast('Refusé : ' + r.message, 'err');
-      bags[qr.value] = 1;
-      ctx.qr = ''; ctx.mat = '';
-      voice('Pesée enregistrée, lot en transit');
-      success(r.status === 'sent' ? 'Pesée 1 enregistrée — Lot en transit' : 'Enregistré hors-ligne — synchro au retour du réseau');
-      go('collect');
+      try {
+        // Check preventif bag_qr_id
+        var chk = await M.sb.from('collections').select('id', { count: 'exact', head: true })
+          .eq('bag_qr_id', ctx.qr)
+          .in('status', ['IN_TRANSIT', 'ANCHORED', 'DISCREPANCY']);
+        if (chk.count > 0) {
+          addBtn.disabled = false; addBtn.textContent = '➕ Ajouter ce sac à la mission';
+          return M.toast('❌ Ce sac (' + ctx.qr + ') est déjà utilisé', 'err');
+        }
+
+        var id = M.uuid();
+        var mat = window.MAAT_MATERIALS_BY_ID && window.MAAT_MATERIALS_BY_ID[ctx.mat];
+        var payload = {
+          client_uuid: id,
+          pickup_id: S.activePickupId,
+          client_id: ctx.client,
+          bag_qr_id: ctx.qr,
+          material_type: ctx.mat,
+          weight_collect_kg: w,
+          status: 'IN_TRANSIT',
+          weighing_method: sc.fault ? 'PHOTO_PROOF' : 'BLUETOOTH_IOT',
+          gps_location: gpsStr(),
+          gps_accuracy_m: S.pos ? Math.round(S.pos.acc) : null,
+          device_time: new Date().toISOString(),
+          operator_email: S.P.email
+        };
+        payload.payload_hash = await hashRow(payload);
+
+        var ins = await M.sb.from('collections').insert([payload]).select('id').single();
+        if (ins.error) {
+          addBtn.disabled = false; addBtn.textContent = '➕ Ajouter ce sac à la mission';
+          return M.toast('Erreur : ' + ins.error.message, 'err');
+        }
+
+        // Upload photo si fault
+        if (sc.photo) {
+          try {
+            var path = S.P.id + '/p1-' + ctx.qr + '-' + Date.now() + '.jpg';
+            var up = await M.sb.storage.from('proofs').upload(path, sc.photo, { contentType: 'image/jpeg', upsert: true });
+            if (!up.error) {
+              var pub = M.sb.storage.from('proofs').getPublicUrl(path);
+              if (pub.data && pub.data.publicUrl) {
+                await M.sb.from('collections').update({ scale_fault_photo: pub.data.publicUrl }).eq('bag_qr_id', ctx.qr);
+              }
+            }
+          } catch (e) {}
+        }
+
+        S.sessionBags.push({ qr: ctx.qr, mat: ctx.mat, matLabel: mat ? mat.label : ctx.mat, weight: w, id: id });
+        M.toast('✅ Sac ajouté · ' + w.toFixed(2) + ' kg', '');
+        voice('Sac enregistré');
+
+        ctx.qr = ''; ctx.mat = ''; sc.reset();
+        go('collect');
+      } catch (e) {
+        addBtn.disabled = false; addBtn.textContent = '➕ Ajouter ce sac à la mission';
+        M.toast('Erreur : ' + (e.message || e), 'err');
+      }
     };
-    app.appendChild(go1);
-  }
 
-  /* =================================================================
-     14. VUE : DÉPÔT HUB (Pesée 2 & Double Ancrage Blockchain)
-     ================================================================= */
-  async function vDepot() {
-    app.append(title('Dépôt Hub', 'Étape 2 — Double pesée certifiée et ancrage cryptographique'));
-    var lots = [];
+    app.appendChild(addBtn);
 
-    try {
-      var r = await M.sb.from('collections').select('id,bag_qr_id,material_type,weight_collect_kg,client_id,created_at')
-        .eq('status', 'IN_TRANSIT').order('created_at');
-      lots = r.data || [];
-      try { localStorage.setItem('ii_lots', JSON.stringify(lots)); } catch (e) {}
-    } catch (e) {
-      try { lots = JSON.parse(localStorage.getItem('ii_lots')) || []; } catch (x) {}
-    }
-
-    var cl = await clients(), by = {}; cl.forEach(function (c) { by[c.id] = c; });
-    var cur = null;
-
-    var sel = h('select', { class: 'inp mt-2', id: 'd_lot', 'aria-label': 'Lot en transit' },
-      h('option', { value: '', text: lots.length ? 'Sélectionnez un lot en transit…' : 'Aucun lot en transit' }),
-      lots.map(function (l) { return h('option', { value: l.id, text: l.bag_qr_id + ' — ' + ((by[l.client_id] || {}).company_name || 'Client') + ' (' + l.weight_collect_kg + ' kg)' }); }));
-
-    var info = h('div', { class: 'hidden mt-3 p-3 bg-black/60 rounded-xl border border-white/10 text-xs font-mono space-y-1' });
-    var delta = h('p', { class: 'text-center text-[11px] font-mono min-h-[1.5rem]' });
-
-    sel.onchange = function () {
-      cur = lots.filter(function (l) { return l.id === sel.value; })[0];
-      info.classList.toggle('hidden', !cur);
-      if (!cur) return;
-      info.innerHTML = '';
-      [['Client', (by[cur.client_id] || {}).company_name || 'Client inconnu'],
-       ['Matériau', cur.material_type],
-       ['Pesée 1 (Site)', cur.weight_collect_kg + ' Kg'],
-       ['Enregistré le', M.fmt.dt(cur.created_at)]].forEach(function (x) {
-        info.appendChild(h('div', { class: 'flex justify-between text-slate-400' },
-          h('span', { text: x[0] }), h('span', { class: 'text-white font-bold', text: x[1] })));
+    // Lista sacchi sessione
+    if (S.sessionBags.length > 0) {
+      var totalW = S.sessionBags.reduce(function (s, b) { return s + b.weight; }, 0);
+      var sess = h('div', { class: 'card g space-y-2' },
+        h('div', { class: 'flex justify-between items-center' },
+          h('span', { class: 'lbl', text: 'Sacs de cette mission' }),
+          h('span', { class: 'text-xs font-mono font-bold text-cyberGreen', text: S.sessionBags.length + ' · ' + totalW.toFixed(2) + ' kg' })));
+      S.sessionBags.forEach(function (b) {
+        sess.appendChild(h('div', { class: 'flex justify-between items-center gap-2 py-1 border-t border-white/5 text-xs font-mono' },
+          h('span', { class: 'text-white truncate flex-1', text: b.qr }),
+          h('span', { class: 'text-slate-400', text: b.matLabel }),
+          h('span', { class: 'text-cyberGreen font-bold', text: b.weight.toFixed(2) + ' kg' })));
       });
-      upd();
-    };
-
-    app.appendChild(h('div', { class: 'card' }, h('label', { class: 'lbl', for: 'd_lot', text: 'Lots en transit' }), sel, info));
-
-    var sc = Scale('Pont-bascule dépôt');
-    function upd() {
-      var w = sc.value();
-      if (cur && w > 0) {
-        var d = Math.abs(w - cur.weight_collect_kg) / cur.weight_collect_kg * 100;
-        delta.textContent = 'Écart pesée 1 vs 2 : ' + d.toFixed(1) + ' %' + (d > 3 ? ' — Litige (> 3 %)' : ' — Conforme (≤ 3 %)');
-        delta.style.color = d > 3 ? '#f87171' : '#00FFA3';
-      }
+      app.appendChild(sess);
     }
-    sc.onchange = upd;
-    app.append(sc.el, delta);
 
-    var btn = h('button', {
-      type: 'button', class: 'btn btn-g !py-4 !text-sm !rounded-2xl font-black shadow-lg',
-      text: '🔗 Valider la double pesée & Notariser Blockchain'
-    });
-
-    btn.onclick = async function () {
-      var w = sc.value();
-      if (!cur) return M.toast('Sélectionnez un lot en transit.', 'err');
-      if (sc.fault && !sc.photo) return M.toast('Photo du cadran obligatoire.', 'err');
-      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation du pont-bascule.', 'err');
-      if (!(w > 0)) return M.toast('Poids invalide.', 'err');
-
-      btn.disabled = true;
-      var files = sc.photo ? [{ bucket: 'proofs', path: S.P.id + '/' + cur.id + '-depot.jpg', blob: sc.photo, field: 'depot_fault_photo' }] : null;
-      var r = await M.update('collections', { weight_depot_kg: w }, { id: cur.id }, files);
-      btn.disabled = false;
-
-      if (r.status === 'error') return M.toast('Refusé : ' + r.message, 'err');
-      voice('Double pesée notarisée');
-      success('Double pesée notarisée !\nStatut : ANCHORED\nHash cryptographique inscrit.');
-      go('depot');
-    };
-    app.appendChild(btn);
-  }
-
-  /* =================================================================
-     15. VUE : CONTRATS AMBASSADEUR B2B
-     ================================================================= */
-  async function vContracts() {
-    app.append(title('Contrats B2B', 'Apport d\'affaires 0 MAD. La Direction valide et fixe la prime.'));
-
+    // Bouton aller au dépôt
     app.appendChild(h('button', {
-      type: 'button', class: 'btn btn-au', text: '🤝 Nouveau contrat signé',
-      onclick: function () {
-        M.form('Nouveau contrat B2B', [
-          { k: 'company', label: 'Établissement', required: true, placeholder: 'Nom de l\'établissement' },
-          { k: 'cat', label: 'Catégorie', type: 'select', options: CATS },
-          { k: 'contact', label: 'Contact sur place', required: true },
-          { k: 'phone', label: 'Téléphone', type: 'tel', placeholder: '+212 6...' },
-          { k: 'photo', label: 'Photo du contrat signé', type: 'file', accept: 'image/*', capture: 'environment', required: true },
-          { k: 'ok', label: 'Consentement Loi CNDP 09-08 obtenu.', type: 'checkbox', required: true }
-        ], 'Envoyer à la Direction', async function (v) {
-          var id = M.uuid();
-          var blob = await M.resize(v.photo);
-          blob = await annotate(blob, { ts: new Date().toISOString(), gps: gpsStr(), mode: 'CONTRACT_SIGNED' });
-          var r = await M.insert('ambassador_contracts', {
-            id: id, ambassador_email: S.P.email,
-            company_name: v.company, category: v.cat,
-            contact_name: v.contact, phone: v.phone
-          }, [{ bucket: 'contracts', path: S.P.id + '/' + id + '.jpg', blob: blob, field: 'photo_path' }]);
-          if (r.status === 'error') return 'Refusé : ' + r.message;
-          M.toast('Contrat transmis à la Direction.');
-          voice('Contrat transmis');
-          go('contracts');
-        });
-      }
+      type: 'button', class: 'btn btn-g !py-3', text: '🏭 Aller au Dépôt (P2)',
+      onclick: function () { go('depot'); }
     }));
 
-    var list = h('div', { class: 'space-y-2 mt-4' });
-    app.append(h('p', { class: 'lbl au px-1', text: 'Mes contrats apportés' }), list);
+    // Register bag scan callback
+    S.onBagScan = function (token) {
+      ctx.qr = token;
+      var q = document.getElementById('qr_input');
+      if (q) q.value = token;
+      buzz(50); voice('Sac scanné');
+      M.toast('📦 Sac : ' + token.slice(0, 24), '');
+    };
+    // Fix input id
+    if (qr && !qr.id) qr.id = 'qr_input';
+  }
+
+  /* =================================================================
+     14. VUE : DÉPÔT P2
+     ================================================================= */
+  async function vDepot() {
+    app.append(title('Dépôt Hub', 'Étape 2 — Double pesée certifiée'));
+
+    // Récupérer les pickups IN_PROGRESS
+    var pickups = [];
+    try {
+      var pr = await M.sb.from('pickups')
+        .select('id,client_id,scheduled_at')
+        .eq('vector_id', S.P.id)
+        .eq('status', 'IN_PROGRESS');
+      pickups = pr.data || [];
+    } catch (e) {}
+
+    if (!pickups.length) {
+      app.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '🏭' }),
+        h('p', { text: 'Aucune mission en cours. Démarrez une tournée pour collecter des sacs.' })));
+      app.appendChild(h('button', {
+        type: 'button', class: 'btn btn-au mt-3', text: '🗓️ Aller à la Tournée',
+        onclick: function () { go('tour'); }
+      }));
+      return;
+    }
+
+    // Récupérer les sacs IN_TRANSIT de ces pickups
+    var pkIds = pickups.map(function (p) { return p.id; });
+    var lots = [];
+    try {
+      var lr = await M.sb.from('collections')
+        .select('id,bag_qr_id,material_type,weight_collect_kg,client_id,pickup_id,created_at')
+        .eq('status', 'IN_TRANSIT')
+        .in('pickup_id', pkIds)
+        .order('created_at');
+      lots = lr.data || [];
+    } catch (e) {}
+
+    // Map client names
+    var cl = await clients(), by = {}; cl.forEach(function (c) { by[c.id] = c; });
+
+    // Section A · Sacs en transit
+    app.appendChild(h('div', { class: 'card g space-y-2' },
+      h('span', { class: 'lbl', text: '📦 Sacs en transit (' + lots.length + ')' })));
+
+    if (!lots.length) {
+      app.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '✅' }),
+        h('p', { text: 'Tous les sacs de vos missions en cours ont été réceptionnés.' })));
+    } else {
+      var lotsCard = h('div', { class: 'card space-y-2' });
+      lots.forEach(function (l) {
+        var clientName = (by[l.client_id] || {}).company_name || 'Client';
+        var mat = (window.MAAT_MATERIALS_BY_ID && window.MAAT_MATERIALS_BY_ID[l.material_type]) || { icon: '♻️', label: l.material_type };
+        lotsCard.appendChild(h('div', { class: 'flex justify-between items-center gap-2 py-2 border-b border-white/5 last:border-b-0' },
+          h('div', { class: 'flex-1 min-w-0' },
+            h('p', { class: 'font-mono text-xs text-white truncate', text: l.bag_qr_id }),
+            h('p', { class: 'text-[10px] text-slate-400', text: mat.icon + ' ' + mat.label + ' · ' + clientName + ' · P1 ' + Number(l.weight_collect_kg).toFixed(2) + ' kg' })),
+          h('button', {
+            type: 'button', class: 'btn btn-au sm', text: '⚖️ Peser P2',
+            onclick: function () { openP2Modal(l); }
+          })));
+      });
+      app.appendChild(lotsCard);
+    }
+
+    // Section B · Missions à clôturer
+    if (pickups.length) {
+      app.appendChild(h('div', { class: 'card au space-y-2 mt-4' },
+        h('span', { class: 'lbl au', text: '🔗 Missions à clôturer' })));
+      var closeCard = h('div', { class: 'card space-y-2' });
+      pickups.forEach(function (p) {
+        var clientName = (by[p.client_id] || {}).company_name || 'Client';
+        closeCard.appendChild(h('div', { class: 'flex justify-between items-center gap-2 py-2 border-b border-white/5 last:border-b-0' },
+          h('div', { class: 'flex-1 min-w-0' },
+            h('p', { class: 'font-bold text-sm text-white', text: clientName }),
+            h('p', { class: 'text-[10px] font-mono text-slate-400', text: M.fmt.dt(p.scheduled_at) })),
+          h('button', {
+            type: 'button', class: 'btn btn-g sm', text: '✓ Clôturer',
+            onclick: function () { S.activePickupId = p.id; openMissionClose(p.id); }
+          })));
+      });
+      app.appendChild(closeCard);
+    }
+
+    // Register bag scan callback (P2 quick select)
+    S.onBagScan = function (token) {
+      var found = lots.find(function (l) { return l.bag_qr_id === token; });
+      if (found) { openP2Modal(found); }
+      else { M.toast('Sac non trouvé dans les lots en transit', 'warn'); }
+    };
+  }
+
+  function openP2Modal(lot) {
+    var mat = (window.MAAT_MATERIALS_BY_ID && window.MAAT_MATERIALS_BY_ID[lot.material_type]) || { icon: '♻️', label: lot.material_type };
+    var body = h('div', { class: 'space-y-3' });
+    body.innerHTML = '<div class="p-2 bg-black/60 rounded-lg border border-white/10 font-mono text-[10px] text-slate-300 space-y-1">' +
+      '<div class="flex justify-between"><span>Sac</span><span class="text-cyberGreen">' + lot.bag_qr_id + '</span></div>' +
+      '<div class="flex justify-between"><span>Matériau</span><span>' + mat.icon + ' ' + mat.label + '</span></div>' +
+      '<div class="flex justify-between"><span>P1</span><span class="font-bold text-white">' + Number(lot.weight_collect_kg).toFixed(2) + ' kg</span></div>' +
+      '</div>';
+
+    var sc = Scale('Pont-bascule dépôt');
+    body.appendChild(sc.el);
+
+    var delta = h('p', { class: 'text-center font-mono text-xs py-1', text: '' });
+    body.appendChild(delta);
+
+    sc.onchange = function () {
+      var w = sc.value();
+      if (w > 0 && lot.weight_collect_kg > 0) {
+        var d = Math.abs(w - lot.weight_collect_kg) / lot.weight_collect_kg * 100;
+        delta.textContent = 'Écart P1↔P2: ' + d.toFixed(2) + '% ' + (d > 3 ? '⚠️' : '✓');
+        delta.style.color = d > 3 ? '#f87171' : '#00FFA3';
+      }
+    };
+
+    var confirmBtn = h('button', { type: 'button', class: 'btn btn-g', text: '✓ Valider P2' });
+    body.appendChild(confirmBtn);
+
+    var m = M.modal('Pesée P2 · ' + lot.bag_qr_id, body);
+
+    confirmBtn.onclick = async function () {
+      var w = sc.value();
+      if (!(w > 0 && w <= 1000)) return M.toast('Poids invalide', 'err');
+      if (sc.fault && !sc.photo) return M.toast('Photo cadran requise', 'err');
+      if (!sc.fault && !sc.stable) return M.toast('Attendez la stabilisation', 'warn');
+
+      confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Enregistrement…';
+
+      try {
+        var photoUrl = null;
+        if (sc.photo) {
+          try {
+            var path = S.P.id + '/p2-' + lot.bag_qr_id + '-' + Date.now() + '.jpg';
+            var up = await M.sb.storage.from('proofs').upload(path, sc.photo, { contentType: 'image/jpeg', upsert: true });
+            if (!up.error) {
+              var pub = M.sb.storage.from('proofs').getPublicUrl(path);
+              if (pub.data && pub.data.publicUrl) photoUrl = pub.data.publicUrl;
+            }
+          } catch (e) {}
+        }
+
+        var updates = { weight_depot_kg: w, status: 'ANCHORED' };
+        if (photoUrl) updates.depot_fault_photo = photoUrl;
+
+        var r = await M.sb.from('collections').update(updates).eq('id', lot.id)
+          .select('id,status,weight_collect_kg,weight_depot_kg').single();
+
+        if (r.error) {
+          confirmBtn.disabled = false; confirmBtn.textContent = '✓ Valider P2';
+          return M.toast('Erreur : ' + r.error.message, 'err');
+        }
+
+        var status = r.data.status;
+        stopStream();
+        m.close();
+        if (status === 'DISCREPANCY') {
+          M.toast('⚠️ DISCREPANCY · admin doit investiguer (Δ > 3%)', 'warn');
+        } else {
+          M.toast('✅ ANCHORED · ' + w.toFixed(2) + ' kg', '');
+        }
+        go('depot');
+      } catch (e) {
+        confirmBtn.disabled = false; confirmBtn.textContent = '✓ Valider P2';
+        M.toast('Erreur : ' + (e.message || e), 'err');
+      }
+    };
+  }
+
+  /* =================================================================
+     15. OPEN MISSION CLOSE (Payout COURSE)
+     ================================================================= */
+  function openMissionClose(pickupId) {
+    return new Promise(async function (resolve) {
+      var pid = pickupId || S.activePickupId;
+      if (!pid) { M.toast('Aucune mission active', 'err'); return resolve(); }
+
+      // 1) Check DISCREPANCY
+      try {
+        var dc = await M.sb.from('collections').select('id', { count: 'exact', head: true })
+          .eq('pickup_id', pid).eq('status', 'DISCREPANCY');
+        if (dc.count && dc.count > 0) {
+          var ok = await M.confirm(dc.count + ' sac(s) en DISCREPANCY seront exclus du paiement. Continuer la clôture ?');
+          if (!ok) return resolve();
+        }
+      } catch (e) {}
+
+      // 2) GPS Point C
+      var gpsC = await gpsNow(8000);
+      if (!gpsC) M.toast('GPS hub indisponible — fallback serveur', 'warn');
+
+      // 3) UPDATE pickup → DONE (trigger DB calcule course)
+      var upd;
+      try {
+        upd = await M.sb.from('pickups').update({
+          status: 'DONE',
+          gps_hub_lat: gpsC ? gpsC.lat : null,
+          gps_hub_lng: gpsC ? gpsC.lng : null,
+          closed_at: new Date().toISOString()
+        }).eq('id', pid).select('id, course_amount_mad, weight_total_kg, bags_count, distance_triangle_km').single();
+      } catch (e) {
+        M.toast('Erreur réseau clôture : ' + (e.message || e), 'err');
+        return resolve();
+      }
+
+      if (upd.error || !upd.data) {
+        M.toast('Erreur clôture: ' + (upd.error ? upd.error.message : 'données absentes'), 'err');
+        return resolve();
+      }
+
+      var pk = upd.data;
+      var amount = Number(pk.course_amount_mad || 0);
+      var weight = Number(pk.weight_total_kg || 0);
+      var dist = Number(pk.distance_triangle_km || 0);
+      var bagsN = Number(pk.bags_count || 0);
+
+      // 4) Modale breakdown + paiement
+      var body = h('div', { class: 'space-y-3' });
+      body.innerHTML = '<div class="p-3 bg-black/60 rounded-xl border border-cyberGreen/30 font-mono text-xs space-y-1">' +
+        '<div class="flex justify-between"><span class="text-slate-400">Course</span><span class="text-cyberGreen font-bold text-lg">' + M.fmt.n(amount, 2) + ' MAD</span></div>' +
+        '<div class="flex justify-between"><span class="text-slate-400">Poids ANCHORED</span><span class="text-white">' + weight.toFixed(2) + ' kg</span></div>' +
+        '<div class="flex justify-between"><span class="text-slate-400">Sacs</span><span class="text-white">' + bagsN + '</span></div>' +
+        '<div class="flex justify-between"><span class="text-slate-400">Distance payée</span><span class="text-white">' + dist.toFixed(2) + ' km</span></div>' +
+        '</div>';
+
+      var methodSel = h('select', { class: 'inp' });
+      PAY_METHODS.forEach(function (p) {
+        var o = document.createElement('option');
+        o.value = p[0]; o.textContent = p[1]; methodSel.appendChild(o);
+      });
+      body.appendChild(h('label', { class: 'lbl', text: 'Mode de règlement' }));
+      body.appendChild(methodSel);
+
+      var detailsInp = h('input', { type: 'text', class: 'inp', placeholder: 'RIB / téléphone (si virement)' });
+      body.appendChild(h('label', { class: 'lbl', text: 'Détails (optionnel)' }));
+      body.appendChild(detailsInp);
+
+      var confirmBtn = h('button', { type: 'button', class: 'btn btn-g', text: '✓ Confirmer et enregistrer' });
+      body.appendChild(confirmBtn);
+
+      var m = M.modal('Clôture · Reçu de Mission', body);
+
+      confirmBtn.onclick = async function () {
+        confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Enregistrement…';
+
+        var method = methodSel.value;
+        var details = detailsInp.value.trim() || null;
+        if (method !== 'ESPECES_CAISSE' && !details) {
+          confirmBtn.disabled = false; confirmBtn.textContent = '✓ Confirmer et enregistrer';
+          return M.toast('RIB/téléphone requis pour ce mode', 'err');
+        }
+
+        var rates = {
+          base_fare_mad: Number(S.P.contract_base_fare_mad) || 15,
+          km_rate_mad: Number(S.P.contract_km_rate_mad) || 2,
+          weight_prime_mad: Number(S.P.contract_weight_prime_mad) || 5,
+          weight_tranche_kg: Number(S.P.contract_weight_tranche_kg) || 50
+        };
+
+        var pr = await M.sb.from('payout_requests').insert([{
+          user_id: S.P.id,
+          operator: S.P.email,
+          amount_mad: amount,
+          method: method,
+          details: details,
+          status: 'PENDING',
+          payout_type: 'COURSE',
+          pickup_id: pid,
+          base_fare_mad: rates.base_fare_mad,
+          km_rate_mad: rates.km_rate_mad,
+          weight_prime_mad: rates.weight_prime_mad,
+          weight_tranche_kg: rates.weight_tranche_kg,
+          distance_km: dist,
+          weight_kg: weight
+        }]).select('id').single();
+
+        if (pr.error) {
+          confirmBtn.disabled = false; confirmBtn.textContent = '✓ Confirmer et enregistrer';
+          return M.toast('Erreur payout: ' + pr.error.message, 'err');
+        }
+
+        // Link bidirezionale
+        try { await M.sb.from('pickups').update({ payout_request_id: pr.data.id }).eq('id', pid); } catch (e) {}
+
+        S.activePickupId = null;
+        m.close();
+        success('Mission clôturée · ' + amount.toFixed(2) + ' MAD');
+        go('tour');
+        resolve();
+      };
+    });
+  }
+
+  /* =================================================================
+     16. VUE : AMBASSADEUR
+     ================================================================= */
+  async function vAmbassador() {
+    app.append(title('Ambassadeur', 'Clients portés · avances · contrats signés.'));
+
+    // Section A · Clients portés
+    var clientsList = h('div', { class: 'space-y-2 mt-4' });
+    app.append(h('p', { class: 'lbl au px-1', text: 'Mes clients portés' }), clientsList);
 
     var rows = [];
     try {
-      var r = await M.sb.from('ambassador_contracts').select('*')
-        .eq('ambassador_email', S.P.email).order('created_at', { ascending: false }).limit(30);
+      var r = await M.sb.from('clients')
+        .select('id,company_name,exclusive_status,horeca_category,exclusive_vector_id,procured_at')
+        .eq('procured_by_vector_id', S.P.id)
+        .order('procured_at', { ascending: false });
       rows = r.data || [];
     } catch (e) {}
 
     if (!rows.length) {
-      list.appendChild(h('div', { class: 'empty-state' },
-        h('div', { class: 'ico', text: '🤝' }),
-        h('p', { text: 'Aucun contrat soumis pour le moment.' })));
-      return;
+      clientsList.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '👥' }),
+        h('p', { text: 'Aucun client porté. Signez un nouveau contrat ci-dessous.' })));
+    } else {
+      rows.forEach(function (c, i) {
+        var bd = c.exclusive_status === 'APPROVED' ? 'bd-g'
+               : c.exclusive_status === 'PENDING'  ? 'bd-au'
+               : c.exclusive_status === 'REJECTED' ? 'bd-r' : 'bd-n';
+        var bdt = c.exclusive_status || 'N/A';
+        var card = h('div', { class: 'card', style: '--i:' + i },
+          h('div', { class: 'flex justify-between items-start gap-2' },
+            h('div', null,
+              h('p', { class: 'font-bold text-sm text-white', text: c.company_name }),
+              h('p', { class: 'text-[10px] font-mono text-slate-400', text: (c.horeca_category || 'B2B') + ' · ' + M.fmt.d(c.procured_at) })),
+            h('span', { class: 'bd ' + bd, text: bdt })));
+        if (c.exclusive_status === 'APPROVED' || c.exclusive_status === 'PENDING') {
+          card.appendChild(h('button', {
+            type: 'button', class: 'btn btn-au !py-2 !text-[10px] mt-2', text: '⚡ Demander une avance',
+            onclick: function () { openAvanceForm(c); }
+          }));
+        }
+        clientsList.appendChild(card);
+      });
     }
 
-    rows.forEach(function (c, i) {
-      var bd = c.status === 'VALIDATED' ? 'bd-g' : c.status === 'REJECTED' ? 'bd-r' : 'bd-au';
-      var bdt = c.status === 'VALIDATED' ? 'Validé' : c.status === 'REJECTED' ? 'Refusé' : 'En revue';
-      list.appendChild(h('div', { class: 'card flex justify-between items-center gap-2', style: '--i:' + i },
-        h('div', null,
-          h('p', { class: 'font-bold text-sm text-white', text: c.company_name }),
-          h('p', { class: 'text-[10px] font-mono text-slate-400',
-            text: M.fmt.d(c.created_at) + (c.status === 'VALIDATED' && c.bonus_mad ? ' · Prime ' + M.fmt.n(c.bonus_mad, 2) + ' MAD' : '') })),
-        h('span', { class: 'bd ' + bd, text: bdt })));
+    // Section B · Nouveau contrat
+    app.appendChild(h('button', {
+      type: 'button', class: 'btn btn-au mt-4', text: '🤝 Nouveau contrat signé',
+      onclick: openNewContractForm
+    }));
+
+    // Section C · Contrats signés (legacy)
+    var contractsList = h('div', { class: 'space-y-2 mt-4' });
+    app.append(h('p', { class: 'lbl au px-1', text: 'Mes contrats signés' }), contractsList);
+
+    var crows = [];
+    try {
+      var cr = await M.sb.from('ambassador_contracts').select('*')
+        .eq('ambassador_email', S.P.email).order('created_at', { ascending: false }).limit(30);
+      crows = cr.data || [];
+    } catch (e) {}
+
+    if (!crows.length) {
+      contractsList.appendChild(h('div', { class: 'empty-state' },
+        h('div', { class: 'ico', text: '📄' }),
+        h('p', { text: 'Aucun contrat soumis.' })));
+    } else {
+      crows.forEach(function (c, i) {
+        var bd = c.status === 'VALIDATED' ? 'bd-g' : c.status === 'REJECTED' ? 'bd-r' : 'bd-au';
+        var bdt = c.status === 'VALIDATED' ? 'Validé' : c.status === 'REJECTED' ? 'Refusé' : 'En revue';
+        contractsList.appendChild(h('div', { class: 'card flex justify-between items-center gap-2', style: '--i:' + i },
+          h('div', null,
+            h('p', { class: 'font-bold text-sm text-white', text: c.company_name }),
+            h('p', { class: 'text-[10px] font-mono text-slate-400',
+              text: M.fmt.d(c.created_at) + (c.status === 'VALIDATED' && c.bonus_mad ? ' · Prime ' + M.fmt.n(c.bonus_mad, 2) + ' MAD' : '') })),
+          h('span', { class: 'bd ' + bd, text: bdt })));
+      });
+    }
+  }
+
+  function openNewContractForm() {
+    M.form('Nouveau contrat B2B', [
+      { k: 'company', label: 'Établissement', required: true, placeholder: 'Nom de l\'établissement' },
+      { k: 'cat', label: 'Catégorie', type: 'select', options: CATS },
+      { k: 'contact', label: 'Contact sur place', required: true },
+      { k: 'phone', label: 'Téléphone', type: 'tel', placeholder: '+212 6...' },
+      { k: 'photo', label: 'Photo du contrat signé', type: 'file', accept: 'image/*', capture: 'environment', required: true },
+      { k: 'ok', label: 'Consentement Loi CNDP 09-08 obtenu.', type: 'checkbox', required: true }
+    ], 'Envoyer à la Direction', async function (v) {
+      var id = M.uuid();
+      var blob = await M.resize(v.photo);
+      blob = await annotate(blob, { ts: new Date().toISOString(), gps: gpsStr(), mode: 'CONTRACT_SIGNED' });
+      var r = await M.insert('ambassador_contracts', {
+        id: id, ambassador_email: S.P.email,
+        company_name: v.company, category: v.cat,
+        contact_name: v.contact, phone: v.phone
+      }, [{ bucket: 'contracts', path: S.P.id + '/' + id + '.jpg', blob: blob, field: 'photo_path' }]);
+      if (r.status === 'error') return 'Refusé : ' + r.message;
+      M.toast('Contrat transmis à la Direction.');
+      voice('Contrat transmis');
+      go('contracts');
+    });
+  }
+
+  async function openAvanceForm(client) {
+    M.form('Demande d\'avance · ' + client.company_name, [
+      { k: 'amount', label: 'Montant (MAD)', type: 'number', min: 1, max: 500, step: '0.01', required: true, value: 500 },
+      { k: 'method', label: 'Mode', type: 'select', options: PAY_METHODS },
+      { k: 'details', label: 'RIB / Téléphone (si virement)' }
+    ], 'Demander l\'avance', async function (v) {
+      if (v.method !== 'ESPECES_CAISSE' && !v.details) return 'RIB ou téléphone requis';
+      var r = await M.sb.from('payout_requests').insert([{
+        user_id: S.P.id,
+        operator: S.P.email,
+        amount_mad: v.amount,
+        method: v.method,
+        details: v.details || null,
+        status: 'PENDING',
+        payout_type: 'ADVANCE_CONTRACT',
+        related_client_id: client.id,
+        admin_notes: 'Avance sur contrat ' + client.company_name
+      }]);
+      if (r.error) return 'Erreur : ' + r.error.message;
+      M.toast('Demande d\'avance transmise à la Direction.');
     });
   }
 
   /* =================================================================
-     16. VUE : KEMET WALLET (Calculé depuis Supabase DB)
+     17. VUE : KEMET WALLET
      ================================================================= */
   async function vWallet() {
     app.append(title('Kemet Wallet', 'Trésorerie opérationnelle et Actions de Classe B.'));
@@ -1068,7 +1461,7 @@
   }
 
   /* =================================================================
-     17. VUE : PROFIL OPÉRATEUR & SCORE MAAT
+     18. VUE : PROFIL
      ================================================================= */
   async function vMe() {
     var initials = (S.P.full_name || S.P.email).split(/[\s@.]+/).slice(0, 2)
@@ -1155,7 +1548,7 @@
   }
 
   /* =================================================================
-     18. INSTALLATION PWA & PULL-TO-REFRESH
+     19. INSTALLATION PWA & PULL-TO-REFRESH
      ================================================================= */
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault(); S.deferred = e;
@@ -1188,7 +1581,7 @@
   })();
 
   /* =================================================================
-     19. DÉMARRAGE DU RUNTIME
+     20. DÉMARRAGE DU RUNTIME
      ================================================================= */
   window.addEventListener('load', function () {
     M.init();
