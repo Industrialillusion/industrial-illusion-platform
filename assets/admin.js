@@ -2,17 +2,11 @@
    MAAT OS v8.3.0 — Control Tower (Direction Générale)
    Industrial Illusion SARL · Deep Tech Systems · Marrakech
    ------------------------------------------------------------
-   Nouveautés v8.3.0 :
-     - Module B · Recrutement & Flotte Terrain (carrieres_applications)
-       · Filtres rôles : Vecteurs / Ambassadeurs / Guelssas
-       · Liens WhatsApp cliquables (wa.me)
-       · Habilitation + Rejet avec motif interne
-       · Fallback automatique sur "profiles" si table absente
-     - generateToken() : CSPRNG crypto.getRandomValues (conservé)
-     - Déconnexion explicite (vidage storage + redirection index.html)
-     - Branding strict "INDUSTRIAL ILLUSION / CONTROL TOWER"
-     - Badge PENDING temps réel sur les deux nouveaux modules
-     - Realtime : datalake_access_requests + carrieres_applications
+   Fase 4 · Patch Control Tower :
+     - VIEWS : + exclusivity (12e vue sidebar)
+     - open() : dispatch exclusivity → module admin-exclusivity.js
+     - vCash  : bouton 🔍 sur toutes les lignes + openPayoutDetail modal
+     - openPayoutDetail : breakdown COURSE (base+km+prime) + pickup link
    ============================================================ */
 (function () {
   'use strict';
@@ -33,6 +27,7 @@
     ['overview',  '📊', 'Vue d\'ensemble'],
     ['users',     '👥', 'Utilisateurs & permissions'],
     ['clients',   '🏨', 'Clients B2B'],
+    ['exclusivity','✨', 'Exclusivités'],
     ['pickups',   '🗓️', 'Ritiri programmés'],
     ['weigh',     '⚖️', 'Registre des pesées'],
     ['contracts', '🤝', 'Contrats ambassadeurs'],
@@ -299,6 +294,12 @@
         overview:  vOverview,
         users:     vUsers,
         clients:   vClients,
+        exclusivity: function (box) {
+          if (window.MaatAdminExclusivity && typeof window.MaatAdminExclusivity.view === 'function') {
+            return window.MaatAdminExclusivity.view(box);
+          }
+          box.appendChild(h('div', { class: 'card text-xs text-red-400 font-mono', text: 'Module exclusivity non chargé. Vérifiez assets/admin-exclusivity.js.' }));
+        },
         pickups:   vPickups,
         weigh:     vWeigh,
         contracts: vContracts,
@@ -980,6 +981,90 @@
      7. CAISSE, VIREMENTS, WALLET
      ═════════════════════════════════════════════════════════ */
 
+  /* FASE 4 · Modal détail payout avec breakdown COURSE */
+  async function openPayoutDetail(p) {
+    var body = h('div', { class: 'space-y-3 font-mono text-xs' });
+
+    body.appendChild(h('div', { class: 'p-3 bg-black/60 rounded-xl border border-white/10 space-y-1' },
+      h('div', { class: 'flex justify-between' },
+        h('span', { class: 'text-slate-400', text: 'Type' }),
+        h('span', { class: 'text-kemetGoldBright font-bold', text: p.payout_type || '—' })),
+      h('div', { class: 'flex justify-between' },
+        h('span', { class: 'text-slate-400', text: 'Montant' }),
+        h('span', { class: 'text-cyberGreen font-bold text-base', text: M.fmt.n(p.amount_mad, 2) + ' MAD' })),
+      h('div', { class: 'flex justify-between' },
+        h('span', { class: 'text-slate-400', text: 'Opérateur' }),
+        h('span', { class: 'text-white break-all', text: p.operator || '—' })),
+      h('div', { class: 'flex justify-between' },
+        h('span', { class: 'text-slate-400', text: 'Mode' }),
+        h('span', { class: 'text-white', text: (p.method || '—') + (p.cash_slot ? ' · ' + p.cash_slot : '') })),
+      h('div', { class: 'flex justify-between' },
+        h('span', { class: 'text-slate-400', text: 'Statut' }),
+        h('span', { class: 'text-white', text: p.status || '—' }))
+    ));
+    if (p.details) {
+      body.appendChild(h('div', { class: 'p-2 bg-black/60 rounded-lg border border-white/10 text-[10px]' },
+        h('span', { class: 'text-slate-400 block mb-1', text: 'Détails bénéficiaire' }),
+        h('span', { class: 'text-white break-all', text: p.details })));
+    }
+
+    if (p.payout_type === 'COURSE' && p.pickup_id) {
+      try {
+        var pr = await M.sb.from('pickups').select('id,client_id,scheduled_at,closed_at').eq('id', p.pickup_id).maybeSingle();
+        if (pr.data) {
+          var clientName = '—';
+          if (pr.data.client_id) {
+            var cr = await M.sb.from('clients').select('company_name').eq('id', pr.data.client_id).maybeSingle();
+            if (cr.data) clientName = cr.data.company_name;
+          }
+          body.appendChild(h('div', { class: 'p-3 bg-cyberGreen/10 rounded-xl border border-cyberGreen/30 space-y-1' },
+            h('span', { class: 'text-cyberGreen font-bold block', text: '🚚 Course · Pickup' }),
+            h('div', { class: 'flex justify-between' },
+              h('span', { class: 'text-slate-400', text: 'Client' }),
+              h('span', { class: 'text-white', text: clientName })),
+            h('div', { class: 'flex justify-between' },
+              h('span', { class: 'text-slate-400', text: 'Pickup ID' }),
+              h('span', { class: 'text-white text-[10px]', text: String(p.pickup_id).slice(0, 8) + '…' })),
+            h('div', { class: 'flex justify-between' },
+              h('span', { class: 'text-slate-400', text: 'Clôturée' }),
+              h('span', { class: 'text-white', text: pr.data.closed_at ? M.fmt.dt(pr.data.closed_at) : '—' }))));
+        }
+      } catch (e) {}
+
+      var base = Number(p.base_fare_mad || 0);
+      var kmr = Number(p.km_rate_mad || 0);
+      var prim = Number(p.weight_prime_mad || 0);
+      var trank = Number(p.weight_tranche_kg || 50);
+      var dist = Number(p.distance_km || 0);
+      var w = Number(p.weight_kg || 0);
+      var tranches = Math.ceil(w / trank) * prim;
+      var calc = base + (kmr * dist) + tranches;
+      var match = Math.abs(calc - Number(p.amount_mad || 0)) < 0.01;
+
+      body.appendChild(h('div', { class: 'p-3 bg-black/60 rounded-xl border border-white/10 space-y-1' },
+        h('span', { class: 'text-kemetGoldBright font-bold block', text: '📊 Breakdown calcul' }),
+        h('div', { class: 'flex justify-between' },
+          h('span', { class: 'text-slate-400', text: 'Base fare' }),
+          h('span', { class: 'text-white', text: M.fmt.n(base, 2) + ' MAD' })),
+        h('div', { class: 'flex justify-between' },
+          h('span', { class: 'text-slate-400', text: 'Distance payée' }),
+          h('span', { class: 'text-white', text: M.fmt.n(dist, 2) + ' km × ' + M.fmt.n(kmr, 2) + ' = ' + M.fmt.n(dist * kmr, 2) + ' MAD' })),
+        h('div', { class: 'flex justify-between' },
+          h('span', { class: 'text-slate-400', text: 'Poids / prime' }),
+          h('span', { class: 'text-white', text: M.fmt.n(w, 2) + ' kg · ' + Math.ceil(w / trank) + ' tr. × ' + M.fmt.n(prim, 2) + ' = ' + M.fmt.n(tranches, 2) + ' MAD' })),
+        h('div', { class: 'flex justify-between border-t border-white/10 pt-2 mt-2' },
+          h('span', { class: 'text-slate-400', text: 'Calculé' }),
+          h('span', { class: 'text-white font-bold', text: M.fmt.n(calc, 2) + ' MAD' })),
+        h('div', { class: 'flex justify-between' },
+          h('span', { class: 'text-slate-400', text: 'Enregistré' }),
+          h('span', { class: match ? 'text-cyberGreen font-bold' : 'text-red-400 font-bold',
+            text: M.fmt.n(p.amount_mad, 2) + ' MAD' + (match ? ' ✓' : ' ⚠ écart') }))
+      ));
+    }
+
+    M.modal('Détail payout · ' + M.fmt.dt(p.created_at), body, true);
+  }
+
   async function vCash(box) {
     var pay = h('div', { class: 'card !p-2' });
     var rec = h('div', { class: 'card !p-2' });
@@ -1001,12 +1086,13 @@
         { t: 'Bénéficiaire', f: function (p) { return p.details; } },
         { t: 'Statut',     f: function (p) { return badge(p.status); } },
         { t: 'Actions',    f: function (p) {
-          return p.status === 'PAID' || p.status === 'REJECTED' ? null : h('div', { class: 'flex gap-1 flex-wrap' },
-            p.status === 'PENDING' ? btn('Approuver', async function () {
+          var acts = [btn('🔍', function () { openPayoutDetail(p); }, 'btn-o')];
+          if (p.status !== 'PAID' && p.status !== 'REJECTED') {
+            if (p.status === 'PENDING') acts.push(btn('Approuver', async function () {
               var r = await M.sb.from('payout_requests').update({ status: 'APPROVED', reviewed_by: A.id }).eq('id', p.id);
               if (!fail(r)) { load(); scheduleBadges(); }
-            }) : null,
-            btn('Marquer payé', async function () {
+            }));
+            acts.push(btn('Marquer payé', async function () {
               if (await M.confirm('Confirmer le paiement de ' + M.fmt.n(p.amount_mad, 2) + ' MAD ? Le solde sera débité.')) {
                 var r = await M.sb.rpc('settle_payout', { p_id: p.id });
                 if (r.error) return M.toast(r.error.message, 'err');
@@ -1015,12 +1101,13 @@
                 load();
                 scheduleBadges();
               }
-            }, 'btn-g'),
-            btn('Rejeter', async function () {
+            }, 'btn-g'));
+            acts.push(btn('Rejeter', async function () {
               var r = await M.sb.from('payout_requests').update({ status: 'REJECTED', reviewed_by: A.id }).eq('id', p.id);
               if (!fail(r)) { load(); scheduleBadges(); }
-            }, 'btn-r')
-          );
+            }, 'btn-r'));
+          }
+          return h('div', { class: 'flex gap-1 flex-wrap' }, acts);
         } }
       ], a.data || [], 'Aucune demande.'));
 
@@ -1566,7 +1653,7 @@
 
   try {
     console.info(
-      '%c[CONTROL TOWER] v8.3.0 · 11 modules · datalake + carrieres · déconnexion propre',
+      '%c[CONTROL TOWER] v8.3.0 · 12 modules · exclusivités + payout detail COURSE',
       'color:#00FFA3;font-weight:bold;background:#0A0D10;padding:3px 6px;border-radius:4px;'
     );
   } catch (e) {}
