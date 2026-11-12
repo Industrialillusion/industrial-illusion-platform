@@ -1,7 +1,12 @@
-/* PurKemet · dashboard.js v5.2
-   HUD, KPI animés, catalogue matières (11 types), Chart.js cartésien + barres détail,
-   ESG workflow, MFA, QR, formulaires → Supabase (Control Tower)
-   v5.2: admin sans ?client_id → client picker inline (plus de message rouge)
+/* PurKemet · dashboard.js v5.3
+   HUD, KPI animés, catalogue matières dynamique (source = MAAT_MATERIALS),
+   Chart.js cartésien + barres détail, ESG workflow, MFA, QR, formulaires → Supabase
+   ------------------------------------------------------------
+   v5.3 (Fase 5):
+   - MAT_META/MAT_ORDER construits depuis window.MAAT_MATERIALS (source unique)
+   - boot() : await MfaGate.done (bloquant, avant chargement data)
+   - renderMatCatalog() : catalogue #matCatalog rendu dynamiquement
+   - Textes "11 filières" → "10 filières"
 */
 (function(){
 'use strict';
@@ -80,23 +85,28 @@ function makeQrSvg(text, cellSize, margin){
   }
 }
 
-/* ═══════════════════ MAT META (11 TYPES · source unique) ═══════════════════ */
-var MAT_META = {
-  'PET':    { label: 'PET Transparent',      short: 'PET',      emoji: '🟢', color: '#00FFA3', c2: '#00C77E' },
-  'PEHD':   { label: 'PE-HD Rigide',         short: 'PE-HD',    emoji: '🟡', color: '#FCD34D', c2: '#F59E0B' },
-  'PE_HD':  { label: 'PE-HD Rigide',         short: 'PE-HD',    emoji: '🟡', color: '#FCD34D', c2: '#F59E0B' },
-  'ALU':    { label: 'Aluminium',            short: 'ALU',      emoji: '🥫', color: '#E8C86A', c2: '#C5A059' },
-  'CARTON': { label: 'Carton Ondulé',        short: 'Carton',   emoji: '📦', color: '#F5A623', c2: '#D97706' },
-  'VERRE':  { label: 'Verre Blanc',          short: 'Verre',    emoji: '🍾', color: '#38BDF8', c2: '#0284C7' },
-  'DIB':    { label: 'Encombrants DIB',      short: 'DIB',      emoji: '🗑️', color: '#94A3B8', c2: '#64748B' },
-  'ORG':    { label: 'Déchets Organiques',   short: 'Organique',emoji: '🌱', color: '#A78BFA', c2: '#7C3AED' },
-  'PAP':    { label: 'Papier / Journaux',    short: 'Papier',   emoji: '📄', color: '#FCD34D', c2: '#CA8A04' },
-  'FILM':   { label: 'Film Plastique',       short: 'Film',     emoji: '🎞️', color: '#67E8F9', c2: '#0891B2' },
-  'METAL':  { label: 'Métaux Ferreux',       short: 'Métal',    emoji: '⚙️', color: '#A1A1AA', c2: '#71717A' },
-  'PP':     { label: 'Polypropylène (PP)',   short: 'PP',       emoji: '🥤', color: '#FB923C', c2: '#EA580C' }
-};
+/* ═══════════════════ MAT META (FASE 5 · source unique = window.MAAT_MATERIALS) ═══════════════════ */
+var MAT_META = {};
+var MAT_ORDER = [];
 
-var MAT_ORDER = ['PET','PEHD','ALU','CARTON','VERRE','DIB','ORG','PAP','FILM','METAL','PP'];
+function buildMatIndex(){
+  var list = window.MAAT_MATERIALS || [];
+  MAT_META = {};
+  MAT_ORDER = [];
+  list.forEach(function(m){
+    MAT_META[m.id] = {
+      label: m.label || m.id,
+      short: m.id,
+      emoji: m.icon || '♻️',
+      color: m.color || '#E5E7EB',
+      c2: m.c2 || m.color || '#9CA3AF',
+      active: m.active !== false
+    };
+    MAT_ORDER.push(m.id);
+  });
+  console.log('[dashboard] MAT_META built · ' + MAT_ORDER.length + ' matériaux');
+}
+buildMatIndex();
 
 function getMatMeta(m){
   return MAT_META[m] || { label: m || '—', short: m || '—', emoji: '♻️', color: '#E5E7EB', c2: '#9CA3AF' };
@@ -224,6 +234,11 @@ async function boot(){
     if (prof.error || !prof.data) { fail('Profil introuvable'); return; }
     S.profile = prof.data;
 
+    // FASE 5 · MFA gate (Promise ne reject jamais · skip si module absent)
+    if (window.MfaGate && window.MfaGate.done) {
+      await window.MfaGate.done;
+    }
+
     if (S.profile.role === 'admin' || S.profile.role === 'direction') {
       var urlP = new URLSearchParams(location.search);
       S.clientId = urlP.get('client_id');
@@ -269,10 +284,39 @@ function renderAll(){
   renderHero();
   renderKpis();
   renderMaterials();
+  renderMatCatalog();
   renderEsg();
   renderTable();
   renderQr();
   startTicker();
+}
+
+/* FASE 5 · catalogue dynamique depuis window.MAAT_MATERIALS */
+function renderMatCatalog(){
+  var el = $('matCatalog');
+  if (!el) return;
+  var list = window.MAAT_MATERIALS || [];
+  if (!list.length) {
+    el.innerHTML = '<div style="color:#94A3B8;font-size:11px;padding:8px;font-family:\'JetBrains Mono\',monospace">Catalogue indisponible (materials.js non chargé).</div>';
+    return;
+  }
+  el.innerHTML = '';
+  list.forEach(function(m){
+    // Affiche les actifs + ORG (phase_test)
+    if (m.active === false && !m.phase_test) return;
+    var item = document.createElement('div');
+    item.className = 'cat-item';
+    item.style.setProperty('--c', m.color || '#00FFA3');
+    var emoji = document.createElement('span');
+    emoji.className = 'cat-emoji';
+    emoji.textContent = m.icon || '♻️';
+    var label = document.createElement('span');
+    label.className = 'cat-label';
+    label.textContent = m.label || m.id;
+    item.appendChild(emoji);
+    item.appendChild(label);
+    el.appendChild(item);
+  });
 }
 
 /* ═══════════════════ HERO ═══════════════════ */
@@ -353,7 +397,7 @@ function renderMaterials(){
       '<div class="mat-empty">' +
         '<div class="mat-empty-icon">📊</div>' +
         '<div class="mat-empty-title">Aucune donnée de valorisation</div>' +
-        '<div class="mat-empty-sub">Vos matières apparaîtront ici après la première collecte certifiée. Les 11 filières sont déjà enregistrées dans le Data Lake.</div>' +
+        '<div class="mat-empty-sub">Vos matières apparaîtront ici après la première collecte certifiée. Les 10 filières sont déjà enregistrées dans le Data Lake.</div>' +
       '</div>';
     return;
   }
@@ -793,11 +837,12 @@ function startTicker(){
       items.push({ label: mat, value: (Number(w) || 0).toFixed(1) + ' kg' });
     }
   } else {
+    var actives = (window.MAAT_MATERIALS || []).filter(function(m){ return m.active !== false; }).length || 10;
     items = [
       { label: 'Maat Data Lake', value: 'ONLINE' },
       { label: 'Blockchain', value: 'Fabric + BTC' },
       { label: 'Node', value: 'HUB-MRK-01' },
-      { label: 'Filières actives', value: '11' }
+      { label: 'Filières actives', value: String(actives) }
     ];
   }
 
