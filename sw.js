@@ -1,10 +1,12 @@
 /* ==========================================================================
  *  sw.js · Service Worker unificato
- *  Maat OS · Industrial Illusion SARL · v1.0.4
+ *  Maat OS · Industrial Illusion SARL · v1.0.5
+ *
+ *  v1.0.5:
+ *  - Bump VERSION per invalidare cache vecchie dopo Fase 5 (dashboard v5.3).
  *
  *  v1.0.4:
  *  - Aggiunti /assets/materials.js e /assets/mfa-gate.js allo shell offline.
- *  - Bump VERSION → invalidazione cache vecchie.
  *
  *  v1.0.3:
  *  - Network-first con { cache: 'reload' } senza perdere gli header originali.
@@ -12,7 +14,7 @@
  *  - Dashboard & Admin escluse dal fallback dell'operatore.
  * ========================================================================== */
 
-const VERSION       = 'maat-v1.0.4-materials-mfa';
+const VERSION       = 'maat-v1.0.5-dashboard-materials';
 const SHELL_CACHE   = VERSION + '-shell';
 const RUNTIME_CACHE = VERSION + '-runtime';
 
