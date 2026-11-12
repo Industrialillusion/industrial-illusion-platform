@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Maat OS v8.1 — Workstation Opérateur | Industrial Illusion SARL</title>
+<title>Maat OS v9.1 — Workstation Opérateur | Industrial Illusion SARL</title>
 <meta name="description" content="Maat OS : tournée, double pesée certifiée, contrats ambassadeurs et Kemet Wallet pour les opérateurs du Projet PurKemet.">
 <meta name="theme-color" content="#00FFA3">
 <meta name="color-scheme" content="dark">
@@ -40,7 +39,7 @@
 <script src="assets/pwa-badges.js" defer></script>
 <!-- ADDED : Scanner QR module (FAB + overlay + feedback multimodale) -->
 <script src="assets/pwa-scan.js" defer></script>
-<!-- ADDED : Scanner QR handlers (badge + depot + bag P1/P2) -->
+<!-- ADDED : Scanner QR handlers (badge + depot · FASE 6 bag dispatch rimosso) -->
 <script src="assets/pwa-scan-handlers.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden" style="background:#090D10">
@@ -55,7 +54,7 @@
         <path d="M50 34V22M34 50H20M66 50H80M50 66v10" stroke="#00FFA3" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <div class="min-w-0">
-        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v8.1</span></h1>
+        <h1 class="font-kemetTitle text-sm font-black tracking-widest leading-none">MAAT OS <span class="font-mono text-[9px] text-cyberGreen">v9.1</span></h1>
         <p id="opInfo" class="text-[9px] text-slate-400 font-mono mt-0.5 truncate">Workstation opérateur</p>
       </div>
     </div>
@@ -108,21 +107,7 @@
 <script src="assets/pwa.js"></script>
 <script src="assets/monitoring.js"></script>
 
-<!-- ADDED : Service Worker registration (idempotent, safe even if pwa.js also registers it) -->
-<script>
-(function () {
-  if (!('serviceWorker' in navigator)) return;
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .then(function (reg) {
-        console.log('[MaatOS] SW registered · scope:', reg.scope);
-      })
-      .catch(function (err) {
-        console.warn('[MaatOS] SW registration failed:', err);
-      });
-  });
-})();
-</script>
+<!-- FASE 6 · SW inline rimosso: registration unica via core.js M.sw() -->
 
 </body>
 </html>
