@@ -707,9 +707,19 @@
     var by = {};
     cl.forEach(function (c) { by[c.id] = c.company_name; });
 
-    var vec = (await M.sb.from('profiles').select('id,full_name,email,capabilities').eq('role', 'operator').eq('status', 'ACTIVE')).data || [];
-    vec = vec.filter(function (p) { return (p.capabilities || []).indexOf('vector') >= 0; });
-    var vopts = [['', '— non assigné —']].concat(vec.map(function (p) { return [p.id, p.full_name || p.email]; }));
+    // FASE 7 · admin/direction possono operare come vettori se capabilities include 'vector'
+    var vec = (await M.sb.from('profiles')
+      .select('id,full_name,email,capabilities,role,status')
+      .eq('status', 'ACTIVE')).data || [];
+    vec = vec.filter(function (p) {
+      return (p.capabilities || []).indexOf('vector') >= 0
+        && (p.role === 'operator' || p.role === 'admin' || p.role === 'direction');
+    });
+    var vopts = [['', '— non assigné —']].concat(vec.map(function (p) {
+      var label = p.full_name || p.email;
+      if (p.role === 'admin' || p.role === 'direction') label += ' (DG)';
+      return [p.id, label];
+    }));
     var list = h('div', { class: 'card !p-2' });
 
     var load = async function () {
